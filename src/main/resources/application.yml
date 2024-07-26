@@ -1,7 +1,0 @@
-jwt:
-  secret: afklqjehwflknslkfvnlkaengawoerngoaiwngoipwrjepajkfladskflmlvkznmlknaewrgfhewaroiptjaipgojwrgdasfkjnasfjenfpoiawn
-
-spring:
-  profiles:
-    active:
-      - dev
