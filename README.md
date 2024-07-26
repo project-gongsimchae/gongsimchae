@@ -21,6 +21,9 @@
 - notion이나 commit 자동화로 만든 commit convention
 - pull request template을 통한 convention을 꼭 지킬것
 - CI-CD, 최초커밋, 환경설정에 대한 커밋 부분 추가했으니 확인
+## 🐞 주의
+- commit 자동화 할때 맨위에 영어 알파벳이 있는 오류가 가끔 발생하는데 없애주는 작업이 필요함
+- gitmessage 이용시에 키보드 위방향키를 누른다음 컨벤션 쓰는 습관을 들일것
 
  ![스크린샷 2024-07-27 011054](https://github.com/user-attachments/assets/a7dac98f-0342-4c4b-a4e6-9cde1a1a7e9c)
 ## ⭐ 하고싶은말
