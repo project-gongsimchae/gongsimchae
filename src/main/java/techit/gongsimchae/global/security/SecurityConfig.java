@@ -1,5 +1,6 @@
 package techit.gongsimchae.global.security;
 
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,18 +57,37 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> cors.configurationSource(configurationSource()))
+
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(new FormAccessDeniedHandler("/denied"))
                         .authenticationEntryPoint(new FormAuthenticationEntryPoint()))
+
                 .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtProcess, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtAuthorizationFilter(jwtProcess,refreshTokenRepository), JwtAuthenticationFilter.class)
+
                 .oauth2Login(oauth -> oauth.
                         loginPage("/login")
                         .userInfoEndpoint(info -> info.
                                 userService(oauth2UserService))
                         .successHandler(oAuth2SuccessHandler)
+                        )
+
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .addLogoutHandler((request, response, authentication) -> {
+                            for (Cookie cookie : request.getCookies()) {
+                                String cookieName = cookie.getName();
+                                if(cookieName.equals("view-count")) continue;
+                                Cookie deleteCookie = new Cookie(cookieName, null);
+                                deleteCookie.setMaxAge(0);
+                                response.addCookie(deleteCookie);
+                            }
+                        })
+                                .invalidateHttpSession(true)
                         )
         ;
 
