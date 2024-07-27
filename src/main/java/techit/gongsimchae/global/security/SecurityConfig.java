@@ -18,9 +18,11 @@ import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepo
 import techit.gongsimchae.domain.common.user.entity.UserRole;
 import techit.gongsimchae.global.security.handler.FormAccessDeniedHandler;
 import techit.gongsimchae.global.security.handler.FormAuthenticationEntryPoint;
+import techit.gongsimchae.global.security.handler.OAuth2SuccessHandler;
 import techit.gongsimchae.global.security.jwt.JwtAuthenticationFilter;
 import techit.gongsimchae.global.security.jwt.JwtAuthorizationFilter;
 import techit.gongsimchae.global.security.jwt.JwtProcess;
+import techit.gongsimchae.global.security.service.CustomOauth2UserService;
 import techit.gongsimchae.global.security.service.FormUserDetailsService;
 
 import java.util.Collections;
@@ -32,6 +34,8 @@ public class SecurityConfig {
     private final JwtProcess jwtProcess;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final CustomOauth2UserService oauth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -58,7 +62,13 @@ public class SecurityConfig {
                         .accessDeniedHandler(new FormAccessDeniedHandler("/denied"))
                         .authenticationEntryPoint(new FormAuthenticationEntryPoint()))
                 .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtProcess, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthorizationFilter(jwtProcess,refreshTokenRepository), JwtAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthorizationFilter(jwtProcess,refreshTokenRepository), JwtAuthenticationFilter.class)
+                .oauth2Login(oauth -> oauth.
+                        loginPage("/login")
+                        .userInfoEndpoint(info -> info.
+                                userService(oauth2UserService))
+                        .successHandler(oAuth2SuccessHandler))
+        ;
 
         return http.build();
     }

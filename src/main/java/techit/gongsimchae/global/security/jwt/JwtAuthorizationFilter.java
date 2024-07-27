@@ -13,7 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
 import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.dto.PrincipalDetails;
-import techit.gongsimchae.global.exception.TokenException;
 
 import java.io.IOException;
 import java.util.HashMap;
