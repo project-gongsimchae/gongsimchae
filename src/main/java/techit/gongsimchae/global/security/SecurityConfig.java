@@ -67,7 +67,8 @@ public class SecurityConfig {
                         loginPage("/login")
                         .userInfoEndpoint(info -> info.
                                 userService(oauth2UserService))
-                        .successHandler(oAuth2SuccessHandler))
+                        .successHandler(oAuth2SuccessHandler)
+                        )
         ;
 
         return http.build();

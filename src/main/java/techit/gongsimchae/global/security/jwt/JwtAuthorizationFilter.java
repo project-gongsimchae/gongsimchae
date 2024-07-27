@@ -1,5 +1,6 @@
 package techit.gongsimchae.global.security.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -33,22 +34,30 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         Map<String, String> cookieVerify = isCookieVerify(request);
         String accessToken = cookieVerify.get(JwtVO.ACCESS_CATEGORY);
         String refreshToken = cookieVerify.get(JwtVO.REFRESH_CATEGORY);
-        if(accessToken != null || refreshToken != null) {
-            if (!jwtProcess.isExpired(accessToken)) {
-                addSecurityContext(accessToken);
-
-            } else if (!jwtProcess.isExpired(refreshToken)) {
-                if (refreshTokenRepository.existsByRefreshToken(refreshToken)) {
-                    addSecurityContext(refreshToken);
+        if (accessToken != null || refreshToken != null) {
+            try {
+                if (!jwtProcess.isExpired(accessToken)) {
+                    addSecurityContext(accessToken);
                 }
+            } catch (ExpiredJwtException e) {
+                log.error("Expired JWT token {}", e.getMessage());
+            }
+
+            try {
+                if (!jwtProcess.isExpired(refreshToken)) {
+                    if (refreshTokenRepository.existsByRefreshToken(refreshToken)) {
+                        addSecurityContext(refreshToken);
+                    }
+                }
+            } catch (ExpiredJwtException e) {
+                log.error("Expired JWT token {}", e.getMessage());
             }
         }
-
         filterChain.doFilter(request, response);
 
     }
 
-    private void addSecurityContext(String token){
+    private void addSecurityContext(String token) {
         String loginId = jwtProcess.getLoginId(token);
         String role = jwtProcess.getRole(token);
         String uid = jwtProcess.getUID(token);
