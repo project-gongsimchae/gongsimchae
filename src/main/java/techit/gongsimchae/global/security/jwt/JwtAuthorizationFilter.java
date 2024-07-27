@@ -42,10 +42,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 if (refreshTokenRepository.existsByRefreshToken(refreshToken)) {
                     addSecurityContext(refreshToken);
                 }
-
             }
         }
-
 
         filterChain.doFilter(request, response);
 
