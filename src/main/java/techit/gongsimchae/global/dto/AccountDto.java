@@ -17,6 +17,7 @@ public class AccountDto {
     private String password;
     private UserRole role;
     private String phoneNumber;
+    private String UID;
 
     public AccountDto(User user) {
         this.id = user.getId();
@@ -26,10 +27,12 @@ public class AccountDto {
         this.password = user.getPassword();
         this.role = user.getRole();
         this.phoneNumber = user.getPhoneNumber();
+        this.UID = user.getUID();
     }
 
-    public AccountDto(String loginId, String role) {
+    public AccountDto(String loginId, String role, String UID) {
         this.loginId = loginId;
         this.role = UserRole.valueOf(role);
+        this.UID = UID;
     }
 }

@@ -6,10 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.common.user.dto.UserJoinReqDto;
 import techit.gongsimchae.domain.common.user.service.UserService;
 
@@ -27,13 +24,13 @@ public class UserController {
 
     @PostMapping("/signup")
     public String signup(@Validated @ModelAttribute("user") UserJoinReqDto userJoinReqDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("sign up error {}", bindingResult.getAllErrors());
             return "login/signup";
         }
 
         if (!userJoinReqDto.getPassword().equals(userJoinReqDto.getPasswordConfirm())) {
-            bindingResult.reject("password_not_confirm","비밀번호가 일치하지 않습니다.");
+            bindingResult.reject("password_not_confirm", "비밀번호가 일치하지 않습니다.");
             return "login/singup";
         }
         userService.signup(userJoinReqDto);
@@ -55,5 +52,9 @@ public class UserController {
         return "login/denied";
     }
 
-
+    @GetMapping("/reissue")
+    @ResponseBody
+    public String reissue(){
+        return "test";
+    }
 }
