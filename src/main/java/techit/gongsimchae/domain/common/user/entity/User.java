@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.common.user.dto.UserJoinReqDto;
 import techit.gongsimchae.global.dto.OAuth2Response;
@@ -39,12 +40,16 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String UID;
 
+    @Embedded
+    private Address address;
+
     /**
      * 생성자
      * 일반 회원가입
      */
 
     public User(UserJoinReqDto joinReqDto) {
+
         this.name = joinReqDto.getName();
         this.email = joinReqDto.getEmail();
         this.password = joinReqDto.getPassword();

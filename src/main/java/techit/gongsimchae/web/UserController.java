@@ -46,6 +46,7 @@ public class UserController {
             log.info("sign up error {}", bindingResult.getAllErrors());
             return "login/signup";
         }
+        log.info("sign up user {} " , userJoinReqDto);
 
         if (!userJoinReqDto.getPassword().equals(userJoinReqDto.getPasswordConfirm())) {
             bindingResult.reject("password_not_confirm", "비밀번호가 일치하지 않습니다.");

@@ -16,4 +16,8 @@ public class UserJoinReqDto {
     private String nickname;
     private String phoneNumber;
 
+    private String address;
+    private String zipcode;
+    private String detailAddress;
+
 }
