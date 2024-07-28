@@ -5,6 +5,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f87234e8635a427cd0f2a6dcdf8b0597"></script>
+
 </head>
 <body>
 테스트
@@ -14,5 +16,18 @@
     </form>
     <a class="nav-link" href="#" onclick="document.getElementById('logoutForm').submit();">로그아웃</a>
 </div>
+
+<div id="map" style="width:500px;height:400px;"></div>
+
+<script>
+    var mapContainer = document.getElementById("map"), // 지도를 표시할 div
+        mapOption = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+
+    // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+</script>
 </body>
 </html>
