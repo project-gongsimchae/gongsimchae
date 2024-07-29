@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.BaseEntity;
-import techit.gongsimchae.domain.common.user.dto.UserJoinReqDto;
+import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
+import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
 import techit.gongsimchae.global.dto.OAuth2Response;
 
 import java.util.UUID;
@@ -39,12 +41,16 @@ public class User extends BaseEntity {
     @Column(unique = true)
     private String UID;
 
+    @Embedded
+    private Address address;
+
     /**
      * 생성자
      * 일반 회원가입
      */
 
-    public User(UserJoinReqDto joinReqDto) {
+    public User(UserJoinReqDtoWeb joinReqDto, Address address) {
+
         this.name = joinReqDto.getName();
         this.email = joinReqDto.getEmail();
         this.password = joinReqDto.getPassword();
@@ -54,6 +60,8 @@ public class User extends BaseEntity {
         this.phoneNumber = joinReqDto.getPhoneNumber();
         this.userStatus = UserStatus.NORMAL;
         this.UID = UUID.randomUUID().toString();
+        this.address = address;
+        this.mannerPoint = 0;
     }
 
     /**
@@ -74,5 +82,12 @@ public class User extends BaseEntity {
          this.name = oAuth2Response.getName();
          this.loginId = oAuth2Response.getLoginId();
          this.email = oAuth2Response.getEmail();
+    }
+
+    public void changeInfo(UserUpdateReqDtoWeb userUpdateReqDtoWeb) {
+        this.nickname = userUpdateReqDtoWeb.getNickname();
+        this.phoneNumber = userUpdateReqDtoWeb.getPhoneNumber();
+        this.email = userUpdateReqDtoWeb.getEmail();
+        this.password = userUpdateReqDtoWeb.getChangePassword();
     }
 }

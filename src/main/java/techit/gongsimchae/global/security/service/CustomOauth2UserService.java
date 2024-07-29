@@ -37,7 +37,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        Optional<User> _user = userRepository.findByEmail(oAuth2Response.getEmail());
+        Optional<User> _user = userRepository.findByLoginId(oAuth2Response.getLoginId());
         if (_user.isEmpty()) {
             User savedUser = userRepository.save(new User(oAuth2Response));
             AccountDto accountDto = new AccountDto(savedUser);
