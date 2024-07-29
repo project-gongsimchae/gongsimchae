@@ -12,7 +12,7 @@
     <form th:action method="post" th:object="${user}">
         <div>
             <label for="loginId">아이디</label>
-            <input type="text" id="loginId"  th:field="*{loginId}" required>
+            <input type="text" id="loginId"  th:field="*{loginId}" readonly>
             <div th:errors="*{loginId}" class="error-class"></div>
         </div>
 
