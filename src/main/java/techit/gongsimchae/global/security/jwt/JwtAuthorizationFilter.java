@@ -11,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
 import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
 import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.dto.PrincipalDetails;

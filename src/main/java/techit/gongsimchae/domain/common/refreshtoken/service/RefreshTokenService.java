@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import techit.gongsimchae.domain.common.refreshtoken.entity.RefreshTokenEntity;
 import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
+import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.security.jwt.JwtVO;
 
-import java.util.HashMap;
-import java.util.Map;
+
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -17,24 +18,27 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Transactional(readOnly = true)
 public class RefreshTokenService {
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public void saveRefreshToken(String loginId, Object refreshToken) {
-        redisTemplate.opsForValue().set(loginId, refreshToken, JwtVO.REFRESH_TOKEN_EXPIRES_TIME, TimeUnit.MILLISECONDS);
+    public void saveRefreshToken(String loginId, String refreshToken) {
+        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(loginId, refreshToken);
+        refreshTokenRepository.save(refreshTokenEntity);
     }
 
-    public RefreshTokenEntity getRefreshToken(String loginId) {
-        return (RefreshTokenEntity) redisTemplate.opsForValue().get(loginId);
+    public String getRefreshToken(String refreshToken) {
+        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new CustomWebException("refresh token not found"));
+        return refreshTokenEntity.getRefreshToken();
+    }
+    @Transactional
+    public void deleteToken(String refreshToken) {
+        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new CustomWebException("refresh token not found"));
+        refreshTokenRepository.delete(refreshTokenEntity);
     }
 
-    public void deleteToken(String key) {
-        redisTemplate.delete(key);
-    }
 
-
-    public boolean existsByRefreshToken(String loginId) {
-        Long ttl = redisTemplate.getExpire(loginId, TimeUnit.MILLISECONDS);
-        return ttl != null && ttl > 0;
+    public boolean existsByRefreshToken(String refreshToken) {
+        Optional<RefreshTokenEntity> _refreshToken = refreshTokenRepository.findByRefreshToken(refreshToken);
+        return _refreshToken.isPresent();
     }
 }

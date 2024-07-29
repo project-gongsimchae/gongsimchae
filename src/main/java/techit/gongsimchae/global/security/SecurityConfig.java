@@ -15,9 +15,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
+
 import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
-import techit.gongsimchae.domain.common.user.entity.UserRole;
+
 import techit.gongsimchae.global.security.handler.FormAccessDeniedHandler;
 import techit.gongsimchae.global.security.handler.FormAuthenticationEntryPoint;
 import techit.gongsimchae.global.security.handler.OAuth2SuccessHandler;
@@ -25,7 +25,7 @@ import techit.gongsimchae.global.security.jwt.JwtAuthenticationFilter;
 import techit.gongsimchae.global.security.jwt.JwtAuthorizationFilter;
 import techit.gongsimchae.global.security.jwt.JwtProcess;
 import techit.gongsimchae.global.security.service.CustomOauth2UserService;
-import techit.gongsimchae.global.security.service.FormUserDetailsService;
+
 
 import java.util.Collections;
 
