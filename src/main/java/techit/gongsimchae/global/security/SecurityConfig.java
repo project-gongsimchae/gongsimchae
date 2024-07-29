@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
+import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
 import techit.gongsimchae.domain.common.user.entity.UserRole;
 import techit.gongsimchae.global.security.handler.FormAccessDeniedHandler;
 import techit.gongsimchae.global.security.handler.FormAuthenticationEntryPoint;
@@ -34,7 +35,7 @@ import java.util.Collections;
 public class SecurityConfig {
     private final JwtProcess jwtProcess;
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
     private final CustomOauth2UserService oauth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
@@ -65,8 +66,8 @@ public class SecurityConfig {
                         .accessDeniedHandler(new FormAccessDeniedHandler("/denied"))
                         .authenticationEntryPoint(new FormAuthenticationEntryPoint()))
 
-                .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtProcess, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthorizationFilter(jwtProcess,refreshTokenRepository), JwtAuthenticationFilter.class)
+                .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtProcess, refreshTokenService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthorizationFilter(jwtProcess,refreshTokenService), JwtAuthenticationFilter.class)
 
                 .oauth2Login(oauth -> oauth.
                         loginPage("/login")

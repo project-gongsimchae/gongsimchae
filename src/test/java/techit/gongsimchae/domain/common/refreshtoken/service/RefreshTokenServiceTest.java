@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import techit.gongsimchae.domain.common.refreshtoken.entity.RefreshTokenEntity;
+import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,6 +21,8 @@ class RefreshTokenServiceTest {
     private RefreshTokenService refreshTokenService;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
 
     @Test
     @DisplayName("Refresh Token Redis Test")
@@ -43,11 +47,25 @@ class RefreshTokenServiceTest {
         Object key = redisTemplate.opsForValue().get("key");
         System.out.println("key = " + key);
 
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity("hi","123","123");
+        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity("hi", "123");
 
         refreshTokenService.saveRefreshToken("key1", refreshTokenEntity);
         Object refreshToken = refreshTokenService.getRefreshToken("key1");
         System.out.println("refreshToken = " + refreshToken);
 
+        boolean result = refreshTokenService.existsByRefreshToken("123");
+        System.out.println("result = " + result);
+
+    }
+
+    @Test
+    @DisplayName("RedisRepository를 활용")
+    void redis_repository_test() throws Exception {
+        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity("hi", "123");
+        refreshTokenRepository.save(refreshTokenEntity);
+        Optional<RefreshTokenEntity> byRefreshToken = refreshTokenRepository.findByRefreshToken("123");
+        RefreshTokenEntity refreshTokenEntity1 = byRefreshToken.get();
+        System.out.println("refreshTokenEntity1 = " + refreshTokenEntity1)
+        ;
     }
 }

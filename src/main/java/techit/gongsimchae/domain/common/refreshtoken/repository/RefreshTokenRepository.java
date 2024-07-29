@@ -7,7 +7,7 @@ import techit.gongsimchae.domain.common.refreshtoken.entity.RefreshTokenEntity;
 
 import java.util.Optional;
 
-public interface RefreshTokenRepository extends CrudRepository<RefreshTokenEntity, Long> {
+public interface RefreshTokenRepository extends CrudRepository<RefreshTokenEntity, String> {
     Optional<RefreshTokenEntity> findByRefreshToken(String refreshToken);
 
     @Transactional

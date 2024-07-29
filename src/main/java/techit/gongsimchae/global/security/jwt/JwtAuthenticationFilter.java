@@ -18,11 +18,13 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import techit.gongsimchae.domain.common.refreshtoken.entity.RefreshTokenEntity;
 import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
+import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
 import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -30,13 +32,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final JwtProcess jwtProcess;
     private final RequestCache requestCache = new HttpSessionRequestCache();
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtProcess jwtProcess, RefreshTokenRepository refreshTokenRepository) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtProcess jwtProcess,RefreshTokenService refreshTokenService) {
         super(authenticationManager);
         this.authenticationManager = authenticationManager;
         this.jwtProcess = jwtProcess;
-        this.refreshTokenRepository = refreshTokenRepository;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Override
@@ -71,9 +73,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     private void saveRefreshToken(String loginId, String refreshToken) {
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(loginId, refreshToken,
-                new Date(System.currentTimeMillis() + JwtVO.REFRESH_TOKEN_EXPIRES_TIME).toString());
-        refreshTokenRepository.save(refreshTokenEntity);
+        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(loginId, refreshToken);
+        refreshTokenService.saveRefreshToken(loginId,refreshTokenEntity);
     }
 
     private Cookie createCookie(String key, String value) {

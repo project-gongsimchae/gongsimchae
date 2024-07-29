@@ -3,26 +3,36 @@ package techit.gongsimchae.domain.common.refreshtoken.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
+import org.springframework.data.redis.core.index.Indexed;
+import techit.gongsimchae.global.security.jwt.JwtVO;
 
-@Entity
+import java.io.Serializable;
+import java.util.Date;
+import java.util.UUID;
+
+@RedisHash("refreshTokenEntity")
 @Getter
 @NoArgsConstructor
-public class RefreshTokenEntity {
+@ToString
+public class RefreshTokenEntity implements Serializable {
 
     @Id
     private String id;
 
     private String loginId;
     @Column(length = 512)
+    @Indexed
     private String refreshToken;
-    private String expiration;
     @TimeToLive
-    private long ttl;
+    private Long ttl;
 
-    public RefreshTokenEntity(String loginId, String refreshToken, String expiration) {
+    public RefreshTokenEntity(String loginId, String refreshToken) {
+        this.id = UUID.randomUUID().toString();
         this.loginId = loginId;
         this.refreshToken = refreshToken;
-        this.expiration = expiration;
+        this.ttl =  JwtVO.REFRESH_TOKEN_EXPIRES_TIME;
     }
 }

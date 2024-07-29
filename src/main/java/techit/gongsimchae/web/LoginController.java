@@ -126,8 +126,7 @@ public class LoginController {
     }
 
     private void saveRefreshToken(String loginId, String refreshToken) {
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(loginId, refreshToken,
-                new Date(System.currentTimeMillis() + JwtVO.REFRESH_TOKEN_EXPIRES_TIME).toString());
+        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(loginId, refreshToken);
         refreshTokenRepository.save(refreshTokenEntity);
     }
 
