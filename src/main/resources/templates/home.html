@@ -1,4 +1,4 @@
-<html>
+<html xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,5 +8,11 @@
 </head>
 <body>
 테스트
+<div sec:authorize="isAuthenticated()">
+    <form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </form>
+    <a class="nav-link" href="#" onclick="document.getElementById('logoutForm').submit();">로그아웃</a>
+</div>
 </body>
 </html>
