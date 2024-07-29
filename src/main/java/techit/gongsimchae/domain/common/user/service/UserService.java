@@ -23,6 +23,7 @@ public class UserService {
     /**
      * 회원가입 하는 메서드
      */
+    @Transactional
     public void signup(UserJoinReqDtoWeb joinDto) {
         joinDto.setPassword(passwordEncoder.encode(joinDto.getPassword()));
         Address address = new Address(joinDto);
