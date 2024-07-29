@@ -20,6 +20,7 @@ import java.util.UUID;
 @Table(name = "users")
 @Builder
 public class User extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -79,16 +80,47 @@ public class User extends BaseEntity {
         this.UID = UUID.randomUUID().toString();
     }
 
+    /**
+     * 비지니스 메서드
+     */
+
+    /**
+     * 기존 Oauth2 회원이 또 로그인헀을 때 바뀐게 있는지 확인
+     */
+
     public void changeOauth(OAuth2Response oAuth2Response) {
          this.name = oAuth2Response.getName();
          this.loginId = oAuth2Response.getLoginId();
          this.email = oAuth2Response.getEmail();
     }
 
+    /**
+     * 개인정보 수정으로 바뀌는 정보들
+     */
+
     public void changeInfo(UserUpdateReqDtoWeb userUpdateReqDtoWeb) {
         this.nickname = userUpdateReqDtoWeb.getNickname();
         this.phoneNumber = userUpdateReqDtoWeb.getPhoneNumber();
         this.email = userUpdateReqDtoWeb.getEmail();
         this.password = userUpdateReqDtoWeb.getChangePassword();
+    }
+
+
+    /**
+     * 자신 email인지 확인
+     */
+    public boolean isUserEmail(String email) {
+        return this.email.equals(email);
+    }
+
+    /**
+     * 자신 phoneNumber 확인
+     */
+    public boolean isUserPhoneNumber(String phoneNumber) {
+        return this.phoneNumber.equals(phoneNumber);
+    }
+
+    public boolean isUserNickname(String nickname) {
+        return this.nickname.equals(nickname);
     }
 }
