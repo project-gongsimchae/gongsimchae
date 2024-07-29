@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
-@RedisHash(value = "refreshToken", timeToLive = 60)
+@RedisHash(value = "refreshToken", timeToLive = 60 * 60* 24 * 7)
 public class RefreshTokenEntity {
     @Id
     private String id;

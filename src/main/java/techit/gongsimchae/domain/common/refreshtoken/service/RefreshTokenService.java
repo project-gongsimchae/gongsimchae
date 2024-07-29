@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import techit.gongsimchae.domain.common.refreshtoken.entity.RefreshTokenEntity;
 import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
+import techit.gongsimchae.global.exception.CustomTokenException;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.security.jwt.JwtVO;
 
@@ -27,12 +28,12 @@ public class RefreshTokenService {
     }
 
     public String getRefreshToken(String refreshToken) {
-        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new CustomWebException("refresh token not found"));
+        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new CustomTokenException("refresh token not found"));
         return refreshTokenEntity.getRefreshToken();
     }
     @Transactional
     public void deleteToken(String refreshToken) {
-        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new CustomWebException("refresh token not found"));
+        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new CustomTokenException("refresh token not found"));
         refreshTokenRepository.delete(refreshTokenEntity);
     }
 
