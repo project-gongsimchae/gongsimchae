@@ -4,83 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 페이지</title>
-    <link rel="stylesheet" href="" th:href="@{/css/join.css}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f87234e8635a427cd0f2a6dcdf8b0597&libraries=services"></script>
 </head>
 <body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h1>회원가입</h1>
+                </div>
+                <div class="card-body">
+                    <form th:action method="post" th:object="${user}" onsubmit="return validateForm()">
+                        <div th:replace="~{layout/fielderror :: fielderror}"></div>
+                        <div class="form-group">
+                            <label for="loginId">아이디</label>
+                            <input type="text" id="loginId" class="form-control" th:field="*{loginId}" required>
+                            <div th:errors="*{loginId}" class="text-danger"></div>
+                        </div>
 
-<div class="signup-container">
-    <h1>회원가입</h1>
-    <form th:action method="post" th:object="${user}" onsubmit="return validateForm()">
-        <div th:replace="~{layout/fielderror :: fielderror}"></div>
-        <div>
-            <label for="loginId">아이디</label>
-            <input type="text" id="loginId"  th:field="*{loginId}" required>
-            <div th:errors="*{loginId}" class="error-class"></div>
-        </div>
+                        <div class="form-group">
+                            <label for="password">비밀번호</label>
+                            <input type="password" id="password" class="form-control" th:field="*{password}" required>
+                            <div th:errors="*{password}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordConfirm">비밀번호 확인</label>
+                            <input type="password" id="passwordConfirm" class="form-control" th:field="*{passwordConfirm}" required>
+                            <div th:errors="*{passwordConfirm}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">이름</label>
+                            <input type="text" id="name" class="form-control" th:field="*{name}" required>
+                            <div th:errors="*{name}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nickname">닉네임</label>
+                            <input type="text" id="nickname" class="form-control" th:field="*{nickname}" required>
+                            <div th:errors="*{nickname}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">이메일</label>
+                            <div class="input-group">
+                                <input type="email" id="email" class="form-control" th:field="*{email}" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" onclick="sendVerificationCode()">인증 코드 보내기</button>
+                                </div>
+                            </div>
+                            <div th:errors="*{email}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="verificationCode">인증 코드</label>
+                            <div class="input-group">
+                                <input type="text" id="verificationCode" class="form-control" name="authCode" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" onclick="verifyCode()">인증 코드 확인</button>
+                                </div>
+                            </div>
+                            <div id="verificationMessage" class="mt-2 text-danger"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">휴대폰 번호</label>
+                            <input type="text" id="phoneNumber" class="form-control" th:field="*{phoneNumber}" required>
+                            <div th:errors="*{phoneNumber}" class="text-danger"></div>
+                        </div>
 
-        <div>
-            <label for="password">비밀번호</label>
-            <input type="password" id="password" th:field="*{password}" required>
-            <div th:errors="*{password}" class="error-class"></div>
-        </div>
-        <div>
-            <label for="passwordConfirm">비밀번호 확인</label>
-            <input type="password" id="passwordConfirm" th:field="*{passwordConfirm}" required>
-            <div th:errors="*{passwordConfirm}" class="error-class"></div>
-        </div>
-        <div>
-            <label for="name">이름</label>
-            <input type="text" id="name"  th:field="*{name}" required>
-            <div th:errors="*{name}" class="error-class"></div>
-        </div>
-        <div>
-            <label for="nickname">닉네임</label>
-            <input type="text" id="nickname"  th:field="*{nickname}" required>
-            <div th:errors="*{nickname}" class="error-class"></div>
-        </div>
-        <div>
-            <label for="email">이메일</label>
-            <input type="text" id="email" th:field="*{email}" required>
-            <button type="button" onclick="sendVerificationCode()">인증 코드 보내기</button>
-            <div th:errors="*{email}" class="error-class"></div>
-        </div>
-        <div>
-            <label for="verificationCode">인증 코드</label>
-            <input type="text" id="verificationCode" name="authCode" required>
-            <button type="button" onclick="verifyCode()">인증 코드 확인</button>
-            <div id="verificationMessage"></div>
-        </div>
-        <div>
-            <label for="phoneNumber">휴대폰 번호</label>
-            <input type="text" id="phoneNumber"  th:field="*{phoneNumber}" required>
-            <div th:errors="*{phoneNumber}" class="error-class"></div>
-        </div>
+                        <div class="form-group">
+                            <label for="sample6_postcode">우편번호</label>
+                            <div class="input-group">
+                                <input type="text" id="sample6_postcode" class="form-control" placeholder="우편번호" th:field="*{zipcode}" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-secondary" type="button" onclick="sample6_execDaumPostcode()">우편번호 찾기</button>
+                                </div>
+                            </div>
+                            <div th:errors="*{zipcode}" class="text-danger"></div>
+                        </div>
 
-        <div>
-            <label for="sample6_postcode">우편번호</label>
-            <div class="input-group">
-                <input type="text" id="sample6_postcode" placeholder="우편번호"  th:field="*{zipcode}" required>
-                <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+                        <div class="form-group">
+                            <label for="sample6_address">주소</label>
+                            <input type="text" id="sample6_address" class="form-control" placeholder="주소" th:field="*{address}" required>
+                            <input type="text" id="sample6_extraAddress" class="form-control mt-2" placeholder="참고항목" readonly>
+                            <div th:errors="*{address}" class="text-danger"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sample6_detailAddress">상세주소</label>
+                            <input type="text" id="sample6_detailAddress" class="form-control" placeholder="상세주소" th:field="*{detailAddress}" required>
+                            <div th:errors="*{detailAddress}" class="text-danger"></div>
+                        </div>
+                        <div class="form-group text-center">
+                            <input type="submit" class="btn btn-primary" value="회원가입">
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div th:errors="*{zipcode}" class="error-class"></div>
         </div>
-
-        <div>
-            <label for="sample6_address">주소</label>
-            <input type="text" id="sample6_address" placeholder="주소" th:field="*{address}" required>
-            <input type="text" id="sample6_extraAddress" placeholder="참고항목" readonly>
-            <div th:errors="*{address}" class="error-class"></div>
-        </div>
-
-        <div>
-            <label for="sample6_detailAddress">상세주소</label>
-            <input type="text" id="sample6_detailAddress" placeholder="상세주소" th:field="*{detailAddress}" required>
-            <div th:errors="*{detailAddress}" class="error-class"></div>
-        </div>
-        <input type="submit" value="회원가입">
-    </form>
+    </div>
 </div>
 
 <script src="" th:src="@{/js/map.js}"></script>
