@@ -1,53 +1,36 @@
-<div th:fragment="navbar">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" xmlns:sec="http://www.w3.org/1999/xhtml">
-        <a class="navbar-brand" href="#" th:href="@{/}">홈</a>
-        <div sec:authorize="hasRole('ADMIN')">
-            <a class="navbar-brand" href="#" th:href="@{/admin/users}">관리자</a>
-        </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <form th:action="@{/posts}" method="get" class="w-25">
-            <div class="input-group">
-                <select class="form-control w-auto" name="key" style="width: 5px; text-align: center">
-                    <option value="title" name="title">제목+내용</option>
-                    <option value="name" name="name">작성자</option>
-                </select>
-                <input type="text" class="form-control" name="value" style="flex: 2;">
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">검색</button>
-                </div>
-            </div>
-        </form>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a class="nav-link" href="" th:href="@{/login}">로그인</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
                 </li>
-                <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a class="nav-link" href="" th:href="@{/join}">회원가입</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
                 </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    </form>
-                    <a class="nav-link" href="#" onclick="document.getElementById('logoutForm').submit();">로그아웃</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="" th:href="@{/account}">개인정보</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" th:href="@{/posts/create}">글 작성</a>
-                </li>
-
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" th:href="@{|/@${#authentication.getPrincipal().getName()}|}">내 벨로그</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" th:href="@{/posts/saves}">임시글</a>
+                <li class="nav-item">
+                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
                 </li>
             </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
         </div>
-    </nav>
-</div>
+    </div>
+</nav>
