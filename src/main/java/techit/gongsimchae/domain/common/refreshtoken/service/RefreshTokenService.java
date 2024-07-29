@@ -1,20 +1,32 @@
 package techit.gongsimchae.domain.common.refreshtoken.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.refreshtoken.entity.RefreshTokenEntity;
 import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
+import techit.gongsimchae.global.security.jwt.JwtVO;
+
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class RefreshTokenService {
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
-    public RefreshTokenEntity saveRefreshToken(RefreshTokenEntity refresh) {
-        return refreshTokenRepository.save(refresh);
+    public void saveRefreshToken(String key, Object value) {
+        redisTemplate.opsForValue().set(key, value, JwtVO.REFRESH_TOKEN_EXPIRES_TIME, TimeUnit.MILLISECONDS);
+    }
+
+    public Object getRefreshToken(String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    public void deleteToken(String key) {
+        redisTemplate.delete(key);
     }
 
 
