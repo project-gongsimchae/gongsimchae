@@ -2,10 +2,13 @@ package techit.gongsimchae.dummy;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.entity.UserRole;
+import techit.gongsimchae.domain.common.user.entity.UserStatus;
 
-import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Slf4j
 public class DummyObject {
     protected User newMockUser(Long id, String loginId, String name) {
@@ -21,14 +24,38 @@ public class DummyObject {
                 .build();
     }
 
-    protected User newUser(String loginId, String password){
+    protected User adminUser(String loginId, String password){
+        Address address = new Address("zipcode", "address", "detailAddress");
         return User.builder()
                 .loginId(loginId)
-                .password(password)
-                .email("test"+"@nate.com")
+                .nickname("admin")
+                .password("{noop}" + password)
+                .email("test" + "@naver.com")
                 .name("test")
-                .role(UserRole.ROLE_USER)
+                .address(address)
+                .role(UserRole.ROLE_ADMIN)
+                .UID(UUID.randomUUID().toString())
+                .userStatus(UserStatus.NORMAL)
+                .phoneNumber("010-1234-5678")
+                .mannerPoint(0)
                 .build();
 
+    }
+
+    protected User userUser(String loginId, String password) {
+        Address address = new Address("zipcode", "address", "detailAddress");
+        return User.builder()
+                .loginId(loginId)
+                .nickname("user")
+                .password("{noop}" + password)
+                .email("test" + "@naver.com")
+                .name("test")
+                .address(address)
+                .role(UserRole.ROLE_USER)
+                .UID(UUID.randomUUID().toString())
+                .userStatus(UserStatus.NORMAL)
+                .phoneNumber("010-1234-5678")
+                .mannerPoint(0)
+                .build();
     }
 }
