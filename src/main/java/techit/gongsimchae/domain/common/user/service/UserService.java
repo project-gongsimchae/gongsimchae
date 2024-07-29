@@ -1,9 +1,12 @@
 package techit.gongsimchae.domain.common.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
@@ -12,6 +15,7 @@ import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
+import techit.gongsimchae.global.message.mail.event.JoinMailEvent;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,6 +23,7 @@ import techit.gongsimchae.global.exception.CustomWebException;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher publisher;
 
     /**
      * 회원가입 하는 메서드
@@ -29,6 +34,15 @@ public class UserService {
         Address address = new Address(joinDto);
         User user = new User(joinDto, address);
         userRepository.save(user);
+
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronizationAdapter() {
+                    @Override
+                    public void afterCommit() {
+                        publisher.publishEvent(new JoinMailEvent(joinDto.getEmail()));
+                    }
+                }
+        );
     }
 
     /**
