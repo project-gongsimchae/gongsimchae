@@ -1,4 +1,4 @@
-<nav th:fragment="navbar" class="navbar navbar-light bg-white" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<nav th:fragment="product_navbar" class="navbar navbar-light bg-white" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
             <img th:src="@{/img/logo.png}" alt="공심채 로고" style="height: 30px;">
@@ -44,8 +44,8 @@
             <a th:href="@{/product/market-best}" class="btn btn-link nav-list-a">베스트</a>
             <a th:href="@{/market-benefit}" class="btn btn-link nav-list-a">이벤트</a>
         </div>
-        <div sec:authorize="!hasRole('ADMIN')">
-            <input style="visibility: hidden"> <!-- 간격 맞춤용 -->
+        <div sec:authorize="hasRole('USER')">
+            <a th:href="@{/inquiries}" class="btn btn-link nav-list-a">1:1 문의</a>
         </div>
         <div sec:authorize="hasRole('ADMIN')" class="text-end">
             <a th:href="@{/admin}" class="btn btn-link nav-list-a">관리자 페이지</a>
