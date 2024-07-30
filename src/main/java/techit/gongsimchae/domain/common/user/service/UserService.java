@@ -18,7 +18,6 @@ import techit.gongsimchae.domain.mail.event.JoinMailEvent;
 import techit.gongsimchae.domain.mail.event.LoginIdEvent;
 import techit.gongsimchae.domain.mail.event.PasswordEvent;
 import techit.gongsimchae.global.dto.PrincipalDetails;
-import techit.gongsimchae.global.exception.CustomTokenException;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.util.AuthCode;
 
