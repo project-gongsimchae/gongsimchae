@@ -1,4 +1,4 @@
-package techit.gongsimchae.domain.category;
+package techit.gongsimchae.domain.category.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
