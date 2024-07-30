@@ -10,18 +10,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import techit.gongsimchae.domain.Address;
-import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
-import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
-import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
+import techit.gongsimchae.domain.common.user.dto.*;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.mail.event.AuthCodeEvent;
 import techit.gongsimchae.domain.mail.event.JoinMailEvent;
+import techit.gongsimchae.domain.mail.event.LoginIdEvent;
+import techit.gongsimchae.domain.mail.event.PasswordEvent;
 import techit.gongsimchae.global.dto.PrincipalDetails;
+import techit.gongsimchae.global.exception.CustomTokenException;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.util.AuthCode;
 
 import java.time.Duration;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -49,12 +51,17 @@ public class UserService {
     }
 
     /**
-     * 유저가 쓴 인증코드와 레디스에 저장한 인증코드가 맞는지 확인하는 메서드
+     * UUID값을 비밀번호로 바꾸고 그 값을 email로 보내는 메서드
      */
-    public boolean verifiedCode(String email, String authCode) {
-        String redisAuthCode = (String) redisTemplate.opsForValue().get(AUTH_CODE_PREFIX + email);
-        return authCode.equals(redisAuthCode);
+    @Transactional
+    public void sendPasswordToEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException("not found user"));
+        String newPassword = UUID.randomUUID().toString();
+        user.changePassword(passwordEncoder.encode(newPassword));
+        publisher.publishEvent(new PasswordEvent(user.getEmail(), newPassword));
     }
+
+
 
     /**
      * 회원가입 하는 메서드
@@ -83,7 +90,7 @@ public class UserService {
     @Transactional
     public void updateInfo(UserUpdateReqDtoWeb userUpdateReqDtoWeb, PrincipalDetails principalDetails) {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
-        userUpdateReqDtoWeb.setChangePassword(passwordEncoder.encode(userUpdateReqDtoWeb.getChangePassword()));
+        userUpdateReqDtoWeb.setPasswordChange(passwordEncoder.encode(userUpdateReqDtoWeb.getPasswordChange()));
         user.changeInfo(userUpdateReqDtoWeb);
     }
 
@@ -95,6 +102,7 @@ public class UserService {
         userRepository.deleteByLoginId(principalDetails.getUsername());
 
     }
+
 
     /**
      * 개인정보 수정할 때 기존비밀번호와 입력한 비밀번확 맞는지 확인하는 메서드
@@ -118,5 +126,36 @@ public class UserService {
                     }
                 }
         );
+    }
+
+    /**
+     * 유저가 쓴 인증코드와 레디스에 저장한 인증코드가 맞는지 확인하는 메서드
+     */
+    public boolean verifiedCode(String email, String authCode) {
+        String redisAuthCode = (String) redisTemplate.opsForValue().get(AUTH_CODE_PREFIX + email);
+        return authCode.equals(redisAuthCode);
+    }
+
+    public UserRespDtoWeb getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException("not found user"));
+        return new UserRespDtoWeb(user);
+    }
+
+    public UserRespDtoWeb getUser(String name, String email ) {
+        User user = userRepository.findByNameAndEmail(name, email).orElseThrow(() -> new CustomWebException("not found user"));
+        return new UserRespDtoWeb(user);
+    }
+
+    public boolean checkUser(UserFindPwReqDtoWeb user) {
+        return userRepository.existsByLoginIdAndEmail(user.getLoginId(), user.getEmail());
+    }
+
+    public boolean checkUser(UserFindIdReqDtoWeb user) {
+        return userRepository.existsByNameAndEmail(user.getName(), user.getEmail());
+    }
+
+    public void sendIdToEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException("not found user"));
+        publisher.publishEvent(new LoginIdEvent(user.getEmail(), user.getLoginId()));
     }
 }

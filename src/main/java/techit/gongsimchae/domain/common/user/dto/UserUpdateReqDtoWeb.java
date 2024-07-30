@@ -13,6 +13,6 @@ public class UserUpdateReqDtoWeb {
     private String nickname;
     @UserUpdateUnique
     private String phoneNumber;
-    private String changePassword;
-    private String changePasswordConfirm;
+    private String passwordChange;
+    private String passwordChangeConfirm;
 }

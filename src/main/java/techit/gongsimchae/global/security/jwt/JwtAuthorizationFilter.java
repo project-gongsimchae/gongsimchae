@@ -45,7 +45,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             try {
                 if (!jwtProcess.isExpired(refreshToken)) {
-                    if (refreshTokenService.existsByRefreshToken(refreshToken)) {
+                    if (refreshTokenService.isRefreshTokenExists(refreshToken)) {
                         addSecurityContext(refreshToken);
                     }
                 }

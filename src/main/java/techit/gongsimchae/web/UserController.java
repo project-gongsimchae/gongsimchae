@@ -50,7 +50,7 @@ public class UserController {
             return "user/update";
         }
 
-        if (!updateDto.getChangePassword().equals(updateDto.getChangePasswordConfirm())) {
+        if (!updateDto.getPasswordChange().equals(updateDto.getPasswordChangeConfirm())) {
             bindingResult.rejectValue("passwordConfirm","passwordConfirm.invalid","비밀번호가 일치하지 않습니다.");
             return "user/update";
         }

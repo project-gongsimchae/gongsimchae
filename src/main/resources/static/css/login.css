@@ -73,7 +73,7 @@ body {
     border-radius: 6px;
     color: white;
     font-size: 16px;
-    width: 32%;
+    width: 48%;
     text-align: center;
     box-sizing: border-box;
     transition: background-color 0.3s;
@@ -90,19 +90,22 @@ body {
 .login-container .oauth-buttons a.google:hover {
     background-color: #c63d2d;
 }
-.login-container a.join {
-    display: inline-block;
+.login-container .links-container {
     margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 14px; /* Smaller font size */
+}
+.login-container .links-container a {
     color: #4A90E2;
     text-decoration: none;
-    font-size: 16px;
     transition: color 0.3s;
 }
-.login-container a.join:hover {
+.login-container .links-container a:hover {
     color: #333;
-    text-decoration: underline;
 }
-.error-message {
+.login-container .error-message {
     color: red;
     margin-bottom: 20px;
     font-size: 14px;
