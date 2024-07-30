@@ -2,6 +2,7 @@ jwt:
   secret: afklqjehwflknslkfvnlkaengawoerngoaiwngoipwrjepajkfladskflmlvkznmlknaewrgfhewaroiptjaipgojwrgdasfkjnasfjenfpoiawn
 
 spring:
+
   mail:
     # Google smtp server 사용
     host: smtp.gmail.com

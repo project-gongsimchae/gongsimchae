@@ -8,25 +8,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import techit.gongsimchae.domain.common.refreshtoken.entity.RefreshTokenEntity;
-import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
+import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
 import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.security.jwt.JwtProcess;
 import techit.gongsimchae.global.security.jwt.JwtVO;
 
 import java.io.IOException;
-import java.util.Date;
 
 @Component
 @Slf4j
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtProcess jwtProcess;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
 
-    public OAuth2SuccessHandler(JwtProcess jwtProcess, RefreshTokenRepository refreshTokenRepository) {
+    public OAuth2SuccessHandler(JwtProcess jwtProcess, RefreshTokenService refreshTokenService) {
         this.jwtProcess = jwtProcess;
-        this.refreshTokenRepository = refreshTokenRepository;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Override
@@ -41,21 +39,18 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         response.addCookie(createCookie(JwtVO.ACCESS_HEADER, accessToken));
         response.addCookie(createCookie(JwtVO.REFRESH_HEADER, refreshToken));
-        saveRefreshToken(accountDto.getLoginId(), refreshToken);
+
+        refreshTokenService.saveRefreshToken(accountDto.getLoginId(),refreshToken);
         getRedirectStrategy().sendRedirect(request, response, getDefaultTargetUrl());
     }
 
-    private void saveRefreshToken(String loginId, String refreshToken) {
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(loginId, refreshToken,
-                new Date(System.currentTimeMillis() + JwtVO.REFRESH_TOKEN_EXPIRES_TIME).toString());
-        refreshTokenRepository.save(refreshTokenEntity);
-    }
 
     private Cookie createCookie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(60 * 60 * 24 * 7); // 60초 * 60 * 24 * 7 = 1주일
         cookie.setPath("/");
         cookie.setHttpOnly(true);
+
 
         return cookie;
     }

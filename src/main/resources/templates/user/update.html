@@ -10,9 +10,10 @@
 <section>
 
     <form th:action method="post" th:object="${user}">
+        <div th:replace="~{layout/fielderror :: fielderror}"></div>
         <div>
             <label for="loginId">아이디</label>
-            <input type="text" id="loginId"  th:field="*{loginId}" required>
+            <input type="text" id="loginId"  th:field="*{loginId}" readonly>
             <div th:errors="*{loginId}" class="error-class"></div>
         </div>
 
@@ -35,19 +36,19 @@
         </div>
 
         <div>
-            <label for="password">비밀번호</label>
+            <label for="password">현재 비밀번호</label>
             <input type="password" id="password" th:field="*{password}" required>
             <div th:errors="*{password}" class="error-class"></div>
         </div>
 
         <div>
-            <label for="changePassword">새로운 비밀번호</label>
+            <label for="changePassword">새 비밀번호</label>
             <input type="password" id="changePassword" th:field="*{changePassword}" required>
             <div th:errors="*{changePassword}" class="error-class"></div>
         </div>
 
         <div>
-            <label for="changePasswordConfirm">새로운 비밀번호 확인</label>
+            <label for="changePasswordConfirm">새 비밀번호 확인</label>
             <input type="text" id="changePasswordConfirm"  th:field="*{changePasswordConfirm}" required>
             <div th:errors="*{changePasswordConfirm}" class="error-class"></div>
         </div>

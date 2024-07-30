@@ -11,7 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
+import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
 import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
@@ -22,11 +22,11 @@ import java.util.Map;
 @Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtProcess jwtProcess;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
 
-    public JwtAuthorizationFilter(JwtProcess jwtProcess, RefreshTokenRepository refreshTokenRepository) {
+    public JwtAuthorizationFilter(JwtProcess jwtProcess, RefreshTokenService refreshTokenService) {
         this.jwtProcess = jwtProcess;
-        this.refreshTokenRepository = refreshTokenRepository;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             try {
                 if (!jwtProcess.isExpired(refreshToken)) {
-                    if (refreshTokenRepository.existsByRefreshToken(refreshToken)) {
+                    if (refreshTokenService.existsByRefreshToken(refreshToken)) {
                         addSecurityContext(refreshToken);
                     }
                 }

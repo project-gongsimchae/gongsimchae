@@ -4,24 +4,23 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import techit.gongsimchae.domain.common.refreshtoken.entity.RefreshTokenEntity;
-import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
+import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
 import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
-import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.exception.CustomTokenException;
 import techit.gongsimchae.global.security.jwt.JwtProcess;
 import techit.gongsimchae.global.security.jwt.JwtVO;
-
-import java.util.Date;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,8 +28,7 @@ import java.util.Date;
 public class LoginController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
     private final JwtProcess jwtProcess;
 
     @GetMapping("/signup")
@@ -39,20 +37,41 @@ public class LoginController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Validated @ModelAttribute("user") UserJoinReqDtoWeb userJoinReqDtoWeb, BindingResult bindingResult) {
+    public String signup(@Validated @ModelAttribute("user") UserJoinReqDtoWeb joinDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("sign up error {}", bindingResult.getAllErrors());
             return "login/signup";
         }
-        log.info("sign up user {} " , userJoinReqDtoWeb);
+        log.info("sign up user {} " , joinDto);
 
-        if (!userJoinReqDtoWeb.getPassword().equals(userJoinReqDtoWeb.getPasswordConfirm())) {
+        if (!joinDto.getPassword().equals(joinDto.getPasswordConfirm())) {
             bindingResult.reject("password_not_confirm", "비밀번호가 일치하지 않습니다.");
             return "login/singup";
         }
-        userService.signup(userJoinReqDtoWeb);
+        if (!userService.verifiedCode(joinDto.getEmail(), joinDto.getAuthCode())) {
+            bindingResult.reject("authCode_invalid", "인증번호가 일치하지 않습니다.");
+            return "login/signup";
+        }
+
+        userService.signup(joinDto);
 
         return "redirect:/login";
+    }
+
+    @PostMapping("/emails/verification-requests")
+    public ResponseEntity<?> sendMessage(@RequestParam("email") @Valid  String email) {
+        userService.sendCodeToEmail(email);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/emails/verifications")
+    public ResponseEntity<?> verificationEmail(@RequestParam("email") @Valid String email,
+                                            @RequestParam("code") String authCode) {
+        if(userService.verifiedCode(email, authCode))  return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
     }
 
     @GetMapping("/login")
@@ -102,7 +121,7 @@ public class LoginController {
         }
 
         // DB에 저장되어 있는지 확인
-        if (refreshTokenRepository.existsByRefreshToken(refresh)) {
+        if (refreshTokenService.existsByRefreshToken(refresh)) {
             throw new CustomTokenException("invalid refresh token ");
         }
 
@@ -116,8 +135,8 @@ public class LoginController {
         String newAccess = jwtProcess.createJwt(accountDto,JwtVO.ACCESS_CATEGORY);
         String newRefresh = jwtProcess.createJwt(accountDto,JwtVO.REFRESH_CATEGORY);
 
-        refreshTokenRepository.deleteByRefreshToken(refresh);
-        saveRefreshToken(loginId,newRefresh);
+        refreshTokenService.deleteToken(refresh);
+        refreshTokenService.saveRefreshToken(loginId, newRefresh);
         //response
         response.addCookie(createCookie(JwtVO.ACCESS_HEADER, newAccess));
         response.addCookie(createCookie(JwtVO.REFRESH_HEADER, newRefresh));
@@ -125,11 +144,7 @@ public class LoginController {
         return "redirect:/";
     }
 
-    private void saveRefreshToken(String loginId, String refreshToken) {
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(loginId, refreshToken,
-                new Date(System.currentTimeMillis() + JwtVO.REFRESH_TOKEN_EXPIRES_TIME).toString());
-        refreshTokenRepository.save(refreshTokenEntity);
-    }
+
 
     private Cookie createCookie(String key, String value) {
         Cookie cookie = new Cookie(key, value);
