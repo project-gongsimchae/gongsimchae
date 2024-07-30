@@ -4,131 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 페이지</title>
+    <link rel="stylesheet" href="" th:href="@{/css/join.css}">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f87234e8635a427cd0f2a6dcdf8b0597&libraries=services"></script>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-        }
-
-        .signup-container {
-            background-color: white;
-            padding: 40px 50px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 400px;
-        }
-
-        .signup-container h1 {
-            margin-bottom: 20px;
-            font-size: 28px;
-            color: #333;
-        }
-
-        .signup-container label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            text-align: left;
-            color: #555;
-        }
-
-        .signup-container input[type="text"],
-        .signup-container input[type="email"],
-        .signup-container input[type="password"],
-        .signup-container select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        .signup-container input[type="button"] {
-            width: calc(50% - 5px);
-            padding: 12px;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 6px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-bottom: 15px;
-            float: right;
-        }
-
-        .signup-container input[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 6px;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .signup-container input[type="submit"]:hover,
-        .signup-container input[type="button"]:hover {
-            background-color: #45a049;
-        }
-
-        .signup-container .form-check {
-            text-align: left;
-            margin-bottom: 15px;
-        }
-
-        .signup-container .form-check input {
-            margin-right: 5px;
-        }
-
-        .error-class {
-            color: red;
-            font-size: 14px;
-            margin-top: -10px;
-            margin-bottom: 10px;
-            text-align: left;
-        }
-
-        .signup-container .form-select {
-            margin-bottom: 15px;
-        }
-
-        .signup-container .input-group {
-            display: flex;
-            align-items: center;
-        }
-
-        .signup-container .input-group input[type="text"] {
-            flex: 1;
-        }
-
-        #map {
-            display: none;
-            width: 100%;
-            height: 400px;
-            margin-top: 20px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-        }
-    </style>
 </head>
 <body>
 
 <div class="signup-container">
     <h1>회원가입</h1>
     <form th:action method="post" th:object="${user}">
+        <div th:replace="~{layout/fielderror :: fielderror}"></div>
         <div>
             <label for="loginId">아이디</label>
             <input type="text" id="loginId"  th:field="*{loginId}" required>

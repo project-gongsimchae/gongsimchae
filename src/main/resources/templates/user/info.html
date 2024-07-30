@@ -9,13 +9,21 @@
 <body>
 <section>
     <div>
-        <h3 th:text="${user.name}"></h3>
-        <h3 th:text="${user.nickname}"></h3>
-        <h3 th:text="${user.phoneNumber}"></h3>
-        <h3 th:text="${user.email}"></h3>
-        <h3 th:text="${user.loginId}"></h3>
-        <h3 th:text="${user.address}"></h3>
-        <h3 th:text="${user.detailAddress}"></h3>
+        <div> 이름
+            <h3 th:text="${user.name}"></h3>
+        </div>
+        <div> 닉네임
+            <h3 th:text="${user.nickname}"></h3>
+        </div>
+        <div> 연락처
+            <h3 th:text="${user.phoneNumber}"></h3>
+        </div>
+        <div> 이메일
+            <h3 th:text="${user.email}"></h3>
+        </div>
+        <div> 아이디
+            <h3 th:text="${user.loginId}"></h3>
+        </div>
     </div>
 
     <div>
