@@ -48,6 +48,9 @@ public class UserService {
         publisher.publishEvent(new AuthCodeEvent(email,sixCode));
     }
 
+    /**
+     * 유저가 쓴 인증코드와 레디스에 저장한 인증코드가 맞는지 확인하는 메서드
+     */
     public boolean verifiedCode(String email, String authCode) {
         String redisAuthCode = (String) redisTemplate.opsForValue().get(AUTH_CODE_PREFIX + email);
         return authCode.equals(redisAuthCode);
@@ -74,18 +77,18 @@ public class UserService {
     }
 
     /**
-     * UID를 통해 유저를 찾고 더티체킹으로
+     * loginId를 통해 유저를 찾고 더티체킹으로
      * nickname, email, phoneNumber, password 변경하는 메서드
      */
     @Transactional
     public void updateInfo(UserUpdateReqDtoWeb userUpdateReqDtoWeb, PrincipalDetails principalDetails) {
-        User user = userRepository.findByUID(principalDetails.getAccountDto().getUID()).orElseThrow(() -> new CustomWebException("not found user"));
+        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
         userUpdateReqDtoWeb.setChangePassword(passwordEncoder.encode(userUpdateReqDtoWeb.getChangePassword()));
         user.changeInfo(userUpdateReqDtoWeb);
     }
 
     /**
-     * UID를 통해 유저 삭제하는 메서드
+     * loginId를 통해 유저 삭제하는 메서드
      */
     @Transactional
     public void deleteUser(PrincipalDetails principalDetails) {
