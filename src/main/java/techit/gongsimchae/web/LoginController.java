@@ -52,7 +52,7 @@ public class LoginController {
 
         if (!joinDto.getPassword().equals(joinDto.getPasswordConfirm())) {
             bindingResult.reject("password_not_confirm", "비밀번호가 일치하지 않습니다.");
-            return "login/singup";
+            return "login/signup";
         }
         if (!userService.verifiedCode(joinDto.getEmail(), joinDto.getAuthCode())) {
             bindingResult.reject("authCode_invalid", "인증번호가 일치하지 않습니다.");
