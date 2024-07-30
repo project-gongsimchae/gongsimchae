@@ -19,13 +19,27 @@ public class MailEventHandler {
     public void joinEventHandler(JoinMailEvent event) throws InterruptedException {
         Thread.sleep(2000);
         emailService.sendJoinEmail(event);
-        log.debug("Email send to {}", event);
+        log.debug("Join Email send to {}", event);
     }
 
     @EventListener
     @Async("customTaskExecutor")
     public void authEventHandler(AuthCodeEvent event) {
         emailService.sendCodeMail(event);
-        log.debug("Email send to {}", event);
+        log.debug("authCode Email send to {}", event);
+    }
+
+    @Async("customTaskExecutor")
+    @EventListener
+    public void FindPwEventHandler(PasswordEvent event) {
+        emailService.sendPasswordEmail(event);
+        log.debug("find Pw Email send to {}", event);
+    }
+
+    @Async("customTaskExecutor")
+    @EventListener
+    public void findIdEventHandler(LoginIdEvent event) {
+        emailService.sendLoginId(event);
+        log.debug("find Id Email send to {}", event);
     }
 }

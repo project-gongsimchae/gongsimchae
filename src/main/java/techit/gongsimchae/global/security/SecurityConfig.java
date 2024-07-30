@@ -51,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue").permitAll()
+                        .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue","/find/**","/emails/**").permitAll()
 
                         .anyRequest().permitAll())
 

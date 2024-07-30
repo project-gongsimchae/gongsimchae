@@ -1,19 +1,15 @@
 package techit.gongsimchae.domain.common.refreshtoken.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import techit.gongsimchae.domain.common.refreshtoken.entity.RefreshTokenEntity;
 import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
 import techit.gongsimchae.global.exception.CustomTokenException;
-import techit.gongsimchae.global.exception.CustomWebException;
-import techit.gongsimchae.global.security.jwt.JwtVO;
 
 
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Service
@@ -38,7 +34,7 @@ public class RefreshTokenService {
     }
 
 
-    public boolean existsByRefreshToken(String refreshToken) {
+    public boolean isRefreshTokenExists(String refreshToken) {
         Optional<RefreshTokenEntity> _refreshToken = refreshTokenRepository.findByRefreshToken(refreshToken);
         return _refreshToken.isPresent();
     }

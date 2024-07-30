@@ -102,7 +102,7 @@ public class User extends BaseEntity {
         this.nickname = userUpdateReqDtoWeb.getNickname();
         this.phoneNumber = userUpdateReqDtoWeb.getPhoneNumber();
         this.email = userUpdateReqDtoWeb.getEmail();
-        this.password = userUpdateReqDtoWeb.getChangePassword();
+        this.password = userUpdateReqDtoWeb.getPasswordChange();
     }
 
 
@@ -122,5 +122,9 @@ public class User extends BaseEntity {
 
     public boolean isUserNickname(String nickname) {
         return this.nickname.equals(nickname);
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
     }
 }
