@@ -1,36 +1,55 @@
-<nav th:fragment="navbar" class="navbar navbar-expand-lg bg-body-tertiary">
+<nav th:fragment="navbar" class="navbar navbar-light bg-white" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/img/logo.png}" alt="공심채 로고" style="height: 30px;">
+        </a>
+        <div class="navbar-collapse show" id="navbarNav">
+            <ul class="me-auto mb-2 mb-lg-0 d-flex align-items-center shop-division">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link" th:href="@{/}">공동구매</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                    <a class="nav-link" th:href="@{/portioning}">소분나눔</a>
                 </li>
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+            <form class="d-flex mx-auto form-style">
+                <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search" style="max-width: 700px; flex-grow: 1;">
+                <button class="btn btn-outline-success" type="submit">검색</button>
             </form>
+            <div sec:authorize="isAnonymous()">
+                <button class="btn btn-success ms-3" th:onclick="|location.href='@{/signup}'|">회원가입</button>
+                <button class="btn btn-success ms-3" th:onclick="|location.href='@{/login}'|">로그인</button>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <button class="btn btn-outline-success ms-3"><span th:text="${#authentication.principal.username}"></span> 님 </button>
+                <button class="btn btn-success ms-3" th:onclick="|location.href='@{/logout}'|">로그아웃</button>
+            </div>
+        </div>
+    </div>
+    <div sec:authorize="isAuthenticated()" class="navbar-links nav-container mt-1 text-end">
+        <a th:href="@{/myPage/interest}" class="btn btn-link nav-list-a">
+            <i class="fas fa-heart"></i> 찜
+        </a>
+        <a th:href="@{/product/cart}" class="btn btn-link nav-list-a">
+            <i class="fas fa-shopping-cart"></i> 장바구니
+        </a>
+        <a th:href="@{/myPage/orders}" class="btn btn-link nav-list-a">
+            <i class="fas fa-user"></i> 마이페이지
+        </a>
+    </div>
+    <div class="navbar-links nav-container mt-3 text-center">
+        <a href="#" class="btn btn-link">카테고리</a>
+        <div class="d-flex justify-content-center mt-2">
+            <a th:href="@{/product/martket-newProduct}" class="btn btn-link nav-list-a">신상품</a>
+            <a th:href="@{/product/market-best}" class="btn btn-link nav-list-a">베스트</a>
+            <a th:href="@{/market-benefit}" class="btn btn-link nav-list-a">이벤트</a>
+        </div>
+        <div sec:authorize="!hasRole('ADMIN')">
+            <input style="visibility: hidden"> <!-- 간격 맞춤용 -->
+        </div>
+        <div sec:authorize="hasRole('ADMIN')" class="text-end">
+            <a th:href="@{/admin}" class="btn btn-link nav-list-a">관리자 페이지</a>
         </div>
     </div>
 </nav>
+
