@@ -44,7 +44,7 @@ class RefreshTokenServiceTest {
         Object refreshToken = refreshTokenService.getRefreshToken("key1");
         System.out.println("refreshToken = " + refreshToken);
 
-        boolean result = refreshTokenService.existsByRefreshToken("123");
+        boolean result = refreshTokenService.isRefreshTokenExists("123");
         System.out.println("result = " + result);
 
     }
@@ -59,7 +59,7 @@ class RefreshTokenServiceTest {
 
         // when
         System.out.println("refreshToken = " + refreshToken);
-        boolean b = refreshTokenService.existsByRefreshToken(refreshToken);
+        boolean b = refreshTokenService.isRefreshTokenExists(refreshToken);
         System.out.println("b = " + b);
 
         // then
@@ -75,11 +75,11 @@ class RefreshTokenServiceTest {
         String refreshToken = refreshTokenService.getRefreshToken(token);
 
         System.out.println("refreshToken = " + refreshToken);
-        boolean b = refreshTokenService.existsByRefreshToken(refreshToken);
+        boolean b = refreshTokenService.isRefreshTokenExists(refreshToken);
         System.out.println("b = " + b);
         // when
         refreshTokenService.deleteToken(token);
-        boolean b1 = refreshTokenService.existsByRefreshToken(token);
+        boolean b1 = refreshTokenService.isRefreshTokenExists(token);
         System.out.println("b1 = " + b1);
 
         // then
