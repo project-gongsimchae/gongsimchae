@@ -4,8 +4,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +21,6 @@ import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.exception.CustomTokenException;
 import techit.gongsimchae.global.security.jwt.JwtProcess;
 import techit.gongsimchae.global.security.jwt.JwtVO;
-
-import java.util.Date;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,20 +37,41 @@ public class LoginController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Validated @ModelAttribute("user") UserJoinReqDtoWeb userJoinReqDtoWeb, BindingResult bindingResult) {
+    public String signup(@Validated @ModelAttribute("user") UserJoinReqDtoWeb joinDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.info("sign up error {}", bindingResult.getAllErrors());
             return "login/signup";
         }
-        log.info("sign up user {} " , userJoinReqDtoWeb);
+        log.info("sign up user {} " , joinDto);
 
-        if (!userJoinReqDtoWeb.getPassword().equals(userJoinReqDtoWeb.getPasswordConfirm())) {
+        if (!joinDto.getPassword().equals(joinDto.getPasswordConfirm())) {
             bindingResult.reject("password_not_confirm", "비밀번호가 일치하지 않습니다.");
             return "login/singup";
         }
-        userService.signup(userJoinReqDtoWeb);
+        if (!userService.verifiedCode(joinDto.getEmail(), joinDto.getAuthCode())) {
+            bindingResult.reject("authCode_invalid", "인증번호가 일치하지 않습니다.");
+            return "login/signup";
+        }
+
+        userService.signup(joinDto);
 
         return "redirect:/login";
+    }
+
+    @PostMapping("/emails/verification-requests")
+    public ResponseEntity<?> sendMessage(@RequestParam("email") @Valid  String email) {
+        userService.sendCodeToEmail(email);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/emails/verifications")
+    public ResponseEntity<?> verificationEmail(@RequestParam("email") @Valid String email,
+                                            @RequestParam("code") String authCode) {
+        if(userService.verifiedCode(email, authCode))  return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
     }
 
     @GetMapping("/login")
