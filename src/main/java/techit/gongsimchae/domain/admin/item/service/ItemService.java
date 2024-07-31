@@ -27,4 +27,15 @@ public class ItemService {
     public Item getItemById(Long id) {
         return itemRepository.findById(id).orElse(null);
     }
+
+    /**
+     * 최신등록 8개 아이템
+     * 참여가 많은 8개 아이템을 리스트형태로 반환하는 메서드입니다. **/
+    public List<Item> getRecentItems(){
+        return itemRepository.findTop8ByOrderByCreateDateDesc();
+    }
+
+    public List<Item> getPopularItems(){
+        return itemRepository.findTop8ByOrderByGroupBuyingQuantityDesc();
+    }
 }
