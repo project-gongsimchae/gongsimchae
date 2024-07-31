@@ -61,12 +61,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         refreshTokenService.saveRefreshToken(accountDto.getLoginId(),refreshToken);
 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
-        if (savedRequest != null) {
-            String targetUrl = savedRequest.getRedirectUrl();
-            redirectStrategy.sendRedirect(request, response, targetUrl);
-        } else{
-            redirectStrategy.sendRedirect(request, response, "/");
-        }
+        log.debug("saved Request {}", savedRequest);
+        log.debug("servlet Request {} ", request.getRequestURI());
 
     }
 

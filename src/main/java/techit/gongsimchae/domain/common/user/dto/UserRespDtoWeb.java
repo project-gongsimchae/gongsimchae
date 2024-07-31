@@ -3,6 +3,7 @@ package techit.gongsimchae.domain.common.user.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import techit.gongsimchae.domain.common.user.entity.JoinType;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.entity.UserRole;
 import techit.gongsimchae.domain.common.user.entity.UserStatus;
@@ -29,6 +30,7 @@ public class UserRespDtoWeb {
     private String password;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+    private JoinType joinType;
 
     private String passwordChange;
     private String passwordChangeConfirm;
@@ -53,6 +55,7 @@ public class UserRespDtoWeb {
         this.userStatus = user.getUserStatus();
         this.UID = user.getUID();
         this.mannerPoint = user.getMannerPoint();
+        this.joinType = user.getJoinType();
 
     }
 }

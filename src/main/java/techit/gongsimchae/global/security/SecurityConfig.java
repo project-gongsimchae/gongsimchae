@@ -10,24 +10,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
-
 import techit.gongsimchae.global.security.handler.FormAccessDeniedHandler;
 import techit.gongsimchae.global.security.handler.FormAuthenticationEntryPoint;
-import techit.gongsimchae.global.security.handler.OAuth2SuccessHandler;
-import techit.gongsimchae.global.security.jwt.JwtAuthenticationFilter;
-import techit.gongsimchae.global.security.jwt.JwtAuthorizationFilter;
-import techit.gongsimchae.global.security.jwt.JwtProcess;
+import techit.gongsimchae.global.security.handler.FormAuthenticationFailureHandler;
+import techit.gongsimchae.global.security.handler.FormAuthenticationSuccessHandler;
 import techit.gongsimchae.global.security.service.CustomOauth2UserService;
-
+import techit.gongsimchae.global.security.service.FormUserDetailsService;
 
 import java.util.Collections;
 
@@ -35,16 +27,11 @@ import java.util.Collections;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtProcess jwtProcess;
-    private final AuthenticationConfiguration authenticationConfiguration;
-    private final RefreshTokenService refreshTokenService;
     private final CustomOauth2UserService oauth2UserService;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final FormAuthenticationFailureHandler failureHandler;
+    private final FormAuthenticationSuccessHandler successHandler;
+    private final FormUserDetailsService userDetailsService;
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
 
     @Bean
     public RoleHierarchy roleHierarchy(){
@@ -52,6 +39,11 @@ public class SecurityConfig {
                 ROLE_ADMIN > ROLE_MANAGER
                 ROLE_MANAGER  > ROLE_USER
                 """);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
@@ -65,26 +57,24 @@ public class SecurityConfig {
 
                         .anyRequest().permitAll())
 
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .usernameParameter("loginId")
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler)
+                        .permitAll())
+                .userDetailsService(userDetailsService)
 
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> cors.configurationSource(configurationSource()))
 
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(new FormAccessDeniedHandler("/denied"))
                         .authenticationEntryPoint(new FormAuthenticationEntryPoint()))
 
-                .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtProcess, refreshTokenService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthorizationFilter(jwtProcess,refreshTokenService), JwtAuthenticationFilter.class)
-
                 .oauth2Login(oauth -> oauth.
                         loginPage("/login")
                         .userInfoEndpoint(info -> info.
-                                userService(oauth2UserService))
-                        .successHandler(oAuth2SuccessHandler)
-                        )
+                                userService(oauth2UserService)))
 
                 .logout(logout -> logout
                         .logoutUrl("/logout")

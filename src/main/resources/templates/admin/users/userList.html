@@ -21,6 +21,7 @@
                     <th>유저상태</th>
                     <th>권한</th>
                     <th>매너포인트</th>
+                    <th>종류</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,7 @@
                     <td th:text="${user.userStatus.name()}"></td>
                     <td th:text="${user.role.name()}"></td>
                     <td th:text="${user.mannerPoint}"></td>
+                    <td th:text="${user.joinType.name()}"></td>
                 </tr>
                 </tbody>
             </table>

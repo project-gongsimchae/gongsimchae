@@ -43,6 +43,7 @@ public class User extends BaseEntity {
     private UserStatus userStatus;
     @Column(unique = true)
     private String UID;
+    private JoinType joinType;
 
     @Embedded
     private Address address;
@@ -65,13 +66,14 @@ public class User extends BaseEntity {
         this.UID = UUID.randomUUID().toString();
         this.address = address;
         this.mannerPoint = 0;
+        this.joinType = JoinType.NORMAL;
     }
 
     /**
      * OAuth2로 로그인시 DB에 저장할것들
      */
 
-    public User(OAuth2Response oAuth2Response) {
+    public User(OAuth2Response oAuth2Response, Address address) {
         this.name = oAuth2Response.getName();
         this.loginId = oAuth2Response.getLoginId();
         this.role = UserRole.ROLE_USER;
@@ -79,6 +81,10 @@ public class User extends BaseEntity {
         this.nickname = UUID.randomUUID().toString().substring(0, 8);
         this.userStatus = UserStatus.NORMAL;
         this.UID = UUID.randomUUID().toString();
+        this.address = address;
+        this.mannerPoint = 0;
+        this.joinType = JoinType.OAUTH;
+
     }
 
     /**
@@ -140,6 +146,7 @@ public class User extends BaseEntity {
         this.userStatus = updateDto.getUserStatus();
         this.address = address;
         this.mannerPoint = updateDto.getMannerPoint();
+        this.joinType = updateDto.getJoinType();
 
     }
 }

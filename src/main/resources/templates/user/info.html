@@ -21,16 +21,15 @@
         <div> 이메일
             <h3 th:text="${user.email}"></h3>
         </div>
-        <div> 아이디
-            <h3 th:text="${user.loginId}"></h3>
-        </div>
     </div>
 
     <div>
 
     </div>
+    <div th:if="${user.joinType == T(techit.gongsimchae.domain.common.user.entity.JoinType).NORMAL}">
+        <button th:onclick="|location.href='@{/mypage/info/update}'|">개인정보 수정</button>
+    </div>
 
-    <button th:onclick="|location.href='@{/mypage/info/update}'|">개인정보 수정</button>
 </section>
 
 </body>

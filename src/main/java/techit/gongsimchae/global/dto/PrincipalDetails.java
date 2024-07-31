@@ -24,6 +24,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     public PrincipalDetails(AccountDto accountDto, Map<String, Object> attributes) {
         this.accountDto = accountDto;
         this.attributes = attributes;
+
     }
 
     @Override

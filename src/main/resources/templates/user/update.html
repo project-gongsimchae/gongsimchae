@@ -11,11 +11,6 @@
 
     <form th:action method="post" th:object="${user}">
         <div th:replace="~{layout/fielderror :: fielderror}"></div>
-        <div>
-            <label for="loginId">아이디</label>
-            <input type="text" id="loginId"  th:field="*{loginId}" readonly>
-            <div th:errors="*{loginId}" class="error-class"></div>
-        </div>
 
         <div>
             <label for="nickname">닉네임</label>

@@ -1,6 +1,7 @@
 package techit.gongsimchae.domain.common.user.dto;
 
 import lombok.Data;
+import techit.gongsimchae.domain.common.user.entity.JoinType;
 import techit.gongsimchae.domain.common.user.entity.UserRole;
 import techit.gongsimchae.domain.common.user.entity.UserStatus;
 @Data
@@ -17,5 +18,6 @@ public class UserAdminUpdateReqDtoWeb {
     private String detailAddress;
     private UserStatus userStatus;
     private UserRole role;
+    private JoinType joinType;
 
 }
