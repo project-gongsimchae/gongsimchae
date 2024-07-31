@@ -1,10 +1,10 @@
-<html th:replace="~{layout/header :: header(~{::title},~{::section})}">
+<html th:replace="~{layout/productHeader :: header(~{::title},~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>유저 정보</title>
 </head>
 <body>
 <section>
@@ -21,16 +21,15 @@
         <div> 이메일
             <h3 th:text="${user.email}"></h3>
         </div>
-        <div> 아이디
-            <h3 th:text="${user.loginId}"></h3>
-        </div>
     </div>
 
     <div>
 
     </div>
+    <div th:if="${user.joinType == T(techit.gongsimchae.domain.common.user.entity.JoinType).NORMAL}">
+        <button th:onclick="|location.href='@{/mypage/info/update}'|">개인정보 수정</button>
+    </div>
 
-    <button th:onclick="|location.href='@{/mypage/info/update}'|">개인정보 수정</button>
 </section>
 
 </body>

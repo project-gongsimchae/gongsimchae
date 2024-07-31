@@ -1,6 +1,9 @@
 package techit.gongsimchae.domain.common.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import techit.gongsimchae.domain.common.user.entity.JoinType;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.entity.UserRole;
 import techit.gongsimchae.domain.common.user.entity.UserStatus;
@@ -8,9 +11,12 @@ import techit.gongsimchae.domain.common.user.entity.UserStatus;
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserRespDtoWeb {
-
+    private Long id;
     private String name;
+    private int mannerPoint;
     private String email;
     private String loginId;
     private String nickname;
@@ -24,24 +30,32 @@ public class UserRespDtoWeb {
     private String password;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+    private JoinType joinType;
 
     private String passwordChange;
     private String passwordChangeConfirm;
 
     /**
-     * 유저가 자기 자신 정보 조회할때 쓰는 생성자
+     * 유저정보가 다 담기는 생성자
      *
      */
     public UserRespDtoWeb(User user) {
+        this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
         this.loginId = user.getLoginId();
         this.nickname = user.getNickname();
         this.phoneNumber = user.getPhoneNumber();
+        this.zipcode = user.getAddress().getZipcode();
         this.address = user.getAddress().getAddress();
         this.detailAddress = user.getAddress().getDetailAddress();
-        this.password = user.getPassword();
         this.createDate = user.getCreateDate();
         this.updateDate = user.getUpdateDate();
+        this.role = user.getRole();
+        this.userStatus = user.getUserStatus();
+        this.UID = user.getUID();
+        this.mannerPoint = user.getMannerPoint();
+        this.joinType = user.getJoinType();
+
     }
 }

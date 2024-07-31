@@ -2,10 +2,8 @@ package techit.gongsimchae.global.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
 import techit.gongsimchae.global.dto.AccountDto;
 
 import javax.crypto.SecretKey;

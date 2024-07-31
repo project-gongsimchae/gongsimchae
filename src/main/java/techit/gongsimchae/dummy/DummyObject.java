@@ -3,6 +3,7 @@ package techit.gongsimchae.dummy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import techit.gongsimchae.domain.Address;
+import techit.gongsimchae.domain.common.user.entity.JoinType;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.entity.UserRole;
 import techit.gongsimchae.domain.common.user.entity.UserStatus;
@@ -38,6 +39,7 @@ public class DummyObject {
                 .userStatus(UserStatus.NORMAL)
                 .phoneNumber("010-1234-5678")
                 .mannerPoint(0)
+                .joinType(JoinType.NORMAL)
                 .build();
 
     }
@@ -56,6 +58,7 @@ public class DummyObject {
                 .userStatus(UserStatus.NORMAL)
                 .phoneNumber("010-5678-1234")
                 .mannerPoint(0)
+                .joinType(JoinType.NORMAL)
                 .build();
     }
 }
