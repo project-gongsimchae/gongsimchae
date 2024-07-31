@@ -96,7 +96,7 @@ public class LoginController {
 
     /**
      * 아이디 알려주는 페이지
-     * todo GET으로 받는건 위험하다
+     * todo GET으로 받는건 위험하다 쿠키에서 데이터를 받는건 위험할 수도 있다. 다른 방법이 없나 생각해보자
      */
     @GetMapping("/find/id/success")
     public String notifyId(Model model, HttpServletRequest request, HttpServletResponse response ) {
