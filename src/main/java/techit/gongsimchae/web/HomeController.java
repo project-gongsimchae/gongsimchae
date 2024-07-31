@@ -15,13 +15,9 @@ public class HomeController {
     private final ItemService itemService;
 
     /**
-     * 테스트용
+     * 메인 페이지
      */
-    @GetMapping("/")
-    public String home(){
-        return "home";
-    }
-    @GetMapping("/gongu")
+    @GetMapping("/main")
     public String home(Model model){
         List<Item> recentItems = itemService.getRecentItems();
         List<Item> popularItems = itemService.getPopularItems();
@@ -29,7 +25,7 @@ public class HomeController {
         model.addAttribute("recentItems", recentItems);
         model.addAttribute("popularItems", popularItems);
 
-        return "gongu/gongu";
+        return "home";
     }
 
 }
