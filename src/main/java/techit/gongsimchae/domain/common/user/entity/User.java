@@ -54,7 +54,6 @@ public class User extends BaseEntity {
      */
 
     public User(UserJoinReqDtoWeb joinReqDto, Address address) {
-
         this.name = joinReqDto.getName();
         this.email = joinReqDto.getEmail();
         this.password = joinReqDto.getPassword();
@@ -86,6 +85,8 @@ public class User extends BaseEntity {
         this.joinType = JoinType.OAUTH;
 
     }
+
+
 
     /**
      * 비지니스 메서드
