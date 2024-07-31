@@ -20,6 +20,7 @@
         <th>공동구매 수량</th>
         <th>공동구매 제한 시간</th>
         <th>등록일자</th>
+        <th>카테고리</th>
         <th>수정</th>
         <th>삭제</th>
     </tr>
@@ -34,6 +35,7 @@
         <td th:text="${item.groupBuyingQuantity}"></td>
         <td th:text="${item.groupBuyingLimitTime}"></td>
         <td th:text="${item.createDate}"></td>
+        <td th:text="${item.category.name}"></td>
         <td>
             <a th:href="@{/admin/item/update/{id}(id=${item.id})}">수정</a>
         </td>
