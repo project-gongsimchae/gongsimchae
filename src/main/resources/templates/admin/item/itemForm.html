@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+</head>
+<body>
+<h1 th:text="${isNew} ? '상품 생성' : '상품 수정'"></h1>
+<form th:action="|${isNew ? '/admin/item/create' : '/admin/item/update'}|" th:object="${item}" method="post">
+    <input type="hidden" th:if="${!isNew}" th:field="*{id}"/>
+
+    <label for="name">이름:</label>
+    <input type="text" id="name" th:field="*{name}" required/><br/>
+
+    <label for="intro">소개:</label>
+    <input type="text" id="intro" th:field="*{intro}"/><br/>
+
+    <label for="originalPrice">정가:</label>
+    <input type="number" id="originalPrice" th:field="*{originalPrice}" step="0.01" required/><br/>
+
+    <label for="discountRate">할인율:</label>
+    <input type="number" id="discountRate" th:field="*{discountRate}" step="0.01" required/><br/>
+
+    <label for="pointAccumulationRate">포인트 적립률:</label>
+    <input type="number" id="pointAccumulationRate" th:field="*{pointAccumulationRate}" step="0.01" required/><br/>
+
+    <label for="groupBuyingQuantity">공동구매 수량:</label>
+    <input type="number" id="groupBuyingQuantity" th:field="*{groupBuyingQuantity}" required/><br/>
+
+    <label for="groupBuyingLimitTime">공동구매 제한 시간:</label>
+    <input type="datetime-local" id="groupBuyingLimitTime" th:field="*{groupBuyingLimitTime}"/><br/>
+
+    <button type="submit" th:text="${isNew} ? '생성' : '수정'"></button>
+</form>
+</body>
+</html>
