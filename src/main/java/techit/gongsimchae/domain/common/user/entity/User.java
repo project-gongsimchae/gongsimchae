@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.BaseEntity;
+import techit.gongsimchae.domain.common.blocked.entity.Block;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
@@ -47,6 +49,14 @@ public class User extends BaseEntity {
 
     @Embedded
     private Address address;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_file_id")
+    private ImageFile imageFile;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "block_id")
+    private Block block;
 
     /**
      * 생성자

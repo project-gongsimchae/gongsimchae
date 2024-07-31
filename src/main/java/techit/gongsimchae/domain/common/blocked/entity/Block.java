@@ -1,25 +1,26 @@
-package techit.gongsimchae.domain.common.wishlist.entity;
+package techit.gongsimchae.domain.common.blocked.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
-import techit.gongsimchae.domain.admin.item.entity.Item;
 import techit.gongsimchae.domain.common.user.entity.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class WishList extends BaseEntity {
+public class Block extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
-    private Item item;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "block")
+    private List<User> users = new ArrayList<>();
 }
