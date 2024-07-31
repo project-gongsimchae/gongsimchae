@@ -15,8 +15,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import techit.gongsimchae.domain.common.refreshtoken.repository.RefreshTokenRepository;
-import techit.gongsimchae.domain.common.user.entity.UserRole;
+
+import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
+
 import techit.gongsimchae.global.security.handler.FormAccessDeniedHandler;
 import techit.gongsimchae.global.security.handler.FormAuthenticationEntryPoint;
 import techit.gongsimchae.global.security.handler.OAuth2SuccessHandler;
@@ -24,7 +25,7 @@ import techit.gongsimchae.global.security.jwt.JwtAuthenticationFilter;
 import techit.gongsimchae.global.security.jwt.JwtAuthorizationFilter;
 import techit.gongsimchae.global.security.jwt.JwtProcess;
 import techit.gongsimchae.global.security.service.CustomOauth2UserService;
-import techit.gongsimchae.global.security.service.FormUserDetailsService;
+
 
 import java.util.Collections;
 
@@ -34,7 +35,7 @@ import java.util.Collections;
 public class SecurityConfig {
     private final JwtProcess jwtProcess;
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
     private final CustomOauth2UserService oauth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
@@ -50,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue").permitAll()
+                        .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue","/find/**","/emails/**").permitAll()
 
                         .anyRequest().permitAll())
 
@@ -65,8 +66,8 @@ public class SecurityConfig {
                         .accessDeniedHandler(new FormAccessDeniedHandler("/denied"))
                         .authenticationEntryPoint(new FormAuthenticationEntryPoint()))
 
-                .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtProcess, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthorizationFilter(jwtProcess,refreshTokenRepository), JwtAuthenticationFilter.class)
+                .addFilterAt(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtProcess, refreshTokenService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthorizationFilter(jwtProcess,refreshTokenService), JwtAuthenticationFilter.class)
 
                 .oauth2Login(oauth -> oauth.
                         loginPage("/login")
