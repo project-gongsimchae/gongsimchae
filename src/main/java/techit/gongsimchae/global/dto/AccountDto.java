@@ -12,6 +12,7 @@ import techit.gongsimchae.domain.common.user.entity.UserRole;
 public class AccountDto {
     private Long id;
     private String name;
+    private String nickname;
     private String email;
     private String loginId;
     private String password;
@@ -28,6 +29,7 @@ public class AccountDto {
         this.role = user.getRole();
         this.phoneNumber = user.getPhoneNumber();
         this.UID = user.getUID();
+        this.nickname = user.getNickname();
     }
 
     public AccountDto(String loginId, String role, String UID) {
