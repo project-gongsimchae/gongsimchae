@@ -6,13 +6,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
+import techit.gongsimchae.domain.BaseEntity;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter@Setter
-public class Item {
+public class Item extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +23,6 @@ public class Item {
     private Integer pointAccumulationRate;
     private Integer groupBuyingQuantity;
     private LocalDateTime groupBuyingLimitTime;
-    private LocalDate createDate;
     private Integer deleteStatus;
     private String UID;
 }
