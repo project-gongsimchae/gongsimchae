@@ -77,6 +77,7 @@ public class SecurityConfig {
                                 userService(oauth2UserService)))
 
                 .logout(logout -> logout
+
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .addLogoutHandler((request, response, authentication) -> {
