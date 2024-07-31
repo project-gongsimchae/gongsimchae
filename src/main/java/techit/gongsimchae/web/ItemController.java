@@ -9,8 +9,6 @@ import techit.gongsimchae.domain.admin.item.dto.ItemDto;
 import techit.gongsimchae.domain.admin.item.entity.Item;
 import techit.gongsimchae.domain.admin.item.service.ItemService;
 
-import java.time.LocalDate;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/item")
@@ -33,7 +31,6 @@ public class ItemController {
     @PostMapping("/create")
     public String createItem(@ModelAttribute ItemDto itemDto) {
         Item item = convertToEntity(itemDto);
-        item.setCreateDate(LocalDate.now());
         itemService.save(item);
         return "redirect:/admin/item";
     }
