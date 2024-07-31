@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.BaseEntity;
+import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
 import techit.gongsimchae.global.dto.OAuth2Response;
@@ -126,5 +127,19 @@ public class User extends BaseEntity {
 
     public void changePassword(String newPassword) {
         this.password = newPassword;
+    }
+
+
+    public void changeInfoByAdmin(UserAdminUpdateReqDtoWeb updateDto, Address address) {
+        this.name = updateDto.getName();
+        this.loginId = updateDto.getLoginId();
+        this.role = updateDto.getRole();
+        this.email = updateDto.getEmail();
+        this.nickname = updateDto.getNickname();
+        this.phoneNumber = updateDto.getPhoneNumber();
+        this.userStatus = updateDto.getUserStatus();
+        this.address = address;
+        this.mannerPoint = updateDto.getMannerPoint();
+
     }
 }

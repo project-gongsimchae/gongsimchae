@@ -22,7 +22,9 @@ import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.util.AuthCode;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -74,8 +76,13 @@ public class UserService {
         sendJoinMail(joinDto);
     }
 
+    public UserRespDtoWeb getUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomWebException("not found user"));
+        return new UserRespDtoWeb(user);
+    }
+
     /**
-     * 유저정보 반환하는 메서드
+     * 로그인 아이디로 유저정보 반환하는 메서드
      */
     public UserRespDtoWeb getUser(String loginId) {
         User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomWebException("not found user"));
@@ -100,6 +107,11 @@ public class UserService {
     public void deleteUser(PrincipalDetails principalDetails) {
         userRepository.deleteByLoginId(principalDetails.getUsername());
 
+    }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
 
@@ -135,11 +147,17 @@ public class UserService {
         return authCode.equals(redisAuthCode);
     }
 
+    /**
+     * email을 통해 user를 반환하는 메서드
+     */
     public UserRespDtoWeb getUserByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException("not found user"));
         return new UserRespDtoWeb(user);
     }
 
+    /**
+     * 이름과 이메일로 유저를 확인해서 반환하는 메서드
+     */
     public UserRespDtoWeb getUser(String name, String email ) {
         User user = userRepository.findByNameAndEmail(name, email).orElseThrow(() -> new CustomWebException("not found user"));
         return new UserRespDtoWeb(user);
@@ -153,8 +171,28 @@ public class UserService {
         return userRepository.existsByNameAndEmail(user.getName(), user.getEmail());
     }
 
+    /**
+     * 전체 아이디를 이메일로 보내주는 이벤트
+     */
     public void sendIdToEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException("not found user"));
         publisher.publishEvent(new LoginIdEvent(user.getEmail(), user.getLoginId()));
+    }
+
+    /**
+     * DB에 있는 유저 전체정보를 반환하는 메서드
+     */
+    public List<UserRespDtoWeb> getUsers() {
+        return userRepository.findAll().stream().map(u -> new UserRespDtoWeb(u)).collect(Collectors.toList());
+    }
+
+    /**
+     * 관리자가 유저의 정보를 바꾸는 메서드
+     */
+    @Transactional
+    public void updateByAdmin(UserAdminUpdateReqDtoWeb updateDto) {
+        User findUser = userRepository.findById(updateDto.getId()).orElseThrow(() -> new CustomWebException("not found user"));
+        Address address = new Address(updateDto.getZipcode(), updateDto.getAddress(), updateDto.getDetailAddress());
+        findUser.changeInfoByAdmin(updateDto, address);
     }
 }

@@ -40,7 +40,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     addSecurityContext(accessToken);
                 }
             } catch (ExpiredJwtException e) {
-                log.error("Expired JWT token {}", e.getMessage());
+                log.info("Expired JWT token {}", e.getMessage());
+            } catch (IllegalArgumentException e) {
+                log.info("Invalid JWT token {}", e.getMessage());
             }
 
             try {
@@ -50,7 +52,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (ExpiredJwtException e) {
-                log.error("Expired JWT token {}", e.getMessage());
+                log.info("Expired JWT token {}", e.getMessage());
             }
         }
         filterChain.doFilter(request, response);

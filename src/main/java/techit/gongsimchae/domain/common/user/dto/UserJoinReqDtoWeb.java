@@ -1,14 +1,10 @@
 package techit.gongsimchae.domain.common.user.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import techit.gongsimchae.global.valid.JoinUnique;
 import techit.gongsimchae.global.valid.NicknameUnique;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class UserJoinReqDtoWeb {
     private String name;
     @JoinUnique
