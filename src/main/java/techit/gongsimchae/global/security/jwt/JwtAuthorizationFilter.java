@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
@@ -17,6 +19,7 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -40,7 +43,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     addSecurityContext(accessToken);
                 }
             } catch (ExpiredJwtException e) {
-                log.error("Expired JWT token {}", e.getMessage());
+                log.info("Expired JWT token {}", e.getMessage());
+            } catch (IllegalArgumentException e) {
+                log.info("Invalid JWT token {}", e.getMessage());
             }
 
             try {
@@ -50,7 +55,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (ExpiredJwtException e) {
-                log.error("Expired JWT token {}", e.getMessage());
+                log.info("Expired JWT token {}", e.getMessage());
             }
         }
         filterChain.doFilter(request, response);

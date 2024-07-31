@@ -1,0 +1,67 @@
+<html th:replace="~{layout/productHeader :: header(~{::title},~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>유저 상세정보</title>
+</head>
+<body>
+<section class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="mb-0">유저 정보</h2>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3 font-weight-bold">번호</div>
+                <div class="col-md-9" th:text="${user.id}"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 font-weight-bold">이름</div>
+                <div class="col-md-9" th:text="${user.name}"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 font-weight-bold">닉네임</div>
+                <div class="col-md-9" th:text="${user.nickname}"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 font-weight-bold">연락처</div>
+                <div class="col-md-9" th:text="${user.phoneNumber}"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 font-weight-bold">이메일</div>
+                <div class="col-md-9" th:text="${user.email}"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 font-weight-bold">아이디</div>
+                <div class="col-md-9" th:text="${user.loginId}"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 font-weight-bold">매너점수</div>
+                <div class="col-md-9" th:text="${user.mannerPoint}"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 font-weight-bold">유저 상태</div>
+                <div class="col-md-9" th:text="${user.userStatus.name()}"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 font-weight-bold">유저 권한</div>
+                <div class="col-md-9" th:text="${user.role.name()}"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3 font-weight-bold">주소</div>
+                <div class="col-md-9" th:text="${user.address + ' ' + user.detailAddress}"></div>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <a href="#" th:href="@{|/admin/users/update/${user.id}|}" class="btn btn-primary">개인정보 수정</a>
+            <form th:action="@{|/admin/users/delete/${user.id}|}" method="post" class="d-inline" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+                <button type="submit" class="btn btn-danger btn-sm">유저삭제</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

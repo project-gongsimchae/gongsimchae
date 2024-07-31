@@ -1,21 +1,16 @@
-<html th:replace="~{layout/header :: header(~{::title},~{::section})}">
+<html th:replace="~{layout/productHeader :: header(~{::title},~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>개인정보 수정</title>
 </head>
 <body>
 <section>
 
     <form th:action method="post" th:object="${user}">
         <div th:replace="~{layout/fielderror :: fielderror}"></div>
-        <div>
-            <label for="loginId">아이디</label>
-            <input type="text" id="loginId"  th:field="*{loginId}" readonly>
-            <div th:errors="*{loginId}" class="error-class"></div>
-        </div>
 
         <div>
             <label for="nickname">닉네임</label>
