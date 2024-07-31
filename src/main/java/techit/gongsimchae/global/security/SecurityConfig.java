@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasRole("USER")
+                        .requestMatchers("/user/**","/mypage/**").hasRole("USER")
                         .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue","/find/**","/emails/**").permitAll()
 
                         .anyRequest().permitAll())
