@@ -3,6 +3,9 @@ package techit.gongsimchae.domain.category.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techit.gongsimchae.domain.admin.item.entity.Item;
+
+import java.util.Set;
 
 @Entity
 @Getter
@@ -14,6 +17,8 @@ public class Category {
     private String name;
     @Column(unique = true)
     private Long categoryNumber;
+
+
 
     public Category (String name, Long categoryNumber){
         this.name = name;
