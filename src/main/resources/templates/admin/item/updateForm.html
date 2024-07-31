@@ -2,12 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>상품 관리</title>
+    <title>상품 수정</title>
 </head>
 <body>
-<h1 th:text="${isNew} ? '상품 생성' : '상품 수정'"></h1>
-<form th:action="|${isNew ? '/admin/item/create' : '/admin/item/update'}|" th:object="${item}" method="post">
-    <input type="hidden" th:if="${!isNew}" th:field="*{id}"/>
+<h1>상품 수정</h1>
+<form th:action="@{/admin/item/update/{id}(id=${item.id})}" th:object="${item}" method="post">
 
     <label for="name">이름:</label>
     <input type="text" id="name" th:field="*{name}" required/><br/>
@@ -30,7 +29,17 @@
     <label for="groupBuyingLimitTime">공동구매 제한 시간:</label>
     <input type="datetime-local" id="groupBuyingLimitTime" th:field="*{groupBuyingLimitTime}"/><br/>
 
-    <button type="submit" th:text="${isNew} ? '생성' : '수정'"></button>
+    <label for="categoryName">카테고리:</label>
+    <select id="categoryName" name="categoryName" required>
+        <option value="">선택해주세요</option>
+        <option th:each="category : ${categories}"
+                th:value="${category.name}"
+                th:text="${category.name}"
+                th:selected="${category.name == item.categoryName}">
+        </option>
+    </select><br/>
+
+    <button type="submit">수정</button>
 </form>
 </body>
 </html>
