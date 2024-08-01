@@ -22,6 +22,7 @@ public class Payment {
 
     private String payType;
     private Integer amount;
+    private String paymentApproveId;
     private String orderName;
     private String customerName;
     private String successUrl;

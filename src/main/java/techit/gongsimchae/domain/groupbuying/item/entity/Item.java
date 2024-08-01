@@ -28,7 +28,7 @@ public class Item extends BaseEntity {
     private Boolean deleteStatus;
     private String UID;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -41,6 +41,7 @@ public class Item extends BaseEntity {
         this.groupBuyingQuantity = itemCreateDto.getGroupBuyingQuantity();
         this.groupBuyingLimitTime = itemCreateDto.getGroupBuyingLimitTime();
         this.category = category;
+        this.UID = UUID.randomUUID().toString().substring(0,8);
     }
 
     public void UpdateDto (ItemUpdateDto itemUpdateDto, Category category) {
