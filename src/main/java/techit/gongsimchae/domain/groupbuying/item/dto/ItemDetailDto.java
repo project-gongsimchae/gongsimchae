@@ -1,4 +1,4 @@
-package techit.gongsimchae.domain.admin.item.dto;
+package techit.gongsimchae.domain.groupbuying.item.dto;
 
 import lombok.Data;
 
