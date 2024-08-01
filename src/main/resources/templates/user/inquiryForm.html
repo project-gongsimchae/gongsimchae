@@ -20,7 +20,7 @@
                             <div class="form-group">
                                 <label for="inquiryType">문의유형</label>
                                 <select id="inquiryType" class="form-control" th:field="*{inquiryType}">
-                                    <option value="">==유저 상태==</option>
+                                    <option value="">==문의 유형==</option>
                                     <option th:each="type : ${T(techit.gongsimchae.domain.common.inquiry.entity.InquiryType).values()}"
                                             th:value="${type.name()}"
                                             th:text="${type.description}"></option>
