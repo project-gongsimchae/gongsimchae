@@ -21,7 +21,8 @@ public class ImageFile extends BaseEntity {
     private String originalFilename;
     private String storeFilename;
 
-
-
-
+    public ImageFile(String originalFilename, String storeFilename) {
+        this.originalFilename = originalFilename;
+        this.storeFilename = storeFilename;
+    }
 }
