@@ -8,7 +8,7 @@ import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
-import techit.gongsimchae.domain.category.service.CategoryService;
+import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 
 @Controller
 @RequiredArgsConstructor

@@ -3,8 +3,8 @@ package techit.gongsimchae.domain.groupbuying.couponuser.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techit.gongsimchae.domain.admin.coupon.entity.Coupon;
 import techit.gongsimchae.domain.common.user.entity.User;
-import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
 
 @Entity
 @Getter

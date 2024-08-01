@@ -21,7 +21,6 @@ public class Cart extends BaseEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @ManyToOne
-    @JoinColumn(name = "item_option_id")
-    private ItemOption itemOption;
+    /**
+     * 차후에 orderItem과의 관계를 의논후 정의 **/
 }

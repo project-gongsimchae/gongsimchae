@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
-import techit.gongsimchae.domain.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import java.time.LocalDateTime;
 
 @Entity
