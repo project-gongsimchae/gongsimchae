@@ -20,9 +20,10 @@ public class Block extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "blocker_id")
+    private User blocker;
 
-    @OneToMany(mappedBy = "block")
-    private List<User> users = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "blocked_user_id")
+    private User blockedUser;
 }

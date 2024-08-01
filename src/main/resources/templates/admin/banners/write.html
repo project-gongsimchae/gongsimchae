@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/productHeader :: header(~{::title},~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>배너</title>
+</head>
+<body>
+<section class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">배너 작성</h1>
+
+            <!-- 배너 작성 폼 -->
+            <form th:action method="post" enctype="multipart/form-data">
+                <!-- 제목 입력 -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">제목</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="배너 제목을 입력하세요" required>
+                </div>
+
+                <!-- 내용 입력 -->
+                <div class="mb-3">
+                    <label for="content" class="form-label">내용</label>
+                    <textarea class="form-control" id="content" name="content" rows="4" placeholder="배너 내용을 입력하세요" required></textarea>
+                </div>
+
+                <!-- 배너 유형 선택 -->
+                <div class="form-group">
+                    <label for="bannerType">배너 유형</label>
+                    <select id="bannerType" class="form-control" th:field="*{bannerType}">
+                        <option value="">==배너 유형==</option>
+                        <option th:each="type : ${T(techit.gongsimchae.domain.common.banner.entity.BannerTypes).values()}"
+                                th:value="${type.name()}"
+                                th:text="${type.description}"></option>
+                    </select>
+                </div>
+
+                <!-- 이미지 파일 업로드 -->
+                <div class="mb-3">
+                    <label for="imageFile" class="form-label">이미지 파일</label>
+                    <input class="form-control" type="file" id="imageFile" name="imageFile" accept="image/*" required>
+                </div>
+
+                <!-- 제출 버튼 -->
+                <button type="submit" class="btn btn-primary">배너 제출</button>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>
