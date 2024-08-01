@@ -1,4 +1,11 @@
 package techit.gongsimchae.domain.groupbuying.item.repository;
 
-public class ItemRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+
+import java.util.List;
+
+public interface ItemRepository extends JpaRepository<Item, Long> {
+    List<Item> findTop8ByOrderByCreateDateDesc();
+    List<Item> findTop8ByOrderByGroupBuyingQuantityDesc();
 }

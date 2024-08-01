@@ -1,4 +1,7 @@
 package techit.gongsimchae.domain.groupbuying.post.repository;
 
-public class PostRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import techit.gongsimchae.domain.groupbuying.post.entity.Post;
+
+public interface PostRepository extends JpaRepository<Post,Long> {
 }
