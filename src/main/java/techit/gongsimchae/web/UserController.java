@@ -98,6 +98,23 @@ public class UserController {
     public String inquires(@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         return "redirect:/inquiry/list";
+    }
 
+    /**
+     * 상품 후기
+     */
+    @GetMapping("/reviews")
+    public String reviews(Model model) {
+        return "user/reviews";
+    }
+
+    @GetMapping("/reviews/write")
+    public String reviewForm() {
+        return "user/reviewForm";
+    }
+
+    @PostMapping("/reviews/write")
+    public String viewsWrite(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return "redirect:/mypage/reviews";
     }
 }
