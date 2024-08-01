@@ -2,21 +2,16 @@ package techit.gongsimchae.domain.portion.areas.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import techit.gongsimchae.domain.common.user.entity.User;
-
-import java.time.LocalDateTime;
-
+import techit.gongsimchae.domain.BaseEntity;
 @Entity
 @Getter
-public class MyeonDongEup {
+public class MyeonDongEup extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String admCode;
     private String name;
-    private LocalDateTime createDate;
-    private LocalDateTime updateDate;
 
     @ManyToOne
     @JoinColumn(name = "sigungu_id")
