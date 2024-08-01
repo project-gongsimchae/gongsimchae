@@ -3,9 +3,6 @@ package techit.gongsimchae.domain.category.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import techit.gongsimchae.domain.admin.item.entity.Item;
-
-import java.util.Set;
 
 @Entity
 @Getter

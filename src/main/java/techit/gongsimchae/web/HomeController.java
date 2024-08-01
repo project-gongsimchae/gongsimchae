@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techit.gongsimchae.domain.admin.item.entity.Item;
-import techit.gongsimchae.domain.admin.item.service.ItemService;
+import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 
 import java.util.List;
 
