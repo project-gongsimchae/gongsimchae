@@ -1,4 +1,7 @@
 package techit.gongsimchae.domain.groupbuying.category.repository;
 
-public class CategoryRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+
+public interface CategoryRepository extends JpaRepository<Category,Long> {
 }
