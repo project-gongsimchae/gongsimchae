@@ -69,4 +69,26 @@ public class UserController {
         userService.deleteUser(principalDetails);
         return "redirect:/";
     }
+
+    /**
+     * 1:1 문의
+     */
+    @GetMapping("/inquiry/list")
+    public String inquiryList(Model model) {
+
+        return "user/inquiryList";
+    }
+
+    @GetMapping("/inquiry/form")
+    public String inquiryForm() {
+
+        return "user/inquiryForm";
+    }
+
+    @PostMapping("/inquiry/form")
+    public String inquires(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        return "redirect:/inquiry/list";
+
+    }
 }

@@ -54,7 +54,6 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**","/mypage/**").hasRole("USER")
                         .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue","/find/**","/emails/**").permitAll()
-
                         .anyRequest().permitAll())
 
                 .formLogin(form -> form
@@ -71,8 +70,9 @@ public class SecurityConfig {
                         .accessDeniedHandler(new FormAccessDeniedHandler("/denied"))
                         .authenticationEntryPoint(new FormAuthenticationEntryPoint()))
 
-                .oauth2Login(oauth -> oauth.
-                        loginPage("/login")
+
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/login")
                         .userInfoEndpoint(info -> info.
                                 userService(oauth2UserService)))
 

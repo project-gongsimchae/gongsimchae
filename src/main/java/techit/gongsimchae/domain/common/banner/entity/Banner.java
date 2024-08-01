@@ -17,6 +17,7 @@ public class Banner extends BaseEntity {
     private Long id;
     private String title;
     private String content;
+    @Enumerated(EnumType.STRING)
     private BannerTypes bannerTypes;
 
     @OneToOne(fetch = FetchType.LAZY)
