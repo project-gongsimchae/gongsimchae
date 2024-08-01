@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +21,10 @@ public class WishList extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subdivision_id")
+    private Subdivision subdivision;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
