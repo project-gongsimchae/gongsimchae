@@ -19,11 +19,11 @@ public class Notifications {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(nullable = false)
+    @Column(nullable = false)
     private NotificationType notificationType;
 
     @Enumerated(EnumType.STRING)
-    @JoinColumn(nullable = false)
+    @Column(nullable = false)
     private ReadStatus readStatus;
 
     @Column(updatable = false)
