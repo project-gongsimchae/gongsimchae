@@ -79,7 +79,7 @@ public class SecurityConfig {
                 .logout(logout -> logout
 
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/main")
                         .addLogoutHandler((request, response, authentication) -> {
                             for (Cookie cookie : request.getCookies()) {
                                 String cookieName = cookie.getName();
