@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techit.gongsimchae.domain.admin.item.dto.ItemCreateDto;
-import techit.gongsimchae.domain.admin.item.dto.ItemUpdateDto;
-import techit.gongsimchae.domain.admin.item.entity.Item;
-import techit.gongsimchae.domain.admin.item.service.ItemService;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
+import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.category.service.CategoryService;
 
 @Controller
