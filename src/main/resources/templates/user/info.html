@@ -26,8 +26,14 @@
     <div>
 
     </div>
-    <div th:if="${user.joinType == T(techit.gongsimchae.domain.common.user.entity.JoinType).NORMAL}">
-        <button th:onclick="|location.href='@{/mypage/info/update}'|">개인정보 수정</button>
+
+    <div class="card-footer text-right">
+        <div th:if="${user.joinType == T(techit.gongsimchae.domain.common.user.entity.JoinType).NORMAL}">
+            <button th:onclick="|location.href='@{/mypage/info/update}'|">개인정보 수정</button>
+        </div>
+        <form th:action="@{/mypage/delete}" method="post" class="d-inline" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+            <button type="submit" class="btn btn-danger btn-sm">회원탈퇴</button>
+        </form>
     </div>
 
 </section>

@@ -2,6 +2,7 @@ package techit.gongsimchae.domain.common.wishlist.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
@@ -10,6 +11,7 @@ import techit.gongsimchae.domain.common.user.entity.User;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Getter
 public class WishList extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
