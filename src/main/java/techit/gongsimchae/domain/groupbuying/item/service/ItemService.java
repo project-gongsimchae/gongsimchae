@@ -7,8 +7,8 @@ import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
-import techit.gongsimchae.domain.category.entity.Category;
-import techit.gongsimchae.domain.category.repository.CategoryRepository;
+import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
 
 import java.util.List;
 

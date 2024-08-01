@@ -1,24 +1,23 @@
-package techit.gongsimchae.domain.groupbuying.point.entity;
+package techit.gongsimchae.domain.groupbuying.post.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.common.user.entity.User;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Point extends BaseEntity {
+public class Post{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "point_id")
+    @Column(name = "post_id")
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private PointType pointType;
-    private Integer point;
+    private String content;
+    private String UID;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
 }
