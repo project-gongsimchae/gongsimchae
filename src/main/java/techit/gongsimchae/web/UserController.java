@@ -133,4 +133,13 @@ public class UserController {
     public String viewsWrite(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         return "redirect:/mypage/reviews";
     }
+
+    /**
+     * 찜
+     */
+
+    @GetMapping("/pick/list")
+    public String PickList() {
+        return "user/pickList";
+    }
 }
