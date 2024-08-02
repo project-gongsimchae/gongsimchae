@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/productHeader :: header(~{::title},~{::section})}">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>소분 글 작성</title>
+
+  </head>
+<body>
+<section class="subdivision-register-body">
+  <link th:href="@{/css/subdivisionRegister.css}" rel="stylesheet">
+
+  <div class="container">
+    <form th:action="@{/portioning/write}" method="post" enctype="multipart/form-data">
+      <!-- 사진 업로드 -->
+      <div class="form-group">
+        <div class="form-group-image">
+          <label for="imageFile" class="custom-file-upload">
+            <i class="fa fa-camera"></i> +
+          </label>
+          <input type="file" id="imageFile" name="imageFile" accept="image/*" required>
+        </div>
+        <div id="imagePreview" class="image-preview"></div>
+      </div>
+      <!-- 제목 작성 -->
+      <div class="form-group">
+        <label for="title">제목</label>
+        <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+      </div>
+      <!-- 내용 작성 -->
+      <div class="form-group">
+        <label for="content">내용</label>
+        <textarea id="content" name="content" placeholder="내용을 입력하세요" required></textarea>
+      </div>
+      <!-- 위치 입력 -->
+      <div class="form-group">
+        <label for="address">거래 희망 장소</label>
+        <input type="text" id="address" name="address" placeholder="위치를 입력하세요" required>
+      </div>
+      <!-- 가격 입력 -->
+      <div class="form-group">
+        <label for="price">가격</label>
+        <input type="number" id="price" name="price" placeholder="가격을 입력하세요" required>
+      </div>
+      <!-- 제출 버튼 -->
+      <div class="form-group form-group-submit">
+        <button type="submit">작성하기</button>
+      </div>
+    </form>
+  </div>
+
+  <script th:src="@{/js/subdivisionRegister.js}"></script>
+</section>
+</body>
+</html>
