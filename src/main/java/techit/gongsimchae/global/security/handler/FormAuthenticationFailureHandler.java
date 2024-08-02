@@ -16,10 +16,10 @@ import java.io.IOException;
 public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        String errorMessage = "Invalid username or password";
+        String errorMessage = "Invalid loginId or password";
 
         if(exception instanceof BadCredentialsException) {
-            errorMessage = "Invalid Username or Password";
+            errorMessage = "Invalid loginId or Password";
         }
         else if(exception instanceof UsernameNotFoundException) {
             errorMessage = "User not exists";

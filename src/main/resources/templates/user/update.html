@@ -5,16 +5,16 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>개인정보 수정</title>
+
 </head>
 <body>
 <section>
-
     <form th:action method="post" th:object="${user}">
         <div th:replace="~{layout/fielderror :: fielderror}"></div>
 
         <div>
             <label for="nickname">닉네임</label>
-            <input type="text" id="nickname"  th:field="*{nickname}" required>
+            <input type="text" id="nickname"  th:field="*{nickname}" readonly>
             <div th:errors="*{nickname}" class="error-class"></div>
         </div>
 
@@ -48,9 +48,14 @@
             <div th:errors="*{passwordChangeConfirm}" class="error-class"></div>
         </div>
 
-        <input type="submit" value="제출">
+        <input type="submit" value="회원정보수정">
     </form>
 
+    <div class="card-footer text-left">
+        <form th:action="@{/mypage/delete}" method="post" class="d-inline" onsubmit="return confirm('정말로 탈퇴하시겠습니까??');">
+            <button type="submit" class="btn btn-danger btn-sm">회원탈퇴</button>
+        </form>
+    </div>
 </section>
 
 </body>
