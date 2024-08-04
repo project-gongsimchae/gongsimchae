@@ -54,10 +54,6 @@ public class User extends BaseEntity {
     @JoinColumn(name = "image_file_id")
     private ImageFile imageFile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "block_id")
-    private Block block;
-
     /**
      * 생성자
      * 일반 회원가입

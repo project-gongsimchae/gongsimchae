@@ -4,38 +4,28 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>유저 정보</title>
+    <title>개인정보 수정</title>
+
 </head>
 <body>
 <section>
-    <div>
-        <div> 이름
-            <h3 th:text="${user.name}"></h3>
-        </div>
-        <div> 닉네임
-            <h3 th:text="${user.nickname}"></h3>
-        </div>
-        <div> 연락처
-            <h3 th:text="${user.phoneNumber}"></h3>
-        </div>
-        <div> 이메일
-            <h3 th:text="${user.email}"></h3>
-        </div>
-    </div>
+    <form th:action method="post" th:object="${user}">
+        <div th:replace="~{layout/fielderror :: fielderror}"></div>
 
-    <div>
-
-    </div>
-
-    <div class="card-footer text-right">
-        <div th:if="${user.joinType == T(techit.gongsimchae.domain.common.user.entity.JoinType).NORMAL}">
-            <button th:onclick="|location.href='@{/mypage/info/update}'|">개인정보 수정</button>
+        <div class="form-group">
+            <label for="loginId">아이디</label>
+            <input type="text" id="loginId" class="form-control" th:field="*{loginId}" required>
+            <div th:errors="*{loginId}" class="text-danger"></div>
         </div>
-        <form th:action="@{/mypage/delete}" method="post" class="d-inline" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
-            <button type="submit" class="btn btn-danger btn-sm">회원탈퇴</button>
-        </form>
-    </div>
 
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" class="form-control" th:field="*{password}" required>
+            <div th:errors="*{password}" class="text-danger"></div>
+        </div>
+
+        <input type="submit" value="제출">
+    </form>
 </section>
 
 </body>

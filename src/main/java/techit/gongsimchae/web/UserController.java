@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import techit.gongsimchae.domain.common.user.dto.UserInfoConfirmReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
@@ -29,14 +30,29 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * 유저가 자기자신 정보를 보는 컨트롤러
+     * 유저가 자기자신 정보를 수정하는 페이지
      */
     @GetMapping("/info")
-    public String account(Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        String loginId = principalDetails.getUsername();
-        UserRespDtoWeb user = userService.getUser(loginId);
+    public String InfoConfirmForm(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        UserRespDtoWeb user = userService.getUser(principalDetails.getUsername());
         model.addAttribute("user", user);
+
         return "user/info";
+    }
+
+    @PostMapping("/info")
+    public String InfoConfirm(@Valid @ModelAttribute("user") UserInfoConfirmReqDtoWeb infoDto, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            log.debug("user info confirm {}", bindingResult.getAllErrors());
+            return "user/info";
+        }
+        if (!userService.checkPassword(infoDto.getLoginId(), infoDto.getPassword())) {
+            log.debug("user info confirm {}", bindingResult.getAllErrors());
+            bindingResult.rejectValue("password","password.invalid","Invalid loginId or password");
+            return "user/info";
+        }
+
+        return "redirect:/mypage/info/update";
     }
 
     @GetMapping("/info/update")
@@ -98,6 +114,23 @@ public class UserController {
     public String inquires(@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         return "redirect:/inquiry/list";
+    }
 
+    /**
+     * 상품 후기
+     */
+    @GetMapping("/reviews")
+    public String reviews(Model model) {
+        return "user/reviews";
+    }
+
+    @GetMapping("/reviews/write")
+    public String reviewForm() {
+        return "user/reviewForm";
+    }
+
+    @PostMapping("/reviews/write")
+    public String viewsWrite(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return "redirect:/mypage/reviews";
     }
 }
