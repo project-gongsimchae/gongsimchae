@@ -34,6 +34,9 @@ public class AdminController {
         return "admin/users/userList";
     }
 
+    /**
+     * 관리자가 보는 유저정보들
+     */
     @GetMapping("/users/{id}")
     public String detailsUser(@PathVariable("id") Long id, Model model) {
         UserRespDtoWeb user = userService.getUser(id);
@@ -67,6 +70,25 @@ public class AdminController {
         userService.deleteUser(id);
         return "redirect:/admin/users";
     }
+
+    /**
+     * 관리자 배너
+     */
+    @GetMapping("/banners")
+    public String banners(){
+        return "admin/banners/bannerList";
+    }
+
+    @GetMapping("/banners/write/{id}")
+    public String bannerForm(@PathVariable("id") Long id){
+        return "admin/banners/write";
+    }
+
+    @PostMapping("/banners/write/{id}")
+    public String banner(){
+        return "redirect:/admin/banners";
+    }
+
 
 
 

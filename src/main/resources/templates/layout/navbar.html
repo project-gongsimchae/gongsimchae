@@ -22,7 +22,9 @@
             </div>
             <div sec:authorize="isAuthenticated()">
                 <button class="btn btn-outline-success ms-3"><span th:text="${#authentication.principal.getNickname()}"></span> 님 </button>
-                <button class="btn btn-success ms-3" th:onclick="|location.href='@{/logout}'|">로그아웃</button>
+                <form th:action="@{/logout}" method="post" class="d-inline" >
+                    <button type="submit" class="btn btn-success ms-3">로그아웃</button>
+                </form>
             </div>
         </div>
     </div>
