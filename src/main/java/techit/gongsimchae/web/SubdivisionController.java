@@ -18,7 +18,7 @@ public class SubdivisionController {
     @GetMapping("/portioning/write")
     public String subdivisionRegisterForm() {
 
-        return "/portion/subdivisionRegister";
+        return "portion/subdivisionRegister";
     }
 
     @PostMapping("/portioning/write")
@@ -35,7 +35,15 @@ public class SubdivisionController {
 
         model.addAttribute("subdivisionDto", subdivisionDto);
 
-        return "/portion/subdivisionDetail";
+        return "portion/subdivisionDetail";
+    }
+
+    @GetMapping("/portioning/{UID}/join")
+    public String subdivisionJoinChatRoom(@PathVariable("UID") String UID) {
+
+        
+
+        return "portion/chattingRoom";
     }
 
 }

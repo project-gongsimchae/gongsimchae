@@ -21,8 +21,7 @@ public class SubdivisionService {
 
         Subdivision subdivision = subdivisionRepository.findByUID(UID).orElseThrow(() -> new CustomWebException("해당 소분 글을 찾을 수 없습니다."));
 
-        return new SubdivisionDto(subdivision.getId(), subdivision.getTitle(), subdivision.getContent(), subdivision.getAddress(),
-                subdivision.getPrice(), subdivision.getViews(), subdivision.getUID(), subdivision.getUser(), subdivision.getImageFile(), subdivision.getCreateDate(), subdivision.getUpdateDate());
+        return new SubdivisionDto(subdivision);
 
     }
 }

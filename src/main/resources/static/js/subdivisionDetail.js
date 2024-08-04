@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     confirmButton.addEventListener('click', function () {
-        window.location.href = '/join-link'; // Replace with your actual link
+        const UID = subdivisionDto.UID; // subdivisionDto.UID를 사용하여 UID 값을 가져옴
+        window.location.href = `/portioning/${UID}/join`;
     });
 
     cancelButton.addEventListener('click', function () {
