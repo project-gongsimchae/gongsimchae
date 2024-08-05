@@ -9,17 +9,39 @@
 </head>
 <body>
 <section>
-    <h3 class="category-alert">채소</h3>
+    <h1 class="category-alert" th:text="${categoryName}"></h1>
     <div class="item-grid-view-main">
         <div class="header">
-            <div class="category-alert-cnt">508건</div>
+            <div class="category-alert-cnt" th:text="'총 ' + ${itemsPage.numberOfElements} + '건'"></div>
             <ul class="category-sort-standard-ul">
-                <li class="category-sort-standard-li"><a href="/categories/907?page=1&amp;per_page=96&amp;sorted_type=0" class="category-sort-standard-alink">신상품순<p class="perpendicular-divider">|</p></a></li>
-                <li class="category-sort-standard-li"><a href="/categories/907?page=1&amp;per_page=96&amp;sorted_type=1" class="category-sort-standard-alink">판매량순<p class="perpendicular-divider">|</p></a></li>
-                <li class="category-sort-standard-li"><a href="/categories/907?page=1&amp;per_page=96&amp;sorted_type=5" class="category-sort-standard-alink">혜택순<p class="perpendicular-divider">|</p></a></li>
-                <li class="category-sort-standard-li"><a href="/categories/907?page=1&amp;per_page=96&amp;sorted_type=2" class="category-sort-standard-alink">낮은 가격순<p class="perpendicular-divider">|</p></a></li>
-                <li class="category-sort-standard-li"><a href="/categories/907?page=1&amp;per_page=96&amp;sorted_type=3" class="category-sort-standard-alink">높은 가격순</a></li>
+                <li class="category-sort-standard-li"><a th:href="@{/category/{category_id}(category_id=${categoryId}, page=1, per_page=96, sorted_type=1)}" class="category-sort-standard-alink">신상품순<p class="perpendicular-divider">|</p></a></li>
+                <li class="category-sort-standard-li"><a th:href="@{/category/{category_id}(category_id=${categoryId}, page=1, per_page=96, sorted_type=2)}"  class="category-sort-standard-alink">판매량순<p class="perpendicular-divider">|</p></a></li>
+                <li class="category-sort-standard-li"><a th:href="@{/category/{category_id}(category_id=${categoryId}, page=1, per_page=96, sorted_type=3)}"  class="category-sort-standard-alink">리뷰 많은 순<p class="perpendicular-divider">|</p></a></li>
+                <li class="category-sort-standard-li"><a th:href="@{/category/{category_id}(category_id=${categoryId}, page=1, per_page=96, sorted_type=4)}"  class="category-sort-standard-alink">낮은 가격순<p class="perpendicular-divider">|</p></a></li>
+                <li class="category-sort-standard-li"><a th:href="@{/category/{category_id}(category_id=${categoryId}, page=1, per_page=96, sorted_type=5)}"  class="category-sort-standard-alink">높은 가격순</a></li>
             </ul>
+        </div>
+    </div>
+</section>
+
+<section class="product-section">
+    <div class="product-list">
+        <div th:each="item : ${itemsPage}" class="product-item">
+            <div class="product-image-placeholder">[상품 이미지]</div>
+            <button class="add-to-cart" data-item-id="[[${item.id}]]">
+                <i class="fa fa-shopping-cart"></i> 장바구니에 담기
+            </button>
+            <h3 class="item-name" th:text="${item.name}">상품명</h3>
+            <div class="price-container">
+                <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
+                <div class="discount-container">
+                    <span class="discount-rate" th:text="${item.discountRate} + '%'">할인율</span>
+                    <span class="discount-price"
+                          th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
+                          th:text="${#numbers.formatDecimal(discountPrice, 0, 'COMMA', 0, 'POINT')} + '원'">할인 가격</span>
+                    <span class="buying-people" th:text="${item.groupBuyingQuantity} + '명 구매중'">구매 인원</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
