@@ -1,9 +1,11 @@
 package techit.gongsimchae.web;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
@@ -59,6 +61,22 @@ public class ItemController {
     public String deleteItem(@RequestParam Long id){
         itemService.deleteItem(id);
         return "redirect:/admin/item";
+    }
+
+    /**
+     * 이하 카테고리
+     */
+
+    /**
+     *  카테고리별 결과 가져오기
+     */
+    @GetMapping("/category/{category_id}")
+    public String getSelectedCategoryItems(Model model, @PathVariable Long category_id){
+        Category category = categoryService.getCategoryById(category_id);
+        List<Item> categoryItems = itemService.getItemsByCategory(category);
+        model.addAttribute("categoryName", category.getName());
+        model.addAttribute("categoryItems", categoryItems);
+        return "/category/category";
     }
 
 }
