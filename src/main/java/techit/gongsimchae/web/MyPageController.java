@@ -22,19 +22,19 @@ public class MyPageController {
     @GetMapping("/inquiry/list")
     public String inquiryList(Model model) {
 
-        return "user/inquiryList";
+        return "mypage/inquiryList";
     }
 
     @GetMapping("/inquiry/form")
     public String inquiryForm() {
 
-        return "user/inquiryForm";
+        return "mypage/inquiryForm";
     }
 
     @PostMapping("/inquiry/form")
     public String inquires(@AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        return "redirect:/inquiry/list";
+        return "redirect:/mypage/inquiry/list";
     }
 
     /**
@@ -42,12 +42,12 @@ public class MyPageController {
      */
     @GetMapping("/reviews")
     public String reviews(Model model) {
-        return "user/reviews";
+        return "mypage/reviews";
     }
 
     @GetMapping("/reviews/write")
     public String reviewForm() {
-        return "user/reviewForm";
+        return "mypage/reviewForm";
     }
 
     @PostMapping("/reviews/write")
@@ -61,7 +61,7 @@ public class MyPageController {
 
     @GetMapping("/pick/list")
     public String PickList() {
-        return "user/pickList";
+        return "mypage/pickList";
     }
     /**
      * 관심 목록
