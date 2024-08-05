@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MyPageController {
-    @GetMapping("/myPage/orders")
+    @GetMapping("/mypage/orders")
     public String mypage(){
-        return "/mypage/orders";
+        return "mypage/orders";
     }
 }
