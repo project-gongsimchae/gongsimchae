@@ -27,6 +27,8 @@ public class Item extends BaseEntity {
     private LocalDateTime groupBuyingLimitTime;
     private Boolean deleteStatus;
     private String UID;
+    private Long cumulativeSalesVolume;
+    private Long reviewCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -42,6 +44,8 @@ public class Item extends BaseEntity {
         this.groupBuyingLimitTime = itemCreateDto.getGroupBuyingLimitTime();
         this.category = category;
         this.UID = UUID.randomUUID().toString().substring(0,8);
+        this.cumulativeSalesVolume = 0L;
+        this.reviewCount = 0L;
     }
 
     public void UpdateDto (ItemUpdateDto itemUpdateDto, Category category) {

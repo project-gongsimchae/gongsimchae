@@ -1,4 +1,4 @@
-<nav th:fragment="product_navbar" class="navbar navbar-light bg-white" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<nav th:fragment="product_navbar" class="navbar navbar-light bg-white" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
             <img th:src="@{/img/logo.png}" alt="공심채 로고" style="height: 30px;">
@@ -43,7 +43,8 @@
         <div class="navbar-menu">카테고리
             <ul class="dropdown-menu">
                 <li th:each="category : ${categories}">
-                    <a th:href="@{/category/{id}(id=${category.id})}" class="dropdown-item" th:text="${category.name}"></a>
+                    <a class="dropdown-item" th:text="${category.name}"
+                       th:href="@{/category/{category_id}(category_id=${category.id}, page=1, per_page=96, sorted_type=1)}"></a>
                 </li>
             </ul>
         </div>

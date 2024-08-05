@@ -1,7 +1,8 @@
 package techit.gongsimchae.web;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,10 @@ import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/item")
+@RequestMapping
 public class ItemController {
     private final ItemService itemService;
     private final CategoryService categoryService;
@@ -71,12 +73,15 @@ public class ItemController {
      *  카테고리별 결과 가져오기
      */
     @GetMapping("/category/{category_id}")
-    public String getSelectedCategoryItems(Model model, @PathVariable Long category_id){
+    public String getSelectedCategoryItems(@PathVariable Long category_id,
+                                           @RequestParam Integer page,
+                                           @RequestParam Integer per_page,
+                                           @RequestParam Integer sorted_type, Model model){
         Category category = categoryService.getCategoryById(category_id);
-        List<Item> categoryItems = itemService.getItemsByCategory(category);
+        Page<Item> itemsPage = itemService.getItemsPageByCategory(category, page - 1, per_page, sorted_type);
+        model.addAttribute("categoryId", category_id);
         model.addAttribute("categoryName", category.getName());
-        model.addAttribute("categoryItems", categoryItems);
+        model.addAttribute("itemsPage", itemsPage);
         return "/category/category";
     }
-
 }

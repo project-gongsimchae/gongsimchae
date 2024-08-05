@@ -10,10 +10,11 @@ body {
 }
 
 .category-alert {
-    font-size: 24px;
     font-weight: bold;
-    margin-bottom: 10px;
     text-align: center; /* 중앙 정렬 추가 */
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .category-alert-cnt {
@@ -53,10 +54,8 @@ body {
 }
 
 .item-grid-view-main {
-    margin-top: 20px;
-    padding: 0 20px; /* 좌우 여백 추가 */
-    max-width: 1200px; /* 최대 너비 설정 */
-    margin-left: auto; /* 중앙 정렬 */
-    margin-right: auto; /* 중앙 정렬 */
-    box-sizing: border-box; /* 패딩과 테두리를 포함하여 요소 크기 계산 */
+    width: 1050px;
+    margin: 0 auto;
+    padding-top: 40px;
+    padding-bottom: 0;
 }
