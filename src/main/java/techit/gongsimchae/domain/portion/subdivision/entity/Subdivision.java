@@ -31,7 +31,7 @@ public class Subdivision extends BaseEntity {
 
     private Integer views;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String UID;
 
     @ManyToOne(fetch = FetchType.LAZY)
