@@ -1,6 +1,7 @@
 package techit.gongsimchae.domain.portion.subdivision.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
@@ -10,7 +11,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class SubdivisionDto {
+@NoArgsConstructor
+public class SubdivisionRespDto {
 
     private Long id;
     private String title;
@@ -24,7 +26,7 @@ public class SubdivisionDto {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
-    public SubdivisionDto(Subdivision subdivision) {
+    public SubdivisionRespDto(Subdivision subdivision) {
         this.id = subdivision.getId();
         this.title = subdivision.getTitle();
         this.content = subdivision.getContent();

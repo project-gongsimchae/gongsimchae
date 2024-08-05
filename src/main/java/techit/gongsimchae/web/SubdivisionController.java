@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionDto;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 
 @Controller
@@ -31,9 +31,9 @@ public class SubdivisionController {
     public String subdivisionDetail(@PathVariable("UID") String UID,
                                      Model model) {
 
-        SubdivisionDto subdivisionDto = subdivisionService.findSubdivisionByUID(UID);
+        SubdivisionRespDto subdivisionRespDto = subdivisionService.findSubdivisionByUID(UID);
 
-        model.addAttribute("subdivisionDto", subdivisionDto);
+        model.addAttribute("subdivisionRespDto", subdivisionRespDto);
 
         return "portion/subdivisionDetail";
     }

@@ -12,10 +12,10 @@
   <link th:href="@{/css/subdivisionDetail.css}" rel="stylesheet">
 
   <div class="container">
-    <div class="image-container" th:if="${subdivisionDto.imageFile != null}">
-      <img th:src="@{/images/} + ${subdivisionDto.imageFile.storeFilename}" alt="Image">
+    <div class="image-container" th:if="${subdivisionRespDto.imageFile != null}">
+      <img th:src="@{/images/} + ${subdivisionRespDto.imageFile.storeFilename}" alt="Image">
     </div>
-    <div class="image-container placeholder" th:if="${subdivisionDto.imageFile == null}">
+    <div class="image-container placeholder" th:if="${subdivisionRespDto.imageFile == null}">
       <i class="fa fa-camera"></i>
     </div>
 
@@ -23,29 +23,29 @@
 
     <div class="user-info">
       <div class="user-details">
-        <span class="nickname" th:text="${subdivisionDto.user.nickname}"></span>
-        <span class="address" th:text="${subdivisionDto.address}"></span>
+        <span class="nickname" th:text="${subdivisionRespDto.user.nickname}"></span>
+        <span class="address" th:text="${subdivisionRespDto.address}"></span>
       </div>
       <div class="manner-point">
         <label>매너 점수: </label>
-        <progress max="100" th:value="${subdivisionDto.user.mannerPoint}" class="progress-bar"></progress>
+        <progress max="100" th:value="${subdivisionRespDto.user.mannerPoint}" class="progress-bar"></progress>
       </div>
     </div>
 
     <hr class="section-divider">
 
     <div class="content">
-      <h1 class="title" th:text="${subdivisionDto.title}"></h1>
-      <p class="date" th:text="${subdivisionDto.updateDate != null ? #temporals.format(subdivisionDto.updateDate, 'yyyy-MM-dd') : #temporals.format(subdivisionDto.createDate, 'yyyy-MM-dd')}"></p>
-      <p class="content-text" th:text="${subdivisionDto.content}"></p>
+      <h1 class="title" th:text="${subdivisionRespDto.title}"></h1>
+      <p class="date" th:text="${subdivisionRespDto.updateDate != null ? #temporals.format(subdivisionRespDto.updateDate, 'yyyy-MM-dd') : #temporals.format(subdivisionRespDto.createDate, 'yyyy-MM-dd')}"></p>
+      <p class="content-text" th:text="${subdivisionRespDto.content}"></p>
       <div class="price-box">
         <label>가격</label>
-        <p th:text="${subdivisionDto.price} + '원'"></p>
+        <p th:text="${subdivisionRespDto.price} + '원'"></p>
       </div>
     </div>
 
     <div class="footer">
-      <span class="views" th:text="'조회수: ' + ${subdivisionDto.views}"></span>
+      <span class="views" th:text="'조회수: ' + ${subdivisionRespDto.views}"></span>
       <button id="joinButton" class="btn btn-success">참여하기</button>
     </div>
   </div>
@@ -60,9 +60,9 @@
   </div>
 
   <script th:inline="javascript">
-    // subdivisionDto 객체를 JavaScript에서 사용할 수 있도록 설정
-    const subdivisionDto = {
-      UID: /*[[${subdivisionDto.UID}]]*/
+    // subdivisionRespDto 객체를 JavaScript에서 사용할 수 있도록 설정
+    const subdivisionRespDto = {
+      UID: /*[[${subdivisionRespDto.UID}]]*/
     };
   </script>
 
