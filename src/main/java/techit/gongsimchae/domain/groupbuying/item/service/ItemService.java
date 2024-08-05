@@ -1,16 +1,15 @@
 package techit.gongsimchae.domain.groupbuying.item.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
-import techit.gongsimchae.domain.groupbuying.category.entity.Category;
-import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -74,5 +73,9 @@ public class ItemService {
 
     public List<Item> getPopularItems(){
         return itemRepository.findTop8ByOrderByGroupBuyingQuantityDesc();
+    }
+
+    public List<Item> getItemsByCategory(Category category) {
+        return itemRepository.findAllByCategory(category);
     }
 }

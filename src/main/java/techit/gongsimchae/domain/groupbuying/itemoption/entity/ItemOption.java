@@ -4,12 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
-import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
 
 @Entity
 @Getter
@@ -23,9 +20,4 @@ public class ItemOption extends BaseEntity {
     private String option;
     private String content;
     private Integer price;
-    @OneToOne
-    @JoinColumn(name = "order_item_id")
-    private OrderItem orderItem;
-
-
 }
