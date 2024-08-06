@@ -1,16 +1,22 @@
 package techit.gongsimchae.web;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import techit.gongsimchae.domain.common.wishlist.service.WishListService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 @Controller
 @RequestMapping("/mypage")
+@RequiredArgsConstructor
 public class MyPageController {
+
+    private final WishListService wishListService;
+
     @GetMapping("/orders")
     public String mypage(){
         return "mypage/orders";
@@ -70,5 +76,18 @@ public class MyPageController {
     @GetMapping("/interest/list")
     public String InterestList() {
         return "mypage/interestList";
+    }
+
+    /**
+     * 소분 글 찜 목록
+     */
+    @GetMapping("/wishlist")
+    public String subdivisionWishlist(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                      Model model) {
+
+        model.addAttribute("subdivisionWishListRespDtoList",
+                wishListService.getSubdivisionWishLists(principalDetails.getAccountDto().getId()));
+
+        return "mypage/subdivisionWishlist";
     }
 }
