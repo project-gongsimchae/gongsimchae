@@ -1,0 +1,238 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.area-filter {
+    max-width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-top: 20px;
+    border: 2px solid #ccc;
+}
+
+.filter-container {
+    padding: 0;
+    margin: 0;
+}
+
+.sido-areas ul, .sigungu-list, .myeondongeup-list{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 한 줄에 7개의 항목을 배치 */
+    gap: 10px; /* 각 항목 사이의 간격 */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.portioning-section li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center; /* 텍스트 가운데 정렬 */
+    background-color: #f9f9f9; /* 각 항목의 배경색 설정 */
+    border-radius: 4px; /* 각 항목의 모서리를 둥글게 설정 */
+}
+
+.portioning-section li:hover {
+    background-color: #f0f0f0;
+}
+
+.portioning-section li.active {
+    background-color: #e0e0e0;
+    font-weight: bold;
+}
+
+.myeondongeup-areas{
+    border-top: 1px solid #e0e0e0;
+    margin-top: 10px;
+    padding-top: 10px;
+    display: none;
+
+}
+
+.sigungu-areas {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.sigungu-list, .myeondongeup-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.write-title {
+    font-size: 16px;
+    line-height: 23px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    letter-spacing: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-align: left;
+    align-self: flex-start;
+    width: 100%;
+}
+
+.navbar-bottom ul {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+}
+
+.navbar-bottom li {
+    margin: 0 20px;
+}
+
+.navbar-bottom a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.banner {
+    background-color: #f7f7f7;
+    text-align: center;
+    padding: 40px 0;
+}
+
+
+.selector-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 100%;
+}
+
+.area-filter{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.tags-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    align-items: center;
+    margin-top:5px;
+    width:100%;
+}
+
+.tags-container {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    box-sizing: border-box; /* 패딩 포함하여 너비 계산 */
+    border-radius: 8px;
+    height: 50px;
+    flex-wrap: wrap;
+}
+
+.tags-label {
+    font-weight: bold;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+
+.tag {
+    background-color: #e0e0e0;
+    padding: 5px 10px;
+    margin: 2px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.tag .close-btn {
+    margin-left: 5px;
+    cursor: pointer;
+    color: #888;
+    font-size: 14px;
+}
+
+.search-tags-btn {
+    margin-left: 5px;
+    height: 50px;
+    border: 1px solid #4CAF50; /* 연두색 테두리 추가 */
+    background-color: #fff; /* 흰색 배경 */
+    color: #4CAF50; /* 버튼 텍스트 색상과 테두리 색상 일치 */
+    font-weight: bold; /* 버튼 텍스트를 굵게 */
+    border-radius: 8px; /* 버튼 모서리 둥글게 */
+    padding: 0 20px; /* 버튼의 좌우 패딩 */
+    transition: all 0.3s ease; /* 호버 시 애니메이션 효과 추가 */
+}
+
+.search-tags-btn:hover {
+    background-color: #4CAF50; /* 호버 시 버튼 배경색을 연두색으로 변경 */
+    color: #fff; /* 호버 시 버튼 텍스트 색상을 흰색으로 변경 */
+    border-color: #4CAF50; /* 호버 시 테두리 색상 유지 */
+}
+
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 0; /* 간격을 0으로 설정하여 붙어 있게 함 */
+    margin-top: 20px;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+}
+
+.search-container .form-control {
+    border-radius: 0; /* 입력 필드와 버튼 사이의 경계 없애기 */
+    flex: 0 1 300px; /* 입력 필드의 기본 너비를 300px로 설정 */
+}
+
+.search-container .btn {
+    border-radius: 0; /* 입력 필드와 버튼 사이의 경계 없애기 */
+}
+
+.search-container .btn-primary {
+    background-color: #4CAF50; /* 검색 버튼 색상 변경 */
+    border-color: #4CAF50; /* 버튼 테두리 색상 변경 */
+}
+
+.search-container .btn-primary:hover {
+    background-color: #45a049; /* 검색 버튼 hover 색상 */
+    border-color: #45a049; /* 버튼 테두리 hover 색상 */
+}
+
+.search-container .btn-write {
+    margin-left: 10px; /* 글쓰기 버튼과 검색 버튼 간격 조정 */
+}
+
+footer {
+    background-color: #f7f7f7;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
