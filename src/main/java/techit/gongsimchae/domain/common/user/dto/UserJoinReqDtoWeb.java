@@ -21,8 +21,4 @@ public class UserJoinReqDtoWeb {
 
     private String AuthCode;
 
-    private String address;
-    private String zipcode;
-    private String detailAddress;
-
 }

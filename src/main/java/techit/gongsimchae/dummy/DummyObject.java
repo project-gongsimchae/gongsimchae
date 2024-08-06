@@ -2,7 +2,6 @@ package techit.gongsimchae.dummy;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.common.user.entity.JoinType;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.entity.UserRole;
@@ -26,14 +25,12 @@ public class DummyObject {
     }
 
     protected User adminUser(String loginId, String password){
-        Address address = new Address("zipcode", "address", "detailAddress");
         return User.builder()
                 .loginId(loginId)
                 .nickname("admin")
                 .password("{noop}" + password)
                 .email("admin@naver.com")
                 .name("admin")
-                .address(address)
                 .role(UserRole.ROLE_ADMIN)
                 .UID(UUID.randomUUID().toString())
                 .userStatus(UserStatus.NORMAL)
@@ -45,14 +42,14 @@ public class DummyObject {
     }
 
     protected User userUser(String loginId, String password) {
-        Address address = new Address("zipcode", "address", "detailAddress");
+
+
         return User.builder()
                 .loginId(loginId)
                 .nickname("user")
                 .password("{noop}" + password)
                 .email("user@naver.com")
                 .name("user")
-                .address(address)
                 .role(UserRole.ROLE_USER)
                 .UID(UUID.randomUUID().toString())
                 .userStatus(UserStatus.NORMAL)
