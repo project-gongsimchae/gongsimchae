@@ -7,6 +7,8 @@ import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SubdivisionService {
@@ -23,5 +25,14 @@ public class SubdivisionService {
 
         return new SubdivisionRespDto(subdivision);
 
+    }
+
+    /**
+     * UserId를 기반으로 자신이 작성한 소분 글 찾아주는 메서드
+     *
+     */
+    public List<SubdivisionRespDto> findSubdivisionByUserId(Long userId) {
+
+        return subdivisionRepository.findAllByUserId(userId).stream().map(SubdivisionRespDto::new).toList();
     }
 }
