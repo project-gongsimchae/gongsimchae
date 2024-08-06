@@ -32,7 +32,6 @@ public class UserRespDtoWeb {
     private String passwordChange;
     private String passwordChangeConfirm;
 
-    private AddressRespDtoWeb address;
     /**
      * 유저정보가 다 담기는 생성자
      *
