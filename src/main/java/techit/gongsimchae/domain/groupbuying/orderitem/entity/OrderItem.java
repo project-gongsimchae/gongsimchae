@@ -6,12 +6,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
-import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 
 @Entity
@@ -30,7 +28,4 @@ public class OrderItem extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
-    @OneToOne
-    @JoinColumn(name = "item_option_id")
-    private ItemOption itemOption;
 }
