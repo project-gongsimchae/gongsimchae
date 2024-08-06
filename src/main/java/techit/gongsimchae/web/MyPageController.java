@@ -97,4 +97,18 @@ public class MyPageController {
 
         return "mypage/mySubdivisionList";
     }
+
+    /**
+     * 참여 중인 소분글 목록
+     */
+    @GetMapping("/join")
+    public String SubdivisionJoinList(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                      Model model) {
+
+        model.addAttribute("SubdivisionJoinRespDtoList",
+                subdivisionService.findJoinSubdivisionByUserId(principalDetails.getAccountDto().getId()));
+
+        return "mypage/subdivisionJoinList";
+    }
+
 }
