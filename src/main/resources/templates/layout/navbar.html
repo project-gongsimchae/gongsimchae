@@ -1,12 +1,12 @@
 <nav th:fragment="product_navbar" class="navbar navbar-light bg-white" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" th:href="@{/main}">
             <img th:src="@{/img/logo.png}" alt="공심채 로고" style="height: 30px;">
         </a>
         <div class="navbar-collapse show" id="navbarNav">
             <ul class="me-auto mb-2 mb-lg-0 d-flex align-items-center shop-division">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/}">공동구매</a>
+                    <a class="nav-link" th:href="@{/main}">공동구매</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/portioning}">소분나눔</a>
@@ -14,7 +14,7 @@
             </ul>
             <form class="d-flex mx-auto form-style">
                 <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search" style="max-width: 700px; flex-grow: 1;">
-                <button class="btn btn-outline-success" type="submit">검색</button>
+                <button class="btn btn-outline-success search-btn" type="submit">검색</button>
             </form>
             <div sec:authorize="isAnonymous()">
                 <button class="btn btn-success ms-3" th:onclick="|location.href='@{/signup}'|">회원가입</button>
@@ -53,6 +53,9 @@
             <a th:href="@{/product/market-best}" class="btn btn-link nav-list-a">베스트</a>
             <a th:href="@{/market-benefit}" class="btn btn-link nav-list-a">이벤트</a>
         </div>
+        <div sec:authorize="isAnonymous()">
+            <a> </a>
+        </div>
         <div sec:authorize="hasRole('USER')">
             <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
         </div>
@@ -65,13 +68,13 @@
 
 <nav th:fragment="portion_navbar" class="navbar navbar-light bg-white" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" th:href="@{/main}">
             <img th:src="@{/img/logo.png}" alt="공심채 로고" style="height: 30px;">
         </a>
         <div class="navbar-collapse show" id="navbarNav">
             <ul class="me-auto mb-2 mb-lg-0 d-flex align-items-center shop-division">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/}">공동구매</a>
+                    <a class="nav-link" th:href="@{/main}">공동구매</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/portioning}">소분나눔</a>
@@ -79,7 +82,7 @@
             </ul>
             <form class="d-flex mx-auto form-style">
                 <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search" style="max-width: 700px; flex-grow: 1;">
-                <button class="btn btn-outline-success" type="submit">검색</button>
+                <button class="btn btn-outline-success search-btn" type="submit">검색</button>
             </form>
             <div sec:authorize="isAnonymous()">
                 <button class="btn btn-success ms-3" th:onclick="|location.href='@{/signup}'|">회원가입</button>
@@ -105,9 +108,14 @@
         </a>
     </div>
     <div class="navbar-links nav-container mt-3 text-center">
-        <div class="d-flex justify-content-center mt-2">
+        <div class="navbar-menu">
             <a th:href="@{/}" class="btn btn-link nav-list-a">소분 글 리스트</a>
+        </div>
+        <div class="d-flex justify-content-center mt-2">
             <a th:href="@{/portioning/write}" class="btn btn-link nav-list-a">글 작성</a>
+        </div>
+        <div sec:authorize="isAnonymous()">
+            <a> </a>
         </div>
         <div sec:authorize="hasRole('USER')">
             <a th:href="@{/inquiries}" class="btn btn-link nav-list-a">1:1 문의</a>
