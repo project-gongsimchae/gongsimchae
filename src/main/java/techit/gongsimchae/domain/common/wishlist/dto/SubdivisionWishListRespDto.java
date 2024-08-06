@@ -1,9 +1,6 @@
 package techit.gongsimchae.domain.common.wishlist.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.wishlist.entity.WishList;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
@@ -12,6 +9,7 @@ import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class SubdivisionWishListRespDto {
 
     private Long id;
