@@ -49,10 +49,10 @@
                 <div class="col-md-3 font-weight-bold">유저 권한</div>
                 <div class="col-md-9" th:text="${user.role.name()}"></div>
             </div>
-            <div class="row mb-3">
+            <!--<div class="row mb-3">
                 <div class="col-md-3 font-weight-bold">주소</div>
                 <div class="col-md-9" th:text="${user.address + ' ' + user.detailAddress}"></div>
-            </div>
+            </div>-->
         </div>
         <div class="card-footer text-right">
             <a href="#" th:href="@{|/admin/users/update/${user.id}|}" class="btn btn-primary">개인정보 수정</a>

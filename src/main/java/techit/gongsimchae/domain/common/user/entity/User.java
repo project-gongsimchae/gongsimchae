@@ -24,7 +24,6 @@ import java.util.UUID;
 @Table(name = "users")
 @Builder
 public class User extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -46,10 +45,9 @@ public class User extends BaseEntity {
     private UserStatus userStatus;
     @Column(unique = true)
     private String UID;
+    @Enumerated(EnumType.STRING)
     private JoinType joinType;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Address> address = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_file_id")

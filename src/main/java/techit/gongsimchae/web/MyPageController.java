@@ -63,12 +63,4 @@ public class MyPageController {
     public String PickList() {
         return "mypage/pickList";
     }
-    /**
-     * 관심 목록
-     */
-
-    @GetMapping("/interest/list")
-    public String InterestList() {
-        return "mypage/interestList";
-    }
 }

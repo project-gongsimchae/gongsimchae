@@ -46,7 +46,6 @@ public class Address {
 
     public void addUser(User user) {
         this.user = user;
-        user.getAddress().add(this);
     }
 
     public void changeInfo(AddressUpdateReqDtoWeb addressUpdateReqDtoWeb) {
