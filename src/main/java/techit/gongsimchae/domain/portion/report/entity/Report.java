@@ -22,10 +22,15 @@ public class Report extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReportType reportType;
 
-    public Report(String title, String content, ReportType reportType) {
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Report(String title, String content, ReportType reportType, User user) {
         this.title = title;
         this.content = content;
         this.reportType = reportType;
-
+        this.user = user;
     }
 }
