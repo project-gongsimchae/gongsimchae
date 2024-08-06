@@ -48,7 +48,6 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private JoinType joinType;
 
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_file_id")
     private ImageFile imageFile;
@@ -139,7 +138,9 @@ public class User extends BaseEntity {
         this.password = newPassword;
     }
 
-
+    /**
+     * 관리자가 유저정보 수정할 때 수정하는 것들
+     */
     public void changeInfoByAdmin(UserAdminUpdateReqDtoWeb updateDto) {
         this.name = updateDto.getName();
         this.loginId = updateDto.getLoginId();
