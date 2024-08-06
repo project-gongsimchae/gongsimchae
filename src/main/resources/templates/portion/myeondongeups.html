@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<ul th:fragment="myeondongeupList" class="myeondongeup-list portioning-section">
+    <li th:each="myeondongeupArea : ${myeondongeupAreas}" th:text="${myeondongeupArea.name}" onclick="selectMyeondongeupArea(this)"> </li>
+</ul>
+</body>
+</html>
