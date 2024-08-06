@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
@@ -106,5 +107,10 @@ public class ItemService {
             throw new CustomWebException("존재하지 않는 정렬기준입니다.");
         }
         return itemRepository.findAllByCategory(category, pageable);
+    }
+
+    public ItemRespDtoWeb getItem(String id) {
+        Item item = itemRepository.findByUID(id).orElseThrow(() -> new CustomWebException("not found item"));
+        return new ItemRespDtoWeb(item);
     }
 }

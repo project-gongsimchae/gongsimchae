@@ -61,7 +61,7 @@ body {
     border-radius: 5px; /* 모서리 둥글기 */
     font-size: 14px; /* 폰트 크기 조정 */
     transition: border-color 0.3s;
-    height: 20px; /* 높이 조정 */
+    height: 35px; /* 높이 조정 */
     margin-right: 10px;
 }
 

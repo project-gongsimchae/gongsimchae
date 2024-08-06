@@ -7,10 +7,13 @@ import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findTop8ByOrderByCreateDateDesc();
     List<Item> findTop8ByOrderByGroupBuyingQuantityDesc();
     List<Item> findAllByCategory(Category category);
     Page<Item> findAllByCategory(Category category, Pageable pageable);
+
+    Optional<Item> findByUID(String id);
 }

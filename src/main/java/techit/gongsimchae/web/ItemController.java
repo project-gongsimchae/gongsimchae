@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
@@ -63,6 +64,17 @@ public class ItemController {
     public String deleteItem(@RequestParam Long id){
         itemService.deleteItem(id);
         return "redirect:/admin/item";
+    }
+
+    /**
+     * 유저가 보는 아이템
+     */
+
+    @GetMapping("/product/{id}")
+    public String itemDetails(@PathVariable("id") String id, Model model) {
+        ItemRespDtoWeb item = itemService.getItem(id);
+        model.addAttribute("item",item);
+        return "groupbuying/itemDetails";
     }
 
     /**
