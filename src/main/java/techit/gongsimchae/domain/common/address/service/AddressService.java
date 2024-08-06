@@ -7,6 +7,7 @@ import techit.gongsimchae.domain.common.address.dto.AddressCreateReqDtoWeb;
 import techit.gongsimchae.domain.common.address.dto.AddressRespDtoWeb;
 import techit.gongsimchae.domain.common.address.dto.AddressUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.address.entity.Address;
+import techit.gongsimchae.domain.common.address.entity.DefaultAddressStatus;
 import techit.gongsimchae.domain.common.address.repository.AddressRepository;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
@@ -14,6 +15,7 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +34,14 @@ public class AddressService {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found User"));
         addressCreateReqDtoWeb.setReceiver(user.getName());
         addressCreateReqDtoWeb.setPhoneNumber(user.getPhoneNumber());
-        Address address = new Address(addressCreateReqDtoWeb, user);
+        Optional<Address> _address = addressRepository.findByUserId(user.getId());
+        Address address = null;
+        if(_address.isPresent()) {
+            address = new Address(addressCreateReqDtoWeb, user);
+        } else{
+            address = new Address(addressCreateReqDtoWeb, user, DefaultAddressStatus.PRIMARY);
+        }
+
         addressRepository.save(address);
     }
 

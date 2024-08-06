@@ -180,7 +180,7 @@ public class LoginController {
 
     @PostMapping("/emails/verification-requests")
     public ResponseEntity<?> sendMessage(@RequestParam("email") @Valid String email) {
-
+        log.debug("send email {}", email);
         userService.sendCodeToEmail(email);
 
         return new ResponseEntity<>(HttpStatus.OK);

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
@@ -66,6 +67,17 @@ public class ItemController {
     }
 
     /**
+     * 유저가 보는 아이템
+     */
+
+    @GetMapping("/product/{id}")
+    public String itemDetails(@PathVariable("id") String id, Model model) {
+        ItemRespDtoWeb item = itemService.getItem(id);
+        model.addAttribute("item",item);
+        return "groupbuying/itemDetails";
+    }
+
+    /**
      * 이하 카테고리
      */
 
@@ -83,5 +95,18 @@ public class ItemController {
         model.addAttribute("categoryName", category.getName());
         model.addAttribute("itemsPage", itemsPage);
         return "/category/category";
+    }
+
+    /**
+     * 상품 등록일 기준 200건을 조회
+     * 200건 내에서 sorted_type에 따라 정렬을 다르게 리턴
+     */
+    @GetMapping("/collection-groups/new-item")
+    public String getNewItems(@RequestParam(defaultValue = "1") Integer page,
+                              @RequestParam(defaultValue = "96") Integer per_page,
+                              @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
+        Page<Item> newItemsPage = itemService.getTop200ItemsPage(page - 1, per_page, sorted_type);
+        model.addAttribute("newItemsPage", newItemsPage);
+        return "category/newItem";
     }
 }
