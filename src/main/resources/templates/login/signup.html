@@ -1,78 +1,102 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/productHeader :: header(~{::title},~{::section})}">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 페이지</title>
+    <link rel="stylesheet" href="" th:href="@{/css/user/join.css}">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
 </head>
 <body>
-<section>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header text-center bg-primary text-white">
-                        <h1>회원가입</h1>
-                    </div>
-                    <div class="card-body">
-                        <form th:action method="post" th:object="${user}" onsubmit="return validateForm()">
-                            <div th:replace="~{layout/fielderror :: fielderror}"></div>
-                            <div class="form-group">
-                                <label for="loginId">아이디</label>
-                                <input type="text" id="loginId" class="form-control" th:field="*{loginId}" required>
-                                <div th:errors="*{loginId}" class="text-danger"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">비밀번호</label>
-                                <input type="password" id="password" class="form-control" th:field="*{password}" required>
-                                <div th:errors="*{password}" class="text-danger"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="passwordConfirm">비밀번호 확인</label>
-                                <input type="password" id="passwordConfirm" class="form-control" th:field="*{passwordConfirm}" required>
-                                <div th:errors="*{passwordConfirm}" class="text-danger"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="name">이름</label>
-                                <input type="text" id="name" class="form-control" th:field="*{name}" required>
-                                <div th:errors="*{name}" class="text-danger"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="nickname">닉네임</label>
-                                <input type="text" id="nickname" class="form-control" th:field="*{nickname}" required>
-                                <div th:errors="*{nickname}" class="text-danger"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">이메일</label>
-                                <div class="input-group">
-                                    <input type="email" id="email" class="form-control" th:field="*{email}" required>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="button" onclick="sendVerificationCode()">인증 코드 보내기</button>
-                                    </div>
-                                </div>
-                                <div th:errors="*{email}" class="text-danger"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="verificationCode">인증 코드</label>
-                                <div class="input-group">
-                                    <input type="text" id="verificationCode" class="form-control" name="authCode" required>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="button" onclick="verifyCode()">인증 코드 확인</button>
-                                    </div>
-                                </div>
-                                <div id="verificationMessage" class="mt-2 text-danger"></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="phoneNumber">휴대폰 번호</label>
-                                <input type="text" id="phoneNumber" class="form-control" th:field="*{phoneNumber}" required>
-                                <div th:errors="*{phoneNumber}" class="text-danger"></div>
-                            </div>
-                        </form>
+<div th:replace="~{layout/navbar :: product_navbar}"></div>
+<div class="signup-container">
+    <div class="signup-card">
+        <div class="signup-card-header">
+            회원가입
+        </div>
+        <div class="signup-card-body">
+            <form th:action method="post" th:object="${user}" onsubmit="return validateForm()">
+                <div th:replace="~{layout/fielderror :: fielderror}"></div>
+
+                <div class="form-field">
+                    <label for="loginId">아이디</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="loginId" class="input-field" th:field="*{loginId}" required>
+                        <div th:errors="*{loginId}" class="error-message"></div>
                     </div>
                 </div>
-            </div>
+
+                <div class="form-field">
+                    <label for="password">비밀번호</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" class="input-field" th:field="*{password}" required>
+                        <div th:errors="*{password}" class="error-message"></div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="passwordConfirm">비밀번호 확인</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="passwordConfirm" class="input-field" th:field="*{passwordConfirm}" required>
+                        <div th:errors="*{passwordConfirm}" class="error-message"></div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="name">이름</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="name" class="input-field" th:field="*{name}" required>
+                        <div th:errors="*{name}" class="error-message"></div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="nickname">닉네임</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="nickname" class="input-field" th:field="*{nickname}" required>
+                        <div th:errors="*{nickname}" class="error-message"></div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="email">이메일</label>
+                    <div class="input-wrapper">
+                        <div class="input-group">
+                            <input type="email" id="email" class="input-field" th:field="*{email}" required>
+                            <button class="action-button" type="button" onclick="sendVerificationCode()">인증번호 받기</button>
+                        </div>
+                        <div th:errors="*{email}" class="error-message"></div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="verificationCode">인증 번호</label>
+                    <div class="input-wrapper">
+                        <div class="input-group">
+                            <input type="text" id="verificationCode" class="input-field" name="authCode" required>
+                            <button class="action-button" type="button" onclick="verifyCode()">인증번호 확인</button>
+                        </div>
+                        <div id="verificationMessage" class="mt-2 error-message"></div>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="phoneNumber">휴대폰 번호</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="phoneNumber" class="input-field" th:field="*{phoneNumber}" required>
+                        <div th:errors="*{phoneNumber}" class="error-message"></div>
+                    </div>
+                </div>
+
+                <div class="form-field text-center">
+                    <div class="input-wrapper">
+                        <input type="submit" class="submit-button" value="회원가입">
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-</section>
+</div>
+<script src="" th:src="@{/js/authcode.js}"></script>
 </body>
 </html>
