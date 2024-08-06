@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.common.user.dto.*;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
@@ -70,8 +69,7 @@ public class UserService {
     @Transactional
     public void signup(UserJoinReqDtoWeb joinDto) {
         joinDto.setPassword(passwordEncoder.encode(joinDto.getPassword()));
-        Address address = new Address(joinDto);
-        User user = new User(joinDto, address);
+        User user = new User(joinDto);
         userRepository.save(user);
         sendJoinMail(joinDto);
     }
@@ -192,7 +190,6 @@ public class UserService {
     @Transactional
     public void updateByAdmin(UserAdminUpdateReqDtoWeb updateDto) {
         User findUser = userRepository.findById(updateDto.getId()).orElseThrow(() -> new CustomWebException("not found user"));
-        Address address = new Address(updateDto.getZipcode(), updateDto.getAddress(), updateDto.getDetailAddress());
-        findUser.changeInfoByAdmin(updateDto, address);
+        findUser.changeInfoByAdmin(updateDto);
     }
 }

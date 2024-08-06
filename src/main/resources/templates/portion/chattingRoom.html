@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/portionHeader :: header(~{::title},~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>채팅방</title>
+</head>
+<body>
+<section>
+    <link th:href="@{/css/portion/chattingRoom.css}" rel="stylesheet">
+
+    <div class="container chat-container">
+        <div class="chat-window" id="chatWindow">
+            <!-- 채팅 메시지들이 이곳에 추가됩니다 -->
+        </div>
+        <div class="input-group chat-input-container">
+            <input type="text" id="chatInput" class="form-control" placeholder="메시지를 입력하세요...">
+            <button id="sendButton" class="btn btn-success">보내기</button>
+        </div>
+    </div>
+
+    <script th:src="@{/js/portion/chattingRoom.js}"></script>
+</section>
+</body>
+</html>
