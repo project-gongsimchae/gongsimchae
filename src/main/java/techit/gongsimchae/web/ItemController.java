@@ -84,4 +84,17 @@ public class ItemController {
         model.addAttribute("itemsPage", itemsPage);
         return "/category/category";
     }
+
+    /**
+     * 상품 등록일 기준 200건을 조회
+     * 200건 내에서 sorted_type에 따라 정렬을 다르게 리턴
+     */
+    @GetMapping("/collection-groups/new-item")
+    public String getNewItems(@RequestParam(defaultValue = "1") Integer page,
+                              @RequestParam(defaultValue = "96") Integer per_page,
+                              @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
+        Page<Item> newItemsPage = itemService.getTop200ItemsPage(page - 1, per_page, sorted_type);
+        model.addAttribute("newItemsPage", newItemsPage);
+        return "category/newItem";
+    }
 }

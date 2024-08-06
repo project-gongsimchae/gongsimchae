@@ -88,6 +88,7 @@ public class ItemService {
         return itemRepository.findAllByCategory(category);
     }
 
+    @Transactional(readOnly = true)
     public Page<Item> getItemsPageByCategory(Category category, Integer page, Integer per_page,
                                                    Integer sorted_type){
         SortType sortType = getInstanceByTypeNumber(sorted_type);
@@ -97,14 +98,35 @@ public class ItemService {
         } else if (sortType.equals(판매량순)) {
             pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC, "cumulativeSalesVolume"));
         } else if (sortType.equals(리뷰많은순)){
-            pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC, "reviewCount").descending());
+            pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC, "reviewCount"));
         } else if (sortType.equals(낮은가격순)){
-            pageable = PageRequest.of(page, per_page, Sort.by(Direction.ASC, "originalPrice").ascending());
+            pageable = PageRequest.of(page, per_page, Sort.by(Direction.ASC, "originalPrice"));
         } else if (sortType.equals(높은가격순)) {
-            pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC, "originalPrice").descending());
+            pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC, "originalPrice"));
         } else {
             throw new CustomWebException("존재하지 않는 정렬기준입니다.");
         }
         return itemRepository.findAllByCategory(category, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Item> getTop200ItemsPage(Integer page, Integer per_page, Integer sorted_type) {
+        SortType sortType = getInstanceByTypeNumber(sorted_type);
+        Pageable pageable = PageRequest.of(page, per_page);
+        Page<Item> newItemsPage;
+        if (sortType.equals(신상품순)){
+            newItemsPage = itemRepository.findTop200ByOrderByCreateDateDesc(pageable);
+        } else if (sortType.equals(판매량순)) {
+            newItemsPage = itemRepository.findTop200ByCreateDateAndSortByCumulativeSalesVolumeDesc(pageable);
+        } else if (sortType.equals(리뷰많은순)){
+            newItemsPage = itemRepository.findTop200ByCreateDateAndSortByReviewCountDesc(pageable);
+        } else if (sortType.equals(낮은가격순)){
+            newItemsPage = itemRepository.findTop200ByCreateDateAndSortByOriginalPriceAsc(pageable);
+        } else if (sortType.equals(높은가격순)) {
+            newItemsPage = itemRepository.findTop200ByCreateDateAndSortByOriginalPriceDesc(pageable);
+        } else {
+            throw new CustomWebException("존재하지 않는 정렬기준입니다.");
+        }
+        return newItemsPage;
     }
 }
