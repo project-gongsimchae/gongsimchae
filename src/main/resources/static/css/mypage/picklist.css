@@ -6,9 +6,8 @@
     margin: 1px auto 15px; /* 자동으로 가운데 정렬 */
     max-width: 1200px; /* 최대 너비 설정 */
     width: 1200px;
-
-
 }
+
 .section-title {
     position: relative;
     margin-bottom: 1rem; /* 제목과 다음 요소 사이의 여백 */
@@ -16,8 +15,8 @@
     font-size: 1.75rem; /* 제목 크기 */
     font-weight: bold; /* 제목 글꼴 두껍게 */
     color: #333333; /* 제목 글꼴 색상 */
-
 }
+
 .section-title::after {
     content: '';
     position: absolute;
@@ -27,30 +26,90 @@
     height: 2px;
     background-color: #000000; /* 선 색상 */
 }
-.card {
-    border: none; /* 카드 경계 제거 */
-    border-radius: 8px; /* 카드 모서리 둥글게 처리 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 카드 그림자 추가 */
+
+.item {
+    margin-bottom: 20px; /* 아이템 간격 */
 }
-.card-img-top {
-    border-top-left-radius: 8px; /* 이미지 모서리 둥글게 처리 */
-    border-top-right-radius: 8px;
+
+.item-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.card-body {
-    padding: 1rem; /* 카드 내부 여백 */
+
+.item-card img {
+    max-width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
 }
+
+.item-details {
+    margin-left: 15px;
+    flex: 1;
+}
+
+.item-details h5 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.item-details p {
+    margin: 5px 0;
+    font-size: 1rem;
+}
+
+.item-details .btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 40px;
+}
+
 .btn {
     font-size: 0.875rem; /* 버튼 글꼴 크기 조정 */
 }
-.btn-danger {
+.picklist-div-container{
+    margin-bottom: -30px;
+    margin-left: 40px;
+}
+
+.picklist-btn-danger {
     background-color: #dc3545; /* 삭제 버튼 색상 */
     border-color: #dc3545;
+    width: 150px;
+    max-width: 150px;
+    height: 40px;
+    color: white;
+    border-radius: 8px;
 }
-.btn-primary {
-    background-color: black; /* 장바구니 버튼 색상 */
+
+.picklist-btn-primary {
+    background-color: #4CAF50; /* 장바구니 버튼 색상 */
     margin-bottom: 10px;
+    width: 150px;
+    max-width: 150px;
+    height: 40px;
+    color: white;
+    border-radius: 8px;
 }
-/* Flexbox를 사용하여 제목과 버튼을 같은 행에 배치 */
+
+.picklist-btn-danger:hover {
+    background: black;
+    color: white;
+
+
+}
+
+.picklist-btn-primary:hover {
+    background: black;
+    color: white;
+
+}
+
 .d-flex {
     display: flex;
 }
@@ -95,6 +154,7 @@
     border-top: 2px solid black; /* 선 색상 및 두께 */
     margin-bottom: 1.5rem; /* 선 아래 여백 */
 }
+
 .btn-info {
     display: flex;
     justify-content: center; /* 버튼 내부 텍스트를 가운데 정렬 */

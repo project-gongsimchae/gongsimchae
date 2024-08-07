@@ -12,15 +12,21 @@
     <thead>
     <tr>
         <th>이벤트명</th>
-        <th>이벤트 URL</th>
-        <th>삭제</th>
+        <th>할인금액</th>
+        <th>최대할인금액</th>
+        <th>만료기한</th>
+        <th>쿠폰코드</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="coupon : ${coupons}">
 
         <td th:text="${coupon.eventName}"></td>
-        <td><img th:src="${coupon.eventImageUrl}" alt="event image" width="100"></td>
+<!--        <td><img th:src="${coupon.eventImageUrl}" alt="event image" width="100"></td>-->
+        <td th:text="${coupon.discount}"></td>
+        <td th:text="${coupon.maxDiscount}"></td>
+        <td th:text="${#temporals.format(coupon.expirationDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${coupon.couponCode}"></td>
         <td>
             <form th:action="@{/admin/event/delete}" method="post">
                 <input type="hidden" th:value="${coupon.id}" name="id"/>
