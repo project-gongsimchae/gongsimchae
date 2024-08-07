@@ -195,4 +195,8 @@ public class UserService {
         Address address = new Address(updateDto.getZipcode(), updateDto.getAddress(), updateDto.getDetailAddress());
         findUser.changeInfoByAdmin(updateDto, address);
     }
+
+    public User findByUserName(String username){
+        return userRepository.findByName(username);
+    }
 }

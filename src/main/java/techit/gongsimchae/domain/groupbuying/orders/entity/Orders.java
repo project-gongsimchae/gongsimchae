@@ -1,15 +1,14 @@
 package techit.gongsimchae.domain.groupbuying.orders.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
+import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderStatus;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,4 +21,11 @@ public class Orders extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    @OneToMany(mappedBy = "orders")
+    private List<OrderItem> orderItems;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
