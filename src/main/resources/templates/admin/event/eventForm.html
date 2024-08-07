@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>이벤트 생성</h1>
-<form th:action="@{/admin/event/create}" th:object="${coupon}" method="post">
+<form th:action="@{/admin/event/create}" th:object="${coupon}" method="post" enctype="multipart/form-data">
     <label for="eventName">이벤트 이름:</label>
     <input type="text" id="eventName" th:field="*{eventName}" required /><br/>
 
@@ -22,6 +22,11 @@
     <div>
         <label for="couponCode">쿠폰 코드</label>
         <input type="text" id="couponCode" th:field="*{couponCode}" required /><br/>
+    </div>
+
+    <div>
+        <label for="eventBannerImage">이벤트 이미지:</label>
+        <input type="file" id="eventBannerImage" name="eventImage" accept="image/*" th:field="*{eventBannerImage}" required /><br/>
     </div>
 
     <button type="submit">생성</button>

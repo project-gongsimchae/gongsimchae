@@ -1,4 +1,3 @@
-/*
 package techit.gongsimchae.domain.common.imagefile.service;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
 
 import java.util.ArrayList;
@@ -22,8 +22,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageS3Service {
     private final AmazonS3 amazonS3;
+    private final ImageFileRepository imageFileRepository;
 
-    @Value("${cloud.aws.s3.bucketName}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     public List<ImageFile> storeFiles(List<MultipartFile> files, String directory) {
@@ -51,8 +52,9 @@ public class ImageS3Service {
             metadata.setContentDisposition(file.getContentType());
             metadata.setContentLength(file.getSize());
             amazonS3.putObject(uploadUrl, storeFileName, file.getInputStream(), metadata);
-
-            return new ImageFile(getFullPath(directory,originalFilename), getFullPath(directory,storeFileName));
+            ImageFile imageFile = imageFileRepository.save(
+                    new ImageFile(originalFilename, getFullPath(directory, storeFileName)));
+            return imageFile;
         } catch (Exception e) {
             throw new CustomWebException(e.getMessage());
         }
@@ -76,7 +78,7 @@ public class ImageS3Service {
         int pos = originalFilename.lastIndexOf(".");
         String ext = originalFilename.substring(pos + 1);
 
-        List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg");
+        List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg", "PNG", "JPG","JPEG");
 
         if (!allowedExtensions.contains(ext)) {
             throw new IllegalArgumentException("지원하지 않는 포맷입니다.");
@@ -94,4 +96,3 @@ public class ImageS3Service {
         }
     }
 }
-*/
