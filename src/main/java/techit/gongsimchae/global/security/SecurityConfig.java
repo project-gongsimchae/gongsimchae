@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll())
 
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/emails/**","/find/**"))
+                        .ignoringRequestMatchers("/emails/**","/find/**","/mypage/**"))
 
                 .formLogin(form -> form
                         .loginPage("/login")
