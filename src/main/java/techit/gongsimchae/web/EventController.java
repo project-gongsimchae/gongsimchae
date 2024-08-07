@@ -6,10 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
+import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
 
 @Controller
 @RequiredArgsConstructor
 public class EventController {
+
+    private final CouponService couponService;
 
     @GetMapping("/event")
     public String getEventPage(Model model){
@@ -31,5 +35,12 @@ public class EventController {
         eventBanners.add("https://lion-bucket-yshong.s3.ap-northeast-2.amazonaws.com/gongsimchae/event-banner/%EC%A0%95%EC%9C%A1%2C%EA%B0%80%EA%B3%B5%EC%9C%A1%2C%EA%B3%84%EB%9E%80.PNG");
         model.addAttribute("eventBanners", eventBanners);
         return "category/eventVer2";
+    }
+
+    @GetMapping("/event/ver3")
+    public String getEventPageVer3(Model model){
+        List<CouponRespDtoWeb> events = couponService.getAllCoupons();
+        model.addAttribute("events", events);
+        return "category/eventVer3";
     }
 }

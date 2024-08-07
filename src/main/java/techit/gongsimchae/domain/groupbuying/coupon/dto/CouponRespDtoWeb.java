@@ -18,6 +18,7 @@ public class CouponRespDtoWeb {
     private LocalDateTime expirationDate;
     private String eventName;
     private String couponCode; // 쿠폰등록 번호
+    private String eventBannerImage;
 
     public CouponRespDtoWeb(Coupon coupon) {
         this.id = coupon.getId();
@@ -26,5 +27,6 @@ public class CouponRespDtoWeb {
         this.expirationDate = coupon.getExpirationDate();
         this.eventName = coupon.getEventName();
         this.couponCode = coupon.getCouponCode();
+        this.eventBannerImage = coupon.getImageFile().getStoreFilename();
     }
 }
