@@ -2,7 +2,6 @@ package techit.gongsimchae.domain.groupbuying.category.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
-import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 
 import java.util.Optional;
 

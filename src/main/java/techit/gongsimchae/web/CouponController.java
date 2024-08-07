@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponCreateReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
-import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
 import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
 
 import java.util.List;

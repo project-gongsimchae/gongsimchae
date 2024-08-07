@@ -3,15 +3,10 @@ package techit.gongsimchae.domain.groupbuying.coupon.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
-import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponCreateReqDtoWeb;
-import techit.gongsimchae.domain.groupbuying.couponuser.entity.CouponUser;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
