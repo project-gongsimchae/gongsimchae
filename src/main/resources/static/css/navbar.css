@@ -1,7 +1,10 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #ffffff; /* 배경색 흰색으로 설정 */
-    margin: 0 20px;
+}
+
+nav {
+    margin: 0 180px;
 }
 
 .navbar {
@@ -79,10 +82,12 @@ body {
 
 .shop-division {
     list-style-type: none;
+    padding-left: 0;
+    padding-right: 10px;
 }
 
 .shop-division > li {
-    margin: 0 20px;
+    margin: 0 15px;
 }
 
 .nav-container {
@@ -94,7 +99,7 @@ body {
 }
 
 .nav-list-a {
-    margin-right: 6rem !important;
+    margin-right: 3rem !important;
     margin-left: 6rem !important;
 }
 
@@ -166,4 +171,8 @@ body {
 .dropdown-item:hover {
     background-color: #d3d3d3;
     color: #4CAF50;
+}
+
+.search-btn {
+    width: 60px;
 }
