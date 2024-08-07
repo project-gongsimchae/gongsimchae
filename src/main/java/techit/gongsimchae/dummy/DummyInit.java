@@ -16,5 +16,4 @@ public class DummyInit extends DummyObject {
             userRepository.save(userUser("user","user"));
         };
     }*/
-
 }
