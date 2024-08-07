@@ -1,16 +1,24 @@
 package techit.gongsimchae.web;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import techit.gongsimchae.domain.common.wishlist.service.WishListService;
+import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 @Controller
 @RequestMapping("/mypage")
+@RequiredArgsConstructor
 public class MyPageController {
+
+    private final WishListService wishListService;
+    private final SubdivisionService subdivisionService;
+
     @GetMapping("/orders")
     public String mypage(){
         return "mypage/orders";
@@ -63,4 +71,44 @@ public class MyPageController {
     public String PickList() {
         return "mypage/pickList";
     }
+
+    /**
+     * 소분 글 관심 목록
+     */
+    @GetMapping("/interest/list")
+    public String InterestList(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                               Model model) {
+
+        model.addAttribute("subdivisionWishListRespDtoList",
+                wishListService.getSubdivisionWishLists(principalDetails.getAccountDto().getId()));
+
+        return "mypage/subdivisionWishlist";
+    }
+
+    /**
+     * 내가 쓴 글 목록
+     */
+    @GetMapping("/write")
+    public String mySubdivisionList(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                    Model model) {
+
+        model.addAttribute("mySubdivisionRespDtoList",
+                subdivisionService.findSubdivisionByUserId(principalDetails.getAccountDto().getId()));
+
+        return "mypage/mySubdivisionList";
+    }
+
+    /**
+     * 참여 중인 소분글 목록
+     */
+    @GetMapping("/join")
+    public String SubdivisionJoinList(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                      Model model) {
+
+        model.addAttribute("SubdivisionJoinRespDtoList",
+                subdivisionService.findJoinSubdivisionByUserId(principalDetails.getAccountDto().getId()));
+
+        return "mypage/subdivisionJoinList";
+    }
+
 }

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/portionHeader :: header(~{::title},~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>참여중인 소분</title>
+</head>
+<body>
+<section>
+    <link th:href="@{/css/portion/subdivisionWishlist.css}" rel="stylesheet">
+
+    <main class="mypage-container">
+        <div th:replace="~{layout/navbar :: mypage_side_navbar}"></div>
+
+        <div id="wishlist-container" class="container mt-4">
+            <div th:each="subdivisionItem : ${SubdivisionJoinRespDtoList}" class="wishlist-item row mb-4"
+                 th:data-url="'/portioning/' + ${subdivisionItem.UID}">
+                <div class="col-md-2">
+                    <div class="image-container">
+                        <div th:if="${subdivisionItem.imageFile != null}">
+                            <img th:src="${subdivisionItem.imageFile.url}" alt="thumbnail" class="img-thumbnail">
+                        </div>
+                        <div th:if="${subdivisionItem.imageFile == null}" class="default-image">
+                            <div class="default-thumbnail">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info col-md-8">
+                    <h5 th:text="${subdivisionItem.title}">제목</h5>
+                    <p class="price" th:text="${subdivisionItem.price + '원'}">가격</p>
+                    <p class="details">
+                        <span th:text="${subdivisionItem.address}">주소</span>
+                        |
+                        <span th:text="${subdivisionItem.updateDate != null ? #temporals.format(subdivisionItem.updateDate, 'yyyy-MM-dd') : #temporals.format(subdivisionItem.createDate, 'yyyy-MM-dd')}">날짜</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script th:src="@{/js/portion/subdivisionWishlist.js}"></script>
+</section>
+</body>
+</html>
