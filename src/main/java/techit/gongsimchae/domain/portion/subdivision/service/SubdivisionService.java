@@ -7,11 +7,22 @@ import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class SubdivisionService {
 
     private final SubdivisionRepository subdivisionRepository;
+
+
+    public List<SubdivisionRespDto> getAllSubdivisions(){
+        List<Subdivision> subdivisions = subdivisionRepository.findByOrderByCreateDateDesc();
+        return subdivisions.stream()
+                .map(SubdivisionRespDto::new)
+                .collect(Collectors.toList());
+    }
 
     /**
      * URL의 Path 값으로 넘어온 UID로 DB에서 해당 소분 글을 찾아주는 메서드

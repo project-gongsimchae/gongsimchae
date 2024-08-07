@@ -119,30 +119,12 @@ document.addEventListener('DOMContentLoaded', function() {
     $('.sigungu-areas, .myeondongeup-areas').hide();
 });
 
-$(document).ready(function() {
-    $('#searchTagsButton').on('click', function() {
-        // 선택된 태그를 가져옵니다
-        let tags = [];
-        $('#selectedTags .tag').each(function() {
-            tags.push($(this).text().trim());
-        });
-
-        // 태그를 기반으로 검색을 수행
-        if (tags.length > 0) {
-            // 검색 쿼리 문자열 생성
-            let query = tags.join(' ');
-            // 검색 로직 구현 (예: 서버로 검색 요청 보내기)
-            console.log('검색 쿼리:', query);
-
-            // 여기서 검색 요청을 보낼 수 있습니다 (예: AJAX)
-            // $.get(`${contextPath}/search?query=${encodeURIComponent(query)}`, function(data) {
-            //     // 검색 결과 처리
-            // }).fail(function(jqXHR, textStatus, errorThrown) {
-            //     console.error("검색 요청 실패:", textStatus, errorThrown);
-            // });
-        } else {
-            alert('검색할 태그를 선택하세요.');
-        }
-    });
+document.getElementById('sortNew').addEventListener('click', function(event) {
+    event.preventDefault();
+    // 최신순 정렬을 위한 코드 작성
 });
 
+document.getElementById('sortDeadline').addEventListener('click', function(event) {
+    event.preventDefault();
+    // 마감순 정렬을 위한 코드 작성
+});
