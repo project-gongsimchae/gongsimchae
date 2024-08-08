@@ -6,14 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.service.UserService;
+import techit.gongsimchae.domain.common.wishlist.service.WishListService;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
-import techit.gongsimchae.domain.common.wishlist.service.WishListService;
+import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
+import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
+import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
@@ -28,14 +29,37 @@ public class MyPageController {
 
     private final WishListService wishListService;
     private final SubdivisionService subdivisionService;
-
     private final UserService userService;
     private final CouponService couponService;
-
+    private final OrdersService ordersService;
 
     @GetMapping("/orders")
-    public String mypage(){
+    public String orders(@AuthenticationPrincipal PrincipalDetails userDetails, Model model){
+        String username = userDetails.getUsername();
+        User user = userService.findByUserName(username);
+        Long userId = user.getId();
+
+        List<Orders> orders = ordersService.getUserOrders(userId);
+        model.addAttribute("orders",orders);
+
         return "mypage/orders";
+    }
+
+    @GetMapping("/orders/{ordersId}")
+    public String orderDetail(@PathVariable Long ordersId,
+                              @AuthenticationPrincipal PrincipalDetails userDetails, Model model){
+        String username = userDetails.getUsername();
+        User user = userService.findByUserName(username);
+
+        Orders ordersDetail = ordersService.getOrderDetail(ordersId,user.getId());
+        OrdersPaymentDto ordersPayment = ordersService.getOrdersPayment(ordersId);
+        if (ordersDetail == null) {
+            return "redirect:error/4xx";
+        }
+
+        model.addAttribute("ordersDetail",ordersDetail);
+        model.addAttribute("ordersPayment",ordersPayment);
+        return "mypage/ordersDetail";
     }
 
     /**

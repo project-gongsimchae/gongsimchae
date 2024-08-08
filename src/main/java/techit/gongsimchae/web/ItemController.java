@@ -98,6 +98,7 @@ public class ItemController {
     }
 
     /**
+     * 신상품 페이지 조회
      * 상품 등록일 기준 200건을 조회
      * 200건 내에서 sorted_type에 따라 정렬을 다르게 리턴
      */
@@ -105,8 +106,23 @@ public class ItemController {
     public String getNewItems(@RequestParam(defaultValue = "1") Integer page,
                               @RequestParam(defaultValue = "96") Integer per_page,
                               @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
-        Page<Item> newItemsPage = itemService.getTop200ItemsPage(page - 1, per_page, sorted_type);
+        Page<Item> newItemsPage = itemService.getTop200NewItemsPage(page - 1, per_page, sorted_type);
         model.addAttribute("newItemsPage", newItemsPage);
         return "category/newItem";
+    }
+
+    /**
+     * 베스트 페이지 조회
+     * 누적 판매량 기준 200건을 조회
+     * 200건 내에서 sorted_type에 따라 정렬을 다르게 리턴
+     */
+
+    @GetMapping("/collection-groups/best-item")
+    public String getBestItems(@RequestParam(defaultValue = "1") Integer page,
+                              @RequestParam(defaultValue = "96") Integer per_page,
+                              @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
+        Page<Item> bestItemsPage = itemService.getTop200BestItemsPage(page - 1, per_page, sorted_type);
+        model.addAttribute("bestItemsPage", bestItemsPage);
+        return "category/bestItem";
     }
 }
