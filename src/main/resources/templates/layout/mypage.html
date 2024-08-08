@@ -17,6 +17,8 @@
     <link th:href="@{/css/mypage.css}" rel="stylesheet">
     <link rel="stylesheet" href="" th:href="@{/css/mypage/picklist.css}">
     <link rel="stylesheet" href="" th:href="@{/css/mypage/coupon.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/mypage/inquiry.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/mypage/inquiryList.css}">
 </head>
 <body>
 <header>
@@ -123,6 +125,41 @@
                     $('#error-message').text(errorMessage).show(); // 오류 메시지를 표시합니다
                 }
             });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const inquiryTable = document.querySelector('.inquiry-table');
+
+        inquiryTable.addEventListener('click', function(e) {
+            if (e.target.classList.contains('inquiry-title-cell')) {
+                const row = e.target.closest('tr');
+                const id = row.getAttribute('data-id');
+
+                // 이미 상세 내용이 표시되어 있다면 제거
+                const existingDetail = row.nextElementSibling;
+                if (existingDetail && existingDetail.classList.contains('inquiry-detail-row')) {
+                    existingDetail.remove();
+                    return;
+                }
+
+                // 서버에서 상세 정보를 가져오는 AJAX 요청
+                fetch(`/mypage/inquiry/${id}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const detailContent = doc.querySelector('section');
+
+                        const newRow = document.createElement('tr');
+                        newRow.classList.add('inquiry-detail-row');
+                        const newCell = newRow.insertCell();
+                        newCell.colSpan = 3;
+                        newCell.appendChild(detailContent);
+
+                        row.parentNode.insertBefore(newRow, row.nextSibling);
+                    });
+            }
         });
     });
 
