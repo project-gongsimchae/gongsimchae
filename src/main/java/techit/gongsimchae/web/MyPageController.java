@@ -4,20 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.service.UserService;
+import techit.gongsimchae.domain.common.wishlist.service.WishListService;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
-import techit.gongsimchae.domain.common.wishlist.service.WishListService;
-import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
-import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
+import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
+import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class MyPageController {
     private final OrdersService ordersService;
 
     @GetMapping("/orders")
-    public String orders(@AuthenticationPrincipal UserDetails userDetails, Model model){
+    public String orders(@AuthenticationPrincipal PrincipalDetails userDetails, Model model){
         String username = userDetails.getUsername();
         User user = userService.findByUserName(username);
         Long userId = user.getId();
@@ -48,7 +47,7 @@ public class MyPageController {
 
     @GetMapping("/orders/{ordersId}")
     public String orderDetail(@PathVariable Long ordersId,
-                              @AuthenticationPrincipal UserDetails userDetails, Model model){
+                              @AuthenticationPrincipal PrincipalDetails userDetails, Model model){
         String username = userDetails.getUsername();
         User user = userService.findByUserName(username);
 
