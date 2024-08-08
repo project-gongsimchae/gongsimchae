@@ -25,7 +25,7 @@ public class Orders extends BaseEntity {
     @OneToMany(mappedBy = "orders")
     private List<OrderItem> orderItems;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 }

@@ -9,9 +9,9 @@ import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.repository.OrdersRepository;
 import techit.gongsimchae.domain.groupbuying.payment.entity.Payment;
 import techit.gongsimchae.domain.groupbuying.payment.repository.PaymentRepository;
+import techit.gongsimchae.global.exception.CustomWebException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +30,8 @@ public class OrdersService {
     public OrdersPaymentDto getOrdersPayment(Long ordersId){
         OrdersPaymentDto dto = new OrdersPaymentDto();
         List<OrderItem> orderItem = orderItemRepository.findByOrdersId(ordersId);
-        Optional<Payment> payment = paymentRepository.findByOrdersId(ordersId);
+        Payment payment = paymentRepository.findByOrdersId(ordersId)
+                .orElseThrow(() -> new CustomWebException("결제 정보를 찾지 못했습니다."));
 
 
         int totalPrice = 0;
@@ -48,8 +49,8 @@ public class OrdersService {
         dto.setTotalPrice(totalDiscountPrice);
         dto.setDiscountAmount(totalPrice - totalDiscountPrice);
         dto.setCouponDiscount(0);
-        dto.setFinalPaymentAmount(payment.get().getAmount());
-        dto.setPaymentType(payment.get().getPayType());
+        dto.setFinalPaymentAmount(payment.getAmount());
+        dto.setPaymentType(payment.getPayType());
 
         return dto;
     }
