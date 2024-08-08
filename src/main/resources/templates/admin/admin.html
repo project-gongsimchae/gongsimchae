@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{layout/productHeader :: header(~{::title},~{::section})}">
 <head>
-    <meta charset="UTF-8">
+    meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>관리자 페이지</title>
 
 </head>
 <body>
 <h1>관리자 페이지</h1>
-<nav>
-    <ul>
-        <li><a th:href="@{/admin/event}">이벤트 관리</a></li>
-        <li><a th:href="@{/admin/item}">상품 관리</a></li>
-        <li><a th:href="@{/admin/users}">유저 관리</a></li>
-        <li><a th:href="@{/admin/banners}">배너 관리</a></li>
-    </ul>
-</nav>
+<section>
+    <link th:href="@{/css/admin/admin.css}" rel="stylesheet">
+
+    <main class="admin-container">
+        <div th:replace="~{layout/navbar :: admin_side_navbar}"></div>
+
+    </main>
+</section>
 </body>
 </html>
