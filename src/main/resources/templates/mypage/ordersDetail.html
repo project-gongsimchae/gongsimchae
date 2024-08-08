@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="layout/mypage :: mypage(~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 내역 상세 - 공심채</title>
+</head>
+<body>
+<section class="order-detail-page">
+    <h2 class="order-detail-title">주문 내역 상세</h2>
+
+    <div class="order-detail-section">
+        <h3 class="order-detail-subtitle">주문 정보</h3>
+        <table class="order-detail-table">
+            <tr>
+                <th>주문번호</th>
+                <td th:text="${ordersDetail.id}"></td>
+            </tr>
+            <tr>
+                <th>주문일자</th>
+                <td th:text="${#temporals.format(ordersDetail.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+            <tr>
+                <th>주문상태</th>
+                <td th:text="${ordersDetail.orderStatus}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="order-detail-section">
+        <h3 class="order-detail-subtitle">주문 상품</h3>
+        <ul class="order-detail-items">
+            <li th:each="orderItem : ${ordersDetail.orderItems}" class="order-detail-item">
+                <div class="order-detail-item-info">
+                    <h4 th:text="${orderItem.item.name}" class="order-detail-item-name"></h4>
+                    <p class="order-detail-item-price" th:text="${#numbers.formatDecimal(orderItem.price, 0, 'COMMA', 0, 'POINT')} + '원'"></p>
+                    <p class="order-detail-item-quantity" th:text="'수량: ' + ${orderItem.count} + '개'"></p>
+                </div>
+                <button class="order-detail-review-button">후기작성</button>
+            </li>
+        </ul>
+    </div>
+
+    <div class="order-detail-section">
+        <h3 class="order-detail-subtitle">결제 정보</h3>
+        <table class="order-detail-table">
+            <tr>
+                <th>상품금액</th>
+                <td th:text="${#numbers.formatDecimal(ordersPayment.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></td>
+            </tr>
+            <tr>
+                <th>상품 할인금액</th>
+                <td th:text="${#numbers.formatDecimal(ordersPayment.discountAmount, 0, 'COMMA', 0, 'POINT')} + '원'"></td>
+            </tr>
+            <tr>
+                <th>쿠폰 할인</th>
+                <td th:text="${#numbers.formatDecimal(ordersPayment.couponDiscount, 0, 'COMMA', 0, 'POINT')} + '원'"></td>
+            </tr>
+            <tr class="order-detail-total">
+                <th>결제금액</th>
+                <td th:text="${#numbers.formatDecimal(ordersPayment.finalPaymentAmount, 0, 'COMMA', 0, 'POINT')} + '원'"></td>
+            </tr>
+            <tr>
+                <th>결제방법</th>
+                <td th:text="${ordersPayment.paymentType}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="order-detail-section">
+        <h3 class="order-detail-subtitle">배송 정보</h3>
+        <table class="order-detail-table">
+            <tr>
+                <th>받는 분</th>
+                <td th:text="${ordersDetail.user.name}"></td>
+            </tr>
+            <tr>
+                <th>연락처</th>
+                <td th:text="${ordersDetail.user.phoneNumber}"></td>
+            </tr>
+            <tr>
+                <th>주소</th>
+                <td th:text="${ordersDetail.user.address}"></td>
+            </tr>
+        </table>
+    </div>
+</section>
+</body>
+</html>

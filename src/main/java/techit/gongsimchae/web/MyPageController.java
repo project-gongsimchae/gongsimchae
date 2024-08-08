@@ -14,10 +14,14 @@ import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
+import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.service.UserService;
+import techit.gongsimchae.domain.common.wishlist.service.WishListService;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
-import techit.gongsimchae.domain.common.wishlist.service.WishListService;
+import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
+import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
+import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
@@ -35,11 +39,36 @@ public class MyPageController {
     private final UserService userService;
     private final CouponService couponService;
     private final InquiryService inquiryService;
+    private final OrdersService ordersService;
 
 
     @GetMapping("/orders")
-    public String mypage(){
+    public String orders(@AuthenticationPrincipal PrincipalDetails userDetails, Model model){
+        String username = userDetails.getUsername();
+        User user = userService.findByUserName(username);
+        Long userId = user.getId();
+
+        List<Orders> orders = ordersService.getUserOrders(userId);
+        model.addAttribute("orders",orders);
+
         return "mypage/orders";
+    }
+
+    @GetMapping("/orders/{ordersId}")
+    public String orderDetail(@PathVariable Long ordersId,
+                              @AuthenticationPrincipal PrincipalDetails userDetails, Model model){
+        String username = userDetails.getUsername();
+        User user = userService.findByUserName(username);
+
+        Orders ordersDetail = ordersService.getOrderDetail(ordersId,user.getId());
+        OrdersPaymentDto ordersPayment = ordersService.getOrdersPayment(ordersId);
+        if (ordersDetail == null) {
+            return "redirect:error/4xx";
+        }
+
+        model.addAttribute("ordersDetail",ordersDetail);
+        model.addAttribute("ordersPayment",ordersPayment);
+        return "mypage/ordersDetail";
     }
 
     /**

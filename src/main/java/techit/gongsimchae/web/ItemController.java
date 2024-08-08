@@ -3,6 +3,7 @@ package techit.gongsimchae.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
+import techit.gongsimchae.global.dto.PrincipalDetails;
 
 @Slf4j
 @Controller
@@ -37,8 +39,10 @@ public class ItemController {
     }
 
     @PostMapping("/admin/item/create")
-    public String createItem(@ModelAttribute ItemCreateDto itemCreateDto) {
-        itemService.createItem(itemCreateDto);
+    public String createItem(@ModelAttribute ItemCreateDto itemCreateDto,
+                             @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        itemService.createItem(itemCreateDto, principalDetails.getAccountDto().getId());
         return "redirect:/admin/item";
     }
 
@@ -98,6 +102,7 @@ public class ItemController {
     }
 
     /**
+     * 신상품 페이지 조회
      * 상품 등록일 기준 200건을 조회
      * 200건 내에서 sorted_type에 따라 정렬을 다르게 리턴
      */
@@ -105,8 +110,23 @@ public class ItemController {
     public String getNewItems(@RequestParam(defaultValue = "1") Integer page,
                               @RequestParam(defaultValue = "96") Integer per_page,
                               @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
-        Page<Item> newItemsPage = itemService.getTop200ItemsPage(page - 1, per_page, sorted_type);
+        Page<Item> newItemsPage = itemService.getTop200NewItemsPage(page - 1, per_page, sorted_type);
         model.addAttribute("newItemsPage", newItemsPage);
         return "category/newItem";
+    }
+
+    /**
+     * 베스트 페이지 조회
+     * 누적 판매량 기준 200건을 조회
+     * 200건 내에서 sorted_type에 따라 정렬을 다르게 리턴
+     */
+
+    @GetMapping("/collection-groups/best-item")
+    public String getBestItems(@RequestParam(defaultValue = "1") Integer page,
+                              @RequestParam(defaultValue = "96") Integer per_page,
+                              @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
+        Page<Item> bestItemsPage = itemService.getTop200BestItemsPage(page - 1, per_page, sorted_type);
+        model.addAttribute("bestItemsPage", bestItemsPage);
+        return "category/bestItem";
     }
 }
