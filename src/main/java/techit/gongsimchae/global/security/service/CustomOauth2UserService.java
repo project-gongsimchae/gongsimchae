@@ -7,7 +7,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
-import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.global.dto.*;
@@ -38,8 +37,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
 
         Optional<User> _user = userRepository.findByEmail(oAuth2Response.getEmail());
         if (_user.isEmpty()) {
-            Address address = new Address("1", "1", "1");
-            User savedUser = userRepository.save(new User(oAuth2Response,address));
+            User savedUser = userRepository.save(new User(oAuth2Response));
             AccountDto accountDto = new AccountDto(savedUser);
             return new PrincipalDetails(accountDto, oAuth2Response.getAttributes());
         } else{

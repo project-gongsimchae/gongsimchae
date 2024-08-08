@@ -1,0 +1,30 @@
+.btn-primary {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+.btn-primary:hover {
+    background-color: #45a049;
+    border-color: #45a049;
+}
+.btn-link {
+    color: #4CAF50;
+    font-size: 0.9rem;
+}
+.btn-link:hover {
+    color: #388E3C;
+}
+.social-buttons .btn {
+    width: 48%;
+    font-size: 1rem;
+}
+.social-buttons .btn-success {
+    background-color: #03C03C;
+    border-color: #03C03C;
+}
+.social-buttons .btn-danger {
+    background-color: #DB4437;
+    border-color: #DB4437;
+}
+.card-header {
+    background-color: #4CAF50 !important;
+}

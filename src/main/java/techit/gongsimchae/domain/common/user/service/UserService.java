@@ -9,10 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.common.user.dto.*;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
+import techit.gongsimchae.domain.groupbuying.coupon.repository.CouponRepository;
+import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
+import techit.gongsimchae.domain.groupbuying.couponuser.entity.CouponUser;
+import techit.gongsimchae.domain.groupbuying.couponuser.repository.CouponUserRepository;
 import techit.gongsimchae.domain.mail.event.AuthCodeEvent;
 import techit.gongsimchae.domain.mail.event.JoinMailEvent;
 import techit.gongsimchae.domain.mail.event.LoginIdEvent;
@@ -39,6 +43,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher publisher;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final CouponRepository couponRepository;
+    private final CouponUserRepository couponUserRepository;
 
     /**
      * 6자리 인증코드를 만들고 redis에 저장
@@ -70,8 +76,7 @@ public class UserService {
     @Transactional
     public void signup(UserJoinReqDtoWeb joinDto) {
         joinDto.setPassword(passwordEncoder.encode(joinDto.getPassword()));
-        Address address = new Address(joinDto);
-        User user = new User(joinDto, address);
+        User user = new User(joinDto);
         userRepository.save(user);
         sendJoinMail(joinDto);
     }
@@ -192,8 +197,15 @@ public class UserService {
     @Transactional
     public void updateByAdmin(UserAdminUpdateReqDtoWeb updateDto) {
         User findUser = userRepository.findById(updateDto.getId()).orElseThrow(() -> new CustomWebException("not found user"));
-        Address address = new Address(updateDto.getZipcode(), updateDto.getAddress(), updateDto.getDetailAddress());
-        findUser.changeInfoByAdmin(updateDto, address);
+        findUser.changeInfoByAdmin(updateDto);
+    }
+
+    public void addCoupon(String couponCode, PrincipalDetails principalDetails) {
+        Coupon coupon = couponRepository.findByCouponCode(couponCode).orElseThrow(() -> new CustomWebException("not found coupon"));
+        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
+        CouponUser couponUser = new CouponUser(coupon, user);
+        couponUserRepository.save(couponUser);
+
     }
 
     public User findByUserName(String username){

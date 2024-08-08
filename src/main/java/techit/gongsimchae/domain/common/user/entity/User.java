@@ -5,15 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import techit.gongsimchae.domain.Address;
 import techit.gongsimchae.domain.BaseEntity;
-import techit.gongsimchae.domain.common.blocked.entity.Block;
+import techit.gongsimchae.domain.common.address.entity.Address;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
 import techit.gongsimchae.global.dto.OAuth2Response;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -23,7 +24,6 @@ import java.util.UUID;
 @Table(name = "users")
 @Builder
 public class User extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -45,10 +45,8 @@ public class User extends BaseEntity {
     private UserStatus userStatus;
     @Column(unique = true)
     private String UID;
+    @Enumerated(EnumType.STRING)
     private JoinType joinType;
-
-    @Embedded
-    private Address address;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_file_id")
@@ -59,7 +57,7 @@ public class User extends BaseEntity {
      * 일반 회원가입
      */
 
-    public User(UserJoinReqDtoWeb joinReqDto, Address address) {
+    public User(UserJoinReqDtoWeb joinReqDto) {
         this.name = joinReqDto.getName();
         this.email = joinReqDto.getEmail();
         this.password = joinReqDto.getPassword();
@@ -69,7 +67,6 @@ public class User extends BaseEntity {
         this.phoneNumber = joinReqDto.getPhoneNumber();
         this.userStatus = UserStatus.NORMAL;
         this.UID = UUID.randomUUID().toString();
-        this.address = address;
         this.mannerPoint = 0;
         this.joinType = JoinType.NORMAL;
     }
@@ -78,7 +75,7 @@ public class User extends BaseEntity {
      * OAuth2로 로그인시 DB에 저장할것들
      */
 
-    public User(OAuth2Response oAuth2Response, Address address) {
+    public User(OAuth2Response oAuth2Response) {
         this.name = oAuth2Response.getName();
         this.loginId = oAuth2Response.getLoginId();
         this.role = UserRole.ROLE_USER;
@@ -86,7 +83,6 @@ public class User extends BaseEntity {
         this.nickname = UUID.randomUUID().toString().substring(0, 8);
         this.userStatus = UserStatus.NORMAL;
         this.UID = UUID.randomUUID().toString();
-        this.address = address;
         this.mannerPoint = 0;
         this.joinType = JoinType.OAUTH;
 
@@ -142,8 +138,10 @@ public class User extends BaseEntity {
         this.password = newPassword;
     }
 
-
-    public void changeInfoByAdmin(UserAdminUpdateReqDtoWeb updateDto, Address address) {
+    /**
+     * 관리자가 유저정보 수정할 때 수정하는 것들
+     */
+    public void changeInfoByAdmin(UserAdminUpdateReqDtoWeb updateDto) {
         this.name = updateDto.getName();
         this.loginId = updateDto.getLoginId();
         this.role = updateDto.getRole();
@@ -151,7 +149,6 @@ public class User extends BaseEntity {
         this.nickname = updateDto.getNickname();
         this.phoneNumber = updateDto.getPhoneNumber();
         this.userStatus = updateDto.getUserStatus();
-        this.address = address;
         this.mannerPoint = updateDto.getMannerPoint();
         this.joinType = updateDto.getJoinType();
 

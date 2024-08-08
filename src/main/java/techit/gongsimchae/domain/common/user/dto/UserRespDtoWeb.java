@@ -3,6 +3,7 @@ package techit.gongsimchae.domain.common.user.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import techit.gongsimchae.domain.common.address.dto.AddressRespDtoWeb;
 import techit.gongsimchae.domain.common.user.entity.JoinType;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.entity.UserRole;
@@ -22,16 +23,12 @@ public class UserRespDtoWeb {
     private String nickname;
     private String phoneNumber;
     private String UID;
-    private String zipcode;
-    private String address;
-    private String detailAddress;
     private UserStatus userStatus;
     private UserRole role;
     private String password;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private JoinType joinType;
-
     private String passwordChange;
     private String passwordChangeConfirm;
 
@@ -46,9 +43,6 @@ public class UserRespDtoWeb {
         this.loginId = user.getLoginId();
         this.nickname = user.getNickname();
         this.phoneNumber = user.getPhoneNumber();
-        this.zipcode = user.getAddress().getZipcode();
-        this.address = user.getAddress().getAddress();
-        this.detailAddress = user.getAddress().getDetailAddress();
         this.createDate = user.getCreateDate();
         this.updateDate = user.getUpdateDate();
         this.role = user.getRole();

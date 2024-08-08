@@ -1,0 +1,283 @@
+body {
+    text-align: center;
+    line-height: 1.6; /* 전체적인 줄 간격 조정 */
+}
+
+.product-detail-section {
+    display: flex;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 30px; /* Padding 추가로 내부 여백 증가 */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.product-detail-image {
+    flex: 1;
+    margin-right: 40px; /* 이미지와 텍스트 사이 간격 증가 */
+    text-align: center;
+}
+
+.product-detail-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.product-detail-info {
+    flex: 1;
+    text-align: center;
+}
+
+.product-detail-title {
+    font-size: 26px; /* 제목 크기 약간 증가 */
+    margin: 0 0 40px 0; /* 위쪽과 아래쪽에 간격 추가 */
+}
+
+.price-detail-container {
+    margin-top: 30px; /* 위쪽에 여백 추가 */
+    position: relative;
+}
+
+.original-price-detail {
+    font-size: 16px; /* 글자 크기 약간 증가 */
+    color: #888;
+    display: block;
+    text-decoration: line-through;
+    margin-bottom: 15px; /* 아래쪽 여백 추가 */
+    font-weight: normal;
+}
+
+.discount-detail-info {
+    position: relative;
+    top: -10px; /* 조금 더 내려와서 보기 좋게 조정 */
+    left: 0;
+    right: 0;
+    font-size: 20px; /* 글자 크기 약간 증가 */
+    text-align: center;
+}
+
+.discount-rate-detail, .discount-price-detail {
+    font-weight: bold;
+    margin: 10px 0; /* 요소 간 간격 증가 */
+}
+
+.discount-rate-detail {
+    color: #e74c3c;
+}
+
+.discount-price-detail {
+    color: #2ecc71;
+}
+
+.buying-people-detail {
+    color: #3498db;
+    margin-top: 15px; /* 위쪽 여백 추가 */
+}
+
+.btn-detail-container {
+    margin-top: 30px; /* 위쪽 여백 추가 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* 버튼과 가격 사이 간격 증가 */
+}
+
+.btn-detail-row {
+    display: flex;
+    justify-content: center; /* 버튼들 사이 간격 증가 */
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-detail-container select {
+    font-size: 16px;
+    padding: 8px;
+    width: 180px;
+}
+
+.total-price-detail {
+    font-size: 22px; /* 글자 크기 약간 증가 */
+    font-weight: bold;
+    margin-top: 15px; /* 위쪽 여백 추가 */
+}
+
+.separator-detail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    margin: 40px auto; /* 위아래 여백 증가 */
+    width: 100%;
+}
+
+.product-description-detail, .reviews-detail, .inquiries-detail {
+    padding: 30px; /* 패딩 증가로 내부 여백 확대 */
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.product-description-detail h4, .reviews-detail h4, .inquiries-detail h4 {
+    margin-top: 0;
+    margin-bottom: 20px; /* 아래쪽 여백 추가 */
+}
+
+.status-detail-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px; /* 아래쪽 여백 추가 */
+    width: 100%;
+    text-align: center;
+}
+
+.status-detail-container .progress {
+    background-color: #f0f0f0;
+    height: 10px;
+    width: 300px;
+    margin-bottom: 15px; /* 아래쪽 여백 추가 */
+}
+
+.progress-bar {
+    height: 10px;
+}
+
+.custom-btn-outline-secondary {
+    border: 1px solid #6c757d;
+    color: #6c757d;
+    background-color: transparent;
+    padding: 8px 16px; /* 패딩을 조정하여 텍스트가 버튼 안에서 잘 보이도록 함 */
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 30px;
+    height: 38px; /* 버튼 높이 고정 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.custom-btn-success {
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+    padding: 8px 16px; /* 패딩을 조정하여 텍스트가 버튼 안에서 잘 보이도록 함 */
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 30px;
+    height: 38px; /* 버튼 높이 고정 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-btn-success:hover {
+    background-color: #218838;
+}
+#selected-options {
+    margin: 20px 0;
+}
+
+.option-detail {
+    font-size: 14px;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    width: 300px; /* 너비 조정 */
+    background: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.option-detail .remove-option-btn {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.option-detail .remove-option-btn:hover {
+    color: #c0392b;
+}
+
+.option-detail .quantity-controls {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.option-detail .quantity-controls button {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 4px 8px;
+    cursor: pointer;
+    height: 30px; /* 버튼 높이 조정 */
+}
+
+.option-detail .quantity-controls input {
+    width: 50px; /* 입력 필드 너비 조정 */
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 4px;
+    margin: 0 5px;
+    height: 30px; /* 입력 필드 높이 조정 */
+}
+
+.option-detail .option-price {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: right;
+    width: 100%;
+}
+
+.total-price-container {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: right;
+    width: 300px; /* 너비 조정 */
+}
+
+.form-select {
+    height: 40px; /* select 높이 조정 */
+    width: 100%;
+    max-width: 300px; /* 너비 조정 */
+}
+.quantity-controls {
+    display: flex;
+    align-items: center;
+}
+.quantity-controls button {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+}
+.quantity-value {
+    width: 40px;
+    text-align: center;
+    font-size: 16px;
+    margin: 0 10px;
+}
+.option-price {
+    margin-left: 10px;
+}

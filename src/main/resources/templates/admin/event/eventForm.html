@@ -19,9 +19,10 @@
     <label for="expirationDate">만료날짜:</label>
     <input type="datetime-local" id="expirationDate" th:field="*{expirationDate}" required /><br/>
 
-
-    <label for="eventImageUrl">이벤트 이미지 URL:</label>
-    <input type="text" id="eventImageUrl" th:field="*{eventImageUrl}" /><br/>
+    <div>
+        <label for="couponCode">쿠폰 코드</label>
+        <input type="text" id="couponCode" th:field="*{couponCode}" required /><br/>
+    </div>
 
     <button type="submit">생성</button>
 </form>

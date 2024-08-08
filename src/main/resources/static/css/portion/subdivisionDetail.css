@@ -33,55 +33,57 @@
     padding: 0;
 }
 
-.user-info {
+.user-info-subdivision {
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
+    padding: 20px;
 }
 
-.user-info .user-details {
+.user-info-subdivision .user-details {
     display: flex;
     flex-direction: column;
 }
 
-.user-info .manner-point {
+.user-info-subdivision .manner-point {
     display: flex;
     align-items: center;
     margin-left: auto;
 }
 
-.user-info .manner-point label {
+.user-info-subdivision .manner-point label {
     margin-right: 10px;
 }
 
-.user-info .manner-point progress {
+.user-info-subdivision .manner-point progress {
     -webkit-appearance: none;
     appearance: none;
     width: 100px;
     height: 10px;
 }
 
-.user-info .manner-point progress::-webkit-progress-bar {
+.user-info-subdivision .manner-point progress::-webkit-progress-bar {
     background-color: #f0f0f0;
     border-radius: 5px;
     overflow: hidden;
 }
 
-.user-info .manner-point progress::-webkit-progress-value {
+.user-info-subdivision .manner-point progress::-webkit-progress-value {
     background-color: #4CAF50;
     border-radius: 5px 0 0 5px;
 }
 
-.user-info .manner-point progress::-moz-progress-bar {
+.user-info-subdivision .manner-point progress::-moz-progress-bar {
     background-color: #4CAF50;
     border-radius: 5px 0 0 5px;
 }
 
 .section-divider {
     border: none;
-    border-bottom: 1px solid #ddd;
-    margin: 20px 0;
 }
 
 .content {

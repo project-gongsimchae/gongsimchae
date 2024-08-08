@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
-import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
 
 @Entity
 @Getter

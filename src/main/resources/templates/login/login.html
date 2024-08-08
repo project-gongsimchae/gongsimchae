@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인 페이지</title>
 </head>
-<body class="bg-light">
+<body>
 <section class="d-flex justify-content-center align-items-start min-vh-100 py-5">
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-5">
                 <div class="card shadow rounded-lg">
-                    <div class="card-header bg-primary text-white text-center py-4">
+                    <div class="card-header text-white text-center py-4">
                         <h1 class="h3 mb-0">로그인</h1>
                     </div>
                     <div class="card-body p-4">
@@ -33,16 +33,14 @@
 
                             <button type="submit" class="btn btn-primary btn-lg btn-block w-100">로그인</button>
                         </form>
-                    </div>
-                    <div class="card-footer bg-white py-3">
-                        <div class="d-flex justify-content-between mb-2">
+                        <div class="d-flex justify-content-between mb-3">
+                            <a href="/signup" class="btn btn-link text-decoration-none">회원가입</a>
                             <a href="/find/id" class="btn btn-link text-decoration-none">아이디 찾기</a>
                             <a href="/find/pw" class="btn btn-link text-decoration-none">비밀번호 찾기</a>
                         </div>
-                        <a href="/signup" class="btn btn-outline-secondary btn-block w-100">회원가입</a>
                     </div>
                 </div>
-                <div class="mt-4 text-center">
+                <div class="mt-4 text-center social-buttons">
                     <a href="/oauth2/authorization/naver" class="btn btn-success btn-lg me-2 mb-2">Naver Login</a>
                     <a href="/oauth2/authorization/google" class="btn btn-danger btn-lg mb-2">Google Login</a>
                 </div>

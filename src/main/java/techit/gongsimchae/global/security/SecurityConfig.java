@@ -56,6 +56,9 @@ public class SecurityConfig {
                         .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue","/find/**","/emails/**").permitAll()
                         .anyRequest().permitAll())
 
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/emails/**","/find/**","/mypage/**"))
+
                 .formLogin(form -> form
                         .loginPage("/login")
                         .usernameParameter("loginId")

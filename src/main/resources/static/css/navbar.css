@@ -1,7 +1,10 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #ffffff; /* 배경색 흰색으로 설정 */
-    margin: 0 20px;
+}
+
+nav {
+    margin: 0 180px;
 }
 
 .navbar {
@@ -79,10 +82,12 @@ body {
 
 .shop-division {
     list-style-type: none;
+    padding-left: 0;
+    padding-right: 10px;
 }
 
 .shop-division > li {
-    margin: 0 20px;
+    margin: 0 15px;
 }
 
 .nav-container {
@@ -94,7 +99,7 @@ body {
 }
 
 .nav-list-a {
-    margin-right: 6rem !important;
+    margin-right: 3rem !important;
     margin-left: 6rem !important;
 }
 
@@ -121,4 +126,53 @@ body {
 .navbar-links.text-center .text-end .nav-list-a {
     margin-left: 1rem !important;
     margin-right: 0 !important;
+}
+
+/**
+카테고리 css
+ */
+
+.navbar-menu {
+    color: rgb(51,51,51);
+    position: relative;
+    display: inline-block;
+}
+
+.navbar-menu:hover {
+    color: #4CAF50;
+}
+
+.navbar-menu .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    z-index: 1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar-menu:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-item {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    color: rgb(51,51,51);
+    background-color: white;
+}
+
+.dropdown-item:hover {
+    background-color: #d3d3d3;
+    color: #4CAF50;
+}
+
+.search-btn {
+    width: 60px;
 }

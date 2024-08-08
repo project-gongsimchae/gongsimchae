@@ -79,12 +79,12 @@ public class AdminController {
         return "admin/banners/bannerList";
     }
 
-    @GetMapping("/banners/write/{id}")
-    public String bannerForm(@PathVariable("id") Long id){
+    @GetMapping("/banners/write")
+    public String bannerForm(){
         return "admin/banners/write";
     }
 
-    @PostMapping("/banners/write/{id}")
+    @PostMapping("/banners/write")
     public String banner(){
         return "redirect:/admin/banners";
     }

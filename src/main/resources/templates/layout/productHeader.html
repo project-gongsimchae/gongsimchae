@@ -9,9 +9,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="" th:href="@{css/login.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/user/login.css}">
+    <link rel="stylesheet" href="/css/category.css">
+    <link rel="stylesheet" th:href="@{/css/gongu.css}">
     <link th:href="@{/css/navbar.css}" rel="stylesheet">
     <link th:href="@{/css/mypage.css}" rel="stylesheet">
+
 </head>
 <body>
 <div th:replace="~{layout/navbar :: product_navbar}"></div>
@@ -23,8 +26,9 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f87234e8635a427cd0f2a6dcdf8b0597&libraries=services"></script>
+<script src="" th:src="@{/js/authcode.js}"></script>
 <script src="" th:src="@{/js/map.js}"></script>
 <script th:src="@{/js/sendmail.js}"></script>
-<script src="" th:src="@{/js/authcode.js}"></script>
+<script th:src="@{/js/gongu.js}"></script>
 </body>
 </html>

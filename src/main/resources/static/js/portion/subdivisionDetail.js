@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     confirmButton.addEventListener('click', function () {
-        const UID = subdivisionDto.UID; // subdivisionDto.UID를 사용하여 UID 값을 가져옴
+        const UID = subdivisionRespDto.UID; // subdivisionDto.UID를 사용하여 UID 값을 가져옴
         window.location.href = `/portioning/${UID}/join`;
     });
 

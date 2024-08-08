@@ -1,16 +1,25 @@
 package techit.gongsimchae.domain.groupbuying.item.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
-import techit.gongsimchae.domain.groupbuying.item.entity.Item;
-import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
-import techit.gongsimchae.domain.groupbuying.category.entity.Category;
-import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
+import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.*;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
+import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
+import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
+import techit.gongsimchae.global.exception.CustomWebException;
 
 @Service
 @RequiredArgsConstructor
@@ -74,5 +83,56 @@ public class ItemService {
 
     public List<Item> getPopularItems(){
         return itemRepository.findTop8ByOrderByGroupBuyingQuantityDesc();
+    }
+
+    public List<Item> getItemsByCategory(Category category) {
+        return itemRepository.findAllByCategory(category);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Item> getItemsPageByCategory(Category category, Integer page, Integer per_page,
+                                                   Integer sorted_type){
+        SortType sortType = getInstanceByTypeNumber(sorted_type);
+        Pageable pageable;
+        if (sortType.equals(신상품순)){
+            pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC,"createDate"));
+        } else if (sortType.equals(판매량순)) {
+            pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC, "cumulativeSalesVolume"));
+        } else if (sortType.equals(리뷰많은순)){
+            pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC, "reviewCount"));
+        } else if (sortType.equals(낮은가격순)){
+            pageable = PageRequest.of(page, per_page, Sort.by(Direction.ASC, "originalPrice"));
+        } else if (sortType.equals(높은가격순)) {
+            pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC, "originalPrice"));
+        } else {
+            throw new CustomWebException("존재하지 않는 정렬기준입니다.");
+        }
+        return itemRepository.findAllByCategory(category, pageable);
+    }
+
+    public ItemRespDtoWeb getItem(String id) {
+        Item item = itemRepository.findByUID(id).orElseThrow(() -> new CustomWebException("not found item"));
+        return new ItemRespDtoWeb(item);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Item> getTop200ItemsPage(Integer page, Integer per_page, Integer sorted_type) {
+        SortType sortType = getInstanceByTypeNumber(sorted_type);
+        Pageable pageable = PageRequest.of(page, per_page);
+        Page<Item> newItemsPage;
+        if (sortType.equals(신상품순)){
+            newItemsPage = itemRepository.findTop200ByOrderByCreateDateDesc(pageable);
+        } else if (sortType.equals(판매량순)) {
+            newItemsPage = itemRepository.findTop200ByCreateDateAndSortByCumulativeSalesVolumeDesc(pageable);
+        } else if (sortType.equals(리뷰많은순)){
+            newItemsPage = itemRepository.findTop200ByCreateDateAndSortByReviewCountDesc(pageable);
+        } else if (sortType.equals(낮은가격순)){
+            newItemsPage = itemRepository.findTop200ByCreateDateAndSortByOriginalPriceAsc(pageable);
+        } else if (sortType.equals(높은가격순)) {
+            newItemsPage = itemRepository.findTop200ByCreateDateAndSortByOriginalPriceDesc(pageable);
+        } else {
+            throw new CustomWebException("존재하지 않는 정렬기준입니다.");
+        }
+        return newItemsPage;
     }
 }

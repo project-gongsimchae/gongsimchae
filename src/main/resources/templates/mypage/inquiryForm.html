@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/productHeader :: header(~{::title},~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 페이지</title>
+</head>
+<body>
+<section>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-center bg-primary text-white">
+                        <h1>1:1 문의</h1>
+                    </div>
+                    <div class="card-body">
+                        <form th:action method="post" th:object="${inquiry}" enctype="multipart/form-data">
+
+                            <div class="form-group">
+                                <label for="inquiryType">문의유형</label>
+                                <select id="inquiryType" class="form-control" th:field="*{inquiryType}">
+                                    <option value="">==문의 유형==</option>
+                                    <option th:each="type : ${T(techit.gongsimchae.domain.common.inquiry.entity.InquiryType).values()}"
+                                            th:value="${type.name()}"
+                                            th:text="${type.description}"></option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="title">제목</label>
+                                <input type="text" id="title" class="form-control" th:field="*{title}" required>
+                                <div th:errors="*{title}" class="text-danger"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="content">내용</label>
+                                <input type="text" id="content" class="form-control" th:field="*{content}" required>
+                                <div th:errors="*{content}" class="text-danger"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="imageFiles">다중 이미지 파일</label>
+                                <input type="file" id="imageFiles" name="imageFiles" multiple="multiple" class="form-control-file">
+                            </div>
+
+                            <div class="form-group text-center">
+                                <input type="submit" class="btn btn-primary" value="제출">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+</body>
+</html>

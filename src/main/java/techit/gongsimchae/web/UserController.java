@@ -12,15 +12,18 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import techit.gongsimchae.domain.common.address.dto.AddressCreateReqDtoWeb;
+import techit.gongsimchae.domain.common.address.dto.AddressRespDtoWeb;
+import techit.gongsimchae.domain.common.address.dto.AddressUpdateReqDtoWeb;
+import techit.gongsimchae.domain.common.address.service.AddressService;
 import techit.gongsimchae.domain.common.user.dto.UserInfoConfirmReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,9 +31,10 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 @Slf4j
 public class UserController {
     private final UserService userService;
+    private final AddressService addressService;
 
     /**
-     * 유저가 자기자신 정보를 수정하는 페이지
+     * 유저 아이디, 비밀번호 확인
      */
     @GetMapping("/info")
     public String InfoConfirmForm(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
@@ -42,18 +46,22 @@ public class UserController {
 
     @PostMapping("/info")
     public String InfoConfirm(@Valid @ModelAttribute("user") UserInfoConfirmReqDtoWeb infoDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.debug("user info confirm {}", bindingResult.getAllErrors());
             return "user/info";
         }
         if (!userService.checkPassword(infoDto.getLoginId(), infoDto.getPassword())) {
             log.debug("user info confirm {}", bindingResult.getAllErrors());
-            bindingResult.rejectValue("password","password.invalid","Invalid loginId or password");
+            bindingResult.rejectValue("password", "password.invalid", "Invalid loginId or password");
             return "user/info";
         }
 
         return "redirect:/mypage/info/update";
     }
+
+    /**
+     * 개인정보 수정
+     */
 
     @GetMapping("/info/update")
     public String userUpdateForm(Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -66,18 +74,18 @@ public class UserController {
     public String userUpdate(@Valid @ModelAttribute("user") UserUpdateReqDtoWeb updateDto, BindingResult bindingResult,
                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("user update form validation error {} ", bindingResult.getAllErrors());
             return "user/update";
         }
 
         if (!updateDto.getPasswordChange().equals(updateDto.getPasswordChangeConfirm())) {
-            bindingResult.rejectValue("passwordConfirm","passwordConfirm.invalid","비밀번호가 일치하지 않습니다.");
+            bindingResult.rejectValue("passwordConfirm", "passwordConfirm.invalid", "비밀번호가 일치하지 않습니다.");
             return "user/update";
         }
 
         if (!userService.checkPassword(principalDetails.getAccountDto().getUID(), updateDto.getPassword())) {
-            bindingResult.rejectValue("password","password.invalid","비밀번호가 일치하지 않습니다.");
+            bindingResult.rejectValue("password", "password.invalid", "비밀번호가 일치하지 않습니다.");
             return "user/update";
         }
 
@@ -85,61 +93,60 @@ public class UserController {
         return "redirect:/mypage/info";
     }
 
+    /**
+     * 회원탈퇴
+     */
+
     @PostMapping("/delete")
     public String userDelete(@AuthenticationPrincipal PrincipalDetails principalDetails, HttpServletRequest request, HttpServletResponse response) {
         userService.deleteUser(principalDetails);
         Authentication authentication = SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication();
         if (authentication != null) {
-            new SecurityContextLogoutHandler().logout(request,response,authentication);
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
         return "redirect:/main";
     }
 
     /**
-     * 1:1 문의
-     */
-    @GetMapping("/inquiry/list")
-    public String inquiryList(Model model) {
-
-        return "user/inquiryList";
-    }
-
-    @GetMapping("/inquiry/form")
-    public String inquiryForm() {
-
-        return "user/inquiryForm";
-    }
-
-    @PostMapping("/inquiry/form")
-    public String inquires(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-
-        return "redirect:/inquiry/list";
-    }
-
-    /**
-     * 상품 후기
-     */
-    @GetMapping("/reviews")
-    public String reviews(Model model) {
-        return "user/reviews";
-    }
-
-    @GetMapping("/reviews/write")
-    public String reviewForm() {
-        return "user/reviewForm";
-    }
-
-    @PostMapping("/reviews/write")
-    public String viewsWrite(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return "redirect:/mypage/reviews";
-    }
-
-    /**
-     * 찜
+     * 배송지 관리
      */
 
-    @GetMapping("/pick/list")
-    public String PickList() {
-        return "user/pickList";
+    @GetMapping("/address")
+    public String address(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        List<AddressRespDtoWeb> address = addressService.getAddresses(principalDetails);
+        model.addAttribute("addresses", address);
+        model.addAttribute("shippingAddress", new AddressCreateReqDtoWeb());
+        return "user/address";
     }
+
+    @PostMapping("/address")
+    public String addAddress(@ModelAttribute("address") AddressCreateReqDtoWeb addressCreateReqDtoWeb, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        log.debug("address {}", addressCreateReqDtoWeb);
+        addressService.addAddress(addressCreateReqDtoWeb, principalDetails);
+        return "redirect:/mypage/address";
+    }
+
+    @GetMapping("/address/update/{id}")
+    public String addressUpdateForm(@PathVariable("id") String id, Model model) {
+        AddressRespDtoWeb address = addressService.getAddress(id);
+        model.addAttribute("address", address);
+        return "user/updateAddress";
+    }
+
+    @PostMapping("/address/update/{id}")
+    public String addressUpdate(@PathVariable("id") String id, @Valid @ModelAttribute("address") AddressUpdateReqDtoWeb addressUpdateReqDtoWeb, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            log.debug("address update form validation error {} ", bindingResult.getAllErrors());
+            return "user/updateAddress";
+        }
+        addressService.updateAddress(id, addressUpdateReqDtoWeb);
+        return "redirect:/mypage/address";
+    }
+
+    @PostMapping("/address/delete/{id}")
+    public String addressDelete(@PathVariable("id") String id) {
+        addressService.deleteAddress(id);
+        return "redirect:/mypage/address";
+    }
+
 }

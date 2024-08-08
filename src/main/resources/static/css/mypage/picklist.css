@@ -1,0 +1,170 @@
+.picklist-section {
+    background-color: #ffffff; /* 섹션 배경 색상 */
+    border-radius: 16px; /* 모서리 둥글게 처리 */
+    border: 1px solid #e2e2e2; /* 경계 색상 */
+    padding: 20px; /* 내측 여백 */
+    margin: 1px auto 15px; /* 자동으로 가운데 정렬 */
+    max-width: 1200px; /* 최대 너비 설정 */
+    width: 1200px;
+}
+
+.section-title {
+    position: relative;
+    margin-bottom: 1rem; /* 제목과 다음 요소 사이의 여백 */
+    padding-bottom: 0.5rem; /* 제목과 선 사이의 여백 */
+    font-size: 1.75rem; /* 제목 크기 */
+    font-weight: bold; /* 제목 글꼴 두껍게 */
+    color: #333333; /* 제목 글꼴 색상 */
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #000000; /* 선 색상 */
+}
+
+.item {
+    margin-bottom: 20px; /* 아이템 간격 */
+}
+
+.item-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.item-card img {
+    max-width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.item-details {
+    margin-left: 15px;
+    flex: 1;
+}
+
+.item-details h5 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.item-details p {
+    margin: 5px 0;
+    font-size: 1rem;
+}
+
+.item-details .btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.btn {
+    font-size: 0.875rem; /* 버튼 글꼴 크기 조정 */
+}
+.picklist-div-container{
+    margin-bottom: -30px;
+    margin-left: 40px;
+}
+
+.picklist-btn-danger {
+    background-color: #dc3545; /* 삭제 버튼 색상 */
+    border-color: #dc3545;
+    width: 150px;
+    max-width: 150px;
+    height: 40px;
+    color: white;
+    border-radius: 8px;
+}
+
+.picklist-btn-primary {
+    background-color: #4CAF50; /* 장바구니 버튼 색상 */
+    margin-bottom: 10px;
+    width: 150px;
+    max-width: 150px;
+    height: 40px;
+    color: white;
+    border-radius: 8px;
+}
+
+.picklist-btn-danger:hover {
+    background: black;
+    color: white;
+
+
+}
+
+.picklist-btn-primary:hover {
+    background: black;
+    color: white;
+
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    width: 150px; /* 레이블의 너비 설정 */
+    margin-right: 1rem; /* 레이블과 입력 필드 사이의 여백 */
+    font-weight: bold; /* 레이블 글꼴 두껍게 */
+}
+
+.form-control {
+    flex: 1; /* 입력 필드가 나머지 공간을 차지하도록 설정 */
+}
+
+.sub-title {
+    margin-top: 1rem; /* 제목과 서브 제목 사이의 여백 */
+    margin-bottom: 0.5rem; /* 서브 제목과 선 사이의 여백 */
+    font-size: 1.25rem; /* 서브 제목 크기 */
+    color: #555555; /* 서브 제목 글꼴 색상 */
+}
+
+.section-divider {
+    border: 0;
+    border-top: 2px solid black; /* 선 색상 및 두께 */
+    margin-bottom: 1.5rem; /* 선 아래 여백 */
+}
+
+.btn-info {
+    display: flex;
+    justify-content: center; /* 버튼 내부 텍스트를 가운데 정렬 */
+    align-items: center; /* 버튼 내부 아이템을 수직으로 가운데 정렬 */
+    width: 200px; /* 버튼 너비 확대 */
+    height: 50px; /* 버튼 높이 확대 */
+    background-color: #4CAF50; /* 버튼 색상 */
+    color: white; /* 버튼 글꼴 색상 */
+    border: none; /* 버튼 테두리 제거 */
+    font-size: 1rem; /* 버튼 글꼴 크기 */
+    border-radius: 8px; /* 버튼 모서리 둥글게 처리 */
+    margin: 0 auto; /* 버튼을 가로로 가운데 정렬 */
+}
