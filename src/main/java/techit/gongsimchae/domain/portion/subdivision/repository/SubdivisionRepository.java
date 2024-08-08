@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface SubdivisionRepository extends JpaRepository<Subdivision, Long> {
 
     Optional<Subdivision> findByUID(String UID);
+    List<Subdivision> findByOrderByCreateDateDesc();
 
     List<Subdivision> findAllByUserId(Long userId);
 }

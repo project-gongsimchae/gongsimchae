@@ -18,6 +18,14 @@ public class SubdivisionService {
     private final SubdivisionRepository subdivisionRepository;
     private final ParticipantService participantService;
 
+
+    public List<SubdivisionRespDto> getAllSubdivisions(){
+        List<Subdivision> subdivisions = subdivisionRepository.findByOrderByCreateDateDesc();
+        return subdivisions.stream()
+                .map(SubdivisionRespDto::new)
+                .collect(Collectors.toList());
+    }
+
     /**
      * URL의 Path 값으로 넘어온 UID로 DB에서 해당 소분 글을 찾아주는 메서드
      *

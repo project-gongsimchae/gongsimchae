@@ -18,7 +18,7 @@
 
 <body>
 <header>
-    <div th:replace="~{layout/navbar :: product_navbar}"></div>
+    <div th:replace="~{layout/navbar :: portion_navbar}"></div>
 </header>
 
 <main>
@@ -44,40 +44,55 @@
                         <ul id="myeondongeupAreaList">
                         </ul>
                     </div>
-
-
                 </div>
             </div>
-            <div class="tags-wrapper">
-                <span class="tags-label">지역</span>
-                <div id="selectedTags" class="tags-container">
-                    <!-- 선택된 지역 태그가 여기에 추가됩니다 -->
+            <div class="tags-wrapper search-section">
+                <span class="label">지역</span>
+                <div id="selectedTags" class="input-container">
                 </div>
-                <button id="searchTagsBtn" class="search-tags-btn">검색</button>
             </div>
 
-            <!-- 검색 폼, 검색 버튼, 글쓰기 버튼 추가 -->
-            <div class="search-container">
-                <input type="text" class="form-control" placeholder="Search..." aria-label="Search">
-                <button type="button" class="btn btn-primary">검색</button>
-                <button type="button" class="btn btn-secondary btn-write">글쓰기</button>
+            <div class="content-wrapper search-section">
+                <span class="label">내용</span>
+                <input type="text" class="input-container" placeholder="Search..." aria-label="Search">
             </div>
-
+            <div class="button-wrapper">
+                <button id="searchBtn" class="search-btn">검색</button>
+            </div>
         </section>
     </div>
 
+    <hr class = "section-divider">
+
     <section class="write-section">
-        <h2>최근 글</h2>
+        <div class="write-header">
+            <button id="writeBtn" class="write-btn">글 작성</button>
+            <div class="sort-options">
+                <a href="#" class="write-sort-new" id="sortNew">최신순</a>
+                <span>|</span>
+                <a href="#" class="write-sort-deadline" id="sortDeadline">마감순</a>
+            </div>
+        </div>
         <div class="write-list">
-            <div th:each="item : ${popularItems}">
-                <div class="thumbnail-image-placeholder">[썸네일 이미지]</div>
-                <h3 class="write-title" th:text="${item.title}">제목</h3>
-                <span class="write-price" th:text="${item.price} + '원'">가격</span>
-                <span class="write-location" th:text="${item.address}">거래 장소</span>
-                <span class="write-interest" th:text="${item.views}">관심</span>
+            <div th:each="subdivision : ${subdivisions}" class="write-subdivision">
+                <div class="thumbnail-image-placeholder">
+                    <img th:src="${subdivision.imageFile != null ? subdivision.imageFile.url : '/images/placeholder.png'}"
+                         alt="썸네일 이미지" />
+                </div>
+                <div class="write-simple-info">
+                    <h3 class="write-title" th:text="${subdivision.title}"></h3>
+                    <h4 class="write-price">
+                        가격: <span class="price-value" th:text="${subdivision.price}"></span>원
+                    </h4>
+                    <h4 class="write-address" th:text="'희망 장소: ' + ${subdivision.address}"></h4>
+                </div>
+                <div class="write-interest">
+                    views <span class="interest-value" th:text="${subdivision.views}"></span>
+                </div>
             </div>
         </div>
     </section>
+
 </main>
 
 <footer>
@@ -90,6 +105,13 @@
     /*]]>*/
 </script>
 
-</body>
 <script th:src="@{/js/portion/portioningMain.js}" defer></script>
+<script>
+    document.getElementById('writeBtn').addEventListener('click', function() {
+        window.location.href = '/portioning/write';
+    });
+</script>
+
+</body>
+
 </html>

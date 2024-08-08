@@ -23,8 +23,7 @@ public class SubdivisionController {
 
     @PostMapping("/portioning/write")
     public String subdivisionRegister() {
-
-        return null;
+        return "redirect:/portioning";
     }
 
     @GetMapping("/portioning/{UID}")
