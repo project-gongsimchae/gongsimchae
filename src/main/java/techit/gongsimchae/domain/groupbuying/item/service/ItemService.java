@@ -113,7 +113,8 @@ public class ItemService {
     public ItemRespDtoWeb getItem(String id) {
         Item item = itemRepository.findByUID(id).orElseThrow(() -> new CustomWebException("not found item"));
         return new ItemRespDtoWeb(item);
-  
+    }
+
     @Transactional(readOnly = true)
     public Page<Item> getTop200ItemsPage(Integer page, Integer per_page, Integer sorted_type) {
         SortType sortType = getInstanceByTypeNumber(sorted_type);

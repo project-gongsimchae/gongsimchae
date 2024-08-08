@@ -38,8 +38,24 @@ public class ImageFile extends BaseEntity {
     @JoinColumn(name = "subdivision_id")
     private Subdivision subdivision;
 
-    public ImageFile(String originalFilename, String storeFilename) {
+    public ImageFile(String originalFilename, String storeFilename, User user, Post post) {
         this.originalFilename = originalFilename;
         this.storeFilename = storeFilename;
+        this.user = user;
+        this.post = post;
+    }
+
+    public ImageFile(String originalFilename, String storeFilename, User user, Item item) {
+        this.originalFilename = originalFilename;
+        this.storeFilename = storeFilename;
+        this.user = user;
+        this.item = item;
+    }
+
+    public ImageFile(String originalFilename, String storeFilename, User user, Subdivision subdivision) {
+        this.originalFilename = originalFilename;
+        this.storeFilename = storeFilename;
+        this.user = user;
+        this.subdivision = subdivision;
     }
 }
