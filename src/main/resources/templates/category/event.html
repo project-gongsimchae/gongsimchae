@@ -8,10 +8,8 @@
 </head>
 <body>
 <section>
-  <div class="event-banner-main">
-    <div class="event-banner-grid" th:each="eventBanner : ${eventBanners}">
-      <img class="event-banner-element" th:src="@{${eventBanner}}" alt="no image"/>
-    </div>
+  <div class="event-banner-main-ver2" th:each="event : ${events}">
+      <img class="event-banner-element-ver2" th:src="@{${event.eventBannerImage}}" alt="no image"/>
   </div>
 </section>
 </body>
