@@ -83,6 +83,11 @@
             <button class="btn btn-outline-danger" type="submit">삭제</button>
         </form>
     </div>
+
+    <div th:if="${inquiry.isAnswered == 1}">
+        답변:
+        <div th:utext="${inquiry.answer}" style="white-space: pre-wrap; font-family: Arial, sans-serif; color: #333"></div>
+    </div>
 </section>
 
 <!-- Bootstrap JS and dependencies -->

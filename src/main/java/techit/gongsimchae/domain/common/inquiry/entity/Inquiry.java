@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
+import techit.gongsimchae.domain.common.inquiry.dto.InquiryAdminReplyReqDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryCreateDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.entity.User;
@@ -28,6 +29,7 @@ public class Inquiry extends BaseEntity {
 
     // 0 미완료 1 완료
     private Integer isAnswered;
+    private String answer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -39,12 +41,17 @@ public class Inquiry extends BaseEntity {
         this.inquiryType = dtoWeb.getInquiryType();
         this.user = user;
         this.isAnswered = 0;
-        this.UID = UUID.randomUUID().toString();
+        this.UID = UUID.randomUUID().toString().substring(0,8);
     }
 
     public void changeInfo(InquiryUpdateReqDtoWeb inquiryUpdateReqDtoWeb) {
         this.title = inquiryUpdateReqDtoWeb.getTitle();
         this.content = inquiryUpdateReqDtoWeb.getContent();
         this.inquiryType = inquiryUpdateReqDtoWeb.getInquiryType();
+    }
+
+    public void changeInfo(InquiryAdminReplyReqDtoWeb dtoWeb) {
+        this.answer = dtoWeb.getAnswer();
+        this.isAnswered = 1;
     }
 }

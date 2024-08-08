@@ -21,6 +21,12 @@ public class InquiryRespDtoWeb {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private String UID;
+    private String answer;
+
+
+    // 문의를 작성한 사용자 정보
+    private String name;
+    private String nickname;
     private String email;
 
     public InquiryRespDtoWeb(Inquiry inquiry) {
@@ -31,5 +37,6 @@ public class InquiryRespDtoWeb {
         this.createDate = inquiry.getCreateDate();
         this.updateDate = inquiry.getUpdateDate();
         this.UID = inquiry.getUID();
+        this.answer = inquiry.getAnswer();
     }
 }

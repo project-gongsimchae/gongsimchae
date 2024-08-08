@@ -86,7 +86,7 @@ public class MyPageController {
      */
     @GetMapping("/inquiry/{id}")
     public String inquiryDetail(@PathVariable("id") String id, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        InquiryRespDtoWeb inquiry = inquiryService.getInquiry(id,principalDetails);
+        InquiryRespDtoWeb inquiry = inquiryService.getInquiry(id);
         model.addAttribute("inquiry", inquiry);
         return "mypage/inquiryDetail";
     }
@@ -96,7 +96,7 @@ public class MyPageController {
      */
     @GetMapping("/inquiry/update/{id}")
     public String updateInquiryForm(@PathVariable("id") String id, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        InquiryRespDtoWeb inquiry = inquiryService.getInquiry(id, principalDetails);
+        InquiryRespDtoWeb inquiry = inquiryService.getInquiry(id);
         model.addAttribute("inquiry", inquiry);
         return "mypage/inquiryUpdate";
     }

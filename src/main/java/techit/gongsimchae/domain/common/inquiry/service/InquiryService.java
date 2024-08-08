@@ -1,12 +1,13 @@
 package techit.gongsimchae.domain.common.inquiry.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techit.gongsimchae.domain.common.inquiry.dto.InquiryCreateDtoWeb;
-import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
-import techit.gongsimchae.domain.common.inquiry.dto.InquiryUpdateReqDtoWeb;
+import techit.gongsimchae.domain.common.inquiry.dto.*;
 import techit.gongsimchae.domain.common.inquiry.entity.Inquiry;
+import techit.gongsimchae.domain.common.inquiry.entity.InquiryType;
 import techit.gongsimchae.domain.common.inquiry.repository.InquiryRepository;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
@@ -27,6 +28,9 @@ public class InquiryService {
     @Transactional
     public void createInquiry(InquiryCreateDtoWeb dtoWeb, PrincipalDetails principalDetails) {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
+        if (dtoWeb.getInquiryType() == null) {
+            dtoWeb.setInquiryType(InquiryType.ETC);
+        }
         Inquiry inquiry = new Inquiry(dtoWeb, user);
         inquiryRepository.save(inquiry);
     }
@@ -36,13 +40,8 @@ public class InquiryService {
         return inquiryRepository.findByUserId(user.getId()).stream().map(InquiryRespDtoWeb::new).collect(Collectors.toList());
     }
 
-    public InquiryRespDtoWeb getInquiry(String UID, PrincipalDetails principalDetails) {
-        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
-        InquiryRespDtoWeb inquiryRespDtoWeb = inquiryRepository.findByUID(UID)
-                .map(InquiryRespDtoWeb::new)
-                .orElseThrow(() -> new CustomWebException("not found inquiry"));
-        inquiryRespDtoWeb.setEmail(user.getEmail());
-        return inquiryRespDtoWeb;
+    public InquiryRespDtoWeb getInquiry(String UID) {
+        return inquiryRepository.findInquiryByUID(UID);
     }
 
     @Transactional
@@ -54,4 +53,16 @@ public class InquiryService {
     public void deleteInquiry(String id) {
         inquiryRepository.deleteByUID(id);
     }
+
+    public Page<InquiryRespDtoWeb> getAllInquiries(Pageable pageable, String filter) {
+        return inquiryRepository.findAllInquiries(pageable, filter);
+
+    }
+    @Transactional
+    public void replyToInquiry(String id, InquiryAdminReplyReqDtoWeb dtoWeb) {
+        Inquiry inquiry = inquiryRepository.findByUID(id).orElseThrow(() -> new CustomWebException("not found inquiry"));
+        inquiry.changeInfo(dtoWeb);
+    }
+
+
 }
