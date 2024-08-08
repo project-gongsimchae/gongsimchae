@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
@@ -27,6 +28,7 @@ import java.util.UUID;
 public class ImageS3Service {
     private final AmazonS3 amazonS3;
     private final UserRepository userRepository;
+    private final ImageFileRepository imageFileRepository;
 
     @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
@@ -41,6 +43,9 @@ public class ImageS3Service {
             }
 
         }
+
+        imageFileRepository.saveAll(uploadFiles);
+
         return uploadFiles;
     }
     @Transactional
