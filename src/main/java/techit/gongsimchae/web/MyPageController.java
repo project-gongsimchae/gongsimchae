@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.service.UserService;
+import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 
@@ -39,12 +40,13 @@ public class MyPageController {
         User user = userService.findByUserName(username);
 
         Orders ordersDetail = ordersService.getOrderDetail(ordersId,user.getId());
-
+        OrdersPaymentDto ordersPayment = ordersService.getOrdersPayment(ordersId);
         if (ordersDetail == null) {
             return "redirect:error/4xx";
         }
 
         model.addAttribute("ordersDetail",ordersDetail);
+        model.addAttribute("ordersPayment",ordersPayment);
         return "mypage/ordersDetail";
     }
 }
