@@ -1,16 +1,22 @@
 package techit.gongsimchae.domain.common.inquiry.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import techit.gongsimchae.domain.common.inquiry.dto.*;
 import techit.gongsimchae.domain.common.inquiry.entity.Inquiry;
 import techit.gongsimchae.domain.common.inquiry.entity.InquiryType;
 import techit.gongsimchae.domain.common.inquiry.repository.InquiryRepository;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.mail.event.JoinMailEvent;
+import techit.gongsimchae.domain.portion.notifications.event.InquiryNotiEvent;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 
@@ -20,10 +26,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class InquiryService {
 
     private final InquiryRepository inquiryRepository;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional
     public void createInquiry(InquiryCreateDtoWeb dtoWeb, PrincipalDetails principalDetails) {
@@ -59,9 +67,20 @@ public class InquiryService {
 
     }
     @Transactional
-    public void replyToInquiry(String id, InquiryAdminReplyReqDtoWeb dtoWeb) {
-        Inquiry inquiry = inquiryRepository.findByUID(id).orElseThrow(() -> new CustomWebException("not found inquiry"));
+    public void replyToInquiry(String inquiryId, InquiryAdminReplyReqDtoWeb dtoWeb) {
+        Inquiry inquiry = inquiryRepository.findByUID(inquiryId).orElseThrow(() -> new CustomWebException("not found inquiry"));
+        User user = userRepository.findById(inquiry.getUser().getId()).orElseThrow(() -> new CustomWebException("not found user"));
         inquiry.changeInfo(dtoWeb);
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronizationAdapter() {
+                    @Override
+                    public void afterCommit() {
+                        log.debug("inquiry event {} ", dtoWeb);
+                        publisher.publishEvent(new InquiryNotiEvent(user, dtoWeb.getAnswer()));
+                    }
+                }
+        );
+
     }
 
 

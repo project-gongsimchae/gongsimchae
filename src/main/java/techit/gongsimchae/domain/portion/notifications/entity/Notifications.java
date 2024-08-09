@@ -4,41 +4,38 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.common.user.entity.User;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "notifications")
-public class Notifications {
+public class Notifications extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String content;
+
+    private Integer isRead; // 0 안읽음 1 읽음
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private NotificationType notificationType;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ReadStatus readStatus;
-
-    @Column(updatable = false)
-    @CreatedDate
-    private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Notifications(NotificationType notificationType, ReadStatus readStatus, LocalDateTime createDate, User user) {
-        this.notificationType = notificationType;
-        this.readStatus = readStatus;
-        this.createDate = createDate;
+    public Notifications(User user, String content, NotificationType notificationType) {
+        this.content = content;
+        this.isRead = 0;
         this.user = user;
+        this.notificationType = notificationType;
+    }
+
+    public void read(){
+        this.isRead = 1;
     }
 }
