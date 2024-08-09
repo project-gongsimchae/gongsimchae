@@ -8,8 +8,8 @@ body {
 
 .admin-container {
     display: flex;
-    max-width: 1050px;
-    margin: 60px auto;
+    margin: 20px 0;
+    margin-left: 40px;
 }
 
 /* 사이드바 스타일 */
@@ -197,4 +197,12 @@ body {
 }
 .detail-button:hover {
     background-color: #4a0063;
+}
+
+.admin-section-container {
+    margin-right: 40px
+}
+
+.form-style {
+    margin-bottom: 0;
 }
