@@ -57,7 +57,7 @@ public class ItemService {
         Item item = new Item(itemCreateDto, category);
         itemRepository.save(item);
 
-        imageS3Service.storeFiles(itemCreateDto.getImages(), "images", userId, item);
+        imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item);
 
     }
 

@@ -33,13 +33,11 @@ public class ImageS3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public List<ImageFile> storeFiles(List<MultipartFile> files, String directory, Long userId, Object object) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException("해당 유저를 찾을 수 없습니다."));
-
+    public List<ImageFile> storeFiles(List<MultipartFile> files, String directory, Object object) {
         List<ImageFile> uploadFiles = new ArrayList<>();
         for (MultipartFile file : files) {
             if(!file.isEmpty()) {
-                uploadFiles.add(storeFile(file, directory, user, object));
+                uploadFiles.add(storeFile(file, directory, object));
             }
 
         }
@@ -49,14 +47,14 @@ public class ImageS3Service {
         return uploadFiles;
     }
     @Transactional
-    public ImageFile storeFile(MultipartFile file, String directory, User user, Object object) {
+    public ImageFile storeFile(MultipartFile file, String directory, Object object) {
         if (file.isEmpty()) {
             return null;
         }
         String storeFileName = storeFileName(file);
         String originalFilename = file.getOriginalFilename();
         String uploadUrl = getUrl(directory);
-
+        ImageFile imageFile;
 
         try {
             ObjectMetadata metadata = new ObjectMetadata();
@@ -65,18 +63,21 @@ public class ImageS3Service {
             amazonS3.putObject(uploadUrl, storeFileName, file.getInputStream(), metadata);
 
             if (object instanceof Post) {
-                return new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), user, (Post) object);
+                imageFile = new ImageFile(getFullPath(directory,originalFilename),
+                        getFullPath(directory,storeFileName), (Post) object);
             } else if (object instanceof Item) {
-                return new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), user, (Item) object);
+                imageFile = new ImageFile(getFullPath(directory,originalFilename),
+                        getFullPath(directory,storeFileName), (Item) object);
             } else if (object instanceof Subdivision) {
-                return new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), user, (Subdivision) object);
+                imageFile = new ImageFile(getFullPath(directory,originalFilename),
+                        getFullPath(directory,storeFileName), (Subdivision) object);
+            } else if (object instanceof User) {
+                imageFile = new ImageFile(getFullPath(directory,originalFilename),
+                        getFullPath(directory,storeFileName), (User) object);
             } else {
                 throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
             }
-
+            return imageFileRepository.save(imageFile);
         } catch (Exception e) {
             throw new CustomWebException(e.getMessage());
         }

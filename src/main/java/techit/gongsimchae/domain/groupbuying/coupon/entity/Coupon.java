@@ -1,12 +1,14 @@
 package techit.gongsimchae.domain.groupbuying.coupon.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponCreateReqDtoWeb;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,10 +24,6 @@ public class Coupon {
     private String eventName;
     private String couponCode; // 쿠폰등록 번호
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "image_file_id")
-    private ImageFile imageFile;
-
     /**
      * 생성자
      */
@@ -35,16 +33,5 @@ public class Coupon {
         this.expirationDate = dto.getExpirationDate();
         this.eventName = dto.getEventName();
         this.couponCode = dto.getCouponCode();
-        // todo 추가해야됨
-        this.imageFile = null;
-    }
-
-    public Coupon(CouponCreateReqDtoWeb dto, ImageFile imageFile) {
-        this.discount = dto.getDiscount();
-        this.maxDiscount = dto.getMaxDiscount();
-        this.expirationDate = dto.getExpirationDate();
-        this.eventName = dto.getEventName();
-        this.couponCode = dto.getCouponCode();
-        this.imageFile = imageFile;
     }
 }
