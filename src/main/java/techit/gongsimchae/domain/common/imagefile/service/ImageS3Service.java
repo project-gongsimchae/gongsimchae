@@ -10,6 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
+
+import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.post.entity.Post;
+import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.global.exception.CustomWebException;
 
 import java.util.ArrayList;
@@ -22,23 +28,30 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageS3Service {
     private final AmazonS3 amazonS3;
+
+    private final UserRepository userRepository;
     private final ImageFileRepository imageFileRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public List<ImageFile> storeFiles(List<MultipartFile> files, String directory) {
+    public List<ImageFile> storeFiles(List<MultipartFile> files, String directory, Long userId, Object object) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException("해당 유저를 찾을 수 없습니다."));
+
         List<ImageFile> uploadFiles = new ArrayList<>();
         for (MultipartFile file : files) {
             if(!file.isEmpty()) {
-                uploadFiles.add(storeFile(file, directory));
+                uploadFiles.add(storeFile(file, directory, user, object));
             }
 
         }
+
+        imageFileRepository.saveAll(uploadFiles);
+
         return uploadFiles;
     }
     @Transactional
-    public ImageFile storeFile(MultipartFile file, String directory) {
+    public ImageFile storeFile(MultipartFile file, String directory, User user, Object object) {
         if (file.isEmpty()) {
             return null;
         }
@@ -52,9 +65,25 @@ public class ImageS3Service {
             metadata.setContentDisposition(file.getContentType());
             metadata.setContentLength(file.getSize());
             amazonS3.putObject(uploadUrl, storeFileName, file.getInputStream(), metadata);
+
             ImageFile imageFile = imageFileRepository.save(
                     new ImageFile(originalFilename, getFullPath(directory, storeFileName)));
             return imageFile;
+
+            if (object instanceof Post) {
+                return new ImageFile(getFullPath(directory,originalFilename),
+                        getFullPath(directory,storeFileName), user, (Post) object);
+            } else if (object instanceof Item) {
+                return new ImageFile(getFullPath(directory,originalFilename),
+                        getFullPath(directory,storeFileName), user, (Item) object);
+            } else if (object instanceof Subdivision) {
+                return new ImageFile(getFullPath(directory,originalFilename),
+                        getFullPath(directory,storeFileName), user, (Subdivision) object);
+            } else {
+                throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
+            }
+
+
         } catch (Exception e) {
             throw new CustomWebException(e.getMessage());
         }

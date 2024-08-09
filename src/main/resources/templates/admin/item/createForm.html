@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>상품 생성</h1>
-<form th:action="@{/admin/item/create}" th:object="${item}" method="post">
+<form th:action="@{/admin/item/create}" th:object="${item}" method="post" enctype="multipart/form-data">
 
     <label for="name">이름:</label>
     <input type="text" id="name" th:field="*{name}" required/><br/>
@@ -37,6 +37,9 @@
                 th:text="${category.name}">
         </option>
     </select><br/>
+
+    <label for="images">이미지 파일들:</label>
+    <input type="file" id="images" name="images" multiple/><br/>
 
     <button type="submit">생성</button>
 </form>
