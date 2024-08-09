@@ -15,7 +15,7 @@ public class EventController {
     private final CouponService couponService;
 
     @GetMapping("/event")
-    public String getEventPageVer3(Model model){
+    public String getEventPage(Model model){
         List<CouponRespDtoWeb> events = couponService.getAllCoupons();
         model.addAttribute("events", events);
         return "/category/event";

@@ -12,6 +12,7 @@ import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.post.entity.Post;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
@@ -74,7 +75,10 @@ public class ImageS3Service {
             } else if (object instanceof User) {
                 imageFile = new ImageFile(getFullPath(directory,originalFilename),
                         getFullPath(directory,storeFileName), (User) object);
-            } else {
+            } else if (object instanceof Coupon) {
+                imageFile = new ImageFile(getFullPath(directory,originalFilename),
+                        getFullPath(directory,storeFileName), (Coupon) object);
+            }else {
                 throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
             }
             return imageFileRepository.save(imageFile);

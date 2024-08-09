@@ -1,9 +1,10 @@
 package techit.gongsimchae.domain.groupbuying.coupon.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
@@ -20,6 +21,7 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final UserRepository userRepository;
     private final ImageS3Service imageS3Service;
+    private final ImageFileRepository imageFileRepository;
 
     public void saveCoupon(CouponCreateReqDtoWeb createDto) {
         Coupon coupon = new Coupon(createDto);
@@ -28,7 +30,12 @@ public class CouponService {
         couponRepository.save(coupon);
     }
     public List<CouponRespDtoWeb> getAllCoupons(){
-        return couponRepository.findAll().stream().map(CouponRespDtoWeb::new).collect(Collectors.toList());
+        List<Coupon> coupons = couponRepository.findAll();
+        List<CouponRespDtoWeb> couponRespDtoWebs = new ArrayList<>();
+        for (Coupon coupon : coupons) {
+            couponRespDtoWebs.add(new CouponRespDtoWeb(coupon, imageFileRepository.findByCoupon(coupon)));
+        }
+        return couponRespDtoWebs;
     }
 
     public void deleteCoupon(Long id) {
