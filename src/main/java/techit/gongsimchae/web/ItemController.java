@@ -3,6 +3,7 @@ package techit.gongsimchae.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
+import techit.gongsimchae.global.dto.PrincipalDetails;
 
 @Slf4j
 @Controller
@@ -37,8 +39,10 @@ public class ItemController {
     }
 
     @PostMapping("/admin/item/create")
-    public String createItem(@ModelAttribute ItemCreateDto itemCreateDto) {
-        itemService.createItem(itemCreateDto);
+    public String createItem(@ModelAttribute ItemCreateDto itemCreateDto,
+                             @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        itemService.createItem(itemCreateDto, principalDetails.getAccountDto().getId());
         return "redirect:/admin/item";
     }
 

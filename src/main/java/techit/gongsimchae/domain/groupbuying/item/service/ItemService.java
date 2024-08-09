@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
@@ -26,6 +27,8 @@ import techit.gongsimchae.global.exception.CustomWebException;
 public class ItemService {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
+
+    private final ImageS3Service imageS3Service;
 
     public void save(Item item) {
         itemRepository.save(item);
@@ -45,7 +48,7 @@ public class ItemService {
 
 
     @Transactional
-    public void createItem(ItemCreateDto itemCreateDto) {
+    public void createItem(ItemCreateDto itemCreateDto, Long userId) {
         Category category = categoryRepository.findByName(itemCreateDto.getCategoryName())
                 .orElseThrow(() -> {
                             throw new IllegalArgumentException("Category not found");
@@ -53,6 +56,8 @@ public class ItemService {
                 );
         Item item = new Item(itemCreateDto, category);
         itemRepository.save(item);
+
+        imageS3Service.storeFiles(itemCreateDto.getImages(), "images", userId, item);
 
     }
 
