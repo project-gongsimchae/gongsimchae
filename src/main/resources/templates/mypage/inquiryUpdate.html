@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공심채</title>
-    <style>
-        /* CSS 코드 삽입 */
-    </style>
 </head>
 <body>
 <section class="picklist-section">
@@ -44,7 +41,7 @@
 
             <div class="custom-form-group">
                 <label for="email" class="custom-form-label">답변수신</label>
-                <input type="text" id="email" class="custom-form-input custom-form-input-readonly" th:value="${user.email}" readonly>
+                <input type="text" id="email" class="custom-form-input custom-form-input-readonly"  th:field="*{email}" readonly>
             </div>
 
             <div class="custom-form-group custom-form-submit-wrapper">

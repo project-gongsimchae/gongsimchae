@@ -17,6 +17,8 @@
     <link th:href="@{/css/mypage.css}" rel="stylesheet">
     <link rel="stylesheet" href="" th:href="@{/css/mypage/picklist.css}">
     <link rel="stylesheet" href="" th:href="@{/css/mypage/coupon.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/mypage/inquiry.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/mypage/inquiryList.css}">
     <link th:href="@{/css/ordersDetail.css}" rel="stylesheet">
 </head>
 <body>
@@ -79,5 +81,84 @@
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const updateButtons = document.querySelectorAll('.update-address');
+        const updateModal = new bootstrap.Modal(document.getElementById('updateAddressModal'));
+
+        updateButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                fetch(`/mypage/address/update/${id}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('updateAddressModalBody').innerHTML = html;
+                        updateModal.show();
+                    });
+            });
+        });
+    });
+
+
+    $(document).ready(function () {
+        $('#confirmButton').click(function () {
+            var couponCode = $('#couponCode').val();
+
+            $.ajax({
+                url: '/mypage/coupons',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ code: couponCode }), // JSON 객체로 감싸서 전송
+                success: function (response) {
+                    $('#couponModal').modal('hide'); // 모달을 닫습니다
+                    // 성공 후 페이지를 새로 고침하거나 쿠폰 리스트를 갱신할 수 있습니다.
+                    location.reload(); // 페이지를 새로 고침하여 쿠폰 리스트 갱신
+                },
+                error: function (xhr) {
+                    var errorMessage = xhr.responseText || '서버 오류';
+                    $('#error-message').text(errorMessage).show(); // 오류 메시지를 표시합니다
+                }
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const inquiryTable = document.querySelector('.inquiry-table');
+
+        inquiryTable.addEventListener('click', function(e) {
+            if (e.target.classList.contains('inquiry-title-cell')) {
+                const row = e.target.closest('tr');
+                const id = row.getAttribute('data-id');
+
+                // 이미 상세 내용이 표시되어 있다면 제거
+                const existingDetail = row.nextElementSibling;
+                if (existingDetail && existingDetail.classList.contains('inquiry-detail-row')) {
+                    existingDetail.remove();
+                    return;
+                }
+
+                // 서버에서 상세 정보를 가져오는 AJAX 요청
+                fetch(`/mypage/inquiry/${id}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const detailContent = doc.querySelector('section');
+
+                        const newRow = document.createElement('tr');
+                        newRow.classList.add('inquiry-detail-row');
+                        const newCell = newRow.insertCell();
+                        newCell.colSpan = 3;
+                        newCell.appendChild(detailContent);
+
+                        row.parentNode.insertBefore(newRow, row.nextSibling);
+                    });
+            }
+        });
+    });
+
+</script>
 </body>
 </html>

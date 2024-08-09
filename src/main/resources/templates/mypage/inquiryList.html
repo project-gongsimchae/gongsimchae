@@ -1,37 +1,35 @@
-<html th:replace="layout/mypage :: mypage(~{::section})">
+<html th:replace="~{layout/mypage :: mypage(~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>유저</title>
+    <title>공심채</title>
 </head>
 <body>
 
-<section class=" picklist-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h3 class="section-title">1:1 문의 내용</h3>
-                <table class="table table-striped table-bordered">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th>제목</th>
-                        <th>작성일</th>
-                        <th>답변상태</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="inquiry : ${inquires}">
-                        <td th:text="${inquiry.title}"></td>
-                        <td th:text="${#temporals.format(inquery.createDate,'yyyy-MM-dd')}"></td>
-                        <td th:if="${inquiry.isAnswered == 1} ? '답변완료' : '답변전'"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+<section class="picklist-section">
+    <div class="inquiry-container">
+        <h2 class="section-title">1:1 문의</h2>
+        <table class="inquiry-table">
+            <thead>
+            <tr>
+                <th>제목</th>
+                <th>작성일</th>
+                <th>답변상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="inquiry : ${inquires}" th:data-id="${inquiry.UID}">
+                <td th:text="${inquiry.title}" class="inquiry-title-cell"></td>
+                <td th:text="${#temporals.format(inquiry.createDate,'yyyy.MM.dd')}"></td>
+                <td th:text="${inquiry.isAnswered == 1 ? '답변완료' : '답변대기'}" th:class="${inquiry.isAnswered == 1 ? 'status-completed' : 'status-waiting'}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="inquiry-button-container">
+            <button class="inquiry-button" th:onclick="|location.href='@{/mypage/inquiry/form}'|">문의하기</button>
         </div>
-        <button th:onclick="|location.href='@{/mypage/inquiry/form}'|">1:1문의하기</button>
     </div>
 </section>
 

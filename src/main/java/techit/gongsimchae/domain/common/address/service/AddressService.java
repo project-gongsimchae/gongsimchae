@@ -30,6 +30,7 @@ public class AddressService {
         return addressRepository.findAllByUser(user.getId()).stream().map(AddressRespDtoWeb::new).collect(Collectors.toList());
     }
 
+    @Transactional
     public void addAddress(AddressCreateReqDtoWeb addressCreateReqDtoWeb, PrincipalDetails principalDetails) {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found User"));
         addressCreateReqDtoWeb.setReceiver(user.getName());
