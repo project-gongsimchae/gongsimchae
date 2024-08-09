@@ -1,0 +1,42 @@
+.event-banner-main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px 24px;
+    width: 1050px;
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+.event-banner-grid {
+    display: flex;
+    flex-direction: column;
+    height: 538px;
+    color: rgb(51, 51, 51);
+}
+
+.event-banner-element {
+    position: relative;
+    border-radius: 5%;
+}
+
+img {
+    width: 100%; /* 이미지 너비를 부모 요소에 맞게 조정 */
+    height: auto; /* 높이 자동 조정 */
+    max-width: 100%; /* 이미지가 너무 크게 확장되지 않도록 최대 너비 설정 */
+}
+
+.event-banner-main-ver2 {
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 10px 0; /* 상하 패딩 */
+    width: 90%; /* 너비를 90%로 설정하여 브라우저 크기에 따라 조절 <- 이게 있어야 이거에 맞춰 margin이 중앙 정렬함. */
+    max-width: 1050px; /* 최대 너비를 1050px로 설정 */
+    display: flex; /* flexbox 사용 */
+    flex-direction: column; /* 세로 방향 배열 */
+    align-items: center; /* 세로 방향에서 아이템을 중앙 정렬 */
+}
+
+.event-banner-element-ver2 {
+    width: 100%; /* 부모 요소의 너비에 맞춤 */
+    height: auto; /* 이미지의 원래 비율을 유지하면서 높이 자동 조정 */
+    max-height: 200px; /* 최대 높이를 200px로 제한 */
+}

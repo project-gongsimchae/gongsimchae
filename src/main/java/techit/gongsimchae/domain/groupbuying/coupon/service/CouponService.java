@@ -2,6 +2,8 @@ package techit.gongsimchae.domain.groupbuying.coupon.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponCreateReqDtoWeb;
@@ -20,9 +22,11 @@ import java.util.stream.Collectors;
 public class CouponService {
     private final CouponRepository couponRepository;
     private final UserRepository userRepository;
+    private final ImageS3Service imageS3Service;
 
     public void saveCoupon(CouponCreateReqDtoWeb createDto) {
-        Coupon coupon = new Coupon(createDto);
+        ImageFile imageFile = imageS3Service.storeFile(createDto.getEventBannerImage(), "gongsimchae/event-banner/");
+        Coupon coupon = new Coupon(createDto, imageFile);
         couponRepository.save(coupon);
     }
     public List<CouponRespDtoWeb> getAllCoupons(){
