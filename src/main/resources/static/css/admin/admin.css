@@ -206,3 +206,8 @@ body {
 .form-style {
     margin-bottom: 0;
 }
+
+/* 컨테이너 스타일링 */
+.form-container {
+    margin-top: 20px;
+}
