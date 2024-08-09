@@ -45,7 +45,7 @@ public class InquiryService {
 
     public List<InquiryRespDtoWeb> getInquiry(PrincipalDetails principalDetails) {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
-        return inquiryRepository.findByUserId(user.getId()).stream().map(InquiryRespDtoWeb::new).collect(Collectors.toList());
+        return inquiryRepository.findByUserIdOrderByCreateDateDesc(user.getId()).stream().map(InquiryRespDtoWeb::new).collect(Collectors.toList());
     }
 
     public InquiryRespDtoWeb getInquiry(String UID) {

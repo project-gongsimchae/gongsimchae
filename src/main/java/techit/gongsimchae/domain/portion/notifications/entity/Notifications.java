@@ -23,16 +23,18 @@ public class Notifications extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
 
+    private String url;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
     @Builder
-    public Notifications(User user, String content, NotificationType notificationType) {
+    public Notifications(String content, Integer isRead, NotificationType notificationType, String url, User user) {
         this.content = content;
-        this.isRead = 0;
-        this.user = user;
+        this.isRead = isRead;
         this.notificationType = notificationType;
+        this.url = url;
+        this.user = user;
     }
 
     public void read(){

@@ -1,9 +1,9 @@
-/*
 package techit.gongsimchae.domain.portion.notifications.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,6 +17,7 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class NotificationInterceptor implements HandlerInterceptor {
 
     private final NotificationRepository notificationRepository;
@@ -25,10 +26,15 @@ public class NotificationInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         Authentication authentication = SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication();
+        log.debug("interceptor authentication {}", authentication);
         if (modelAndView != null && !isRedirectView(modelAndView) && authentication != null && authentication.getPrincipal() instanceof PrincipalDetails) {
             User user = userRepository.findByLoginId(((PrincipalDetails) authentication.getPrincipal()).getUsername()).orElseThrow(RuntimeException::new);
             Long count = notificationRepository.countByUserChecked(user.getId(), 0);
-            modelAndView.addObject("hasNotification", count > 0);
+            log.debug("notification count: {}", count);
+            if (count > 0) {
+                modelAndView.addObject("hasNotification", count);
+            }
+
         }
     }
 
@@ -36,4 +42,3 @@ public class NotificationInterceptor implements HandlerInterceptor {
         return modelAndView.getViewName().startsWith("redirect:") || modelAndView.getView() instanceof RedirectView;
     }
 }
-*/

@@ -1,4 +1,3 @@
-/*
 package techit.gongsimchae.global.config;
 
 import lombok.RequiredArgsConstructor;
@@ -26,4 +25,3 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(staticResourcePath);
     }
 }
-*/

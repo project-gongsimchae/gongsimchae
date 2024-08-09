@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class NotificationService {
     private static final Long DEFAULT_TIMEOUT = 1000 * 60 * 5L;
+    private static final String INQUIRY_URL = "/mypage/inquiry/list";
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
     private final UserRepository userRepository;
@@ -41,8 +42,10 @@ public class NotificationService {
         emitter.onCompletion(() -> emitterRepository.deleteById(id));
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
+
+
         // 오류방지를 위한 더미 이벤트 전송
-        sendToClient(emitter, id, "EventStream Created, [userId=" + id+"]");
+        sendToClient(emitter, id, new NotificationResponse("EventStream Created, [userId=" + id+"]"));
 
         // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 방지
         if (!lastEventId.isBlank()) {
@@ -54,23 +57,29 @@ public class NotificationService {
         return emitter;
 
     }
-    
+
+    /**
+     * 1:1 문의 답변이 왔을 때 알려주는 메서드
+     */
     @Transactional
     public void alertAboutInquiry(User receiver, String content) {
-        Notifications notifications = new Notifications(receiver, content, NotificationType.INQUIRY);
+        Notifications notifications = Notifications.builder()
+                .user(receiver).isRead(0).url(INQUIRY_URL).content(content).notificationType(NotificationType.INQUIRY).build();
         notificationRepository.save(notifications);
+        NotificationResponse notificationResponse = new NotificationResponse(notifications);
 
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartById(String.valueOf(receiver.getId()));
         log.debug("sseEmitters: {}", sseEmitters);
         sseEmitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notifications);
-                    sendToClient(emitter, key, content);
+                    sendToClient(emitter, key, notificationResponse);
                 }
         );
     }
 
-    public  NotificationResponse findUnreadNotifications(User user) {
+    public  NotificationResponse getAllNotifications(PrincipalDetails principalDetails) {
+        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
         List<NotificationRespDtoWeb> result = notificationRepository.findAllUserId(user.getId()).stream()
                 .map(NotificationRespDtoWeb::new).collect(Collectors.toList());
 
@@ -78,9 +87,13 @@ public class NotificationService {
         return new NotificationResponse(result, unreadCount);
     }
 
-    public void readNotification(Long id) {
-        Notifications notifications = notificationRepository.findById(id).orElseThrow(() -> new CustomWebException("not found notifications"));
-        notifications.read();
+    /**
+     * 모든 알림창을 읽음표시로 해주는 메서드
+     */
+    @Transactional
+    public void readNotification(PrincipalDetails principalDetails) {
+        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
+        notificationRepository.findAllUnreadNotificationsByUser(user.getId()).forEach(Notifications::read);
     }
 
     private void sendToClient(SseEmitter emitter, String id, Object data) {
