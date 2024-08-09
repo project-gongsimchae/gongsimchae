@@ -39,5 +39,12 @@ public class Coupon {
         this.imageFile = null;
     }
 
-
+    public Coupon(CouponCreateReqDtoWeb dto, ImageFile imageFile) {
+        this.discount = dto.getDiscount();
+        this.maxDiscount = dto.getMaxDiscount();
+        this.expirationDate = dto.getExpirationDate();
+        this.eventName = dto.getEventName();
+        this.couponCode = dto.getCouponCode();
+        this.imageFile = imageFile;
+    }
 }

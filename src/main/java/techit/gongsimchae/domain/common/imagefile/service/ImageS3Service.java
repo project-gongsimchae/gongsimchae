@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
+
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
@@ -27,10 +28,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageS3Service {
     private final AmazonS3 amazonS3;
+
     private final UserRepository userRepository;
     private final ImageFileRepository imageFileRepository;
 
-    @Value("${cloud.aws.s3.bucketName}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     public List<ImageFile> storeFiles(List<MultipartFile> files, String directory, Long userId, Object object) {
@@ -64,6 +66,10 @@ public class ImageS3Service {
             metadata.setContentLength(file.getSize());
             amazonS3.putObject(uploadUrl, storeFileName, file.getInputStream(), metadata);
 
+            ImageFile imageFile = imageFileRepository.save(
+                    new ImageFile(originalFilename, getFullPath(directory, storeFileName)));
+            return imageFile;
+
             if (object instanceof Post) {
                 return new ImageFile(getFullPath(directory,originalFilename),
                         getFullPath(directory,storeFileName), user, (Post) object);
@@ -76,6 +82,7 @@ public class ImageS3Service {
             } else {
                 throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
             }
+
 
         } catch (Exception e) {
             throw new CustomWebException(e.getMessage());
@@ -100,7 +107,7 @@ public class ImageS3Service {
         int pos = originalFilename.lastIndexOf(".");
         String ext = originalFilename.substring(pos + 1);
 
-        List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg");
+        List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg", "PNG", "JPG","JPEG");
 
         if (!allowedExtensions.contains(ext)) {
             throw new IllegalArgumentException("지원하지 않는 포맷입니다.");
