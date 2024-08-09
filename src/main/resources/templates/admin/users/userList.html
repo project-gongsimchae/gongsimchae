@@ -1,4 +1,4 @@
-<html th:replace="~{layout/productHeader :: header(~{::title},~{::section})}">
+<html th:replace="~{admin/admin :: admin(~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -7,16 +7,12 @@
     <title>유저</title>
 </head>
 <body>
-<section class="container mt-5">
-    <link th:href="@{/css/admin/admin.css}" rel="stylesheet">
-    <link th:href="@{/css/admin/userList.css}" rel="stylesheet">
+<section class="container picklist-section">
 
-    <main class="admin-container">
-        <div th:replace="~{layout/navbar :: admin_side_navbar}"></div>
-
+    <main class="">
         <div class="row user-container">
             <div class="col-12">
-                <h1 class="mb-4">유저 목록</h1>
+                <h1 class="mb-4 section-title">유저 목록</h1>
                 <table class="table table-striped table-bordered">
                     <thead class="thead-dark">
                     <tr>
@@ -50,7 +46,6 @@
         </div>
     </main>
 </section>
-
 
 </body>
 </html>

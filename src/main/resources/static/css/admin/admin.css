@@ -9,7 +9,7 @@ body {
 .admin-container {
     display: flex;
     max-width: 1050px;
-    margin: 0 auto;
+    margin: 60px auto;
 }
 
 /* 사이드바 스타일 */
