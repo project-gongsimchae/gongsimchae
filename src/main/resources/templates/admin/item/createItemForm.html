@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html th:replace="~{admin/admin :: admin(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>상품 생성</title>
+</head>
+<body>
+<section class="container picklist-section admin-section-container">
+    <link th:href="@{/css/admin/createItemForm.css}" rel="stylesheet">
+
+    <div class="form-container">
+        <h1 class="mb-4 section-title">상품 생성</h1>
+        <form th:action="@{/admin/item/create}" th:object="${item}" method="post" enctype="multipart/form-data" class="needs-validation input-form-container" novalidate>
+
+            <div class="form-group" style="width: 600px">
+                <label for="images" class="form-label">이미지 파일들</label>
+                <div class="custom-file-upload">
+                    <label for="images">
+                        <i class="fas fa-plus"></i>
+                    </label>
+                    <input type="file" class="form-control-file" id="images" name="images" multiple onchange="previewImages(event)"/>
+                </div>
+                <div id="image-preview-container" class="image-preview-container"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="name" class="form-label">상품 이름</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required/>
+                <div class="invalid-feedback">
+                    상품 이름을 입력해주세요.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="intro" class="form-label">소개</label>
+                <input type="text" class="form-control" id="intro" th:field="*{intro}"/>
+            </div>
+
+            <div class="form-group">
+                <label for="originalPrice" class="form-label">정가</label>
+                <input type="number" class="form-control" id="originalPrice" th:field="*{originalPrice}" step="0.01" required/>
+                <div class="invalid-feedback">
+                    정가를 입력해주세요.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="discountRate" class="form-label">할인율</label>
+                <input type="number" class="form-control" id="discountRate" th:field="*{discountRate}" step="0.01" required/>
+                <div class="invalid-feedback">
+                    할인율을 입력해주세요.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="pointAccumulationRate" class="form-label">포인트 적립률</label>
+                <input type="number" class="form-control" id="pointAccumulationRate" th:field="*{pointAccumulationRate}" step="0.01" required/>
+                <div class="invalid-feedback">
+                    포인트 적립률을 입력해주세요.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="groupBuyingQuantity" class="form-label">공동구매 수량</label>
+                <input type="number" class="form-control" id="groupBuyingQuantity" th:field="*{groupBuyingQuantity}" required/>
+                <div class="invalid-feedback">
+                    공동구매 수량을 입력해주세요.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="groupBuyingLimitTime" class="form-label">공동구매 제한 시간</label>
+                <input type="datetime-local" class="form-control" id="groupBuyingLimitTime" th:field="*{groupBuyingLimitTime}"/>
+            </div>
+
+            <div class="form-group">
+                <label for="categoryName" class="form-label">카테고리</label>
+                <select id="categoryName" name="categoryName" class="form-control" required>
+                    <option value="">선택해주세요</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.name}"
+                            th:text="${category.name}">
+                    </option>
+                </select>
+                <div class="invalid-feedback">
+                    카테고리를 선택해주세요.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-point-color float-right">생성</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 이미지 미리보기 스크립트 -->
+    <script>
+        function previewImages(event) {
+            const previewContainer = document.getElementById('image-preview-container');
+            previewContainer.innerHTML = '';  // 기존 미리보기 이미지 초기화
+
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('image-preview');
+                    previewContainer.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</section>
+</body>
+</html>
