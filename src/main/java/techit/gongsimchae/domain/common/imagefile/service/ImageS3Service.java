@@ -1,4 +1,3 @@
-/*
 package techit.gongsimchae.domain.common.imagefile.service;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -10,6 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
+import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.post.entity.Post;
+import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.global.exception.CustomWebException;
 
 import java.util.ArrayList;
@@ -23,28 +28,36 @@ import java.util.UUID;
 public class ImageS3Service {
     private final AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.bucketName}")
+    private final UserRepository userRepository;
+    private final ImageFileRepository imageFileRepository;
+
+    @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public List<ImageFile> storeFiles(List<MultipartFile> files, String directory) {
+    public List<ImageFile> storeFiles(List<MultipartFile> files, String directory, Long userId, Object object) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException("해당 유저를 찾을 수 없습니다."));
+
         List<ImageFile> uploadFiles = new ArrayList<>();
         for (MultipartFile file : files) {
             if(!file.isEmpty()) {
-                uploadFiles.add(storeFile(file, directory));
+                uploadFiles.add(storeFile(file, directory, object));
             }
 
         }
+
+        imageFileRepository.saveAll(uploadFiles);
+
         return uploadFiles;
     }
     @Transactional
-    public ImageFile storeFile(MultipartFile file, String directory) {
+    public ImageFile storeFile(MultipartFile file, String directory, Object object) {
         if (file.isEmpty()) {
             return null;
         }
         String storeFileName = storeFileName(file);
         String originalFilename = file.getOriginalFilename();
         String uploadUrl = getUrl(directory);
-
+        ImageFile imageFile;
 
         try {
             ObjectMetadata metadata = new ObjectMetadata();
@@ -52,7 +65,18 @@ public class ImageS3Service {
             metadata.setContentLength(file.getSize());
             amazonS3.putObject(uploadUrl, storeFileName, file.getInputStream(), metadata);
 
-            return new ImageFile(getFullPath(directory,originalFilename), getFullPath(directory,storeFileName));
+            if (object instanceof Post) {
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Post) object);
+            } else if (object instanceof Item) {
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Item) object);
+            } else if (object instanceof Subdivision) {
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Subdivision) object);
+            } else if (object instanceof User) {
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (User) object);
+            } else {
+                throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
+            }
+            return imageFileRepository.save(imageFile);
         } catch (Exception e) {
             throw new CustomWebException(e.getMessage());
         }
@@ -76,7 +100,7 @@ public class ImageS3Service {
         int pos = originalFilename.lastIndexOf(".");
         String ext = originalFilename.substring(pos + 1);
 
-        List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg");
+        List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg", "PNG", "JPG","JPEG");
 
         if (!allowedExtensions.contains(ext)) {
             throw new IllegalArgumentException("지원하지 않는 포맷입니다.");
@@ -94,4 +118,3 @@ public class ImageS3Service {
         }
     }
 }
-*/

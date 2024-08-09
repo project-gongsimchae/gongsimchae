@@ -70,13 +70,14 @@ public class InquiryService {
     public void replyToInquiry(String inquiryId, InquiryAdminReplyReqDtoWeb dtoWeb) {
         Inquiry inquiry = inquiryRepository.findByUID(inquiryId).orElseThrow(() -> new CustomWebException("not found inquiry"));
         User user = userRepository.findById(inquiry.getUser().getId()).orElseThrow(() -> new CustomWebException("not found user"));
+        log.debug("replyToInquiry dto {}", dtoWeb);
         inquiry.changeInfo(dtoWeb);
         TransactionSynchronizationManager.registerSynchronization(
                 new TransactionSynchronizationAdapter() {
                     @Override
                     public void afterCommit() {
                         log.debug("inquiry event {} ", dtoWeb);
-                        publisher.publishEvent(new InquiryNotiEvent(user, dtoWeb.getAnswer()));
+                        publisher.publishEvent(new InquiryNotiEvent(user, dtoWeb.getTitle()));
                     }
                 }
         );
