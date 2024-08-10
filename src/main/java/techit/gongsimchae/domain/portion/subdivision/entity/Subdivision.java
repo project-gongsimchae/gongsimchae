@@ -8,6 +8,8 @@ import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.user.entity.User;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -38,12 +40,11 @@ public class Subdivision extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "image_file_id")
-    private ImageFile imageFile;
+    @OneToMany(mappedBy = "subdivision")
+    private List<ImageFile> imageFileList;
 
     @Builder
-    public Subdivision(String title, String content, String address, Integer price, Integer views, String UID, User user, ImageFile imageFile) {
+    public Subdivision(String title, String content, String address, Integer price, Integer views, String UID, User user, List<ImageFile> imageFileList) {
         this.title = title;
         this.content = content;
         this.address = address;
@@ -51,6 +52,6 @@ public class Subdivision extends BaseEntity {
         this.views = views;
         this.UID = UID;
         this.user = user;
-        this.imageFile = imageFile;
+        this.imageFileList = imageFileList;
     }
 }

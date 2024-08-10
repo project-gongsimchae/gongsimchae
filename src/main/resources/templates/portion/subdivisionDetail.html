@@ -12,10 +12,26 @@
   <link th:href="@{/css/portion/subdivisionDetail.css}" rel="stylesheet">
 
   <div class="container">
-    <div class="image-container" th:if="${subdivisionRespDto.imageFile != null}">
-      <img th:src="@{/images/} + ${subdivisionRespDto.imageFile.storeFilename}" alt="Image">
+    <div th:if="${subdivisionRespDto.imageFileList.size() > 0}">
+      <div id="imageCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div th:each="imageFile, iterStat : ${subdivisionRespDto.imageFileList}"
+               th:classappend="${iterStat.index == 0} ? 'active' : ''"
+               class="carousel-item">
+            <img th:src="@{/images/} + ${imageFile.storeFilename}" class="d-block w-100" alt="Image">
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
     </div>
-    <div class="image-container placeholder" th:if="${subdivisionRespDto.imageFile == null}">
+    <div class="image-container placeholder" th:if="${subdivisionRespDto.imageFileList.size() <= 0}">
       <i class="fa fa-camera"></i>
     </div>
 
@@ -66,6 +82,7 @@
     };
   </script>
 
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script th:src="@{/js/portion/subdivisionDetail.js}"></script>
 </section>
 </body>
