@@ -6,7 +6,7 @@
 
 /* 카드 헤더 스타일링 */
 .card-header {
-    background-color: #5cb25e; /* 부트스트랩 기본 블루 컬러 */
+    background-color: #5cb25e;
     color: #fff;
     border-bottom: 1px solid #5cb25e;
 }
