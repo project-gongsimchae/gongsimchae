@@ -1,0 +1,37 @@
+/* 카드 스타일링 */
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 카드 헤더 스타일링 */
+.card-header {
+    background-color: #5cb25e; /* 부트스트랩 기본 블루 컬러 */
+    color: #fff;
+    border-bottom: 1px solid #5cb25e;
+}
+
+/* 행 스타일링 */
+.row {
+    margin-bottom: 1rem;
+}
+
+/* 폰트 웨이트 조정 */
+.font-weight-bold {
+    font-weight: 600;
+}
+
+/* 버튼 스타일링 */
+.btn-primary {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+    border-color: #45a049;
+}
+
+.btn-danger {
+    margin-left: 10px;
+}
