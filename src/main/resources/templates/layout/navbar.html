@@ -88,7 +88,7 @@
             <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
         </div>
         <div sec:authorize="hasRole('ADMIN')" class="text-end">
-            <a th:href="@{/admin}" class="btn btn-link nav-list-a">관리자 페이지</a>
+            <a th:href="@{/admin/users}" class="btn btn-link nav-list-a">관리자 페이지</a>
         </div>
     </div>
 </nav>
@@ -149,7 +149,7 @@
             <a th:href="@{/inquiries}" class="btn btn-link nav-list-a">1:1 문의</a>
         </div>
         <div sec:authorize="hasRole('ADMIN')" class="text-end">
-            <a th:href="@{/admin}" class="btn btn-link nav-list-a">관리자 페이지</a>
+            <a th:href="@{/admin/users}" class="btn btn-link nav-list-a">관리자 페이지</a>
         </div>
     </div>
 </nav>
@@ -194,6 +194,19 @@
             <li class="menu-text divider">내정보</li>
             <li><a href="/mypage/address">배송지 관리</a></li>
             <li><a href="/mypage/info">개인정보 수정</a></li>
+        </ul>
+    </div>
+</aside>
+
+<aside th:fragment="admin_side_navbar" class="sidebar">
+    <div class="sidebar menu">
+        <ul>
+            <li class="menu-text">관리 메뉴</li>
+            <li><a th:href="@{/admin/users}">유저 관리</a></li>
+            <li><a th:href="@{/admin/item}">상품 관리</a></li>
+            <li><a th:href="@{/admin/event}">이벤트 관리</a></li>
+            <li><a th:href="@{/admin/banners}">배너 관리</a></li>
+            <li><a th:href="@{/admin/inquires}">문의 관리</a></li>
         </ul>
     </div>
 </aside>
