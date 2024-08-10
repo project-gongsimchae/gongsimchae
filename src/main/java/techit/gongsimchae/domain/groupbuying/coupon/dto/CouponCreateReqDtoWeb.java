@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -15,4 +16,5 @@ public class CouponCreateReqDtoWeb {
     private LocalDateTime expirationDate;
     private String eventName;
     private String couponCode; // 쿠폰등록 번호
+    private MultipartFile eventBannerImage; // 배너 이미지
 }

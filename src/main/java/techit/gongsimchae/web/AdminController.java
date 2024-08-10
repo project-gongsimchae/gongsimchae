@@ -3,11 +3,16 @@ package techit.gongsimchae.web;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import techit.gongsimchae.domain.common.inquiry.dto.InquiryAdminReplyReqDtoWeb;
+import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
+import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
@@ -20,6 +25,7 @@ import java.util.List;
 @Slf4j
 public class AdminController {
     private final UserService userService;
+    private final InquiryService inquiryService;
 
 
     @GetMapping
@@ -87,6 +93,43 @@ public class AdminController {
     @PostMapping("/banners/write")
     public String banner(){
         return "redirect:/admin/banners";
+    }
+
+
+    /**
+     * 유저가 쓴 1:1 문의를 관리자가 보고 작성
+     */
+    @GetMapping("/inquires")
+    public String InquiryList(Model model, @RequestParam(value = "filter", defaultValue = "unanswered") String filter, Pageable pageable) {
+        Page<InquiryRespDtoWeb> inquires = inquiryService.getAllInquiries(pageable, filter);
+        log.debug("admin inquires {}", inquires.getContent());
+        model.addAttribute("inquires", inquires);
+        return "admin/inquiry/inquiryList";
+    }
+
+    @GetMapping("/inquires/reply/{id}")
+    public String ReplyToInquiryForm(@PathVariable("id") String id, Model model) {
+        InquiryRespDtoWeb inquiry = inquiryService.getInquiry(id);
+        log.debug("inquiry reply {} ", inquiry);
+        model.addAttribute("inquiry", inquiry);
+        return "admin/inquiry/inquiryReply";
+    }
+
+    @PostMapping("/inquires/reply/{id}")
+    public String ReplyToInquiry(@PathVariable("id") String id
+            , @Valid @ModelAttribute("inquiry")InquiryAdminReplyReqDtoWeb dtoWeb, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.debug("inquiry error {}", bindingResult.getAllErrors());
+            return "admin/inquiry/inquiryReply";
+        }
+        inquiryService.replyToInquiry(id, dtoWeb);
+        return "redirect:/admin/inquires";
+    }
+
+    @PostMapping("/inquires/delete/{id}")
+    public String DeleteInquiry(@PathVariable("id") String id) {
+        inquiryService.deleteInquiry(id);
+        return "redirect:/admin/inquires";
     }
 
 
