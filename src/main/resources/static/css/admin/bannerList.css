@@ -1,0 +1,53 @@
+/* 배너 카드 스타일링 */
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 배너 이미지 스타일링 */
+.banner-img {
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 배너 제목 스타일링 */
+.card-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 배너 내용 스타일링 */
+.card-text {
+    font-size: 1em;
+    color: #555;
+}
+
+/* 배너 유형 텍스트 스타일링 */
+.text-muted {
+    font-size: 0.9em;
+    color: #777;
+}
+
+/* 배너 작성 버튼 스타일링 */
+.btn-point-color {
+    background-color: #4CAF50; /* 포인트 컬러 */
+    border-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.btn-point-color:hover {
+    background-color: #45a049;
+    border-color: #45a049;
+}
+
+/* 정보 알림 스타일 */
+.alert-info {
+    background-color: #e7f3fe;
+    border-color: #d3e7fd;
+    color: #31708f;
+}
