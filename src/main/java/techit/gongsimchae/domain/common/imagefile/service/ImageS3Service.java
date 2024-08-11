@@ -13,6 +13,7 @@ import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
+import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.post.entity.Post;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
@@ -37,7 +38,7 @@ public class ImageS3Service {
     public List<ImageFile> storeFiles(List<MultipartFile> files, String directory, Object object) {
         List<ImageFile> uploadFiles = new ArrayList<>();
         for (MultipartFile file : files) {
-            if(!file.isEmpty()) {
+            if (!file.isEmpty()) {
                 uploadFiles.add(storeFile(file, directory, object));
             }
 
@@ -47,6 +48,7 @@ public class ImageS3Service {
 
         return uploadFiles;
     }
+
     @Transactional
     public ImageFile storeFile(MultipartFile file, String directory, Object object) {
         if (file.isEmpty()) {
@@ -64,21 +66,18 @@ public class ImageS3Service {
             amazonS3.putObject(uploadUrl, storeFileName, file.getInputStream(), metadata);
 
             if (object instanceof Post) {
-                imageFile = new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), (Post) object);
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Post) object);
             } else if (object instanceof Item) {
-                imageFile = new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), (Item) object);
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Item) object);
             } else if (object instanceof Subdivision) {
-                imageFile = new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), (Subdivision) object);
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Subdivision) object);
             } else if (object instanceof User) {
-                imageFile = new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), (User) object);
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (User) object);
             } else if (object instanceof Coupon) {
-                imageFile = new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), (Coupon) object);
-            }else {
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Coupon) object);
+            } else if (object instanceof Event) {
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Event) object);
+            } else {
                 throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
             }
             return imageFileRepository.save(imageFile);
@@ -88,17 +87,18 @@ public class ImageS3Service {
     }
 
 
-
     private String getUrl(String directory) {
         return bucket + "/" + directory;
     }
 
     private String getFullPath(String directory, String fileName) {
-        return amazonS3.getUrl(bucket, directory+"/"+fileName).toString();
+        return amazonS3.getUrl(bucket, directory + "/" + fileName).toString();
     }
 
     private String storeFileName(MultipartFile file) {
-        if (file.isEmpty()) return null;
+        if (file.isEmpty()) {
+            return null;
+        }
 
         String originalFilename = file.getOriginalFilename();
         String uuid = UUID.randomUUID().toString();
@@ -113,9 +113,10 @@ public class ImageS3Service {
         return uuid + "." + ext;
 
     }
+
     @Transactional
     public void deleteFile(String fileName) {
-        String deleteFile = fileName.substring(fileName.indexOf("/", 10)+1);
+        String deleteFile = fileName.substring(fileName.indexOf("/", 10) + 1);
         try {
             amazonS3.deleteObject(bucket, deleteFile);
         } catch (Exception e) {

@@ -8,10 +8,15 @@ import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponCreateReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
 import techit.gongsimchae.domain.groupbuying.coupon.repository.CouponRepository;
+import techit.gongsimchae.domain.groupbuying.couponcategory.entity.CouponCategory;
+import techit.gongsimchae.domain.groupbuying.couponcategory.repository.CouponCategoryRepository;
+import techit.gongsimchae.domain.groupbuying.event.dto.EventCreateReqDtoWeb;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 
@@ -22,6 +27,8 @@ public class CouponService {
     private final UserRepository userRepository;
     private final ImageS3Service imageS3Service;
     private final ImageFileRepository imageFileRepository;
+    private final CategoryRepository categoryRepository;
+    private final CouponCategoryRepository couponCategoryRepository;
 
     public void saveCoupon(CouponCreateReqDtoWeb createDto) {
         Coupon coupon = new Coupon(createDto);
@@ -33,7 +40,7 @@ public class CouponService {
         List<Coupon> coupons = couponRepository.findAll();
         List<CouponRespDtoWeb> couponRespDtoWebs = new ArrayList<>();
         for (Coupon coupon : coupons) {
-            couponRespDtoWebs.add(new CouponRespDtoWeb(coupon, imageFileRepository.findByCoupon(coupon)));
+            couponRespDtoWebs.add(new CouponRespDtoWeb(coupon));
         }
         return couponRespDtoWebs;
     }
@@ -50,5 +57,13 @@ public class CouponService {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
         return couponRepository.findCouponsByUserId(user.getId());
 
+    }
+
+    public void createEventCoupon(EventCreateReqDtoWeb eventDto) {
+        Coupon coupon = couponRepository.save(new Coupon(eventDto));
+        List<Category> categories = categoryRepository.findAllByNameIn(eventDto.getCategoryNames());
+        for (Category category : categories) {
+            couponCategoryRepository.save(new CouponCategory(coupon, category));
+        }
     }
 }

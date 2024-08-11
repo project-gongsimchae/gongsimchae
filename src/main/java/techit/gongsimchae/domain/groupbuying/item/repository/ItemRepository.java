@@ -14,6 +14,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findTop8ByOrderByCreateDateDesc();
     List<Item> findTop8ByOrderByGroupBuyingQuantityDesc();
     List<Item> findAllByCategory(Category category);
+    List<Item> findAllByCategoryIn(List<Category> categories);
     Page<Item> findAllByCategory(Category category, Pageable pageable);
     Optional<Item> findByUID(String id);
     Page<Item> findTop200ByOrderByCreateDateDesc(Pageable pageable);

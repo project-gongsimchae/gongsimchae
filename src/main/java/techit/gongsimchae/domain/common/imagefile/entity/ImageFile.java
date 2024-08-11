@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
+import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.post.entity.Post;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
@@ -40,6 +41,10 @@ public class ImageFile extends BaseEntity {
     private Coupon coupon;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subdivision_id")
     private Subdivision subdivision;
 
@@ -65,6 +70,12 @@ public class ImageFile extends BaseEntity {
         this.originalFilename = originalFilename;
         this.storeFilename = storeFilename;
         this.coupon = coupon;
+    }
+
+    public ImageFile(String originalFilename, String storeFilename, Event event) {
+        this.originalFilename = originalFilename;
+        this.storeFilename = storeFilename;
+        this.event = event;
     }
 
     public ImageFile(String originalFilename, String storeFilename, Subdivision subdivision) {
