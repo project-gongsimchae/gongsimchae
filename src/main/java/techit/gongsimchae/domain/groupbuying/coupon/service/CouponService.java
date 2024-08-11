@@ -1,7 +1,5 @@
 package techit.gongsimchae.domain.groupbuying.coupon.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
@@ -19,6 +17,9 @@ import techit.gongsimchae.domain.groupbuying.couponcategory.repository.CouponCat
 import techit.gongsimchae.domain.groupbuying.event.dto.EventCreateReqDtoWeb;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

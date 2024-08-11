@@ -35,7 +35,7 @@ public class ItemController {
         model.addAttribute("item", new ItemCreateDto());
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("isNew", true);
-        return "admin/item/createForm";
+        return "admin/item/createItemForm";
     }
 
     @PostMapping("/admin/item/create")

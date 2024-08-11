@@ -66,6 +66,12 @@ public class ImageFile extends BaseEntity {
         this.item = item;
     }
 
+    public ImageFile(String originalFilename, String storeFilename, Subdivision subdivision) {
+        this.originalFilename = originalFilename;
+        this.storeFilename = storeFilename;
+        this.subdivision = subdivision;
+    }
+
     public ImageFile(String originalFilename, String storeFilename, Coupon coupon) {
         this.originalFilename = originalFilename;
         this.storeFilename = storeFilename;
@@ -76,11 +82,5 @@ public class ImageFile extends BaseEntity {
         this.originalFilename = originalFilename;
         this.storeFilename = storeFilename;
         this.event = event;
-    }
-
-    public ImageFile(String originalFilename, String storeFilename, Subdivision subdivision) {
-        this.originalFilename = originalFilename;
-        this.storeFilename = storeFilename;
-        this.subdivision = subdivision;
     }
 }

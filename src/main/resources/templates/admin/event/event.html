@@ -1,39 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{admin/admin :: admin(~{::section})}">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>이벤트 관리</title>
 </head>
 <body>
-<h1>이벤트 관리</h1>
-<a th:href="@{/admin/event/create-form}" class="create-event-btn">이벤트 생성</a>
+<section class="container picklist-section admin-section-container">
+    <link th:href="@{/css/admin/event.css}" rel="stylesheet">
 
-<table>
-    <thead>
-    <tr>
-        <th>이벤트명</th>
-        <th>할인금액</th>
-        <th>최대할인금액</th>
-        <th>만료기한</th>
-        <th>쿠폰코드</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="coupon : ${coupons}">
+    <div class="form-container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="section-title">이벤트 관리</h1>
+            <a th:href="@{/admin/event/create}" class="btn btn-point-color">이벤트 생성</a>
+        </div>
 
-        <td th:text="${coupon.eventName}"></td>
-<!--        <td><img th:src="${coupon.eventImageUrl}" alt="event image" width="100"></td>-->
-        <td th:text="${coupon.discount}"></td>
-        <td th:text="${coupon.maxDiscount}"></td>
-        <td th:text="${#temporals.format(coupon.expirationDate,'yyyy-MM-dd HH:mm:ss')}"></td>
-        <td th:text="${coupon.couponCode}"></td>
-        <td>
-            <form th:action="@{/admin/event/delete}" method="post">
-                <input type="hidden" th:value="${coupon.id}" name="id"/>
-                <button type="submit">삭제</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table></body>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>이벤트명</th>
+                <th>할인금액</th>
+                <th>최대할인금액</th>
+                <th>만료기한</th>
+                <th>쿠폰코드</th>
+                <th>삭제</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="coupon : ${coupons}">
+                <td th:text="${coupon.eventName}"></td>
+                <td th:text="${coupon.discount}"></td>
+                <td th:text="${coupon.maxDiscount}"></td>
+                <td th:text="${#temporals.format(coupon.expirationDate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td th:text="${coupon.couponCode}"></td>
+                <td>
+                    <form th:action="@{/admin/event/delete}" method="post">
+                        <input type="hidden" th:value="${coupon.id}" name="id"/>
+                        <button type="submit" class="btn btn-danger">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
 </html>

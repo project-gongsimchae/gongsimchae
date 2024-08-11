@@ -1,0 +1,63 @@
+/* 섹션 제목 스타일링 */
+.section-title {
+    margin-bottom: 20px;
+}
+
+/* 폼 요소 스타일링 */
+.form-group {
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* 라벨 스타일링 */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* 입력란 스타일링 */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    box-shadow: none;
+    background-color: #fff;
+}
+
+/* 생성 버튼 스타일링 */
+.btn-point-color {
+    background-color: #4CAF50; /* 포인트 컬러 */
+    border-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1.1em;
+}
+
+.btn-point-color:hover {
+    background-color: #45a049;
+    border-color: #45a049;
+}
+
+/* 유효성 검사 스타일 */
+.invalid-feedback {
+    color: #dc3545;
+    display: none;
+}
+
+.was-validated .form-control:invalid {
+    border-color: #dc3545;
+}
+
+.was-validated .form-control:valid {
+    border-color: #ced4da; /* 유효성 검사 후에도 보더 색상 고정 */
+}
+
+.was-validated .invalid-feedback {
+    display: block;
+}
+
+.event-form-container {
+    margin: 0 200px;
+}

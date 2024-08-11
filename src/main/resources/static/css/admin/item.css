@@ -1,0 +1,74 @@
+/* styles.css */
+
+/* 전체 글자 크기를 줄이기 위한 테이블 스타일 */
+table {
+    font-size: 0.9em; /* 글자 크기를 약간 줄임 */
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+table td {
+    word-wrap: break-word;
+}
+
+/* 상품 생성 버튼 스타일 */
+.create-item-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    float: right; /* h1 태그와 같은 줄에 위치하도록 설정 */
+    margin-bottom: 20px;
+}
+
+.create-item-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 수정 및 삭제 버튼 스타일 */
+.btn-custom {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-edit {
+    background-color: #28a745; /* 수정 버튼은 초록색 */
+}
+
+.btn-edit:hover {
+    background-color: #218838;
+}
+
+.btn-delete {
+    background-color: #dc3545; /* 삭제 버튼은 빨간색 */
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+/* 페이지 컨테이너 스타일 */
+.container {
+    /*margin-right: 40px;*/
+
+}
+
+.section-title {
+    display: inline-block;
+    margin: 0;
+}

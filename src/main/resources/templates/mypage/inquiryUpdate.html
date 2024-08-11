@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/mypage :: mypage(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공심채</title>
+</head>
+<body>
+<section class="picklist-section">
+    <div class="custom-form-container">
+        <h3 class="section-title">1:1 문의 내용</h3>
+        <form th:action method="post" th:object="${inquiry}" enctype="multipart/form-data" class="custom-inquiry-form">
+            <div class="custom-form-group">
+                <label for="inquiryType" class="custom-form-label">문의유형</label>
+                <select id="inquiryType" class="custom-form-select" th:field="*{inquiryType}">
+                    <option value="">==문의유형을 선택해주세요==</option>
+                    <option th:each="type : ${T(techit.gongsimchae.domain.common.inquiry.entity.InquiryType).values()}"
+                            th:value="${type.name()}"
+                            th:text="${type.description}"></option>
+                </select>
+            </div>
+
+            <div class="custom-form-group">
+                <label for="title" class="custom-form-label">제목</label>
+                <input type="text" id="title" class="custom-form-input" th:field="*{title}" required placeholder="제목을 입력해주세요">
+                <div th:errors="*{title}" class="custom-form-error"></div>
+            </div>
+
+            <div class="custom-form-group">
+                <label for="content" class="custom-form-label">내용</label>
+                <textarea id="content" class="custom-form-textarea" th:field="*{content}"
+                          placeholder="1:1문의 작성 전 확인해주세요 어쩌고 저쩌고"
+                          required rows="4"></textarea>
+                <div th:errors="*{content}" class="custom-form-error"></div>
+            </div>
+
+            <div class="custom-form-group">
+                <label for="imageFiles" class="custom-form-label">다중 이미지 파일</label>
+                <input type="file" id="imageFiles" name="imageFiles" multiple="multiple" class="custom-form-file">
+            </div>
+
+            <div class="custom-form-group">
+                <label for="email" class="custom-form-label">답변수신</label>
+                <input type="text" id="email" class="custom-form-input custom-form-input-readonly"  th:field="*{email}" readonly>
+            </div>
+
+            <div class="custom-form-group custom-form-submit-wrapper">
+                <input type="submit" class="custom-form-submit" value="등록">
+            </div>
+        </form>
+    </div>
+</section>
+</body>
+</html>

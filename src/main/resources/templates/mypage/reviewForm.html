@@ -13,7 +13,7 @@
             <h1 class="mb-4">리뷰 작성</h1>
 
             <!-- 리뷰 작성 폼 -->
-            <form th:action="@{/reviews/write}" method="post">
+            <form th:action="@{/mypage/reviews/write}" method="post">
                 <!-- 상품 선택 (숨겨진 필드로, 필요에 따라 수정 가능) -->
                 <input type="hidden" name="productId" th:value="${productId}"/>
 

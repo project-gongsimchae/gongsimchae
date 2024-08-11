@@ -29,6 +29,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageS3Service {
     private final AmazonS3 amazonS3;
+
     private final UserRepository userRepository;
     private final ImageFileRepository imageFileRepository;
 
@@ -92,13 +93,11 @@ public class ImageS3Service {
     }
 
     private String getFullPath(String directory, String fileName) {
-        return amazonS3.getUrl(bucket, directory + "/" + fileName).toString();
+        return amazonS3.getUrl(bucket, directory+"/"+fileName).toString();
     }
 
     private String storeFileName(MultipartFile file) {
-        if (file.isEmpty()) {
-            return null;
-        }
+        if (file.isEmpty()) return null;
 
         String originalFilename = file.getOriginalFilename();
         String uuid = UUID.randomUUID().toString();
@@ -116,7 +115,7 @@ public class ImageS3Service {
 
     @Transactional
     public void deleteFile(String fileName) {
-        String deleteFile = fileName.substring(fileName.indexOf("/", 10) + 1);
+        String deleteFile = fileName.substring(fileName.indexOf("/", 10)+1);
         try {
             amazonS3.deleteObject(bucket, deleteFile);
         } catch (Exception e) {

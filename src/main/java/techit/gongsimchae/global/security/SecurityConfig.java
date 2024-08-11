@@ -53,11 +53,11 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**","/mypage/**").hasRole("USER")
-                        .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue","/find/**","/emails/**").permitAll()
+                        .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue","/find/**","/emails/**","/subscribe").permitAll()
                         .anyRequest().permitAll())
 
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/emails/**","/find/**","/mypage/**"))
+                        .ignoringRequestMatchers("/emails/**","/find/**","/mypage/**","/subscribe/**"))
 
                 .formLogin(form -> form
                         .loginPage("/login")
