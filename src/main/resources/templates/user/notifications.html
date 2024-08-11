@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Notifications</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .notification-card {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative; /* 추가: 새로운 알림 표시를 위한 위치 설정 */
+        }
+
+        .notification-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 알림 유형별 스타일 */
+        .notification-chat {
+            background-color: #d1ecf1;
+        }
+
+        .notification-keyword {
+            background-color: #fff3cd;
+        }
+
+        .notification-chatroom {
+            background-color: #f8d7da;
+        }
+
+        .notification-inquiry {
+            background-color: #d4edda;
+        }
+
+        .notification-type {
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-right: 40px;
+            flex-shrink: 0;
+            font-size: 12px;
+            color: white;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .notification-content h5 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: normal;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70%;
+        }
+
+        .notification-date {
+            font-size: 13px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* 새 알림 스타일 */
+        .notification-new {
+            background-color: #dc3545;
+            color: white;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: auto 5px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div th:each="notification : ${notificationResponse.notifications}" class="notification-card">
+        <!-- 새 알림을 표시하기 위한 추가 요소 -->
+        <span th:if="${notification.isRead == 0}" class="notification-new">New</span>
+
+        <div class="notification-type " th:classappend="${'notification-' + notification.notificationType.name().toLowerCase()}"
+             th:text="${notification.getNotificationType().getDescription()}"></div>
+
+        <div class="notification-content">
+            <h5>
+                <a th:href="@{|${notification.url}|}"
+                   th:text="${notification.content}"></a>
+            </h5>
+            <span class="notification-date"
+                  th:text="${#temporals.format(notification.createDate,'yyyy-MM-dd HH:mm')}"></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
