@@ -20,6 +20,7 @@
     <div class="custom-inquiry-actions">
         <form th:action method="post" th:object="${inquiry}">
             <div class="custom-form-group">
+                <input type="hidden" th:field="*{title}">
                 <label for="answer" class="custom-form-label">답변 작성</label>
                 <textarea id="answer" name="answer" class="custom-form-control" rows="8" cols="10" required th:field="*{answer}"></textarea>
             </div>

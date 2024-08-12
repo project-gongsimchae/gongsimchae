@@ -27,7 +27,7 @@ public class InquiryCustomRepositoryImpl implements InquiryCustomRepository {
                         user.name, user.nickname, user.email))
                 .from(inquiry)
                 .join(inquiry.user, user)
-                .orderBy(inquiry.createDate.asc())
+                .orderBy(inquiry.createDate.desc())
                 .where(unanswered(filter))
                 .fetch();
 

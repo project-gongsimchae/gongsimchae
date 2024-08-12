@@ -1,0 +1,44 @@
+/* 폼 그룹 스타일 */
+.form-group label {
+    font-weight: 500;
+    color: #333333;
+}
+
+.form-group .form-control {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+.form-group .form-control:focus {
+    box-shadow: none;
+    border-color: #007bff;
+}
+
+/* 에러 메세지 스타일 */
+.text-danger {
+    font-size: 14px;
+}
+
+/* 제출 버튼 스타일 */
+.btn-primary {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 0;
+    margin-top: 20px;
+    border-radius: 4px;
+}
+
+.btn-primary:hover {
+    background-color: #5cb25e;
+    border-color: #5cb25e;
+}
+
+.form-group {
+    display: block;
+}
+
+.user-update-form-container {
+    margin: 0 200px;
+}
