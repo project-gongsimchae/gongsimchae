@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
+import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -19,4 +20,5 @@ public class GlobalControllerAdvice {
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
     }
+
 }

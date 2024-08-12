@@ -12,8 +12,8 @@
                     <a class="nav-link" th:href="@{/portioning}">소분나눔</a>
                 </li>
             </ul>
-            <form class="d-flex mx-auto form-style">
-                <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search" style="max-width: 700px; flex-grow: 1;">
+            <form class="d-flex mx-auto form-style" method="get" action="/search">
+                <input class="form-control me-2" type="search" name="keyword" placeholder="검색" aria-label="Search" style="max-width: 700px; flex-grow: 1;">
                 <button class="btn btn-outline-success search-btn" type="submit">검색</button>
             </form>
             <div sec:authorize="isAnonymous()">
