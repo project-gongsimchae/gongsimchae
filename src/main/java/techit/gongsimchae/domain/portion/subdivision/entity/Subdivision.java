@@ -35,6 +35,9 @@ public class Subdivision extends BaseEntity {
     private Double longitude;
 
     @Column(nullable = false)
+    private Integer numOfParticipants;
+
+    @Column(nullable = false)
     private Integer price;
 
     private Integer views;
@@ -50,12 +53,13 @@ public class Subdivision extends BaseEntity {
     private List<ImageFile> imageFileList;
 
     @Builder
-    public Subdivision(String title, String content, String address, Double latitude, Double longitude, Integer price, Integer views, String UID, User user) {
+    public Subdivision(String title, String content, String address, Double latitude, Double longitude, Integer numOfParticipants, Integer price, Integer views, String UID, User user) {
         this.title = title;
         this.content = content;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.numOfParticipants = numOfParticipants;
         this.price = price;
         this.views = views;
         this.UID = UID;

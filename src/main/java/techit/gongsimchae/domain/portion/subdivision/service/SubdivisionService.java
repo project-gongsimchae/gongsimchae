@@ -79,6 +79,7 @@ public class SubdivisionService {
                 .address(subdivisionReqDto.getAddress())
                 .latitude(subdivisionReqDto.getLatitude())
                 .longitude(subdivisionReqDto.getLongitude())
+                .numOfParticipants(subdivisionReqDto.getNumOfParticipants())
                 .price(subdivisionReqDto.getPrice())
                 .views(0)
                 .UID(UUID.randomUUID().toString())
