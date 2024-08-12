@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -21,6 +23,7 @@ import techit.gongsimchae.global.security.handler.FormAuthenticationSuccessHandl
 import techit.gongsimchae.global.security.service.CustomOauth2UserService;
 import techit.gongsimchae.global.security.service.FormUserDetailsService;
 
+import javax.sql.DataSource;
 import java.util.Collections;
 
 @EnableWebSecurity
@@ -31,6 +34,7 @@ public class SecurityConfig {
     private final FormAuthenticationFailureHandler failureHandler;
     private final FormAuthenticationSuccessHandler successHandler;
     private final FormUserDetailsService userDetailsService;
+    private final DataSource dataSource;
 
 
     @Bean
@@ -94,9 +98,19 @@ public class SecurityConfig {
                         })
                                 .invalidateHttpSession(true)
                         )
+
+                .rememberMe(remember -> remember
+                        .userDetailsService(userDetailsService)
+                        .tokenRepository(tokenRepository()))
         ;
 
         return http.build();
+    }
+    @Bean
+    public PersistentTokenRepository tokenRepository() {
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource);
+        return jdbcTokenRepository;
     }
 
     private CorsConfigurationSource configurationSource() {

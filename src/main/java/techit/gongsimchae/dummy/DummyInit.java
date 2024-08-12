@@ -8,12 +8,12 @@ import techit.gongsimchae.domain.common.user.repository.UserRepository;
 
 @Configuration
 public class DummyInit extends DummyObject {
-/*    @Bean
+    @Bean
     @Profile("dev")
     CommandLineRunner init(UserRepository userRepository) {
         return args -> {
             userRepository.save(adminUser("admin", "admin"));
             userRepository.save(userUser("user","user"));
         };
-    }*/
+    }
 }
