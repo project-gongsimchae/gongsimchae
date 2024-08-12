@@ -18,7 +18,7 @@
           <div th:each="imageFile, iterStat : ${subdivisionRespDto.imageFileList}"
                th:classappend="${iterStat.index == 0} ? 'active' : ''"
                class="carousel-item">
-            <img th:src="@{/images/} + ${imageFile.storeFilename}" class="d-block w-100" alt="Image">
+            <img th:src="@{${imageFile.storeFilename}}" class="d-block w-100" alt="Image">
           </div>
         </div>
         <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
