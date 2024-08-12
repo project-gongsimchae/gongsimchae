@@ -19,6 +19,8 @@ public class SubdivisionRespDto {
     private String title;
     private String content;
     private String address;
+    private Double latitude;
+    private Double longitude;
     private Integer price;
     private Integer views;
     private String UID;
@@ -32,6 +34,8 @@ public class SubdivisionRespDto {
         this.title = subdivision.getTitle();
         this.content = subdivision.getContent();
         this.address = subdivision.getAddress();
+        this.latitude = subdivision.getLatitude();
+        this.longitude = subdivision.getLongitude();
         this.price = subdivision.getPrice();
         this.views = subdivision.getViews();
         this.UID = subdivision.getUID();
