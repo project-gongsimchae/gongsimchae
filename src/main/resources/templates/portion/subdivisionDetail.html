@@ -32,7 +32,8 @@
       </div>
     </div>
     <div class="image-container placeholder" th:if="${subdivisionRespDto.imageFileList.size() <= 0}">
-      <i class="fa fa-camera"></i>
+      <img th:src="@{'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}" class="d-block w-100" alt="Image">
+<!--      <i class="fa fa-camera"></i>-->
     </div>
 
     <hr class="section-divider">
