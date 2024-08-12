@@ -27,17 +27,6 @@ document.getElementById('imageFile').addEventListener('change', function() {
     }
 });
 
-// 작성하기 버튼을 눌렀을 때 이미지 업로드 필드 검증
-document.querySelector('form').addEventListener('submit', function(event) {
-    const imageFileInput = document.getElementById('imageFile');
-
-    // 이미지가 하나도 업로드되지 않았을 때
-    if (imageFileInput.files.length === 0) {
-        alert("이미지를 등록해주세요!"); // 알림창 표시
-        event.preventDefault(); // 폼 제출 방지
-    }
-});
-
 document.addEventListener('DOMContentLoaded', async function () {
     function currentLocation() {
         if (navigator.geolocation) {
