@@ -1,4 +1,4 @@
-package techit.gongsimchae.domain.mail.event;
+package techit.gongsimchae.domain.common.user.mail.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
-import techit.gongsimchae.domain.mail.service.EmailService;
+import techit.gongsimchae.domain.common.user.mail.service.EmailService;
 
 @Component
 @Slf4j

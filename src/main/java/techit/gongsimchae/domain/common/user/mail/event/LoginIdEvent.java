@@ -1,4 +1,4 @@
-package techit.gongsimchae.domain.mail.event;
+package techit.gongsimchae.domain.common.user.mail.event;
 
 import lombok.Getter;
 import lombok.ToString;
