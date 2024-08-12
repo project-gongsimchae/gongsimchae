@@ -3,13 +3,18 @@ package techit.gongsimchae.domain.portion.subdivision.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
+import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.portion.participants.service.ParticipantService;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,7 +24,8 @@ public class SubdivisionService {
 
     private final SubdivisionRepository subdivisionRepository;
     private final ParticipantService participantService;
-
+    private final UserRepository userRepository;
+    private final ImageS3Service imageS3Service;
 
     @Transactional(readOnly = true)
     public List<SubdivisionRespDto> getAllSubdivisions(){
@@ -60,5 +66,29 @@ public class SubdivisionService {
     public List<SubdivisionRespDto> findJoinSubdivisionByUserId(Long userId) {
 
         return participantService.findByUserId(userId).stream().map(participant -> participant.getSubdivision()).toList();
+    }
+
+    public String saveSubdivision(SubdivisionReqDto subdivisionReqDto,
+                                  Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException("not found user"));
+
+        Subdivision subdivision = Subdivision.builder()
+                .title(subdivisionReqDto.getTitle())
+                .content(subdivisionReqDto.getContent())
+                .address(subdivisionReqDto.getAddress())
+                .latitude(subdivisionReqDto.getLatitude())
+                .longitude(subdivisionReqDto.getLongitude())
+                .price(subdivisionReqDto.getPrice())
+                .views(0)
+                .UID(UUID.randomUUID().toString())
+                .user(user)
+                .build();
+
+        subdivisionRepository.save(subdivision);
+
+        imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", userId, subdivision);
+
+        return subdivision.getUID();
     }
 }

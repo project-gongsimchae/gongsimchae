@@ -22,7 +22,7 @@
           <label for="imageFile" class="custom-file-upload">
             <i class="fa fa-camera"></i> +
           </label>
-          <input type="file" id="imageFile" name="imageFile" accept="image/*" required>
+          <input type="file" id="imageFile" name="images" accept="image/*" multiple required>
         </div>
         <div id="imagePreview" class="image-preview"></div>
       </div>
@@ -38,8 +38,14 @@
       </div>
       <!-- 위치 입력 -->
       <div class="form-group">
-        <label for="address">거래 희망 장소</label>
-        <input type="text" id="address" name="address" placeholder="위치를 입력하세요" required>
+        <label>모임 희망 장소</label>
+        <div class="hAddr" style="margin-bottom: 15px">
+          <input type="text" id="address" name="address" readonly required>
+        </div>
+        <div id="map" style="width:350px;height:350px;"></div>
+
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
       </div>
       <!-- 가격 입력 -->
       <div class="form-group">
@@ -53,6 +59,8 @@
     </form>
   </div>
 
+
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4a7673bf164245754c968e7459217a90&libraries=services"></script>
   <script th:src="@{/js/portion/subdivisionRegister.js}"></script>
 </section>
 </body>
