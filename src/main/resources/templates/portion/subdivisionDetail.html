@@ -40,7 +40,7 @@
     <div class="user-info-subdivision">
       <div class="user-details">
         <span class="nickname" th:text="${subdivisionRespDto.user.nickname}"></span>
-        <span class="address" th:text="${subdivisionRespDto.address}"></span>
+<!--        <span class="address" th:text="${subdivisionRespDto.address}"></span>-->
       </div>
       <div class="manner-point">
         <label>매너 점수: </label>
@@ -57,9 +57,14 @@
       <div class="price-box">
         <label>가격</label>
         <p th:text="${subdivisionRespDto.price} + '원'"></p>
+
+        <label>모임 장소</label>
+        <p class="address" th:text="${subdivisionRespDto.address}"></p>
+
+        <label>모임 장소 뷰</label>
+        <div id="map" style="width:200px;height:200px;"></div>
       </div>
 
-      <div id="map" style="width:350px;height:350px;"></div>
     </div>
 
     <div class="footer">
