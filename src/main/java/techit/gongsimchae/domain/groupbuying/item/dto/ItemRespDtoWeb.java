@@ -2,6 +2,7 @@ package techit.gongsimchae.domain.groupbuying.item.dto;
 
 import lombok.Data;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.wishlist.entity.WishList;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 
 import java.time.LocalDateTime;

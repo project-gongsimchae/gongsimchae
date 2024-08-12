@@ -19,6 +19,8 @@ import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.common.wishlist.service.WishListService;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
@@ -40,6 +42,7 @@ public class MyPageController {
     private final CouponService couponService;
     private final InquiryService inquiryService;
     private final OrdersService ordersService;
+    private final ItemService itemService;
 
 
     @GetMapping("/orders")
@@ -174,8 +177,25 @@ public class MyPageController {
      */
 
     @GetMapping("/pick/list")
-    public String PickList() {
+    public String PickList(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        List<ItemRespDtoWeb> items = wishListService.getPickItems(principalDetails);
+        log.debug("PickList {}", items);
+        model.addAttribute("items", items);
         return "mypage/pickList";
+    }
+
+    @PostMapping("/pick/{itemId}")
+    @ResponseBody
+    public ResponseEntity<?> pickItem(@PathVariable("itemId") String itemId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        wishListService.pickItem(itemId, principalDetails);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/pick/check/{itemId}")
+    @ResponseBody
+    public ResponseEntity<?> checkPick(@PathVariable("itemId") String itemId,@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        boolean result = wishListService.checkPickItem(itemId, principalDetails);
+        return ResponseEntity.ok().body(result);
     }
 
     /**
