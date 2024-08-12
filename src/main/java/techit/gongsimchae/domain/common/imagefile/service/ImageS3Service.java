@@ -31,7 +31,7 @@ public class ImageS3Service {
     private final UserRepository userRepository;
     private final ImageFileRepository imageFileRepository;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
 
     public List<ImageFile> storeFiles(List<MultipartFile> files, String directory, Long userId, Object object) {

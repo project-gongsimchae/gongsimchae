@@ -44,10 +44,7 @@ public class MyPageController {
 
     @GetMapping("/orders")
     public String orders(@AuthenticationPrincipal PrincipalDetails userDetails, Model model){
-        String username = userDetails.getUsername();
-        User user = userService.findByUserName(username);
-        Long userId = user.getId();
-
+        Long userId = userDetails.getAccountDto().getId();
         List<Orders> orders = ordersService.getUserOrders(userId);
         model.addAttribute("orders",orders);
 
@@ -57,10 +54,8 @@ public class MyPageController {
     @GetMapping("/orders/{ordersId}")
     public String orderDetail(@PathVariable Long ordersId,
                               @AuthenticationPrincipal PrincipalDetails userDetails, Model model){
-        String username = userDetails.getUsername();
-        User user = userService.findByUserName(username);
-
-        Orders ordersDetail = ordersService.getOrderDetail(ordersId,user.getId());
+        Long userId = userDetails.getAccountDto().getId();
+        Orders ordersDetail = ordersService.getOrderDetail(ordersId,userId);
         OrdersPaymentDto ordersPayment = ordersService.getOrdersPayment(ordersId);
         if (ordersDetail == null) {
             return "redirect:error/4xx";
