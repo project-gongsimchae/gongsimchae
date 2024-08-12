@@ -18,5 +18,6 @@ public interface SubdivisionRepository extends JpaRepository<Subdivision, Long> 
     @Query("SELECT s FROM Subdivision s LEFT JOIN FETCH s.imageFileList")
     List<Subdivision> findByOrderByCreateDateDesc();
 
+    @Query("SELECT s FROM Subdivision s LEFT JOIN FETCH s.imageFileList")
     List<Subdivision> findAllByUserId(Long userId);
 }

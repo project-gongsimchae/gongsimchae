@@ -19,12 +19,12 @@
            th:data-url="'/portioning/' + ${subdivisionItem.UID}">
         <div class="col-md-2">
           <div class="image-container">
-            <div th:if="${subdivisionItem.imageFile != null}">
-              <img th:src="${subdivisionItem.imageFile.url}" alt="thumbnail" class="img-thumbnail">
+            <div th:if="${subdivisionItem.imageFileList.size() > 0}">
+              <img th:src="${subdivisionItem.imageFileList.get(0).storeFilename}" alt="thumbnail" class="img-thumbnail">
             </div>
-            <div th:if="${subdivisionItem.imageFile == null}" class="default-image">
+            <div th:if="${subdivisionItem.imageFileList.size() <= 0}" class="default-image">
               <div class="default-thumbnail">
-                <i class="fas fa-image"></i>
+                <img th:src="@{'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}" class="d-block w-100" alt="Image">
               </div>
             </div>
           </div>
