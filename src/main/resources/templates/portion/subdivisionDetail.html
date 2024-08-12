@@ -58,6 +58,8 @@
         <label>가격</label>
         <p th:text="${subdivisionRespDto.price} + '원'"></p>
       </div>
+
+      <div id="map" style="width:350px;height:350px;"></div>
     </div>
 
     <div class="footer">
@@ -78,10 +80,12 @@
   <script th:inline="javascript">
     // subdivisionRespDto 객체를 JavaScript에서 사용할 수 있도록 설정
     const subdivisionRespDto = {
-      UID: /*[[${subdivisionRespDto.UID}]]*/
+      UID: /*[[${subdivisionRespDto.UID}]]*/,
+      address: /*[[${subdivisionRespDto.address}]]*/
     };
   </script>
 
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4a7673bf164245754c968e7459217a90"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script th:src="@{/js/portion/subdivisionDetail.js}"></script>
 </section>
