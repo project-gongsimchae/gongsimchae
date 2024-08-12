@@ -9,14 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
-import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
-import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 @Slf4j

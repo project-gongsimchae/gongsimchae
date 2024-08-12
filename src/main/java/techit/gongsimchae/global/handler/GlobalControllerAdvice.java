@@ -1,13 +1,13 @@
 package techit.gongsimchae.global.handler;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
-import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
+
+import java.util.List;
 
 @ControllerAdvice
 @RequiredArgsConstructor
