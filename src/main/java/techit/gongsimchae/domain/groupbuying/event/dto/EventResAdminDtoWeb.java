@@ -23,20 +23,9 @@ public class EventResAdminDtoWeb {
         this.eventType = event.getEventType();
         this.eventName = event.getEventName();
         this.discountRate = event.getDiscountRate();
-        this.discountAmount = event.getDiscountAmount();
         this.maxDiscount = event.getMaxDiscount();
         this.expirationDate = event.getExpirationDate();
         this.eventId = event.getId();
         this.couponCode = couponCode;
     }
-    /**
-     *                 <th>이벤트 종류</th>
-     *                 <th>이벤트명</th>
-     *                 <th>할인율</th>
-     *                 <th>할인금액</th>
-     *                 <th>최대할인금액</th>
-     *                 <th>만료기한</th>
-     *                 <th>쿠폰코드</th>
-     *                 <th>삭제</th>
-     */
 }

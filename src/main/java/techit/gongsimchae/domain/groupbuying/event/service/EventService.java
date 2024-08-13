@@ -18,6 +18,8 @@ import techit.gongsimchae.domain.groupbuying.eventcategory.entity.EventCategory;
 import techit.gongsimchae.domain.groupbuying.eventcategory.repository.EventCategoryRepository;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
+import techit.gongsimchae.global.exception.CustomWebException;
+import techit.gongsimchae.global.message.ErrorMessage;
 
 @Service
 @Transactional
@@ -31,6 +33,9 @@ public class EventService {
     private final ImageS3Service imageS3Service;
     private final ImageFileRepository imageFileRepository;
     public void createDiscountEvent(EventCreateReqDtoWeb eventDto) {
+        if (eventDto.getEventBannerImage().isEmpty()){
+            throw new CustomWebException(ErrorMessage.EVENT_BANNER_IMAGE_EMPTY);
+        }
         List<Category> categories = categoryRepository.findAllByNameIn(eventDto.getCategoryNames());
         List<Item> categoryItems = itemRepository.findAllByCategoryIn(categories);
         for (Item categoryItem : categoryItems) {
@@ -44,6 +49,9 @@ public class EventService {
     }
 
     public void createCouponEvent(EventCreateReqDtoWeb eventDto) {
+        if (eventDto.getEventBannerImage().isEmpty()){
+            throw new CustomWebException(ErrorMessage.EVENT_BANNER_IMAGE_EMPTY);
+        }
         List<Category> categories = categoryRepository.findAllByNameIn(eventDto.getCategoryNames());
         Event event = eventRepository.save(new Event(eventDto));
         for (Category category : categories) {

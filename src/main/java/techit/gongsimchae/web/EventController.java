@@ -4,13 +4,13 @@ import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.COUPO
 import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.COUPON_CODE;
 import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.DISCOUNT;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
@@ -57,14 +57,7 @@ public class EventController {
      * 응답 : 이벤트 생성 폼
      */
     @GetMapping("/admin/event/create-form")
-    public String showCreateForm(Model model) {
-        EventType[] values = EventType.values();
-        List<String> eventTypeNames = new ArrayList<>();
-        for (EventType value : values) {
-            eventTypeNames.add(value.getEventTypeName());
-        }
-        model.addAttribute("eventTypes", eventTypeNames);
-        model.addAttribute("event", new EventCreateReqDtoWeb());
+    public String showCreateForm(@ModelAttribute(name = "event") EventCreateReqDtoWeb eventCreateReqDtoWeb) {
         return "admin/event/eventForm";
     }
 
@@ -85,7 +78,7 @@ public class EventController {
      * 응답 : redirect:/이벤트 관리 페이지
      */
     @PostMapping("/admin/event")
-    public String createEvent(EventCreateReqDtoWeb eventDto){
+    public String createEvent(@ModelAttribute EventCreateReqDtoWeb eventDto){
         EventType eventType = EventType.getInstanceByEventTypeName(eventDto.getEventTypeName());
         if (eventType.equals(DISCOUNT)) {
             eventService.createDiscountEvent(eventDto);
@@ -96,7 +89,7 @@ public class EventController {
             eventService.createCouponCodeEvent(eventDto);
             couponService.createEventCoupon(eventDto);
         } else {
-            throw new CustomWebException(ErrorMessage.EVENT_TYPE_NOT_VALID.getMessage());
+            throw new CustomWebException(ErrorMessage.EVENT_TYPE_NOT_VALID);
         }
         return "redirect:/admin/event";
     }

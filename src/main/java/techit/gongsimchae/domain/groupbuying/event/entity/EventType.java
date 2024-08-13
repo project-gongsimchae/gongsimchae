@@ -21,6 +21,6 @@ public enum EventType {
                 return value;
             }
         }
-        throw new CustomWebException(ErrorMessage.EVENT_TYPE_NOT_VALID.getMessage());
+        throw new CustomWebException(ErrorMessage.EVENT_TYPE_NOT_VALID);
     }
 }
