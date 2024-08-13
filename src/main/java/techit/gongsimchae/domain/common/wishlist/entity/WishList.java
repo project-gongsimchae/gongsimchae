@@ -29,4 +29,9 @@ public class WishList extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public WishList(User user, Subdivision subdivision) {
+        this.user = user;
+        this.subdivision = subdivision;
+    }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/portionHeader :: header(~{::title},~{::section})}">
+<html th:replace="~{layout/portionHeader :: header(~{::title},~{::section})}" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
@@ -10,6 +10,7 @@
 <body>
 <section>
   <link th:href="@{/css/portion/subdivisionDetail.css}" rel="stylesheet">
+  <link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css}" rel="stylesheet">
 
   <div class="container">
     <div class="image-container" th:if="${subdivisionRespDto.imageFile != null}">
@@ -35,7 +36,21 @@
     <hr class="section-divider">
 
     <div class="content">
-      <h1 class="title" th:text="${subdivisionRespDto.title}"></h1>
+      <div class="content-header">
+        <h1 class="title" th:text="${subdivisionRespDto.title}"></h1>
+        <button sec:authorize="isAnonymous()"
+                id="wishlistButtonAnonymous"
+                onclick="alert('로그인 후 이용해 주세요.');">
+          <i id="heartIconAnonymous" class="fa fa-heart-o"></i>
+        </button>
+        <form sec:authorize="isAuthenticated()" th:if="${!isOwner}"
+                th:action="@{/portioning/{subdivisionUID}/{action}(subdivisionUID=${subdivisionRespDto.UID}, action=${isWishListed ? 'remove' : 'add'})}"
+                method="post">
+          <button type="submit" id="wishlistButton">
+            <i id="heartIcon" class="fa" th:classappend="${isWishListed ? 'fa-heart' : 'fa-heart-o'}"></i>
+          </button>
+        </form>
+      </div>
       <p class="date" th:text="${subdivisionRespDto.updateDate != null ? #temporals.format(subdivisionRespDto.updateDate, 'yyyy-MM-dd') : #temporals.format(subdivisionRespDto.createDate, 'yyyy-MM-dd')}"></p>
       <p class="content-text" th:text="${subdivisionRespDto.content}"></p>
       <div class="price-box">
