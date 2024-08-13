@@ -28,6 +28,7 @@ public class Coupon {
     private LocalDateTime expirationDate;
     private String couponName;
     private String couponCode; // 쿠폰등록 번호
+    private Integer couponStatus;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
@@ -43,6 +44,7 @@ public class Coupon {
         this.expirationDate = dto.getExpirationDate();
         this.couponName = dto.getCouponName();
         this.couponCode = dto.getCouponCode();
+        this.couponStatus = 0;
     }
 
     public Coupon(EventCreateReqDtoWeb eventDto){
@@ -51,9 +53,14 @@ public class Coupon {
         this.expirationDate = eventDto.getExpirationDate();
         this.couponName = eventDto.getCouponName();
         this.couponCode = eventDto.getCouponCode();
+        this.couponStatus = 0;
     }
 
     public void connectEvent(Event event){
         this.event = event;
+    }
+
+    public void setStatusDeleted(){
+        this.couponStatus = 1;
     }
 }

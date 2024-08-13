@@ -1,12 +1,10 @@
 package techit.gongsimchae.domain.groupbuying.coupon.dto;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor

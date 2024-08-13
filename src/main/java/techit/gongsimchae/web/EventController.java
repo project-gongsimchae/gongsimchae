@@ -8,18 +8,23 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
+import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
+import techit.gongsimchae.domain.groupbuying.couponuser.service.CouponUserService;
 import techit.gongsimchae.domain.groupbuying.event.dto.EventCreateReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.event.dto.EventResAdminDtoWeb;
 import techit.gongsimchae.domain.groupbuying.event.dto.EventResUserDtoWeb;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.event.entity.EventType;
 import techit.gongsimchae.domain.groupbuying.event.service.EventService;
+import techit.gongsimchae.domain.groupbuying.eventcategory.service.EventCategoryService;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
@@ -33,9 +38,13 @@ import techit.gongsimchae.global.message.ErrorMessage;
 @Slf4j
 @RequiredArgsConstructor
 public class EventController {
-
     private final EventService eventService;
     private final CouponService couponService;
+    private final EventCategoryService eventCategoryService;
+    private final ImageS3Service imageS3Service;
+    private final CouponUserService couponUserService;
+    private final CategoryService categoryService;
+
 
     //--------------------------------------------- event --------------------------------------------
 
@@ -45,7 +54,7 @@ public class EventController {
      */
     @GetMapping("/event")
     public String getEventPage(Model model){
-        List<EventResUserDtoWeb> eventResUserDtoWebs = eventService.getEvents();
+        List<EventResUserDtoWeb> eventResUserDtoWebs = eventService.getActivatedEvents();
         model.addAttribute("events", eventResUserDtoWebs);
         return "/category/event";
     }
@@ -68,7 +77,7 @@ public class EventController {
     @GetMapping("/admin/event")
     public String getEventList(Model model){
         List<Event> events = eventService.getAllEvents();
-        List<EventResAdminDtoWeb> eventResAdminDtoWebs = couponService.getEventInfo(events);
+        List<EventResAdminDtoWeb> eventResAdminDtoWebs = couponService.getCouponEventInfo(events);
         model.addAttribute("events", eventResAdminDtoWebs);
         return "admin/event/event";
     }
@@ -98,8 +107,24 @@ public class EventController {
      * 요청 : 관리자 페이지 - 이벤트 목록 - 이벤트 삭제
      * 응답 : redirect:/이벤트 관리 페이지
      */
+    @Transactional
     @PostMapping("/admin/event/delete")
     public String deleteEvent(@RequestParam("event_id") Long eventId){
+        /**
+         * 1. imageFile에서 eventStatus가 1로 변경된 eventId를 가진 ImageFile 인스턴스의 ImageFileStatus를 1로 변경
+         * 2. item에서 eventCategory에서 eventStatus가 1로 변경된 eventId를 가진 Category의 categoryId를 가진 Item의 할인가를
+         *    event의 discountRate만큼 감소
+         * 3. eventCategory에서 eventStatus가 1로 변경된 eventId를 가진 eventCategory 인스턴스의 eventCategoryStatus 를 1로 변경
+         * 4. couponUser에서 couponStatus가 1로 변경된 couponId를 가진 couponUser의 couponUserStatus를 1로 변경
+         * 5. coupon에서 eventStatus가 1로 변경된 eventId를 가진 coupon의 couponStatus를 1로 변경
+         * 6. event의 eventStatus를 1로 변경
+         */
+        imageS3Service.deleteImageFile(eventId);
+        categoryService.endCategoryEvent(eventId);
+        eventCategoryService.deleteEventCategory(eventId);
+        couponUserService.deleteCouponUser(eventId);
+        couponService.deleteCoupon(eventId);
+        eventService.deleteEvent(eventId);
 
         return "redirect:/admin/event";
     }

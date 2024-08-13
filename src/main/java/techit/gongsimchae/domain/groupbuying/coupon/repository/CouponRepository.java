@@ -1,5 +1,6 @@
 package techit.gongsimchae.domain.groupbuying.coupon.repository;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
 
@@ -10,4 +11,5 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>, CouponCus
 
     Optional<Coupon> findByCouponCode(String couponCode);
     Optional<Coupon> findByEvent(Event event);
+    List<Coupon> findAllByEventId(Long eventId);
 }

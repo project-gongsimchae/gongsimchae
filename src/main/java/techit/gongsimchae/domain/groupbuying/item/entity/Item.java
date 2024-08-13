@@ -66,7 +66,11 @@ public class Item extends BaseEntity {
         this.category = category;
     }
 
-    public void updateDiscountRate(Integer discountRate) {
+    public void plusDiscountRate(Integer discountRate) {
         this.discountRate += discountRate;
+    }
+
+    public void minusDiscountRate(Integer discountRate) {
+        this.discountRate -= discountRate;
     }
 }

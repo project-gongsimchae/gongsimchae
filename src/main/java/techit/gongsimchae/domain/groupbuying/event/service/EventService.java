@@ -20,6 +20,7 @@ import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
+import techit.gongsimchae.global.util.EntityStatus;
 
 @Service
 @Transactional
@@ -39,7 +40,7 @@ public class EventService {
         List<Category> categories = categoryRepository.findAllByNameIn(eventDto.getCategoryNames());
         List<Item> categoryItems = itemRepository.findAllByCategoryIn(categories);
         for (Item categoryItem : categoryItems) {
-            categoryItem.updateDiscountRate(eventDto.getDiscountRate());
+            categoryItem.plusDiscountRate(eventDto.getDiscountRate());
         }
         Event event = eventRepository.save(new Event(eventDto));
         for (Category category : categories) {
@@ -69,16 +70,32 @@ public class EventService {
     }
 
     public List<Event> getAllEvents() {
-        List<Event> events = eventRepository.findAll();
-        return eventRepository.findAll();
+        return eventRepository.findAllByOrderByEventStatusAscExpirationDateAsc();
     }
 
-    public List<EventResUserDtoWeb> getEvents(){
-        List<Event> activatedEvents = eventRepository.findByExpirationDateAfter(LocalDateTime.now());
+    public List<EventResUserDtoWeb> getActivatedEvents(){
+        List<Event> activatedEvents = eventRepository.findByExpirationDateAfterAndEventStatusEquals(LocalDateTime.now(),
+                EntityStatus.EXIST);
         List<EventResUserDtoWeb> eventResAdminDtoWebs = new ArrayList<>();
         for (Event activatedEvent : activatedEvents) {
             eventResAdminDtoWebs.add(new EventResUserDtoWeb(activatedEvent, imageFileRepository.findByEvent(activatedEvent).getStoreFilename()));
         }
         return eventResAdminDtoWebs;
+    }
+
+    public void deleteEvent(Long eventId) {
+        /**
+         * 1. event의 eventStatus를 1로 변경
+         * 2. eventCategory에서 eventStatus가 1로 변경된 eventId를 가진 eventCategory 인스턴스의 eventCategoryStatus 를 1로 변경
+         * 3. coupon에서 eventStatus가 1로 변경된 eventId를 가진 coupon의 couponStatus를 1로 변경
+         * 4. couponUser에서 couponStatus가 1로 변경된 couponId를 가진 couponUser의 couponUserStatus를 1로 변경
+         * 5. imageFile에서 eventStatus가 1로 변경된 eventId를 가진 ImageFile 인스턴스의 ImageFileStatus를 1로 변경
+         */
+        Event event = eventRepository.findById(eventId).orElseThrow(
+                () -> new CustomWebException(ErrorMessage.EVENT_NOT_FOUND)
+        );
+        event.setStatusDeleted();
+
+
     }
 }

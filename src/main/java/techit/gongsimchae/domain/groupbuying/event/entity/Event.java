@@ -28,6 +28,7 @@ public class Event {
     private Integer discountRate;
     private Integer maxDiscount;
     private LocalDateTime expirationDate;
+    private Integer eventStatus;
 
     public Event(EventCreateReqDtoWeb dto){
         this.eventType = EventType.getInstanceByEventTypeName(dto.getEventTypeName());
@@ -35,5 +36,10 @@ public class Event {
         this.discountRate = dto.getDiscountRate();
         this.maxDiscount = dto.getMaxDiscount();
         this.expirationDate = dto.getExpirationDate();
+        this.eventStatus = 0;
+    }
+
+    public void setStatusDeleted() {
+        this.eventStatus = 1;
     }
 }
