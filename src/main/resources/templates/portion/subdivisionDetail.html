@@ -12,11 +12,28 @@
   <link th:href="@{/css/portion/subdivisionDetail.css}" rel="stylesheet">
 
   <div class="container">
-    <div class="image-container" th:if="${subdivisionRespDto.imageFile != null}">
-      <img th:src="@{/images/} + ${subdivisionRespDto.imageFile.storeFilename}" alt="Image">
+    <div th:if="${subdivisionRespDto.imageFileList.size() > 0}">
+      <div id="imageCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div th:each="imageFile, iterStat : ${subdivisionRespDto.imageFileList}"
+               th:classappend="${iterStat.index == 0} ? 'active' : ''"
+               class="carousel-item">
+            <img th:src="@{${imageFile.storeFilename}}" class="d-block w-100" alt="Image">
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
     </div>
-    <div class="image-container placeholder" th:if="${subdivisionRespDto.imageFile == null}">
-      <i class="fa fa-camera"></i>
+    <div class="image-container placeholder" th:if="${subdivisionRespDto.imageFileList.size() <= 0}">
+      <img th:src="@{'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}" class="d-block w-100" alt="Image">
+<!--      <i class="fa fa-camera"></i>-->
     </div>
 
     <hr class="section-divider">
@@ -24,7 +41,7 @@
     <div class="user-info-subdivision">
       <div class="user-details">
         <span class="nickname" th:text="${subdivisionRespDto.user.nickname}"></span>
-        <span class="address" th:text="${subdivisionRespDto.address}"></span>
+<!--        <span class="address" th:text="${subdivisionRespDto.address}"></span>-->
       </div>
       <div class="manner-point">
         <label>매너 점수: </label>
@@ -39,9 +56,19 @@
       <p class="date" th:text="${subdivisionRespDto.updateDate != null ? #temporals.format(subdivisionRespDto.updateDate, 'yyyy-MM-dd') : #temporals.format(subdivisionRespDto.createDate, 'yyyy-MM-dd')}"></p>
       <p class="content-text" th:text="${subdivisionRespDto.content}"></p>
       <div class="price-box">
+        <label>모집 인원 수</label>
+        <p th:text="${subdivisionRespDto.numOfParticipants} + '명'"></p>
+
         <label>가격</label>
         <p th:text="${subdivisionRespDto.price} + '원'"></p>
+
+        <label>모임 장소</label>
+        <p class="address" th:text="${subdivisionRespDto.address}"></p>
+
+        <label>모임 장소 뷰</label>
+        <div id="map" style="width:200px;height:200px;"></div>
       </div>
+
     </div>
 
     <div class="footer">
@@ -62,10 +89,13 @@
   <script th:inline="javascript">
     // subdivisionRespDto 객체를 JavaScript에서 사용할 수 있도록 설정
     const subdivisionRespDto = {
-      UID: /*[[${subdivisionRespDto.UID}]]*/
+      UID: /*[[${subdivisionRespDto.UID}]]*/,
+      address: /*[[${subdivisionRespDto.address}]]*/
     };
   </script>
 
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4a7673bf164245754c968e7459217a90"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script th:src="@{/js/portion/subdivisionDetail.js}"></script>
 </section>
 </body>

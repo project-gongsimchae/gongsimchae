@@ -27,6 +27,7 @@ public class WishListService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<SubdivisionWishListRespDto> getSubdivisionWishLists(Long userId) {
 
         return wishListRepository.findWishListsByUserIdAndItemIsNull(userId)
