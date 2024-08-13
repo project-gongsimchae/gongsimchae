@@ -46,6 +46,8 @@ public class Subdivision extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String UID;
 
+    private Boolean deleteStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -64,6 +66,7 @@ public class Subdivision extends BaseEntity {
         this.price = price;
         this.views = views;
         this.UID = UID;
+        this.deleteStatus = false;
         this.user = user;
     }
 
@@ -75,5 +78,9 @@ public class Subdivision extends BaseEntity {
         this.longitude = subdivisionUpdateReqDto.getLongitude();
         this.numOfParticipants = subdivisionUpdateReqDto.getNumOfParticipants();
         this.price = subdivisionUpdateReqDto.getPrice();
+    }
+
+    public void deleteSubdivision() {
+        this.deleteStatus = true;
     }
 }

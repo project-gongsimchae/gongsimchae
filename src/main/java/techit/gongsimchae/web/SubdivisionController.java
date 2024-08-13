@@ -77,4 +77,11 @@ public class SubdivisionController {
         return "redirect:/portioning/"+UID;
     }
 
+    @PostMapping("/{UID}/delete")
+    public String subdivisionDelete(@PathVariable("UID") String UID) {
+
+        subdivisionService.deleteSubdivision(UID);
+
+        return "redirect:/portioning";
+    }
 }

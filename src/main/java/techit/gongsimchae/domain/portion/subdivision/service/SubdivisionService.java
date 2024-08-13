@@ -117,4 +117,11 @@ public class SubdivisionService {
 
         return subdivision.getUID();
     }
+
+    public void deleteSubdivision(String UID) {
+
+        Subdivision subdivision = subdivisionRepository.findByUID(UID).orElseThrow(() -> new CustomWebException("Subdivision not found"));
+
+        subdivision.deleteSubdivision();
+    }
 }
