@@ -6,15 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
-import techit.gongsimchae.domain.common.address.entity.Address;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
 import techit.gongsimchae.global.dto.OAuth2Response;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Getter

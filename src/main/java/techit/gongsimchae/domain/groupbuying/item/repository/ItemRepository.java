@@ -10,7 +10,7 @@ import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import java.util.List;
 import java.util.Optional;
 
-public interface ItemRepository extends JpaRepository<Item, Long> {
+public interface ItemRepository extends JpaRepository<Item, Long>, ItemCustomRepository {
     List<Item> findTop8ByOrderByCreateDateDesc();
     List<Item> findTop8ByOrderByGroupBuyingQuantityDesc();
     List<Item> findAllByCategory(Category category);

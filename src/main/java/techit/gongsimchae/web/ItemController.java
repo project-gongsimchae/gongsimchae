@@ -3,17 +3,19 @@ package techit.gongsimchae.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
-import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 @Slf4j
@@ -23,6 +25,17 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 public class ItemController {
     private final ItemService itemService;
     private final CategoryService categoryService;
+
+    /**
+     * 검색
+     */
+    @GetMapping("/search")
+    public String search(ItemSearchForm itemSearchForm,Pageable pageable, Model model) {
+        Page<ItemRespDtoWeb> items = itemService.searchItems(itemSearchForm, pageable);
+        model.addAttribute("keyword", itemSearchForm.getKeyword());
+        model.addAttribute("items", items);
+        return "groupbuying/search";
+    }
 
     @GetMapping("/admin/item")
     public String listItems(Model model) {

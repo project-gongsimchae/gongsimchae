@@ -12,15 +12,16 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import techit.gongsimchae.domain.common.user.dto.*;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.common.wishlist.repository.WishListRepository;
 import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
 import techit.gongsimchae.domain.groupbuying.coupon.repository.CouponRepository;
-import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
 import techit.gongsimchae.domain.groupbuying.couponuser.entity.CouponUser;
 import techit.gongsimchae.domain.groupbuying.couponuser.repository.CouponUserRepository;
-import techit.gongsimchae.domain.mail.event.AuthCodeEvent;
-import techit.gongsimchae.domain.mail.event.JoinMailEvent;
-import techit.gongsimchae.domain.mail.event.LoginIdEvent;
-import techit.gongsimchae.domain.mail.event.PasswordEvent;
+import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
+import techit.gongsimchae.domain.common.user.mail.event.AuthCodeEvent;
+import techit.gongsimchae.domain.common.user.mail.event.JoinMailEvent;
+import techit.gongsimchae.domain.common.user.mail.event.LoginIdEvent;
+import techit.gongsimchae.domain.common.user.mail.event.PasswordEvent;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.util.AuthCode;
@@ -45,6 +46,8 @@ public class UserService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final CouponRepository couponRepository;
     private final CouponUserRepository couponUserRepository;
+    private final WishListRepository wishListRepository;
+    private final ItemRepository itemRepository;
 
     /**
      * 6자리 인증코드를 만들고 redis에 저장
