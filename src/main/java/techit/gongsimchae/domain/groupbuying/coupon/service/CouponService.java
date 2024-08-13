@@ -60,4 +60,9 @@ public class CouponService {
         }
         return eventResAdminDtoWebs;
     }
+
+    public void deleteCoupon(Long eventId) {
+        List<Coupon> coupons = couponRepository.findAllByEventId(eventId);
+        coupons.forEach(Coupon::setStatusDeleted);
+    }
 }

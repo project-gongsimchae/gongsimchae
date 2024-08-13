@@ -2,6 +2,10 @@ package techit.gongsimchae.domain.common.imagefile.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,17 +16,11 @@ import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
-import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.post.entity.Post;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.global.exception.CustomWebException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -74,9 +72,7 @@ public class ImageS3Service {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Subdivision) object);
             } else if (object instanceof User) {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (User) object);
-            } else if (object instanceof Coupon) {
-                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Coupon) object);
-            } else if (object instanceof Event) {
+            }  else if (object instanceof Event) {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Event) object);
             } else {
                 throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
@@ -121,5 +117,13 @@ public class ImageS3Service {
         } catch (Exception e) {
             throw new CustomWebException(e.getMessage());
         }
+    }
+
+    /**
+     * 실제 삭제가 아닌 deleteStatus를 1로 변경하는 메서드
+     */
+    public void deleteImageFile(Long eventId) {
+        List<ImageFile> imageFiles = imageFileRepository.findALlByEventId(eventId);
+        imageFiles.forEach(ImageFile::setStatusDeleted);
     }
 }

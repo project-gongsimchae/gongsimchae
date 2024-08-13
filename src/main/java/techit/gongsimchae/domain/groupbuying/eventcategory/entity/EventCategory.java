@@ -19,14 +19,19 @@ public class EventCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    private Integer eventCategoryStatus;
+    @ManyToOne
     private Event event;
     @ManyToOne
     private Category category;
 
     public EventCategory(Event event, Category category) {
+        this.eventCategoryStatus = 0;
         this.event = event;
         this.category = category;
+    }
+
+    public void setStatusDeleted(){
+        this.eventCategoryStatus = 1;
     }
 }
