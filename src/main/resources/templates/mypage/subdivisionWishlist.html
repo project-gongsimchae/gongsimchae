@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/portionHeader :: header(~{::title},~{::section})}">
+<html th:replace="~{layout/mypage :: mypage(~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,50 +8,41 @@
     <title>마이페이지 - 소분 글 찜</title>
 </head>
 <body>
-<section>
-    <link th:href="@{/css/portion/subdivisionWishlist.css}" rel="stylesheet">
-    <link th:href="@{/css/mypage/picklist.css}" rel="stylesheet">
-
-    <main class="mypage-container">
-        <div th:replace="~{layout/navbar :: mypage_side_navbar}"></div>
-
-        <div class="picklist-section">
-            <div class="container">
-                <h3 class="section-title">관심 목록</h3>
-                <div id="wishlist-container" class="container mt-4">
-                    <div th:each="wishlistItem : ${subdivisionWishListRespDtoList}" class="wishlist-item row mb-4"
-                         th:data-url="'/portioning/' + ${wishlistItem.subdivision.UID}">
-                        <div class="col-md-2">
-                            <div class="image-container">
-                                <div th:if="${wishlistItem.subdivision.imageFileList.size() > 0}">
-                                    <img th:src="${wishlistItem.subdivision.imageFileList.get(0).storeFilename}" alt="thumbnail" class="img-thumbnail">
-                                </div>
-                                <div th:if="${wishlistItem.subdivision.imageFileList.size() <= 0}" class="default-image">
-                                    <div class="default-thumbnail">
-                                        <img th:src="@{'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}" class="d-block w-100" alt="Image">
-                                    </div>
+<section  class="picklist-section">
+        <div class="container">
+            <h3 class="section-title">관심 목록</h3>
+            <div id="wishlist-container" class="container mt-4">
+                <div th:each="wishlistItem : ${subdivisionWishListRespDtoList}" class="wishlist-item row mb-4"
+                     th:data-url="'/portioning/' + ${wishlistItem.subdivision.UID}">
+                    <div class="col-md-2">
+                        <div class="image-container">
+                            <div th:if="${wishlistItem.subdivision.imageFileList.size() > 0}">
+                                <img th:src="${wishlistItem.subdivision.imageFileList.get(0).storeFilename}"
+                                     alt="thumbnail" class="img-thumbnail">
+                            </div>
+                            <div th:if="${wishlistItem.subdivision.imageFileList.size() <= 0}" class="default-image">
+                                <div class="default-thumbnail">
+                                    <img th:src="@{'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}"
+                                         class="d-block w-100" alt="Image">
                                 </div>
                             </div>
                         </div>
-                        <div class="info col-md-8">
-                            <h5 th:text="${wishlistItem.subdivision.title}">제목</h5>
-                            <p class="price" th:text="${wishlistItem.subdivision.price + '원'}">가격</p>
-                            <p class="details">
-                                <span th:text="${wishlistItem.subdivision.address}">주소</span>
-                                |
-                                <span th:text="${wishlistItem.subdivision.updateDate != null ? #temporals.format(wishlistItem.subdivision.updateDate, 'yyyy-MM-dd') : #temporals.format(wishlistItem.subdivision.createDate, 'yyyy-MM-dd')}">날짜</span>
-                            </p>
-                        </div>
-                        <div class="heart-icon col-md-2 text-right">
-                            <i class="fas fa-heart"></i>
-                        </div>
+                    </div>
+                    <div class="info col-md-8">
+                        <h5 th:text="${wishlistItem.subdivision.title}">제목</h5>
+                        <p class="price" th:text="${wishlistItem.subdivision.price + '원'}">가격</p>
+                        <p class="details">
+                            <span th:text="${wishlistItem.subdivision.address}">주소</span>
+                            |
+                            <span th:text="${wishlistItem.subdivision.updateDate != null ? #temporals.format(wishlistItem.subdivision.updateDate, 'yyyy-MM-dd') : #temporals.format(wishlistItem.subdivision.createDate, 'yyyy-MM-dd')}">날짜</span>
+                        </p>
+                    </div>
+                    <div class="heart-icon col-md-2 text-right">
+                        <i class="fas fa-heart"></i>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
-
-    <script th:src="@{/js/portion/subdivisionWishlist.js}"></script>
 </section>
 </body>
 </html>
