@@ -40,7 +40,7 @@ public class EventService {
         List<Category> categories = categoryRepository.findAllByNameIn(eventDto.getCategoryNames());
         List<Item> categoryItems = itemRepository.findAllByCategoryIn(categories);
         for (Item categoryItem : categoryItems) {
-            categoryItem.updateDiscountRate(eventDto.getDiscountRate());
+            categoryItem.plusDiscountRate(eventDto.getDiscountRate());
         }
         Event event = eventRepository.save(new Event(eventDto));
         for (Category category : categories) {
