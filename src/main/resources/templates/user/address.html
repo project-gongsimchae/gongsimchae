@@ -11,45 +11,46 @@
 <section class="picklist-section">
     <div class="container">
         <div class="section-title d-flex justify-content-between align-items-center mb-4">
-            <h3 >배송지 관리</h3>
+            <h3>배송지 관리</h3>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressModal">
                 <i class="fas fa-plus"></i> 새 배송지 추가
             </button>
         </div>
-    <div class="row gy-4">
+        <div class="row gy-4">
 
-        <!-- 주소 목록 표시 -->
-        <div class="list-group">
-            <div class="list-group-item list-group-item-action" th:each="address : ${addresses}">
-                <div class="d-flex w-100 justify-content-between align-items-center">
-                    <div>
-                        <h5 class="mb-1" th:text="${address.getAddress() + ' ' + address.getAdditionalAddress()}"></h5>
-                        <p class="mb-0 text-muted" th:text="${address.getDetailAddress()}"></p>
+            <!-- 주소 목록 표시 -->
+            <div class="list-group">
+                <div class="list-group-item list-group-item-action" th:each="address : ${addresses}">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1"
+                                th:text="${address.getAddress() + ' ' + address.getAdditionalAddress()}"></h5>
+                            <p class="mb-0 text-muted" th:text="${address.getDetailAddress()}"></p>
+                        </div>
+                        <button class="btn btn-sm btn-outline-secondary update-address" th:data-id="${address.UID}">
+                            수정
+                        </button>
                     </div>
-                    <button class="btn btn-sm btn-outline-secondary update-address" th:data-id="${address.UID}">
-                        수정
-                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 수정 모달 -->
+        <div class="modal fade" id="updateAddressModal" tabindex="-1" aria-labelledby="updateAddressModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateAddressModalLabel">주소 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="updateAddressModalBody">
+                        <!-- 여기에 동적으로 내용이 채워집니다 -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- 수정 모달 -->
-    <div class="modal fade" id="updateAddressModal" tabindex="-1" aria-labelledby="updateAddressModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateAddressModalLabel">주소 수정</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="updateAddressModalBody">
-                    <!-- 여기에 동적으로 내용이 채워집니다 -->
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div th:replace="~{user/addAddress}"></div>
 </section>
 

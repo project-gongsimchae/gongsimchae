@@ -20,7 +20,6 @@
                     <!-- 주소 추가 폼 -->
                     <form id="addressForm" th:action="@{/mypage/address}" method="post" th:object="${shippingAddress}">
                         <div class="form-group">
-                            <label for="sample6_postcode">우편번호</label>
                             <div class="input-group">
                                 <input type="text" id="sample6_postcode" class="form-control" placeholder="우편번호"
                                        th:field="*{zipcode}" required>
@@ -33,7 +32,6 @@
                             <div th:errors="*{zipcode}" class="text-danger"></div>
                         </div>
                         <div class="form-group">
-                            <label for="sample6_address">주소</label>
                             <input type="text" id="sample6_address" class="form-control" placeholder="주소"
                                    th:field="*{address}" required>
                             <input type="text" id="sample6_extraAddress" class="form-control mt-2" placeholder="참고항목"
@@ -42,7 +40,6 @@
                             <div th:errors="*{address}" class="text-danger"></div>
                         </div>
                         <div class="form-group">
-                            <label for="sample6_detailAddress">상세주소</label>
                             <input type="text" id="sample6_detailAddress" class="form-control" placeholder="상세주소"
                                    th:field="*{detailAddress}" required>
                             <div th:errors="*{detailAddress}" class="text-danger"></div>
