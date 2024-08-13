@@ -46,6 +46,9 @@ public class Subdivision extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String UID;
 
+    @Enumerated(EnumType.STRING)
+    private SubdivisionType subdivisionType;
+
     private Boolean deleteStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -56,7 +59,7 @@ public class Subdivision extends BaseEntity {
     private List<ImageFile> imageFileList;
 
     @Builder
-    public Subdivision(String title, String content, String address, Double latitude, Double longitude, Integer numOfParticipants, Integer price, Integer views, String UID, User user) {
+    public Subdivision(String title, String content, String address, Double latitude, Double longitude, Integer numOfParticipants, Integer price, Integer views, String UID, SubdivisionType subdivisionType, User user) {
         this.title = title;
         this.content = content;
         this.address = address;
@@ -66,6 +69,7 @@ public class Subdivision extends BaseEntity {
         this.price = price;
         this.views = views;
         this.UID = UID;
+        this.subdivisionType = subdivisionType;
         this.deleteStatus = false;
         this.user = user;
     }

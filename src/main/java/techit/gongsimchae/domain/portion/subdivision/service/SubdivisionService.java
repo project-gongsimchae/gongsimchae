@@ -13,6 +13,7 @@ import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
+import techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
 
@@ -88,6 +89,7 @@ public class SubdivisionService {
                 .price(subdivisionReqDto.getPrice())
                 .views(0)
                 .UID(UUID.randomUUID().toString())
+                .subdivisionType(SubdivisionType.RECRUITING)
                 .user(user)
                 .build();
 
