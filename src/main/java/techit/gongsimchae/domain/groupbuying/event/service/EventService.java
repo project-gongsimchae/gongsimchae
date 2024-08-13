@@ -20,6 +20,7 @@ import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
+import techit.gongsimchae.global.util.EntityStatus;
 
 @Service
 @Transactional
@@ -69,12 +70,12 @@ public class EventService {
     }
 
     public List<Event> getAllEvents() {
-        List<Event> events = eventRepository.findAll();
-        return eventRepository.findAll();
+        return eventRepository.findAllByOrderByEventStatusAscExpirationDateAsc();
     }
 
-    public List<EventResUserDtoWeb> getEvents(){
-        List<Event> activatedEvents = eventRepository.findByExpirationDateAfter(LocalDateTime.now());
+    public List<EventResUserDtoWeb> getActivatedEvents(){
+        List<Event> activatedEvents = eventRepository.findByExpirationDateAfterAndEventStatusEquals(LocalDateTime.now(),
+                EntityStatus.EXIST);
         List<EventResUserDtoWeb> eventResAdminDtoWebs = new ArrayList<>();
         for (Event activatedEvent : activatedEvents) {
             eventResAdminDtoWebs.add(new EventResUserDtoWeb(activatedEvent, imageFileRepository.findByEvent(activatedEvent).getStoreFilename()));

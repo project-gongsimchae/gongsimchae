@@ -50,7 +50,7 @@ public class CouponService {
         }
     }
 
-    public List<EventResAdminDtoWeb> getEventInfo(List<Event> events) {
+    public List<EventResAdminDtoWeb> getCouponEventInfo(List<Event> events) {
         List<EventResAdminDtoWeb> eventResAdminDtoWebs = new ArrayList<>();
         String couponCode;
         for (Event event : events) {

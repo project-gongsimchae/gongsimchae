@@ -7,5 +7,8 @@ import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     Event findByEventName(String eventName);
-    List<Event> findByExpirationDateAfter(LocalDateTime localDateTime);
+    List<Event> findByExpirationDateAfterAndEventStatusEquals(LocalDateTime localDateTime, Integer eventStatus);
+
+    List<Event> findAllByEventStatus(Integer eventStatus);
+    List<Event> findAllByOrderByEventStatusAscExpirationDateAsc();
 }

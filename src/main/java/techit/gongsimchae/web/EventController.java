@@ -52,7 +52,7 @@ public class EventController {
      */
     @GetMapping("/event")
     public String getEventPage(Model model){
-        List<EventResUserDtoWeb> eventResUserDtoWebs = eventService.getEvents();
+        List<EventResUserDtoWeb> eventResUserDtoWebs = eventService.getActivatedEvents();
         model.addAttribute("events", eventResUserDtoWebs);
         return "/category/event";
     }
@@ -75,7 +75,7 @@ public class EventController {
     @GetMapping("/admin/event")
     public String getEventList(Model model){
         List<Event> events = eventService.getAllEvents();
-        List<EventResAdminDtoWeb> eventResAdminDtoWebs = couponService.getEventInfo(events);
+        List<EventResAdminDtoWeb> eventResAdminDtoWebs = couponService.getCouponEventInfo(events);
         model.addAttribute("events", eventResAdminDtoWebs);
         return "admin/event/event";
     }

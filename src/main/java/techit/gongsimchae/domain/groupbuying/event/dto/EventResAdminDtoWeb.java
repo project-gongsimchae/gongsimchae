@@ -17,6 +17,7 @@ public class EventResAdminDtoWeb {
     private LocalDateTime expirationDate;
     private Long eventId;
     private String couponCode;
+    private Integer eventStatus;
 
     public EventResAdminDtoWeb(Event event, String couponCode){
         this.eventType = event.getEventType();
@@ -26,5 +27,6 @@ public class EventResAdminDtoWeb {
         this.expirationDate = event.getExpirationDate();
         this.eventId = event.getId();
         this.couponCode = couponCode;
+        this.eventStatus = event.getEventStatus();
     }
 }
