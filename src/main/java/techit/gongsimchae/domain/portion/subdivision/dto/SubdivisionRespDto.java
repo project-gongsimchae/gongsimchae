@@ -6,6 +6,7 @@ import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,11 +19,14 @@ public class SubdivisionRespDto {
     private String title;
     private String content;
     private String address;
+    private Double latitude;
+    private Double longitude;
+    private Integer numOfParticipants;
     private Integer price;
     private Integer views;
     private String UID;
     private UserRespDtoWeb user;
-    private ImageFile imageFile;
+    private List<ImageFile> imageFileList;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
@@ -31,11 +35,14 @@ public class SubdivisionRespDto {
         this.title = subdivision.getTitle();
         this.content = subdivision.getContent();
         this.address = subdivision.getAddress();
+        this.latitude = subdivision.getLatitude();
+        this.longitude = subdivision.getLongitude();
+        this.numOfParticipants = subdivision.getNumOfParticipants();
         this.price = subdivision.getPrice();
         this.views = subdivision.getViews();
         this.UID = subdivision.getUID();
         this.user = new UserRespDtoWeb(subdivision.getUser());
-        this.imageFile = subdivision.getImageFile();
+        this.imageFileList = subdivision.getImageFileList();
         this.createDate = subdivision.getCreateDate();
         this.updateDate = subdivision.getUpdateDate();
     }

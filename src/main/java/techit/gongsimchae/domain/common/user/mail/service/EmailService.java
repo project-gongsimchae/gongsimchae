@@ -1,14 +1,14 @@
-package techit.gongsimchae.domain.mail.service;
+package techit.gongsimchae.domain.common.user.mail.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import techit.gongsimchae.domain.mail.event.AuthCodeEvent;
-import techit.gongsimchae.domain.mail.event.JoinMailEvent;
-import techit.gongsimchae.domain.mail.event.LoginIdEvent;
-import techit.gongsimchae.domain.mail.event.PasswordEvent;
+import techit.gongsimchae.domain.common.user.mail.event.AuthCodeEvent;
+import techit.gongsimchae.domain.common.user.mail.event.JoinMailEvent;
+import techit.gongsimchae.domain.common.user.mail.event.LoginIdEvent;
+import techit.gongsimchae.domain.common.user.mail.event.PasswordEvent;
 
 @Service
 @RequiredArgsConstructor

@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
-import techit.gongsimchae.domain.common.inquiry.dto.InquirySearchForm;
 
 import java.util.List;
 

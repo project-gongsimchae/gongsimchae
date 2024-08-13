@@ -1,9 +1,5 @@
 package techit.gongsimchae.domain.common.user.service;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -13,25 +9,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
-import techit.gongsimchae.domain.common.user.dto.UserFindIdReqDtoWeb;
-import techit.gongsimchae.domain.common.user.dto.UserFindPwReqDtoWeb;
-import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
-import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
-import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
+import techit.gongsimchae.domain.common.user.dto.*;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.common.wishlist.repository.WishListRepository;
 import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
 import techit.gongsimchae.domain.groupbuying.coupon.repository.CouponRepository;
 import techit.gongsimchae.domain.groupbuying.couponuser.entity.CouponUser;
 import techit.gongsimchae.domain.groupbuying.couponuser.repository.CouponUserRepository;
-import techit.gongsimchae.domain.mail.event.AuthCodeEvent;
-import techit.gongsimchae.domain.mail.event.JoinMailEvent;
-import techit.gongsimchae.domain.mail.event.LoginIdEvent;
-import techit.gongsimchae.domain.mail.event.PasswordEvent;
+import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
+import techit.gongsimchae.domain.common.user.mail.event.AuthCodeEvent;
+import techit.gongsimchae.domain.common.user.mail.event.JoinMailEvent;
+import techit.gongsimchae.domain.common.user.mail.event.LoginIdEvent;
+import techit.gongsimchae.domain.common.user.mail.event.PasswordEvent;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.util.AuthCode;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,6 +46,8 @@ public class UserService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final CouponRepository couponRepository;
     private final CouponUserRepository couponUserRepository;
+    private final WishListRepository wishListRepository;
+    private final ItemRepository itemRepository;
 
     /**
      * 6자리 인증코드를 만들고 redis에 저장
@@ -209,11 +209,5 @@ public class UserService {
         CouponUser couponUser = new CouponUser(coupon, user);
         couponUserRepository.save(couponUser);
 
-    }
-
-    public User findByUserName(String username){
-        return userRepository.findByLoginId(username).orElseThrow(
-                () -> new CustomWebException("존재하지 않는 아이디입니다.")
-        );
     }
 }

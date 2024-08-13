@@ -1,10 +1,14 @@
 package techit.gongsimchae.domain.groupbuying.item.entity;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
@@ -33,6 +37,9 @@ public class Item extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "item")
+    private List<ImageFile> imageFiles = new ArrayList<>();
 
     public Item (ItemCreateDto itemCreateDto, Category category) {
         this.name = itemCreateDto.getName();
