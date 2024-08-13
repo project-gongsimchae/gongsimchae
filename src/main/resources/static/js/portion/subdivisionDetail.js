@@ -1,12 +1,17 @@
 document.addEventListener('DOMContentLoaded', async function () {
-    const joinButton = document.getElementById('joinButton');
+    let joinButton;
+
+    if (document.getElementById('joinButton') != null) {
+        joinButton = document.getElementById('joinButton');
+
+        joinButton.addEventListener('click', function () {
+            modal.style.display = 'flex';
+        });
+    }
+
     const modal = document.getElementById('modal');
     const confirmButton = document.getElementById('confirmButton');
     const cancelButton = document.getElementById('cancelButton');
-
-    joinButton.addEventListener('click', function () {
-        modal.style.display = 'flex';
-    });
 
     confirmButton.addEventListener('click', function () {
         const UID = subdivisionRespDto.UID; // subdivisionDto.UID를 사용하여 UID 값을 가져옴

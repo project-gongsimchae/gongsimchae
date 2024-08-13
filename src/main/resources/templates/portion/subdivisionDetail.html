@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/portionHeader :: header(~{::title},~{::section})}">
+<html th:replace="~{layout/portionHeader :: header(~{::title},~{::section})}" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
@@ -73,7 +73,13 @@
 
     <div class="footer">
       <span class="views" th:text="'조회수: ' + ${subdivisionRespDto.views}"></span>
-      <button id="joinButton" class="btn btn-success">참여하기</button>
+      <div sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username} == ${subdivisionRespDto.user.loginId}">
+        <button class="btn btn-success">수정</button>
+        <button class="btn btn-danger">삭제</button>
+      </div>
+      <div sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username} != ${subdivisionRespDto.user.loginId}">
+        <button id="joinButton" class="btn btn-success">참여하기</button>
+      </div>
     </div>
   </div>
 
