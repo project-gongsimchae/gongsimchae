@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**","/mypage/**", "/portioning/write", "/portioning/{UID}/update", "/portioning/{UID}/delete").hasRole("USER")
+                        .requestMatchers("/user/**","/mypage/**", "/portioning/write", "/portioning/{UID}/update", "/portioning/{UID}/delete", "/portioning/{UID}/join").hasRole("USER")
                         .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue","/find/**","/emails/**","/subscribe").permitAll()
                         .anyRequest().permitAll())
 
