@@ -76,8 +76,8 @@
         <div class="write-list">
             <div th:each="subdivision : ${subdivisions}" class="write-subdivision">
                 <div class="thumbnail-image-placeholder">
-                    <img th:src="${subdivision.imageFile != null ? subdivision.imageFile.url : '/images/placeholder.png'}"
-                         alt="썸네일 이미지" />
+                    <img th:src="${subdivision.imageFileList.size() > 0 ? subdivision.imageFileList.get(0).storeFilename : 'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}"
+                         alt="썸네일 이미지"/>
                 </div>
                 <div class="write-simple-info">
                     <h3 class="write-title" th:text="${subdivision.title}"></h3>

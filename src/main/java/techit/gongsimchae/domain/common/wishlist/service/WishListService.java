@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+
 import techit.gongsimchae.domain.common.wishlist.dto.SubdivisionWishListRespDto;
 import techit.gongsimchae.domain.common.wishlist.entity.WishList;
 import techit.gongsimchae.domain.common.wishlist.repository.WishListRepository;
@@ -27,6 +28,7 @@ public class WishListService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<SubdivisionWishListRespDto> getSubdivisionWishLists(Long userId) {
 
         return wishListRepository.findWishListsByUserIdAndItemIsNull(userId)
