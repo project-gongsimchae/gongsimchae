@@ -1,21 +1,39 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 장바구니 추가 기능
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
     const addToCartButtons = document.querySelectorAll('.add-to-cart');
     addToCartButtons.forEach(button => {
         button.addEventListener('click', function(e) {
-            const itemId = e.target.dataset.itemId;
-            // AJAX 요청을 통해 서버에 장바구니 추가 요청을 보냅니다.
-            fetch(`/api/cart/add/${itemId}`, { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('장바구니에 추가되었습니다.');
-                    } else {
-                        alert('장바구니 추가에 실패했습니다.');
-                    }
-                });
+            e.preventDefault();
+            const itemId = this.getAttribute('data-item-id');
+            addToCart(itemId);
         });
     });
+
+    function addToCart(itemId) {
+        fetch(`/product/cart/add/${itemId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify({ count: 1 })
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                alert('상품이 장바구니에 추가되었습니다.');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('장바구니 추가에 실패했습니다.' + error.message);
+            });
+    }
 
     /** 무한 스크롤 **/
     let page = 1;

@@ -207,8 +207,4 @@ public class UserService {
         couponUserRepository.save(couponUser);
 
     }
-
-    public User findByUserName(String username){
-        return userRepository.findByName(username);
-    }
 }
