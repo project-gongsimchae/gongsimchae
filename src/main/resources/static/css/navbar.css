@@ -1,6 +1,11 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #ffffff; /* 배경색 흰색으로 설정 */
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+}
+.custom-container{
+    background-color: white !important;
 }
 
 nav {
@@ -9,6 +14,7 @@ nav {
 
 .navbar {
     background-color: #ffffff !important; /* nav 배경색 흰색으로 설정 */
+    max-width: 1600px !important;
 }
 
 .navbar-brand {
