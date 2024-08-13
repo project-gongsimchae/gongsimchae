@@ -43,21 +43,30 @@
 .custom-file-upload i {
     margin-right: 5px;
 }
+/* .image-preview 수정 */
 .image-preview {
-    display: inline-block;
-    vertical-align: top;
+    display: flex;
+    flex-wrap: wrap; /* 여러 장의 이미지를 가로로 넘기지 않고 줄바꿈 */
+    gap: 10px; /* 이미지 간 간격 */
+    margin-top: 10px;
+}
+
+/* 이미지와 삭제 버튼 스타일 수정 */
+.image-preview .preview-item {
     position: relative;
-    width: 100px; /* 정사각형 크기 지정 */
-    height: 100px; /* 정사각형 크기 지정 */
-    box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
+    width: 100px; /* 각 이미지와 삭제 버튼을 포함한 크기 */
+    height: 100px; /* 각 이미지와 삭제 버튼을 포함한 크기 */
+    box-sizing: border-box;
 }
+
+
 .image-preview img {
-    width: 100px; /* 부모 크기에 맞춤 */
-    height: 100px; /* 부모 크기에 맞춤 */
+    width: 100%;
+    height: 100%;
     border-radius: 4px;
-    object-fit: cover; /* 이미지 비율 유지 */
-    box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
+    object-fit: cover;
 }
+
 .image-preview .delete-btn {
     position: absolute;
     top: 5px;
@@ -69,8 +78,15 @@
     width: 20px;
     height: 20px;
     text-align: center;
+    line-height: 20px; /* 중앙 정렬 */
     cursor: pointer;
 }
+
+/* 버튼 클릭 시 스타일 */
+.image-preview .delete-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
 .form-group textarea {
     height: 100px;
 }
@@ -97,4 +113,8 @@
 }
 .form-group-image {
     display: inline-block;
+}
+
+input[readonly] {
+    background-color: #f0f0f0;
 }

@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum NotificationType {
-    CHAT("채팅"), REVIEW("리뷰"), KEYWORD("키워드");
-
-    private String value;
+    INQUIRY("문의"), CHATROOM("채팅방"), KEYWORD("알림 키워드"), CHAT("채팅");
+    private String description;
 }

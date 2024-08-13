@@ -16,6 +16,7 @@ import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
@@ -160,5 +161,9 @@ public class ItemService {
             throw new CustomWebException("존재하지 않는 정렬기준입니다.");
         }
         return bestItemsPage;
+    }
+
+    public Page<ItemRespDtoWeb> searchItems(ItemSearchForm itemSearchForm, Pageable pageable) {
+        return itemRepository.findItemsByKeyword(itemSearchForm, pageable);
     }
 }

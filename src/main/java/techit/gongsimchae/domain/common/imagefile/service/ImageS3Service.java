@@ -27,6 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageS3Service {
     private final AmazonS3 amazonS3;
+
     private final UserRepository userRepository;
     private final ImageFileRepository imageFileRepository;
 
@@ -39,7 +40,7 @@ public class ImageS3Service {
         List<ImageFile> uploadFiles = new ArrayList<>();
         for (MultipartFile file : files) {
             if(!file.isEmpty()) {
-                uploadFiles.add(storeFile(file, directory, user, object));
+                uploadFiles.add(storeFile(file, directory, object));
             }
 
         }
@@ -49,14 +50,14 @@ public class ImageS3Service {
         return uploadFiles;
     }
     @Transactional
-    public ImageFile storeFile(MultipartFile file, String directory, User user, Object object) {
+    public ImageFile storeFile(MultipartFile file, String directory, Object object) {
         if (file.isEmpty()) {
             return null;
         }
         String storeFileName = storeFileName(file);
         String originalFilename = file.getOriginalFilename();
         String uploadUrl = getUrl(directory);
-
+        ImageFile imageFile;
 
         try {
             ObjectMetadata metadata = new ObjectMetadata();
@@ -65,18 +66,17 @@ public class ImageS3Service {
             amazonS3.putObject(uploadUrl, storeFileName, file.getInputStream(), metadata);
 
             if (object instanceof Post) {
-                return new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), user, (Post) object);
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Post) object);
             } else if (object instanceof Item) {
-                return new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), user, (Item) object);
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Item) object);
             } else if (object instanceof Subdivision) {
-                return new ImageFile(getFullPath(directory,originalFilename),
-                        getFullPath(directory,storeFileName), user, (Subdivision) object);
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Subdivision) object);
+            } else if (object instanceof User) {
+                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (User) object);
             } else {
                 throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
             }
-
+            return imageFileRepository.save(imageFile);
         } catch (Exception e) {
             throw new CustomWebException(e.getMessage());
         }
@@ -100,7 +100,7 @@ public class ImageS3Service {
         int pos = originalFilename.lastIndexOf(".");
         String ext = originalFilename.substring(pos + 1);
 
-        List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg");
+        List<String> allowedExtensions = Arrays.asList("jpg", "png", "gif", "jpeg", "PNG", "JPG","JPEG");
 
         if (!allowedExtensions.contains(ext)) {
             throw new IllegalArgumentException("지원하지 않는 포맷입니다.");

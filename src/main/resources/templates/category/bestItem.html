@@ -31,7 +31,7 @@
             <button class="add-to-cart" data-item-id="[[${item.id}]]">
                 <i class="fa fa-shopping-cart"></i> 장바구니에 담기
             </button>
-            <h3 class="item-name" th:text="${item.name}">상품명</h3>
+            <h3 class="item-name" ><a href="" th:href="@{|/product/${item.UID}|}" th:text="${item.name}"></a></h3>
             <div class="price-container">
                 <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
                 <div class="discount-container">

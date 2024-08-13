@@ -1,7 +1,10 @@
 package techit.gongsimchae.domain.groupbuying.item.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.wishlist.entity.WishList;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 
 import java.time.LocalDateTime;
@@ -9,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ItemRespDtoWeb {
     private Long id;
     private String name;
