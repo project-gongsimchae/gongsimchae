@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
 
 import java.util.List;
 
@@ -64,5 +65,15 @@ public class Subdivision extends BaseEntity {
         this.views = views;
         this.UID = UID;
         this.user = user;
+    }
+
+    public void updateSubdivision(SubdivisionUpdateReqDto subdivisionUpdateReqDto) {
+        this.title = subdivisionUpdateReqDto.getTitle();
+        this.content = subdivisionUpdateReqDto.getContent();
+        this.address = subdivisionUpdateReqDto.getAddress();
+        this.latitude = subdivisionUpdateReqDto.getLatitude();
+        this.longitude = subdivisionUpdateReqDto.getLongitude();
+        this.numOfParticipants = subdivisionUpdateReqDto.getNumOfParticipants();
+        this.price = subdivisionUpdateReqDto.getPrice();
     }
 }

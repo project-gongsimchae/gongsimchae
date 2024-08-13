@@ -117,4 +117,9 @@ public class ImageS3Service {
             throw new CustomWebException(e.getMessage());
         }
     }
+
+    @Transactional
+    public void deleteFileFromDb(ImageFile imageFile) {
+        imageFileRepository.delete(imageFile);
+    }
 }

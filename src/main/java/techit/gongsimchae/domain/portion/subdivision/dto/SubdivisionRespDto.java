@@ -1,6 +1,7 @@
 package techit.gongsimchae.domain.portion.subdivision.dto;
 
 import lombok.*;
+import techit.gongsimchae.domain.common.imagefile.dto.ImageFileRespDto;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
@@ -26,7 +27,7 @@ public class SubdivisionRespDto {
     private Integer views;
     private String UID;
     private UserRespDtoWeb user;
-    private List<ImageFile> imageFileList;
+    private List<ImageFileRespDto> imageFileList;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
@@ -42,7 +43,7 @@ public class SubdivisionRespDto {
         this.views = subdivision.getViews();
         this.UID = subdivision.getUID();
         this.user = new UserRespDtoWeb(subdivision.getUser());
-        this.imageFileList = subdivision.getImageFileList();
+        this.imageFileList = subdivision.getImageFileList().stream().map(ImageFileRespDto::new).toList();
         this.createDate = subdivision.getCreateDate();
         this.updateDate = subdivision.getUpdateDate();
     }

@@ -3,17 +3,21 @@ package techit.gongsimchae.domain.portion.subdivision.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.portion.participants.service.ParticipantService;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,6 +30,7 @@ public class SubdivisionService {
     private final ParticipantService participantService;
     private final UserRepository userRepository;
     private final ImageS3Service imageS3Service;
+    private final ImageFileRepository imageFileRepository;
 
     @Transactional(readOnly = true)
     public List<SubdivisionRespDto> getAllSubdivisions(){
@@ -89,6 +94,26 @@ public class SubdivisionService {
         subdivisionRepository.save(subdivision);
 
         imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", userId, subdivision);
+
+        return subdivision.getUID();
+    }
+
+    public String updateSubdivision(SubdivisionUpdateReqDto subdivisionUpdateReqDto) {
+
+        Subdivision subdivision = subdivisionRepository.findById(subdivisionUpdateReqDto.getId()).orElseThrow(() -> new CustomWebException("Subdivision not found"));
+        subdivision.updateSubdivision(subdivisionUpdateReqDto);
+
+        imageS3Service.storeFiles(subdivisionUpdateReqDto.getImages(), "images", subdivision.getUser().getId(), subdivision);
+
+        if (!Objects.isNull(subdivisionUpdateReqDto.getDeleteImages())) {
+            for (Long deleteImageId : subdivisionUpdateReqDto.getDeleteImages()) {
+
+                ImageFile imageFile = imageFileRepository.findById(deleteImageId).orElseThrow(() -> new CustomWebException("ImageFile not found"));
+
+                imageS3Service.deleteFile(imageFile.getStoreFilename());
+                imageS3Service.deleteFileFromDb(imageFile);
+            }
+        }
 
         return subdivision.getUID();
     }

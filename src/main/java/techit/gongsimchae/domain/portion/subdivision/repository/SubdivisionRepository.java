@@ -12,12 +12,9 @@ import java.util.Optional;
 @Repository
 public interface SubdivisionRepository extends JpaRepository<Subdivision, Long> {
 
-    @Query("SELECT s FROM Subdivision s LEFT JOIN FETCH s.imageFileList WHERE s.UID = :uid")
     Optional<Subdivision> findByUID(@Param("uid") String UID);
 
-    @Query("SELECT s FROM Subdivision s LEFT JOIN FETCH s.imageFileList")
     List<Subdivision> findByOrderByCreateDateDesc();
 
-    @Query("SELECT s FROM Subdivision s LEFT JOIN FETCH s.imageFileList")
     List<Subdivision> findAllByUserId(Long userId);
 }
