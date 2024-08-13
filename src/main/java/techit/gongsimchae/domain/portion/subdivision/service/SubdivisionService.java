@@ -34,7 +34,7 @@ public class SubdivisionService {
 
     @Transactional(readOnly = true)
     public List<SubdivisionRespDto> getAllSubdivisions(){
-        List<Subdivision> subdivisions = subdivisionRepository.findByOrderByCreateDateDesc();
+        List<Subdivision> subdivisions = subdivisionRepository.findByDeleteStatusIsFalseOrderByCreateDateDesc();
         return subdivisions.stream()
                 .map(SubdivisionRespDto::new)
                 .collect(Collectors.toList());
@@ -60,7 +60,7 @@ public class SubdivisionService {
     @Transactional(readOnly = true)
     public List<SubdivisionRespDto> findSubdivisionByUserId(Long userId) {
 
-        return subdivisionRepository.findAllByUserId(userId).stream().map(SubdivisionRespDto::new).toList();
+        return subdivisionRepository.findAllByUserIdAndDeleteStatusIsFalse(userId).stream().map(SubdivisionRespDto::new).toList();
     }
 
     /**

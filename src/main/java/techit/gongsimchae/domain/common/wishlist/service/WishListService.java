@@ -31,7 +31,7 @@ public class WishListService {
     @Transactional(readOnly = true)
     public List<SubdivisionWishListRespDto> getSubdivisionWishLists(Long userId) {
 
-        return wishListRepository.findWishListsByUserIdAndItemIsNull(userId)
+        return wishListRepository.findWishListsByUserIdAndItemIsNullAndSubdivisionDeleteStatusIsFalse(userId)
                 .stream().map(SubdivisionWishListRespDto::new).toList();
     }
 
