@@ -10,7 +10,7 @@
 <body>
 <section class="container picklist-section admin-section-container">
     <link th:href="@{/css/admin/eventForm.css}" rel="stylesheet">
-
+    <script src="/js/groupbuying/eventCreate.js"></script>
     <div class="form-container">
         <h1 class="section-title">이벤트 생성</h1>
         <form th:action="@{/admin/event}" th:object="${event}" method="post" class="needs-validation event-form-container" novalidate enctype="multipart/form-data">
@@ -18,19 +18,24 @@
                 <label for="eventTypeName">이벤트 타입:</label>
                 <select id="eventTypeName" th:field="${event.eventTypeName}">
                     <option value="" disabled selected>이벤트 타입 선택</option>
-                    <option th:each="eventType : ${eventTypes}"
-                            th:value="${eventType}"
-                            th:text="${eventType}">EventType</option>
+                    <option value="할인">할인</option>
+                    <option value="쿠폰발급">쿠폰발급</option>
+                    <option value="쿠폰코드발급">쿠폰코드발급</option>
                 </select><br/>
             </div>
 
             <div class="form-group">
-                <label for="categoryName">카테고리:</label><br/>
-                <div id="categoryName" th:each="category : ${categories}">
-                    <input type="checkbox" th:field="*{categoryNames}" th:value="${category.name}"/>
-                    <label th:text="${category.name}">카테고리</label><br/>
+                <label>카테고리:</label>
+                <div class="selected-category-container" id="selectedCategories"></div>
+                <div class="separator"></div>
+                <div class="category-container" id="categoryContainer">
+                    <div th:each="category : ${categories}" class="category-box"
+                         th:data-category-name="${category.name}"
+                         th:text="${category.name}">카테고리</div>
                 </div>
             </div>
+
+            <input type="hidden" th:field="*{categoryNames}" id="categoryNames">
 
             <div class="form-group">
                 <label for="eventName">이벤트 이름</label>
@@ -65,14 +70,6 @@
             </div>
 
             <div class="form-group">
-                <label for="discountAmount">할인 금액</label>
-                <input type="number" id="discountAmount" th:field="*{discountAmount}" class="form-control" required />
-                <div class="invalid-feedback">
-                    할인 금액을 입력해주세요.
-                </div>
-            </div>
-
-            <div class="form-group">
                 <label for="couponCode">쿠폰 코드</label>
                 <input type="text" id="couponCode" th:field="*{couponCode}" class="form-control" required />
                 <div class="invalid-feedback">
@@ -80,7 +77,7 @@
                 </div>
             </div>
 
-            <div>
+            <div class="form-group">
                 <label for="eventBannerImage">이벤트 이미지:</label>
                 <input type="file" id="eventBannerImage" name="eventImage" accept="image/*" th:field="*{eventBannerImage}" required /><br/>
             </div>
@@ -89,5 +86,92 @@
         </form>
     </div>
 </section>
+<!--<section class="container picklist-section admin-section-container">-->
+<!--    <link th:href="@{/css/admin/eventForm.css}" rel="stylesheet">-->
+<!--    <script src="/js/groupbuying/eventCreate.js"></script>-->
+
+<!--    <div class="form-container">-->
+<!--        <h1 class="section-title">이벤트 생성</h1>-->
+<!--        <form th:action="@{/admin/event}" th:object="${event}" method="post" class="needs-validation event-form-container" novalidate enctype="multipart/form-data">-->
+<!--            <div class="form-group">-->
+<!--                <label for="eventTypeName">이벤트 타입:</label>-->
+<!--                <select id="eventTypeName" th:field="${event.eventTypeName}">-->
+<!--                    <option value="" disabled selected>이벤트 타입 선택</option>-->
+<!--                    <option th:each="eventType : ${eventTypes}"-->
+<!--                            th:value="${eventType}"-->
+<!--                            th:text="${eventType}">EventType</option>-->
+<!--                </select><br/>-->
+<!--            </div>-->
+
+<!--            <div class="form-group">-->
+<!--                <label>카테고리:</label>-->
+<!--                <div class="selected-category-container" id="selectedCategories"></div>-->
+<!--                <div class="separator"></div>-->
+<!--                <div class="category-container" id="categoryContainer">-->
+<!--                    <div th:each="category : ${categories}" class="category-box"-->
+<!--                         th:data-category-name="${category.name}"-->
+<!--                         th:text="${category.name}">카테고리</div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <input type="hidden" th:field="*{categoryNames}" id="categoryNames">-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="eventName">이벤트 이름</label>-->
+<!--                <input type="text" id="eventName" th:field="*{eventName}" class="form-control" required />-->
+<!--                <div class="invalid-feedback">-->
+<!--                    이벤트 이름을 입력해주세요.-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="discount">할인율</label>-->
+<!--                <input type="number" id="discount" th:field="*{discountRate}" class="form-control" required />-->
+<!--                <div class="invalid-feedback">-->
+<!--                    할인율을 입력해주세요.-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="maxDiscount">최대 할인액</label>-->
+<!--                <input type="number" id="maxDiscount" th:field="*{maxDiscount}" class="form-control" required />-->
+<!--                <div class="invalid-feedback">-->
+<!--                    최대 할인액을 입력해주세요.-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="expirationDate">만료날짜</label>-->
+<!--                <input type="datetime-local" id="expirationDate" th:field="*{expirationDate}" class="form-control" required />-->
+<!--                <div class="invalid-feedback">-->
+<!--                    만료 날짜를 선택해주세요.-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="discountAmount">할인 금액</label>-->
+<!--                <input type="number" id="discountAmount" th:field="*{discountAmount}" class="form-control" required />-->
+<!--                <div class="invalid-feedback">-->
+<!--                    할인 금액을 입력해주세요.-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="couponCode">쿠폰 코드</label>-->
+<!--                <input type="text" id="couponCode" th:field="*{couponCode}" class="form-control" required />-->
+<!--                <div class="invalid-feedback">-->
+<!--                    쿠폰 코드를 입력해주세요.-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div>-->
+<!--                <label for="eventBannerImage">이벤트 이미지:</label>-->
+<!--                <input type="file" id="eventBannerImage" name="eventImage" accept="image/*" th:field="*{eventBannerImage}" required /><br/>-->
+<!--            </div>-->
+
+<!--            <button type="submit" class="btn btn-point-color">생성</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</section>-->
 </body>
 </html>
