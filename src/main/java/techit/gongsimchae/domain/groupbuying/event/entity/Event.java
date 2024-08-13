@@ -1,5 +1,6 @@
 package techit.gongsimchae.domain.groupbuying.event.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -22,10 +23,12 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private EventType eventType;
+    @Column(unique = true)
     private String eventName;
     private Integer discountRate;
     private Integer maxDiscount;
     private LocalDateTime expirationDate;
+    private Integer discountAmount;
 
     public Event(EventCreateReqDtoWeb dto){
         this.eventType = EventType.getInstanceByEventTypeName(dto.getEventTypeName());
@@ -33,5 +36,6 @@ public class Event {
         this.discountRate = dto.getDiscountRate();
         this.maxDiscount = dto.getMaxDiscount();
         this.expirationDate = dto.getExpirationDate();
+        this.discountAmount = dto.getDiscountAmount();
     }
 }

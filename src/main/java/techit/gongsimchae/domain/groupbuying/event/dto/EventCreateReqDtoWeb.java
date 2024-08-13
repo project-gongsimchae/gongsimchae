@@ -16,4 +16,5 @@ public class EventCreateReqDtoWeb {
     private String couponName;
     private String couponCode;
     private MultipartFile eventBannerImage;
+    private Integer discountAmount;
 }
