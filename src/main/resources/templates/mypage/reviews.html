@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/mypage :: mypage(~{::section})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/mypage :: mypage(~{::section}, 'reviews')}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,6 +8,7 @@
     <title>리뷰</title>
 </head>
 <body>
+
 <section class="picklist-section">
     <div class="container">
         <h3 class="section-title">상품 후기</h3>
