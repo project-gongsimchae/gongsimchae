@@ -21,7 +21,7 @@ public class NotificationSchedule {
         this.jobRegistry = jobRegistry;
     }
 
-    @Scheduled(cron = "00 0/1 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 * * * *", zone = "Asia/Seoul")
     public void runFirstJob() throws Exception {
         System.out.println("first schedule start");
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());

@@ -1,6 +1,5 @@
 package techit.gongsimchae.domain.groupbuying.event.entity;
 
-import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import techit.gongsimchae.global.message.ErrorMessage;
 @NoArgsConstructor
 public enum EventType {
 
-    DISCOUNT("할인"), COUPON("쿠폰발급"), COUPON_CODE("쿠폰코드생성");
+    DISCOUNT("할인"), COUPON("쿠폰발급"), COUPON_CODE("쿠폰코드발급");
 
     String eventTypeName;
 

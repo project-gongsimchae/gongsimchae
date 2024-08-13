@@ -52,6 +52,14 @@ public class EventService {
         imageS3Service.storeFile(eventDto.getEventBannerImage(), "gongsimchae/event-banner", event);
     }
 
+    public void createCouponCodeEvent(EventCreateReqDtoWeb eventDto) {
+        List<Category> categories = categoryRepository.findAllByNameIn(eventDto.getCategoryNames());
+        Event event = eventRepository.save(new Event(eventDto));
+        for (Category category : categories) {
+            eventCategoryRepository.save(new EventCategory(event, category));
+        }
+    }
+
     public List<Event> getAllEvents() {
         List<Event> events = eventRepository.findAll();
         return eventRepository.findAll();
@@ -64,9 +72,5 @@ public class EventService {
             eventResAdminDtoWebs.add(new EventResUserDtoWeb(activatedEvent, imageFileRepository.findByEvent(activatedEvent).getStoreFilename()));
         }
         return eventResAdminDtoWebs;
-    }
-
-    public void deleteEvent(Long eventId) {
-        eventRepository.deleteById(eventId);
     }
 }

@@ -93,11 +93,11 @@ public class EventController {
             eventService.createCouponEvent(eventDto);
             couponService.createEventCoupon(eventDto);
         } else if (eventType.equals(COUPON_CODE)) {
+            eventService.createCouponCodeEvent(eventDto);
             couponService.createEventCoupon(eventDto);
         } else {
             throw new CustomWebException(ErrorMessage.EVENT_TYPE_NOT_VALID.getMessage());
         }
-
         return "redirect:/admin/event";
     }
 
@@ -107,7 +107,7 @@ public class EventController {
      */
     @PostMapping("/admin/event/delete")
     public String deleteEvent(@RequestParam("event_id") Long eventId){
-        eventService.deleteEvent(eventId);
+
         return "redirect:/admin/event";
     }
 }
