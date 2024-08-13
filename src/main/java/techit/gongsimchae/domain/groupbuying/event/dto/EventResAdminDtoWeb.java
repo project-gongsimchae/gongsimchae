@@ -13,7 +13,6 @@ public class EventResAdminDtoWeb {
     private EventType eventType;
     private String eventName;
     private Integer discountRate;
-    private Integer discountAmount;
     private Integer maxDiscount;
     private LocalDateTime expirationDate;
     private Long eventId;
