@@ -17,7 +17,7 @@ public class ItemOption extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String option;
+    private String options;
     private String content;
     private Integer price;
 }

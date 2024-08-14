@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
 
 import java.util.List;
 
@@ -45,6 +46,11 @@ public class Subdivision extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String UID;
 
+    @Enumerated(EnumType.STRING)
+    private SubdivisionType subdivisionType;
+
+    private Boolean deleteStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -53,7 +59,7 @@ public class Subdivision extends BaseEntity {
     private List<ImageFile> imageFileList;
 
     @Builder
-    public Subdivision(String title, String content, String address, Double latitude, Double longitude, Integer numOfParticipants, Integer price, Integer views, String UID, User user) {
+    public Subdivision(String title, String content, String address, Double latitude, Double longitude, Integer numOfParticipants, Integer price, Integer views, String UID, SubdivisionType subdivisionType, User user) {
         this.title = title;
         this.content = content;
         this.address = address;
@@ -63,6 +69,22 @@ public class Subdivision extends BaseEntity {
         this.price = price;
         this.views = views;
         this.UID = UID;
+        this.subdivisionType = subdivisionType;
+        this.deleteStatus = false;
         this.user = user;
+    }
+
+    public void updateSubdivision(SubdivisionUpdateReqDto subdivisionUpdateReqDto) {
+        this.title = subdivisionUpdateReqDto.getTitle();
+        this.content = subdivisionUpdateReqDto.getContent();
+        this.address = subdivisionUpdateReqDto.getAddress();
+        this.latitude = subdivisionUpdateReqDto.getLatitude();
+        this.longitude = subdivisionUpdateReqDto.getLongitude();
+        this.numOfParticipants = subdivisionUpdateReqDto.getNumOfParticipants();
+        this.price = subdivisionUpdateReqDto.getPrice();
+    }
+
+    public void deleteSubdivision() {
+        this.deleteStatus = true;
     }
 }
