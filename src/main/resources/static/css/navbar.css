@@ -43,7 +43,7 @@ nav {
 }
 
 .btn-link {
-    color: #4CAF50 !important;
+    color: #818181 !important;
     font-size: 16px;
     text-decoration: none;
     padding: 0;
@@ -127,13 +127,17 @@ nav {
     margin-left: 1rem !important;
     margin-right: 0 !important;
 }
+.text-end-admin{
+    width: 400px;
+    margin-left: 30px;
+}
 
 /**
 카테고리 css
  */
 
 .navbar-menu {
-    color: rgb(51,51,51);
+    color: #818181;
     position: relative;
     display: inline-block;
 }
