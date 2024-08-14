@@ -244,7 +244,7 @@
 }
 
 .custom-picklist-delete-button {
-    background-color: #dc3545;
+    background-color: #DB2035;
     width: 150px;
     margin-right: 20px;
 }
@@ -254,13 +254,13 @@
 }
 
 .custom-picklist-cart-button {
-    background-color: #28a745;
+    background-color: #4CAF50;
     width: 150px;
 
 }
 
 .custom-picklist-cart-button:hover {
-    background-color: #218838;
+    background-color: #39813d;
 }
 
 .custom-price-detail-container {

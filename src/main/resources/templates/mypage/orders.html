@@ -1,4 +1,5 @@
-<html th:replace="layout/mypage :: mypage(~{::section})">
+<html th:replace="~{layout/mypage :: mypage(~{::section},'orders')}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -7,6 +8,7 @@
     <title>주문 내역</title>
 </head>
 <body>
+
 <section class="content">
     <h1>주문 내역</h1>
     <div class="order-list">

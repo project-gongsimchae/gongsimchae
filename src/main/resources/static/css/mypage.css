@@ -103,7 +103,7 @@ body {
 }
 
 .sidebar a.active {
-    color: #5f0080;
+    color: #4CAF50;
     font-weight: bold;
 }
 .sidebar .menu {
@@ -180,7 +180,7 @@ body {
 .order-status {
     margin-left: auto;
     font-weight: bold;
-    color: #5f0080;
+    color: #4CAF50;
 }
 
 .footer{
@@ -190,12 +190,12 @@ body {
 .detail-button {
     display: inline-block;
     padding: 8px 16px;
-    background-color: #5f0080;
+    background-color: #4CAF50;
     color: white;
     text-decoration: none;
     border-radius: 4px;
     margin-top: 10px;
 }
 .detail-button:hover {
-    background-color: #4a0063;
+    background-color: #39813d;
 }

@@ -91,6 +91,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 
@@ -117,6 +118,13 @@ body {
     color: rgb(250, 98, 47);
     margin-right: 7px;
 }
+
+.discount-info {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
 .buying-people{
     margin-left: 30px;
 }
@@ -140,6 +148,36 @@ body {
 
 .add-to-cart:hover {
     background-color: rgb(247, 247, 247);
+}
+
+.price-progress-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.custom-progress {
+    height: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    width: auto;
+    margin: 0;
+    overflow: hidden;
+}
+
+.progress-container {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.custom-progress-bar {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+    border-radius: 10px;
 }
 
 footer {
