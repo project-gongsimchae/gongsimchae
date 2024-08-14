@@ -6,6 +6,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techit.gongsimchae.domain.common.user.service.UserService;
+import techit.gongsimchae.domain.common.wishlist.service.WishListService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
@@ -19,6 +25,8 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 public class SubdivisionController {
 
     private final SubdivisionService subdivisionService;
+    private final WishListService wishListService;
+    private final UserService userService;
 
     @GetMapping("/write")
     public String subdivisionRegisterForm(Model model) {
@@ -39,11 +47,26 @@ public class SubdivisionController {
 
     @GetMapping("/{UID}")
     public String subdivisionDetail(@PathVariable("UID") String UID,
+                                     @AuthenticationPrincipal PrincipalDetails userDetails,
                                      Model model) {
 
         SubdivisionRespDto subdivisionRespDto = subdivisionService.findSubdivisionByUID(UID);
 
         model.addAttribute("subdivisionRespDto", subdivisionRespDto);
+
+        boolean isLoggedIn = userDetails != null;
+
+        if(isLoggedIn) {
+            Long userId = userDetails.getAccountDto().getId();
+            boolean isOwner = wishListService.isOwner(userId, subdivisionRespDto.getUID());
+            model.addAttribute("isOwner", isOwner);
+
+            boolean isWishListed = wishListService.isWishListed(userId, subdivisionRespDto.getUID());
+            model.addAttribute("isWishListed", isWishListed);
+        } else {
+            model.addAttribute("isWishListed", false);
+            model.addAttribute("isOwner", false);
+        }
 
         return "portion/subdivisionDetail";
     }

@@ -30,6 +30,11 @@ public class WishList extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public WishList(User user, Subdivision subdivision) {
+        this.user = user;
+        this.subdivision = subdivision;
+    }
+
     public WishList(Item item, User user) {
         this.item = item;
         this.user = user;
