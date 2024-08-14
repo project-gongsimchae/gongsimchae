@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
-
 @Slf4j
 @Controller
+@RequestMapping("/portioning")
 @RequiredArgsConstructor
 public class SubdivisionController {
 
@@ -27,14 +28,14 @@ public class SubdivisionController {
     private final WishListService wishListService;
     private final UserService userService;
 
-    @GetMapping("/portioning/write")
+    @GetMapping("/write")
     public String subdivisionRegisterForm(Model model) {
         model.addAttribute("subdivisionReqDto", new SubdivisionReqDto());
 
         return "portion/subdivisionRegister";
     }
 
-    @PostMapping("/portioning/write")
+    @PostMapping("/write")
     public String subdivisionRegister(@ModelAttribute("subdivisionReqDto") SubdivisionReqDto subdivisionReqDto,
                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
@@ -44,7 +45,7 @@ public class SubdivisionController {
         return "redirect:/portioning/"+ UID;
     }
 
-    @GetMapping("/portioning/{UID}")
+    @GetMapping("/{UID}")
     public String subdivisionDetail(@PathVariable("UID") String UID,
                                      @AuthenticationPrincipal PrincipalDetails userDetails,
                                      Model model) {
@@ -70,12 +71,40 @@ public class SubdivisionController {
         return "portion/subdivisionDetail";
     }
 
-    @GetMapping("/portioning/{UID}/join")
+    @GetMapping("/{UID}/join")
     public String subdivisionJoinChatRoom(@PathVariable("UID") String UID) {
-
-        
 
         return "portion/chattingRoom";
     }
 
+    @GetMapping("/{UID}/update")
+    public String subdivisionUpdateForm(@PathVariable("UID") String UID, Model model,
+                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        SubdivisionRespDto subdivisionRespDto = subdivisionService.findSubdivisionByUID(UID);
+
+        if (principalDetails == null || principalDetails.getAccountDto().getId() != subdivisionRespDto.getUser().getId()) {
+            return "redirect:/portioning";
+        }
+
+        model.addAttribute("subdivisionRespDto", subdivisionRespDto);
+
+        return "portion/subdivisionUpdate";
+    }
+
+    @PostMapping("/update")
+    public String subdivisionUpdate(@ModelAttribute("subdivisionUpdateReqDto") SubdivisionUpdateReqDto subdivisionUpdateReqDto) {
+
+        String UID = subdivisionService.updateSubdivision(subdivisionUpdateReqDto);
+
+        return "redirect:/portioning/"+UID;
+    }
+
+    @PostMapping("/{UID}/delete")
+    public String subdivisionDelete(@PathVariable("UID") String UID) {
+
+        subdivisionService.deleteSubdivision(UID);
+
+        return "redirect:/portioning";
+    }
 }

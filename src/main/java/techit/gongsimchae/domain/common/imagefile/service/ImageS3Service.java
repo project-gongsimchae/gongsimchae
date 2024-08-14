@@ -119,6 +119,11 @@ public class ImageS3Service {
         }
     }
 
+    @Transactional
+    public void deleteFileFromDb(ImageFile imageFile) {
+        imageFileRepository.delete(imageFile);
+    }
+  
     /**
      * 실제 삭제가 아닌 deleteStatus를 1로 변경하는 메서드
      */
