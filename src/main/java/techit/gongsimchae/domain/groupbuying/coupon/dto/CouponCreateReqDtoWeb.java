@@ -14,7 +14,7 @@ public class CouponCreateReqDtoWeb {
     private Integer discount;
     private Integer maxDiscount;
     private LocalDateTime expirationDate;
-    private String eventName;
+    private String couponName;
     private String couponCode; // 쿠폰등록 번호
     private MultipartFile eventBannerImage; // 배너 이미지
 }

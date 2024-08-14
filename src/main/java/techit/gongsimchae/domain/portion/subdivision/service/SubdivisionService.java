@@ -95,7 +95,7 @@ public class SubdivisionService {
 
         subdivisionRepository.save(subdivision);
 
-        imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", userId, subdivision);
+        imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", subdivision);
 
         return subdivision.getUID();
     }

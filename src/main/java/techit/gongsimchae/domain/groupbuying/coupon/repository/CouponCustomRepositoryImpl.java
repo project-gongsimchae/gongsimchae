@@ -23,7 +23,7 @@ public class CouponCustomRepositoryImpl implements CouponCustomRepository{
     @Override
     public List<CouponRespDtoWeb> findCouponsByUserId(Long userId) {
         return queryFactory.select(Projections.fields(CouponRespDtoWeb.class,
-                        coupon.id, coupon.discount, coupon.maxDiscount, coupon.expirationDate, coupon.eventName, coupon.couponCode))
+                        coupon.id, coupon.discountRate, coupon.maxDiscount, coupon.expirationDate, coupon.couponName, coupon.couponCode))
                 .from(couponUser)
                 .leftJoin(couponUser.coupon, coupon)
                 .join(couponUser.user, user)

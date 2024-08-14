@@ -65,4 +65,12 @@ public class Item extends BaseEntity {
         this.groupBuyingLimitTime = itemUpdateDto.getGroupBuyingLimitTime();
         this.category = category;
     }
+
+    public void plusDiscountRate(Integer discountRate) {
+        this.discountRate += discountRate;
+    }
+
+    public void minusDiscountRate(Integer discountRate) {
+        this.discountRate -= discountRate;
+    }
 }

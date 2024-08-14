@@ -9,7 +9,7 @@
 <body>
 <section>
   <div class="event-banner-main-ver2" th:each="event : ${events}">
-      <img class="event-banner-element-ver2" th:src="@{${event.eventBannerImage}}" alt="no image"/>
+      <img class="event-banner-element-ver2" th:src="${event.getEventBannerImage()}" alt="no image"/>
   </div>
 </section>
 </body>
