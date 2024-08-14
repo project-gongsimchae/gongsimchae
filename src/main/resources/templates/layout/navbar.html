@@ -146,7 +146,7 @@
             <a> </a>
         </div>
         <div sec:authorize="hasRole('USER')">
-            <a th:href="@{/inquiries}" class="btn btn-link nav-list-a">1:1 문의</a>
+            <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
         </div>
         <div sec:authorize="hasRole('ADMIN')" class="text-end">
             <a th:href="@{/admin/users}" class="btn btn-link nav-list-a">관리자 페이지</a>

@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.common.imagefile.entity.S3VO;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
@@ -46,7 +47,7 @@ public class EventService {
         for (Category category : categories) {
             eventCategoryRepository.save(new EventCategory(event, category));
         }
-        imageS3Service.storeFile(eventDto.getEventBannerImage(), "gongsimchae/event-banner", event);
+        imageS3Service.storeFile(eventDto.getEventBannerImage(), S3VO.EVENT_BANNER_DIRECTORY, event);
     }
 
     public void createCouponEvent(EventCreateReqDtoWeb eventDto) {
@@ -58,7 +59,7 @@ public class EventService {
         for (Category category : categories) {
             eventCategoryRepository.save(new EventCategory(event, category));
         }
-        imageS3Service.storeFile(eventDto.getEventBannerImage(), "gongsimchae/event-banner", event);
+        imageS3Service.storeFile(eventDto.getEventBannerImage(), S3VO.EVENT_BANNER_DIRECTORY, event);
     }
 
     public void createCouponCodeEvent(EventCreateReqDtoWeb eventDto) {

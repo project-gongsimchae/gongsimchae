@@ -8,4 +8,5 @@ public interface S3VO {
     String COUPON_IMAGE_UPLOAD_DIRECTORY = "coupon-image";
     String SUBDIVISION_IMAGE_UPLOAD_DIRECTORY = "subdivision-image";
     String REVIEWS_IMAGE_UPLOAD_DIRECTORY = "reviews-image";
+    String EVENT_BANNER_DIRECTORY = "event-banner";
 }
