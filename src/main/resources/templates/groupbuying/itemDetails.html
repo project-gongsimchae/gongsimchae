@@ -1,5 +1,7 @@
 <!DOCTYPE html >
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/productHeader :: header(~{::title}, ~{:: section})}">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/productHeader :: header(~{::title}, ~{:: section})}"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +29,7 @@
                 총 가격: 0원
             </div>
             <div class="btn-detail-row">
-                <button class="custom-btn-outline-secondary" id="wishlist-btn" th:data-item-id="${item.UID}">
+                <button sec:authorize="isAuthenticated()" class="custom-btn-outline-secondary" id="wishlist-btn" th:data-item-id="${item.UID}" >
                     <i id="wishlist-icon" class="bi"></i> 찜하기
                 </button>
                 <button class="custom-btn-success" id="purchase-btn">공동구매 참여하기</button>
