@@ -7,7 +7,9 @@ body {
 .custom-container{
     background-color: white !important;
 }
-
+.container-nav{
+    background-color: #ffffff;
+}
 nav {
     margin: 0 180px;
 }
