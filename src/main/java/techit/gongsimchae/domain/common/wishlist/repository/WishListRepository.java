@@ -21,4 +21,8 @@ public interface WishListRepository extends JpaRepository <WishList, Long> {
     @Query("SELECT wl FROM WishList wl LEFT JOIN FETCH wl.subdivision s LEFT JOIN FETCH s.imageFileList WHERE wl.user.id = :userId AND wl.item IS NULL")
     List<WishList> findWishListsByUserIdAndItemIsNull(@Param("userId") Long userId);
 
+    // User의 loginId와 Subdivision의 UID를 기준으로 찜 목록에 존재하는지 확인
+    boolean existsByUserIdAndSubdivisionUID(Long userId, String subdivisionUID);
+
+    void deleteByUserIdAndSubdivisionUID(Long userId, String subdivisionUID);
 }
