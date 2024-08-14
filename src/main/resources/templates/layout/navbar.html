@@ -66,26 +66,28 @@
 
     </div>
     <div class="navbar-links nav-container mt-3 text-center">
-        <div class="navbar-menu">카테고리
-            <ul class="dropdown-menu">
-                <li th:each="category : ${categories}">
-                    <a class="dropdown-item" th:text="${category.name}"
-                       th:href="@{/category/{category_id}(category_id=${category.id}, page=1, per_page=96, sorted_type=1)}"></a>
-                </li>
-            </ul>
-        </div>
+
         <div class="d-flex justify-content-center mt-2">
+            <div class="navbar-menu">카테고리
+                <ul class="dropdown-menu">
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item" th:text="${category.name}"
+                           th:href="@{/category/{category_id}(category_id=${category.id}, page=1, per_page=96, sorted_type=1)}"></a>
+                    </li>
+                </ul>
+            </div>
             <a th:href="@{/collection-groups/new-item}" class="btn btn-link nav-list-a">신상품</a>
             <a th:href="@{/collection-groups/best-item}" class="btn btn-link nav-list-a">베스트</a>
             <a th:href="@{/event}" class="btn btn-link nav-list-a">이벤트</a>
+            <div sec:authorize="hasRole('USER')">
+                <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
+            </div>
         </div>
         <div sec:authorize="isAnonymous()">
             <a> </a>
         </div>
-        <div sec:authorize="hasRole('USER')">
-            <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
-        </div>
-        <div sec:authorize="hasRole('ADMIN')" class="text-end">
+
+        <div sec:authorize="hasRole('ADMIN')" class="text-end-admin">
             <a th:href="@{/admin/users}" class="btn btn-link nav-list-a">관리자 페이지</a>
         </div>
     </div>

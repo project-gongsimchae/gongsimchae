@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:fragment="mypage(main)">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:fragment="mypage(main,sidebarMenu)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,28 +42,27 @@
                         <div class="name-text">쿠폰</div>
                         <div class="amount-text">
                             <div class="number-text" th:text="${userCoupons != null ? userCoupons : '0'}">0</div>
-                            개
                         </div>
                     </button>
                 </div>
             </div>
         </div>
-        <div class="sidebar menu">
+        <div th:fragment="sidebar-menu (sidebarMenu)" class="sidebar menu">
             <ul>
                 <li class="menu-text">자주 찾는 메뉴</li>
-                <li><a href="/mypage/orders" class="active">주문 내역</a></li>
-                <li><a href="/mypage/coupons">쿠폰</a></li>
-                <li><a href="/mypage/pick/list">찜한상품</a></li>
+                <li><a href="/mypage/orders" th:classappend="${sidebarMenu == 'orders'} ? active">주문 내역</a></li>
+                <li><a href="/mypage/coupons" th:classappend="${sidebarMenu == 'coupons'} ? active">쿠폰</a></li>
+                <li><a href="/mypage/pick/list" th:classappend="${sidebarMenu == 'pick'} ? active">찜한상품</a></li>
                 <li class="menu-text divider">쇼핑</li>
-                <li><a href="/mypage/reviews">상품 후기</a></li>
-                <li><a href="/mypage/inquiry/list">상품 문의</a></li>
+                <li><a href="/mypage/reviews" th:classappend="${sidebarMenu == 'reviews'} ? active">상품 후기</a></li>
+                <li><a href="/mypage/inquiry/list" th:classappend="${sidebarMenu == 'inquiry'} ? active">상품 문의</a></li>
                 <li class="menu-text divider">소분</li>
-                <li><a href="/mypage/interest/list">관심 목록</a></li>
-                <li><a href="/mypage/write">내가 쓴글</a></li>
-                <li><a href="/mypage/join">참여중인 소분</a></li>
+                <li><a href="/mypage/interest/list" th:classappend="${sidebarMenu == 'interest'} ? active">관심 목록</a></li>
+                <li><a href="/mypage/write" th:classappend="${sidebarMenu == 'write'} ? active">내가 쓴글</a></li>
+                <li><a href="/mypage/join" th:classappend="${sidebarMenu == 'join'} ? active">참여중인 소분</a></li>
                 <li class="menu-text divider">내정보</li>
-                <li><a href="/mypage/address">배송지 관리</a></li>
-                <li><a href="/mypage/info">개인정보 수정</a></li>
+                <li><a href="/mypage/address" th:classappend="${sidebarMenu == 'address'} ? active">배송지 관리</a></li>
+                <li><a href="/mypage/info" th:classappend="${sidebarMenu == 'info'} ? active">개인정보 수정</a></li>
             </ul>
         </div>
     </aside>

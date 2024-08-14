@@ -37,8 +37,20 @@
                     </button>
                     <h3 class="item-name" ><a href="" th:href="@{|/product/${item.UID}|}" th:text="${item.name}"></a></h3>
                     <div class="price-container">
-                        <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
-                        <div class="discount-container">
+                        <div class="price-progress-container">
+                            <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
+                            <div class="progress-container">
+                                <div class="custom-progress">
+                                    <div class="custom-progress-bar" role="progressbar"
+                                         th:style="'width: ' + ${(item.groupBuyingQuantity / 100.0) * 100} + '%'"
+                                         th:aria-valuenow="${item.groupBuyingQuantity}"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        <span th:text="${item.groupBuyingQuantity + '%'}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="discount-info">
                             <span class="discount-rate" th:text="${item.discountRate} + '%'">할인율</span>
                             <span class="discount-price"
                                   th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
@@ -62,8 +74,20 @@
                         <h3 class="item-name" ><a href="" th:href="@{|/product/${item.UID}|}" th:text="${item.name}"></a></h3>
                     </div>
                     <div class="price-container">
-                        <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
-                        <div class="discount-container">
+                        <div class="price-progress-container">
+                            <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
+                            <div class="progress-container">
+                                <div class="custom-progress">
+                                    <div class="custom-progress-bar" role="progressbar"
+                                         th:style="'width: ' + ${(item.groupBuyingQuantity / 100.0) * 100} + '%'"
+                                         th:aria-valuenow="${item.groupBuyingQuantity}"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        <span th:text="${item.groupBuyingQuantity + '%'}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="discount-info">
                             <span class="discount-rate" th:text="${item.discountRate} + '%'">할인율</span>
                             <span class="discount-price"
                                   th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
