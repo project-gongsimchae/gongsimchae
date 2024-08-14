@@ -35,4 +35,8 @@ public class CouponUser {
     public void addCoupon(Coupon coupon) {
         this.coupon = coupon;
     }
+
+    public void setStatusDeleted() {
+        this.couponStatus = 1;
+    }
 }

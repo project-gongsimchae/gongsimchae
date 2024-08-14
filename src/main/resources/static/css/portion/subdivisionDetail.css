@@ -98,6 +98,39 @@
     color: #999;
 }
 
+.content-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    flex-grow: 1;
+    margin: 0;
+}
+
+
+#wishlistButton, #wishlistButtonAnonymous {
+    margin-left: 20px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* 로그인하지 않은 사용자의 찜하기 버튼 아이콘 */
+#heartIconAnonymous {
+    font-size: 24px;
+    color: red; /* 회색 색상으로 빈 하트 표시 */
+}
+
+
+#heartIcon {
+    font-size: 24px;
+    color: red; /* 빨간색 테두리 설정 */
+}
+
+
 .price-box {
     border: 1px solid #ddd;
     border-radius: 5px;
