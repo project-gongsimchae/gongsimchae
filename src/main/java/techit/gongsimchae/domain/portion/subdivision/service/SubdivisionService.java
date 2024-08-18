@@ -105,7 +105,7 @@ public class SubdivisionService {
         Subdivision subdivision = subdivisionRepository.findById(subdivisionUpdateReqDto.getId()).orElseThrow(() -> new CustomWebException("Subdivision not found"));
         subdivision.updateSubdivision(subdivisionUpdateReqDto);
 
-        imageS3Service.storeFiles(subdivisionUpdateReqDto.getImages(), "images", subdivision.getUser().getId(), subdivision);
+        imageS3Service.storeFiles(subdivisionUpdateReqDto.getImages(), "images", subdivision);
 
         if (!Objects.isNull(subdivisionUpdateReqDto.getDeleteImages())) {
             for (Long deleteImageId : subdivisionUpdateReqDto.getDeleteImages()) {
