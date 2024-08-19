@@ -19,7 +19,7 @@ import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
 import techit.gongsimchae.domain.portion.chatmessage.service.ChatMessageService;
 import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
-import techit.gongsimchae.global.config.fafka.MessageSenderService;
+import techit.gongsimchae.domain.portion.chatmessage.service.MessageSenderService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.util.ArrayList;

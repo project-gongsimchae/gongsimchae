@@ -25,8 +25,11 @@ public class ChatRoomUser extends BaseEntity {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
+    private Integer isActivate = 0; // 0 비활성 1 활성
+
     public ChatRoomUser(User user, ChatRoom chatRoom) {
         this.user = user;
+        this.isActivate = 1;
         addChatRoom(chatRoom);
     }
 

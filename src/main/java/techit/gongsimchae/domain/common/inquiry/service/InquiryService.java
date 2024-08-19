@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryAdminReplyReqDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryCreateDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
@@ -34,6 +35,7 @@ public class InquiryService {
     private final InquiryRepository inquiryRepository;
     private final UserRepository userRepository;
     private final ApplicationEventPublisher publisher;
+    private final ImageS3Service imageS3Service;
 
     @Transactional
     public void createInquiry(InquiryCreateDtoWeb dtoWeb, PrincipalDetails principalDetails) {

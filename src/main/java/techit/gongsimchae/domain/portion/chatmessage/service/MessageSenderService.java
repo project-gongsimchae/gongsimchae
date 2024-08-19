@@ -1,4 +1,4 @@
-package techit.gongsimchae.global.config.fafka;
+package techit.gongsimchae.domain.portion.chatmessage.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,8 +7,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
 import techit.gongsimchae.domain.portion.chatmessage.entity.MessageType;
-import techit.gongsimchae.domain.portion.chatmessage.service.ChatMessageService;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
+import techit.gongsimchae.global.config.fafka.KafkaConstants;
 
 import java.time.LocalDateTime;
 

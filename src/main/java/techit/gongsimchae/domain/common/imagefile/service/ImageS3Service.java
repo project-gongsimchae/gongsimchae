@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
+import techit.gongsimchae.domain.common.inquiry.entity.Inquiry;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
@@ -74,6 +75,8 @@ public class ImageS3Service {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (User) object);
             }  else if (object instanceof Event) {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Event) object);
+            } else if (object instanceof Inquiry) {
+                imageFile = new ImageFile(originalFilename, getFullPath(directory,storeFileName), (Inquiry) object);
             } else {
                 throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
             }
