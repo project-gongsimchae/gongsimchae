@@ -14,9 +14,7 @@ import techit.gongsimchae.domain.portion.chatroomuser.repository.ChatRoomUserRep
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -51,15 +49,6 @@ public class ChatRoomService {
     public ChatRoomRespDto getChatRoom(Long subdivisionId) {
         ChatRoom chatRoom = chatRoomRepository.findBySubdivisionId(subdivisionId).orElseThrow(() -> new RuntimeException("Room not found"));
         return new ChatRoomRespDto(chatRoom);
-    }
-
-    /**
-     * 모든 채팅방 찾는 메서드
-     */
-    public List<ChatRoomRespDto> findAllRoom(){
-        return chatRoomRepository.findAll().stream()
-                .map(ChatRoomRespDto::new)
-                .collect(Collectors.toList());
     }
 
     /**

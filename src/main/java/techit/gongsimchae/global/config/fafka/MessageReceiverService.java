@@ -3,7 +3,6 @@ package techit.gongsimchae.global.config.fafka;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
 
