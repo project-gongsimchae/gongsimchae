@@ -7,6 +7,8 @@ public interface ErrorMessage {
      * common 에러
      */
 
+    String USER_NOT_FOUND = "존재하지 않는 유저입니다.";
+
     /**
      * groupBuying 에러
      */

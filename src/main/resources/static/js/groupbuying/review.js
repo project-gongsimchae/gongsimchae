@@ -17,10 +17,49 @@ tabs.forEach(tab => {
     });
 });
 
-// 모달 열기 버튼과 닫기 버튼에 대한 이벤트 리스너 추가
-document.getElementById('openModalButton').addEventListener('click', function() {
-    document.getElementById('reviewModal').style.display = 'block';
-    document.getElementById('modalOverlay').style.display = 'block';
+document.getElementById('submitReviewButton').addEventListener('click', function(event) {
+    event.preventDefault(); // 기본 폼 제출 막기
+
+    // 폼 데이터 생성
+    const form = document.getElementById('reviewForm');
+    const formData = new FormData(form);
+
+    // AJAX 요청
+    fetch('/mypage/reviews/write', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => {
+            if (response.ok) {
+                // 요청 성공 시
+                alert('리뷰가 작성되었습니다.');
+                location.reload(); // 페이지 새로고침
+            } else {
+                return response.json().then(errorData => {
+                    // 요청 실패 시 오류 출력
+                    console.error('오류:', errorData);
+                });
+            }
+        })
+        .catch(error => {
+            // 네트워크 오류 또는 기타 오류
+            console.error('리뷰 작성 중 오류가 발생했습니다:', error);
+        });
+});
+
+// 모든 '리뷰작성' 버튼에 대해 클릭 이벤트 추가
+document.querySelectorAll('.openModalButton').forEach(button => {
+    button.addEventListener('click', function() {
+        // 버튼의 data-uid 속성에서 UID 값 가져오기
+        const uid = this.getAttribute('data-uid');
+
+        // 숨겨진 input 필드에 UID 값 설정
+        document.getElementById('itemUID').value = uid;
+
+        // 모달 열기
+        document.getElementById('reviewModal').style.display = 'block';
+        document.getElementById('modalOverlay').style.display = 'block';
+    });
 });
 
 document.getElementById('closeModalButton').addEventListener('click', function() {

@@ -27,10 +27,13 @@ import techit.gongsimchae.domain.common.wishlist.service.WishListService;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.dto.ReviewItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
+import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
+import techit.gongsimchae.domain.groupbuying.reviews.service.ReviewsService;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
@@ -47,6 +50,7 @@ public class MyPageController {
     private final InquiryService inquiryService;
     private final OrdersService ordersService;
     private final ItemService itemService;
+    private final ReviewsService reviewsService;
 
 
     @GetMapping("/orders")
@@ -157,9 +161,10 @@ public class MyPageController {
      * 상품 후기
      */
     @GetMapping("/reviews")
-    public String getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
-        model.addAttribute("reviewAbleItems", itemService.getReviewableItems(principalDetails.getAccountDto()));
-        model.addAttribute("reviewedItems", itemService.getReviewedItems(principalDetails.getAccountDto()));
+    public String getReviewPage(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
+        ReviewItemResDtoWeb reviewItemResDtoWeb = itemService.getReviewItems(principalDetails.getAccountDto());
+        model.addAttribute("reviewAbleItems", reviewItemResDtoWeb.getReviewAbleItemResDtoWebs());
+        model.addAttribute("reviewedItems", reviewItemResDtoWeb.getReviewedItemResDtoWebs());
         return "mypage/reviews";
     }
 
@@ -169,7 +174,10 @@ public class MyPageController {
     }
 
     @PostMapping("/reviews/write")
-    public String viewsWrite(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public String createReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb) {
+
+        reviewsService.createReview(principalDetails.getAccountDto(), reviewReqDtoWeb);
         return "redirect:/mypage/reviews";
     }
 

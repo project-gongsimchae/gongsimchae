@@ -22,6 +22,7 @@ import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ReviewAbleItemResDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.dto.ReviewItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ReviewedItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
@@ -185,32 +186,30 @@ public class ItemService {
         return itemRepository.findItemsByKeyword(itemSearchForm, pageable);
     }
 
-    public List<ReviewAbleItemResDtoWeb> getReviewableItems(AccountDto accountDto) {
+    public ReviewItemResDtoWeb getReviewItems(AccountDto accountDto) {
         List<Orders> orders = ordersRepository.findAllByUserIdAndOrderStatus(accountDto.getId(), OrderStatus.완료);
         List<OrderItem> ordersItems = orderItemRepository.findAllByOrdersIn(orders);
         List<Item> items = ordersItems.stream()
                 .map((ordersItem) -> itemRepository.findById(ordersItem.getItem().getId()).orElseThrow(
                         () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
                 )).toList();
+        List<Reviews> reviews = reviewsRepository.findAllByUserId(accountDto.getId());
+
         List<ReviewAbleItemResDtoWeb> reviewAbleItemResDtoWebs = new ArrayList<>();
+        List<ReviewedItemResDtoWeb> reviewedItemResDtoWebs = new ArrayList<>();
         for (Item item : items) {
             ImageFile imageFile = imageFileRepository.findByItem(item);
-            reviewAbleItemResDtoWebs.add(new ReviewAbleItemResDtoWeb(item, imageFile.getStoreFilename()));
-        }
-        return reviewAbleItemResDtoWebs;
-    }
+            Reviews matchingReview = reviews.stream()
+                    .filter(review -> review.getItem().equals(item))
+                    .findFirst()
+                    .orElse(null);
 
-    public List<ReviewedItemResDtoWeb> getReviewedItems(AccountDto accountDto) {
-        List<Reviews> reviews = reviewsRepository.findAllByUserId(accountDto.getId());
-        List<Item> items1 = reviews.stream()
-                .map((review -> itemRepository.findById(review.getItem().getId()).orElseThrow(
-                        () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
-                ))).toList();
-        List<ReviewedItemResDtoWeb> reviewedItemResDtoWebs = new ArrayList<>();
-        for (Item item : items1) {
-            ImageFile imageFile = imageFileRepository.findByItem(item);
-            reviewedItemResDtoWebs.add(new ReviewedItemResDtoWeb(item, imageFile.getStoreFilename()));
+            if (matchingReview != null) {
+                reviewedItemResDtoWebs.add(new ReviewedItemResDtoWeb(item, imageFile.getStoreFilename()));
+            } else {
+                reviewAbleItemResDtoWebs.add(new ReviewAbleItemResDtoWeb(item, imageFile.getStoreFilename()));
+            }
         }
-        return reviewedItemResDtoWebs;
+        return new ReviewItemResDtoWeb(reviewAbleItemResDtoWebs, reviewedItemResDtoWebs);
     }
 }
