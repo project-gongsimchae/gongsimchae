@@ -119,6 +119,19 @@ document.addEventListener('DOMContentLoaded', function() {
     $('.sigungu-areas, .myeondongeup-areas').hide();
 });
 
+
+
+document.getElementById('searchBtn').addEventListener('click', function() {
+    const address = tags.filter(tag => tag.trim() !== '').join(' ');
+    const content = document.querySelector('.content-wrapper input').value;
+
+    $.get(`${contextPath}portioning/search?address=${encodeURIComponent(address)}&content=${encodeURIComponent(content)}`, function(data) {
+        $('#subdivisionList').html(data);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("Search request failed:", textStatus, errorThrown);
+    });
+});
+
 document.getElementById('sortNew').addEventListener('click', function(event) {
     event.preventDefault();
     // 최신순 정렬을 위한 코드 작성

@@ -126,4 +126,12 @@ public class SubdivisionService {
 
         subdivision.deleteSubdivision();
     }
+
+    @Transactional(readOnly = true)
+    public List<SubdivisionRespDto> searchSubdivisions(String address, String content) {
+        List<Subdivision> subdivisions = subdivisionRepository.searchSubdivisions(address, content);
+        return subdivisions.stream()
+                .map(SubdivisionRespDto::new)
+                .collect(Collectors.toList());
+    }
 }

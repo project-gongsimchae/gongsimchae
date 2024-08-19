@@ -73,25 +73,26 @@
                 <a href="#" class="write-sort-deadline" id="sortDeadline">마감순</a>
             </div>
         </div>
-        <div class="write-list">
-            <div th:each="subdivision : ${subdivisions}" class="write-subdivision">
-                <a th:href="@{/portioning/{UID}(UID=${subdivision.UID})}">
-                    <div class="thumbnail-image-placeholder">
-                        <img th:src="${subdivision.imageFileList.size() > 0 ? subdivision.imageFileList.get(0).storeFilename : 'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}"
-                             alt="썸네일 이미지" />
-                    </div>
-                    <div class="write-simple-info">
-                        <h3 class="write-title" th:text="${subdivision.title}"></h3>
-                        <h4 class="write-price">
-                            가격: <span class="price-value" th:text="${subdivision.price}"></span>원
-                        </h4>
-                        <h4 class="write-address" th:text="'희망 장소: ' + ${subdivision.address}"></h4>
-                        <div class="write-interest">
-                            views <span class="interest-value" th:text="${subdivision.views}"></span>
+        <div id="subdivisionList">
+            <div class="write-list" >
+                <div th:each="subdivision : ${subdivisions}" class="write-subdivision">
+                    <a th:href="@{/portioning/{UID}(UID=${subdivision.UID})}">
+                        <div class="thumbnail-image-placeholder">
+                            <img th:src="${subdivision.imageFileList.size() > 0 ? subdivision.imageFileList.get(0).storeFilename : 'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}"
+                              alt="썸네일 이미지" />
                         </div>
-                    </div>
-
-                </a>
+                        <div class="write-simple-info">
+                            <h3 class="write-title" th:text="${subdivision.title}"></h3>
+                            <h4 class="write-price">
+                             가격: <span class="price-value" th:text="${subdivision.price}"></span>원
+                           </h4>
+                          <h4 class="write-address" th:text="'희망 장소: ' + ${subdivision.address}"></h4>
+                           <div class="write-interest">
+                                views <span class="interest-value" th:text="${subdivision.views}"></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
