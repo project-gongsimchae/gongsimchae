@@ -1,0 +1,94 @@
+/* 아이템 css */
+.reviewable-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.reviewable-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.reviewable-item .info {
+    flex: 1;
+    margin-left: 15px;
+    position: relative;
+}
+
+.reviewable-item .info h5 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.reviewable-item .info .reviewable-date {
+    font-size: 0.75rem;
+}
+
+/* 이미지 css */
+.default-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ccc;
+    width: 100%;
+    padding-top: 100%; /* Maintain aspect ratio */
+    position: relative;
+}
+
+.image-container img, .default-image {
+    width: 100%;
+    height: auto;
+}
+
+/* 탭 css */
+.tabs {
+    display: flex;
+    border: 1px solid #000;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #e0e0e0;
+    border-right: 1px solid #000;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.tab:last-child {
+    border-right: none;
+}
+
+.tab.active {
+    background-color: #fff;
+    color: #28a745;
+}
+/* 비활성화 탭*/
+.review-section {
+    display: none;
+}
+
+/* 활성화 탭*/
+.review-section.active {
+    display: block;
+}
+
+/* 작성 버튼 css */
+.btn {
+    font-size: 0.8rem; /* 버튼 글꼴 크기 조정 */
+}
+
+.btn-success {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}

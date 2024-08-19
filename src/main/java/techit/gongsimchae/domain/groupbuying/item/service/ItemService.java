@@ -2,6 +2,7 @@ package techit.gongsimchae.domain.groupbuying.item.service;
 
 import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
@@ -18,10 +21,21 @@ import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
+import techit.gongsimchae.domain.groupbuying.item.dto.ReviewAbleItemResDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.dto.ReviewedItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderStatus;
+import techit.gongsimchae.domain.groupbuying.orderitem.repository.OrderItemRepository;
+import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
+import techit.gongsimchae.domain.groupbuying.orders.repository.OrdersRepository;
+import techit.gongsimchae.domain.groupbuying.reviews.entity.Reviews;
+import techit.gongsimchae.domain.groupbuying.reviews.repository.ReviewsRepository;
+import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.exception.CustomWebException;
+import techit.gongsimchae.global.message.ErrorMessage;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +44,10 @@ public class ItemService {
     private final CategoryRepository categoryRepository;
 
     private final ImageS3Service imageS3Service;
+    private final OrderItemRepository orderItemRepository;
+    private final OrdersRepository ordersRepository;
+    private final ImageFileRepository imageFileRepository;
+    private final ReviewsRepository reviewsRepository;
 
     public void save(Item item) {
         itemRepository.save(item);
@@ -165,5 +183,34 @@ public class ItemService {
 
     public Page<ItemRespDtoWeb> searchItems(ItemSearchForm itemSearchForm, Pageable pageable) {
         return itemRepository.findItemsByKeyword(itemSearchForm, pageable);
+    }
+
+    public List<ReviewAbleItemResDtoWeb> getReviewableItems(AccountDto accountDto) {
+        List<Orders> orders = ordersRepository.findAllByUserIdAndOrderStatus(accountDto.getId(), OrderStatus.완료);
+        List<OrderItem> ordersItems = orderItemRepository.findAllByOrdersIn(orders);
+        List<Item> items = ordersItems.stream()
+                .map((ordersItem) -> itemRepository.findById(ordersItem.getItem().getId()).orElseThrow(
+                        () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
+                )).toList();
+        List<ReviewAbleItemResDtoWeb> reviewAbleItemResDtoWebs = new ArrayList<>();
+        for (Item item : items) {
+            ImageFile imageFile = imageFileRepository.findByItem(item);
+            reviewAbleItemResDtoWebs.add(new ReviewAbleItemResDtoWeb(item, imageFile.getStoreFilename()));
+        }
+        return reviewAbleItemResDtoWebs;
+    }
+
+    public List<ReviewedItemResDtoWeb> getReviewedItems(AccountDto accountDto) {
+        List<Reviews> reviews = reviewsRepository.findAllByUserId(accountDto.getId());
+        List<Item> items1 = reviews.stream()
+                .map((review -> itemRepository.findById(review.getItem().getId()).orElseThrow(
+                        () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
+                ))).toList();
+        List<ReviewedItemResDtoWeb> reviewedItemResDtoWebs = new ArrayList<>();
+        for (Item item : items1) {
+            ImageFile imageFile = imageFileRepository.findByItem(item);
+            reviewedItemResDtoWebs.add(new ReviewedItemResDtoWeb(item, imageFile.getStoreFilename()));
+        }
+        return reviewedItemResDtoWebs;
     }
 }

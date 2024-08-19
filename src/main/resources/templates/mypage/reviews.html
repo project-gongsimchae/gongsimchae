@@ -8,34 +8,62 @@
     <title>리뷰</title>
 </head>
 <body>
-
 <section class="picklist-section">
     <div class="container">
         <h3 class="section-title">상품 후기</h3>
-        <div class="row gy-4">
-            <!-- 상품 후기 리스트 -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div th:if="${reviews != null && reviews.size() > 0}">
-                        <div th:each="review : ${reviews}" class="card mb-3">
-                            <div class="card-body">
-                                <img src="" alt="주문한 상품 사진">
-                                <h5 class="card-title" th:text="${review.productName}">상품명</h5>
-                                <h6 class="card-subtitle mb-2 text-muted" th:text="${review.reviewDate}">작성일자</h6>
-                                <p class="card-text" th:text="${review.content}">리뷰 내용</p>
-                                <div>
-                                    <span class="badge bg-success" th:text="'평점: ' + ${review.rating}">평점</span>
-                                </div>
+
+        <!-- 탭 버튼 -->
+        <div class="tabs">
+            <div class="tab active" data-target="reviewable-section">작성 가능 후기</div>
+            <div class="tab" data-target="reviewed-section">작성한 후기</div>
+        </div>
+
+        <!-- 작성 가능 후기 섹션 -->
+        <div id="reviewable-section" class="review-section active">
+            <div id="review-container" class="container mt-2">
+                <div th:each="item : ${reviewAbleItems}" class="reviewable-item row mb-4">
+                    <div class="col-md-2">
+                        <div class="image-container">
+                            <div th:if="${!item.getThumbnailUrl().isEmpty()}">
+                                <img src="" th:src="${item.getThumbnailUrl()}" alt="thumbnail" class="img-thumbnail">
+                            </div>
+                            <div th:if="${item.getThumbnailUrl().isEmpty()}">
+                                <img th:src="@{'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}" class="d-block w-100" alt="Image">
                             </div>
                         </div>
+                    </div>
+                    <div class="info col-md-10">
+                        <h5 th:text="${item.itemName}">제목</h5>
+                        <p th:text="${#temporals.format(item.getReviewAbleDate(), 'yyyy.MM.dd') + '까지 작성 가능'}" class="reviewable-date">작성 기한</p>
+                    </div>
+                    <div class="col-md-3">
+                        <button id="writeReviewBtn" class="btn btn-success">후기작성</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- 리뷰가 없을 경우 표시 -->
-    <div th:if="${reviews == null || reviews.size() == 0}">
-        <p>작성한 상품 후기가 없습니다.</p>
+
+        <!-- 작성한 후기 섹션 -->
+        <div id="reviewed-section" class="review-section">
+            <div id="review-container" class="container mt-2">
+                <div th:each="item : ${reviewedItems}" class="reviewed-item row mb-4">
+                    <div class="col-md-2">
+                        <div class="image-container">
+                            <div th:if="${!item.getThumbnailUrl().isEmpty()}">
+                                <img src="" th:src="${item.getThumbnailUrl()}" alt="thumbnail" class="img-thumbnail">
+                            </div>
+                            <div th:if="${item.getThumbnailUrl().isEmpty()}">
+                                <img th:src="@{'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}" class="d-block w-100" alt="Image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info col-md-8">
+                        <h5 th:text="${item.itemName}">제목</h5>
+                        <p th:text="${#temporals.format(item.getReviewDate(), 'yyyy.MM.dd') + '에 작성됨'}" class="reviewed-date">작성 날짜</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 </body>

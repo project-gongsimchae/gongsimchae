@@ -1,6 +1,8 @@
 package techit.gongsimchae.web;
 
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -8,13 +10,18 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryCreateDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
-import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.common.wishlist.service.WishListService;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
@@ -26,9 +33,6 @@ import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
-
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/mypage")
@@ -259,5 +263,14 @@ public class MyPageController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 리뷰
+     */
+    @GetMapping("/review")
+    public String review(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
+        model.addAttribute("reviewAbleItems", itemService.getReviewableItems(principalDetails.getAccountDto()));
+        model.addAttribute("reviewedItems", itemService.getReviewedItems(principalDetails.getAccountDto()));
+        return "mypage/reviews";
+    }
 
 }
