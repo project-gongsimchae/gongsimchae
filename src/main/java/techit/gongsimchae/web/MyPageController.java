@@ -259,5 +259,10 @@ public class MyPageController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 참여한 소분 글
+     */
+    
+
 
 }

@@ -18,12 +18,14 @@ import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
 import techit.gongsimchae.domain.portion.chatmessage.service.ChatMessageService;
+import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.global.config.fafka.MessageSenderService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @Slf4j
@@ -48,6 +50,7 @@ public class ChatController {
         model.addAttribute("user", principalDetails.getAccountDto());
 
         model.addAttribute("room", chatRoomService.getChatRoom(roomId));
+
         log.info("rome detail {}", chatRoomService.getChatRoom(roomId));
         return "portion/chatroom";
     }
@@ -103,4 +106,25 @@ public class ChatController {
 
         return chatRoomService.getUserList(roomId);
     }
+
+    // ai 채팅
+    @GetMapping("/chat/ai")
+    public String chatRoom(@AuthenticationPrincipal PrincipalDetails principal, Model model) {
+        String name = principal.getUsername();
+        String roomId = UUID.randomUUID().toString().substring(0, 8) +name;
+        ChatRoomRespDto chatRoomRespDto = new ChatRoomRespDto();
+        chatRoomRespDto.setRoomId(roomId);
+        chatRoomRespDto.setRoomName(name);
+        model.addAttribute("room", chatRoomRespDto);
+        model.addAttribute("user", principal.getAccountDto());
+        return "ai";
+    }
+
+
+    @MessageMapping("/chat/ai/sendMessage")
+    public void AISendMessage(@Payload ChatMessageDto chatMessageDto) {
+        log.debug("chat message: {}", chatMessageDto);
+        senderService.sendToAI(chatMessageDto);
+    }
+
 }

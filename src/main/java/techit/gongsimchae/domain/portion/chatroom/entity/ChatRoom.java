@@ -27,7 +27,7 @@ public class ChatRoom {
     private List<ChatRoomUser> chatRoomUsers = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "subdivision_id")
     private Subdivision subdivision;
 
     public ChatRoom(Subdivision subdivision) {

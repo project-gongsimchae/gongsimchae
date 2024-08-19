@@ -2,6 +2,7 @@ package techit.gongsimchae.global.config.fafka;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
@@ -19,7 +20,7 @@ public class MessageSenderService {
     private final KafkaTemplate<String, ChatMessageDto> kafkaTemplate;
     private final ChatMessageService chatService;
     private final ChatRoomService chatRoomService;
-    /*private final ChatClient chatClient;*/
+    private final ChatClient chatClient;
 
 
     public void send(ChatMessageDto message) {
@@ -62,9 +63,9 @@ public class MessageSenderService {
             if (message.getType().equals(MessageType.TALK)) {
                 chatService.save(message);
                 kafkaTemplate.send(KafkaConstants.KAFKA_AI_TOPIC, message);
-                /*ChatMessageDto aiMessage = AiResponse(message);
+                ChatMessageDto aiMessage = AiResponse(message);
                 log.debug("ai message {}", aiMessage);
-                kafkaTemplate.send(KafkaConstants.KAFKA_AI_TOPIC, aiMessage);*/
+                kafkaTemplate.send(KafkaConstants.KAFKA_AI_TOPIC, aiMessage);
             }
             else if (message.getType().equals(MessageType.ENTER) && !chatRoomService.checkIsUser(message.getRoomId(), message.getSender())) {
                 message.setMessage(message.getSender() +"님 입장!!");
@@ -88,7 +89,7 @@ public class MessageSenderService {
 
     }
 
-    /*private ChatMessageDto AiResponse(ChatMessageDto message) {
+    private ChatMessageDto AiResponse(ChatMessageDto message) {
         String content = chatClient.prompt()
                 .system("쇼핑몰 관련해서 채팅해줘")
                 .user(message.getMessage())
@@ -98,5 +99,5 @@ public class MessageSenderService {
         return new ChatMessageDto(MessageType.TALK, message.getRoomId(),
                 "AI", content, LocalDateTime.now(), null, false);
 
-    }*/
+    }
 }
