@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -147,6 +148,12 @@ public class UserController {
     public String addressDelete(@PathVariable("id") String id) {
         addressService.deleteAddress(id);
         return "redirect:/mypage/address";
+    }
+
+    @PostMapping("/change/default/address/{id}")
+    public ResponseEntity<?> changeDefaultAddress(@PathVariable("id") String id) {
+        addressService.changeDefaultAddress(id);
+        return ResponseEntity.ok().build();
     }
 
 

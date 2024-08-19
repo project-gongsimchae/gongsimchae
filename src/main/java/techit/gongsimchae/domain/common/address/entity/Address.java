@@ -82,4 +82,11 @@ public class Address {
     }
 
 
+    public void unsetDefaultAddress() {
+        this.defaultAddressStatus = DefaultAddressStatus.SECONDARY;
+    }
+
+    public void setDefaultAddress() {
+        this.defaultAddressStatus = DefaultAddressStatus.PRIMARY;
+    }
 }
