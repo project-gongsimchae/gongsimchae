@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
-import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
 import techit.gongsimchae.domain.portion.chatmessage.service.ChatMessageService;

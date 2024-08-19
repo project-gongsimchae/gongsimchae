@@ -4,15 +4,12 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
-import techit.gongsimchae.domain.common.imagefile.entity.QImageFile;
-import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
-import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static techit.gongsimchae.domain.common.imagefile.entity.QImageFile.*;
+import static techit.gongsimchae.domain.common.imagefile.entity.QImageFile.imageFile;
 import static techit.gongsimchae.domain.common.user.entity.QUser.user;
 import static techit.gongsimchae.domain.portion.chatroom.entity.QChatRoom.chatRoom;
 import static techit.gongsimchae.domain.portion.chatroomuser.entity.QChatRoomUser.chatRoomUser;
