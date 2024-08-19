@@ -86,10 +86,11 @@
                             가격: <span class="price-value" th:text="${subdivision.price}"></span>원
                         </h4>
                         <h4 class="write-address" th:text="'희망 장소: ' + ${subdivision.address}"></h4>
+                        <div class="write-interest">
+                            views <span class="interest-value" th:text="${subdivision.views}"></span>
+                        </div>
                     </div>
-                    <div class="write-interest">
-                        views <span class="interest-value" th:text="${subdivision.views}"></span>
-                    </div>
+
                 </a>
             </div>
         </div>
