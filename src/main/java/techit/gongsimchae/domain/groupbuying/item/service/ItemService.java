@@ -2,6 +2,7 @@ package techit.gongsimchae.domain.groupbuying.item.service;
 
 import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,9 +12,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemCardResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
@@ -30,6 +34,7 @@ public class ItemService {
     private final CategoryRepository categoryRepository;
 
     private final ImageS3Service imageS3Service;
+    private final ImageFileRepository imageFileRepository;
 
     public void save(Item item) {
         itemRepository.save(item);
@@ -83,12 +88,24 @@ public class ItemService {
     /**
      * 최신등록 8개 아이템
      * 참여가 많은 8개 아이템을 리스트형태로 반환하는 메서드입니다. **/
-    public List<Item> getRecentItems(){
-        return itemRepository.findTop8ByOrderByCreateDateDesc();
+    public List<ItemCardResDtoWeb> getRecentItems(){
+        List<Item> items = itemRepository.findTop8ByOrderByCreateDateDesc();
+        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
+        for (Item item : items) {
+            ImageFile imageFile = imageFileRepository.findByItem(item);
+            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
+        }
+        return itemCardResDtoWebs;
     }
 
-    public List<Item> getPopularItems(){
-        return itemRepository.findTop8ByOrderByGroupBuyingQuantityDesc();
+    public List<ItemCardResDtoWeb> getPopularItems(){
+        List<Item> items = itemRepository.findTop8ByOrderByGroupBuyingQuantityDesc();
+        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
+        for (Item item : items) {
+            ImageFile imageFile = imageFileRepository.findByItem(item);
+            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
+        }
+        return itemCardResDtoWebs;
     }
 
     public List<Item> getItemsByCategory(Category category) {
@@ -96,8 +113,8 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Item> getItemsPageByCategory(Category category, Integer page, Integer per_page,
-                                                   Integer sorted_type){
+    public List<ItemCardResDtoWeb> getItemsPageByCategory(Category category, Integer page, Integer per_page,
+                                                          Integer sorted_type){
         SortType sortType = getInstanceByTypeNumber(sorted_type);
         Pageable pageable;
         if (sortType.equals(신상품순)){
@@ -113,16 +130,24 @@ public class ItemService {
         } else {
             throw new CustomWebException("존재하지 않는 정렬기준입니다.");
         }
-        return itemRepository.findAllByCategory(category, pageable);
+        Page<Item> items = itemRepository.findAllByCategory(category, pageable);
+        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
+        for (Item item : items) {
+            ImageFile imageFile = imageFileRepository.findByItem(item);
+            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
+        }
+        return itemCardResDtoWebs;
     }
 
     public ItemRespDtoWeb getItem(String id) {
         Item item = itemRepository.findByUID(id).orElseThrow(() -> new CustomWebException("not found item"));
-        return new ItemRespDtoWeb(item);
+        List<ImageFile> imageFiles = imageFileRepository.findAllByItem(item);
+        List<String> imageUrls = imageFiles.stream().map(ImageFile::getStoreFilename).toList();
+        return new ItemRespDtoWeb(item, imageUrls);
     }
 
     @Transactional(readOnly = true)
-    public Page<Item> getTop200NewItemsPage(Integer page, Integer per_page, Integer sorted_type) {
+    public List<ItemCardResDtoWeb> getTop200NewItemsPage(Integer page, Integer per_page, Integer sorted_type) {
         SortType sortType = getInstanceByTypeNumber(sorted_type);
         Pageable pageable = PageRequest.of(page, per_page);
         Page<Item> newItemsPage;
@@ -139,11 +164,16 @@ public class ItemService {
         } else {
             throw new CustomWebException("존재하지 않는 정렬기준입니다.");
         }
-        return newItemsPage;
+        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
+        for (Item item : newItemsPage) {
+            ImageFile imageFile = imageFileRepository.findByItem(item);
+            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
+        }
+        return itemCardResDtoWebs;
     }
 
     @Transactional(readOnly = true)
-    public Page<Item> getTop200BestItemsPage(Integer page, Integer per_page, Integer sorted_type) {
+    public List<ItemCardResDtoWeb> getTop200BestItemsPage(Integer page, Integer per_page, Integer sorted_type) {
         SortType sortType = getInstanceByTypeNumber(sorted_type);
         Pageable pageable = PageRequest.of(page, per_page);
         Page<Item> bestItemsPage;
@@ -160,7 +190,12 @@ public class ItemService {
         } else {
             throw new CustomWebException("존재하지 않는 정렬기준입니다.");
         }
-        return bestItemsPage;
+        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
+        for (Item item : bestItemsPage) {
+            ImageFile imageFile = imageFileRepository.findByItem(item);
+            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
+        }
+        return itemCardResDtoWebs;
     }
 
     public Page<ItemRespDtoWeb> searchItems(ItemSearchForm itemSearchForm, Pageable pageable) {
