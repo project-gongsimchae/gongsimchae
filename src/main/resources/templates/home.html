@@ -31,7 +31,7 @@
             <h2>인기 공동구매 상품</h2>
             <div class="product-list">
                 <div th:each="item : ${popularItems}" class="product-item">
-                    <div class="product-image-placeholder">[상품 이미지]</div>
+                    <img class="product-image-placeholder" th:src="${item.itemBannerImage}" alt="썸네일 이미지" />
                     <button class="add-to-cart" th:data-item-id="${item.id}">
                         <i class="fa fa-shopping-cart"></i> 장바구니에 담기
                     </button>
@@ -66,7 +66,7 @@
             <h2>신규 공동구매 상품</h2>
             <div class="product-list">
                 <div th:each="item : ${recentItems}" class="product-item">
-                    <div class="product-image-placeholder">[상품 이미지]</div>
+                    <img class="product-image-placeholder" th:src="${item.itemBannerImage}" alt="썸네일 이미지" />
                     <button class="add-to-cart" th:data-item-id="${item.id}">
                         <i class="fa fa-shopping-cart"></i> 장바구니에 담기
                     </button>
