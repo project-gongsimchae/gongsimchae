@@ -58,7 +58,7 @@ public class ChatRoomService {
     public void updateUserInChat(String roomId, String nickname) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
         User user = userRepository.findByNickname(nickname).orElseThrow(() -> new RuntimeException("User not found"));
-        Optional<ChatRoomUser> _chatRoomUser = chatRoomUserRepository.findByUserIdAndChatRoomId(user.getId(), chatRoom.getId());
+        Optional<ChatRoomUser> _chatRoomUser = chatRoomUserRepository.findByChatUser(roomId, nickname);
         if(_chatRoomUser.isPresent()) {
             ChatRoomUser chatRoomUser = _chatRoomUser.get();
             chatRoomUserRepository.delete(chatRoomUser);
@@ -92,13 +92,7 @@ public class ChatRoomService {
         return list;
     }
 
-    /**
-     * 채팅방에 해당 유저가 있는지 확인
-     */
-    public boolean checkIsUser(String roomId, String nickname) {
-        boolean present = chatRoomUserRepository.findByChatUser(roomId, nickname).isPresent();
-        log.debug("check user present {}", present);
-        return present;
-    }
+
+
 
 }

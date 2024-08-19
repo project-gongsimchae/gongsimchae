@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
 import techit.gongsimchae.domain.portion.chatmessage.entity.MessageType;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
+import techit.gongsimchae.domain.portion.chatroomuser.service.ChatRoomUserService;
 import techit.gongsimchae.global.config.fafka.KafkaConstants;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class MessageSenderService {
     private final KafkaTemplate<String, ChatMessageDto> kafkaTemplate;
     private final ChatMessageService chatService;
     private final ChatRoomService chatRoomService;
+    private final ChatRoomUserService chatRoomUserService;
     private final ChatClient chatClient;
 
 
@@ -29,19 +31,22 @@ public class MessageSenderService {
 
         // Kafka Template 을 사용하여 메세지를 지정된 토픽으로 전송
         try {
+            if (message.getType().equals(MessageType.ENTER)) {
+                chatRoomUserService.activateUser(message);
+            }
             if (message.getType().equals(MessageType.TALK)) {
                 chatService.save(message);
                 kafkaTemplate.send(KafkaConstants.KAFKA_TOPIC, message);
+                chatRoomUserService.getUserInactiveAndNotNotified(message);
             }
-            else if (message.getType().equals(MessageType.ENTER) && !chatRoomService.checkIsUser(message.getRoomId(), message.getSender())) {
+            else if (message.getType().equals(MessageType.ENTER) && !chatRoomUserService.isUserAlreadyInRoom(message.getRoomId(), message.getSender())) {
                 message.setMessage(message.getSender() +"님 입장!!");
                 chatRoomService.updateUserInChat(message.getRoomId(), message.getSender());
                 chatService.save(message);
                 kafkaTemplate.send(KafkaConstants.KAFKA_TOPIC, message);
-            }
-            else if (message.getType().equals(MessageType.LEAVE)) {
-                message.setMessage(message.getSender() +"님 퇴장!!");
-                chatRoomService.updateUserInChat(message.getRoomId(),message.getSender());
+            } else if (message.getType().equals(MessageType.LEAVE)) {
+                message.setMessage(message.getSender() + "님 퇴장!!");
+                chatRoomService.updateUserInChat(message.getRoomId(), message.getSender());
                 chatService.save(message);
                 kafkaTemplate.send(KafkaConstants.KAFKA_TOPIC, message);
             }
@@ -67,7 +72,7 @@ public class MessageSenderService {
                 log.debug("ai message {}", aiMessage);
                 kafkaTemplate.send(KafkaConstants.KAFKA_AI_TOPIC, aiMessage);
             }
-            else if (message.getType().equals(MessageType.ENTER) && !chatRoomService.checkIsUser(message.getRoomId(), message.getSender())) {
+            else if (message.getType().equals(MessageType.ENTER) && !chatRoomUserService.isUserAlreadyInRoom(message.getRoomId(), message.getSender())) {
                 message.setMessage(message.getSender() +"님 입장!!");
                 chatRoomService.updateUserInChat(message.getRoomId(), message.getSender());
                 chatService.save(message);

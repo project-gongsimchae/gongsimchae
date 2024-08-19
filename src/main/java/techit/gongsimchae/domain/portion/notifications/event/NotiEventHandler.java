@@ -20,4 +20,12 @@ public class NotiEventHandler {
         notificationService.alertAboutInquiry(event.getUser(), event.getContent());
         log.debug("noti to inquiry {}", event);
     }
+
+    @TransactionalEventListener
+    @Async("customTaskExecutor")
+    public void SendChatNotifications(ChatNotiEvent event) throws InterruptedException {
+        Thread.sleep(2000);
+        notificationService.alertAboutChat(event);
+        log.debug("noti to inquiry {}", event);
+    }
 }
