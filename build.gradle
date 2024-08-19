@@ -61,6 +61,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	// batch
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	// websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+	// mongo
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 tasks.named('test') {

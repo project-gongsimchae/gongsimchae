@@ -1,14 +1,14 @@
 package techit.gongsimchae.domain.portion.chatroom.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.portion.chatroomuser.entity.ChatRoomUser;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -18,27 +18,22 @@ public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true, nullable = false)
+    private String roomId;
+    private String roomName;
+    private int maxUserCnt;
 
-    @Column(columnDefinition = "TEXT")
-    private String message;
+    @OneToMany(mappedBy = "chatRoom")
+    private List<ChatRoomUser> chatRoomUsers = new ArrayList<>();
 
-    @Column(updatable = false)
-    @CreatedDate
-    private LocalDateTime createDate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subdivision_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
     private Subdivision subdivision;
 
-    @Builder
-    public ChatRoom(String message, LocalDateTime createDate, User user, Subdivision subdivision) {
-        this.message = message;
-        this.createDate = createDate;
-        this.user = user;
+    public ChatRoom(Subdivision subdivision) {
+        this.roomId = UUID.randomUUID().toString();
+        this.roomName = subdivision.getTitle();
+        this.maxUserCnt = subdivision.getNumOfParticipants();
         this.subdivision = subdivision;
     }
 }
