@@ -34,15 +34,9 @@ public class AddressService {
     @Transactional
     public void addAddress(AddressCreateReqDtoWeb addressCreateReqDtoWeb, PrincipalDetails principalDetails) {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
-        addressCreateReqDtoWeb.setReceiver(user.getName());
-        addressCreateReqDtoWeb.setPhoneNumber(user.getPhoneNumber());
-        Optional<Address> _address = addressRepository.findByUserId(user.getId());
-        Address address = null;
-        if(_address.isPresent()) {
-            address = new Address(addressCreateReqDtoWeb, user);
-        } else{
-            address = new Address(addressCreateReqDtoWeb, user, DefaultAddressStatus.PRIMARY);
-        }
+        addressCreateReqDtoWeb.applySetting(user);
+        unsetAsDefault();
+        Address address = new Address(addressCreateReqDtoWeb, user, DefaultAddressStatus.PRIMARY);
 
         addressRepository.save(address);
     }
@@ -51,11 +45,13 @@ public class AddressService {
         Address address = addressRepository.findByUID(id).orElseThrow(() -> new CustomWebException(ErrorMessage.ADDRESS_NOT_FOUND));
         return new AddressRespDtoWeb(address);
     }
+
     @Transactional
     public void updateAddress(String id, AddressUpdateReqDtoWeb addressUpdateReqDtoWeb) {
         Address address = addressRepository.findByUID(id).orElseThrow(() -> new CustomWebException(ErrorMessage.ADDRESS_NOT_FOUND));
         address.changeInfo(addressUpdateReqDtoWeb);
     }
+
     @Transactional
     public void deleteAddress(String id) {
         Address address = addressRepository.findByUID(id).orElseThrow(() -> new CustomWebException(ErrorMessage.ADDRESS_NOT_FOUND));
@@ -64,12 +60,16 @@ public class AddressService {
 
     @Transactional
     public void changeDefaultAddress(String id) {
+        unsetAsDefault();
+        Address address = addressRepository.findByUID(id).orElseThrow(() -> new CustomWebException(ErrorMessage.ADDRESS_NOT_FOUND));
+        address.setDefaultAddress();
+    }
+
+    private void unsetAsDefault() {
         Optional<Address> defaultAddress = addressRepository.findDefaultAddress();
-        if(defaultAddress.isPresent()) {
+        if (defaultAddress.isPresent()) {
             Address address = defaultAddress.get();
             address.unsetDefaultAddress();
         }
-        Address address = addressRepository.findByUID(id).orElseThrow(() -> new CustomWebException(ErrorMessage.ADDRESS_NOT_FOUND));
-        address.setDefaultAddress();
     }
 }

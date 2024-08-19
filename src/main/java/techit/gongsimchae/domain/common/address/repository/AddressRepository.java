@@ -14,8 +14,6 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
     Optional<Address> findByUID(String id);
 
-    Optional<Address> findByUserId(Long id);
-
     @Query("select a from Address a where a.defaultAddressStatus = 'PRIMARY'")
     Optional<Address> findDefaultAddress();
 }
