@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
             searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
                 if (status === kakao.maps.services.Status.OK) {
-                    let detailAddr = !!result[0].road_address ? result[0].road_address.address_name : result[0].address.address_name;
+                    let detailAddr = result[0].address.address_name;
 
                     marker.setPosition(mouseEvent.latLng);
                     marker.setMap(map);
