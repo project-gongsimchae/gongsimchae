@@ -157,7 +157,9 @@ public class MyPageController {
      * 상품 후기
      */
     @GetMapping("/reviews")
-    public String reviews(Model model) {
+    public String getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
+        model.addAttribute("reviewAbleItems", itemService.getReviewableItems(principalDetails.getAccountDto()));
+        model.addAttribute("reviewedItems", itemService.getReviewedItems(principalDetails.getAccountDto()));
         return "mypage/reviews";
     }
 
@@ -262,15 +264,4 @@ public class MyPageController {
         userService.addCoupon(couponCode, principalDetails);
         return ResponseEntity.ok().build();
     }
-
-    /**
-     * 리뷰
-     */
-    @GetMapping("/review")
-    public String review(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
-        model.addAttribute("reviewAbleItems", itemService.getReviewableItems(principalDetails.getAccountDto()));
-        model.addAttribute("reviewedItems", itemService.getReviewedItems(principalDetails.getAccountDto()));
-        return "mypage/reviews";
-    }
-
 }
