@@ -84,7 +84,7 @@ public class UserController {
             return "user/update";
         }
 
-        if (!userService.checkPassword(principalDetails.getAccountDto().getUID(), updateDto.getPassword())) {
+        if (!userService.checkPassword(principalDetails.getUsername(), updateDto.getPassword())) {
             bindingResult.rejectValue("password", "password.invalid", "비밀번호가 일치하지 않습니다.");
             return "user/update";
         }
