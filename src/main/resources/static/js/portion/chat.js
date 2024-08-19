@@ -95,7 +95,7 @@ function sendLeaveMessage() {
     }
 
     // 페이지 리디렉션
-    window.location.href = '/';
+    window.location.href = '/portioning';
 }
 
 // 서버에서 이전 메시지 불러오기

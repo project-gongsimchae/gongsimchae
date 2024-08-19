@@ -3,6 +3,9 @@ package techit.gongsimchae.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,11 +13,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
+import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
 import techit.gongsimchae.domain.portion.chatmessage.service.ChatMessageService;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
+import techit.gongsimchae.global.config.fafka.MessageSenderService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,6 +32,8 @@ public class ChatController {
 
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
+    private final MessageSenderService senderService;
+    private final UserService userService;
 
 
     // 채팅방 입장 화면
@@ -58,5 +68,39 @@ public class ChatController {
     public boolean chUserCnt(@PathVariable("roomId") String roomId) {
 
         return chatRoomService.checkRoomUserCount(roomId);
+    }
+
+    @MessageMapping("/chat/enterUser")
+    public void enterUser(@Payload ChatMessageDto chat, SimpMessageHeaderAccessor headerAccessor) {
+        String name = chat.getSender();
+        UserRespDtoWeb user = userService.getUserByNickname(name);
+
+
+        log.debug("enter User {}", chat);
+
+
+        // 반환 결과를 socket session 에 userUUID 로 저장
+        headerAccessor.getSessionAttributes().put("userUUID",user.getUID());
+        headerAccessor.getSessionAttributes().put("roomId", chat.getRoomId());
+        headerAccessor.getSessionAttributes().put("username", chat.getSender());
+
+        senderService.send(chat);
+
+    }
+
+    // 해당 유저
+    @MessageMapping("/chat/sendMessage")
+    public void sendMessage(@Payload ChatMessageDto chat) {
+        log.info("CHAT {}", chat);
+        senderService.send(chat);
+
+    }
+
+    // 채팅에 참여한 유저 리스트 반환
+    @GetMapping("/chat/userlist")
+    @ResponseBody
+    public ArrayList<String> userList(String roomId) {
+
+        return chatRoomService.getUserList(roomId);
     }
 }

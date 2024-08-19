@@ -98,6 +98,14 @@ public class UserService {
     }
 
     /**
+     * 로그인 아이디로 유저정보 반환하는 메서드
+     */
+    public UserRespDtoWeb getUserByNickname(String nickname) {
+        User user = userRepository.findByNickname(nickname).orElseThrow(() -> new CustomWebException("not found user"));
+        return new UserRespDtoWeb(user);
+    }
+
+    /**
      * loginId를 통해 유저를 찾고 더티체킹으로
      * nickname, email, phoneNumber, password 변경하는 메서드
      */

@@ -78,12 +78,6 @@ public class SubdivisionController {
         return "portion/subdivisionDetail";
     }
 
-    @GetMapping("/{UID}/join")
-    public String subdivisionJoinChatRoom(@PathVariable("UID") String UID) {
-
-        return "portion/chattingRoom";
-    }
-
     @GetMapping("/{UID}/update")
     public String subdivisionUpdateForm(@PathVariable("UID") String UID, Model model,
                                         @AuthenticationPrincipal PrincipalDetails principalDetails) {
