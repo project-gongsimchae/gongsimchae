@@ -9,11 +9,11 @@
 </head>
 <body>
 <section class="product-detail-section">
-    <div class="product-detail-image">
-        <img src="" alt="상품 사진">
+    <div class="product-detail-image" th:each="itemImage : ${item.getImageUrls()}">
+        <img th:src="${itemImage}" alt="no image"/>
     </div>
     <div class="product-detail-info">
-        <h3 class="product-detail-title" th:text="${item.name}">에어프라이어 용 미니 돈까스</h3>
+        <h3 class="product-detail-title" th:text="${item.name}"></h3>
 
         <div class="btn-detail-container">
             <select class="form-select" id="product-options" aria-label="상품 선택">
