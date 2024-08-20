@@ -236,7 +236,7 @@ public class ItemService {
                     .orElse(null);
 
             if (matchingReview != null) {
-                reviewedItemResDtoWebs.add(new ReviewedItemResDtoWeb(item, imageFile.getStoreFilename()));
+                reviewedItemResDtoWebs.add(new ReviewedItemResDtoWeb(item, imageFile.getStoreFilename(), matchingReview.getCreateDate()));
             } else {
                 reviewAbleItemResDtoWebs.add(new ReviewAbleItemResDtoWeb(item, imageFile.getStoreFilename()));
             }

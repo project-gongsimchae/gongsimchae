@@ -33,6 +33,7 @@ import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
+import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.service.ReviewsService;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
@@ -160,6 +161,13 @@ public class MyPageController {
     /**
      * 상품 후기
      */
+
+    /**
+     *
+     * @param principalDetails - 사용자 정보
+     * @param model - "reviewAbleItems" : 작성가능한 아이템 / "reviewedItems" : 작성한 아이템
+     * @return
+     */
     @GetMapping("/reviews")
     public String getReviewPage(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
         ReviewItemResDtoWeb reviewItemResDtoWeb = itemService.getReviewItems(principalDetails.getAccountDto());
@@ -168,16 +176,42 @@ public class MyPageController {
         return "mypage/reviews";
     }
 
-    @GetMapping("/reviews/write")
-    public String reviewForm() {
-        return "mypage/reviewForm";
+    /**
+     * 리뷰 생성
+     * @param principalDetails - 사용자 정보
+     * @param reviewReqDtoWeb - "reviewReqDtoWeb" : 작성 리뷰 데이터
+     * @return
+     */
+    @PostMapping("/reviews/write/{uid}")
+    public String createReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
+                                @PathVariable String uid) {
+        reviewsService.createReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
+        return "redirect:/mypage/reviews";
     }
 
-    @PostMapping("/reviews/write")
-    public String createReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb) {
+    /**
+     * 리뷰 조회
+     * @param uid - 가져올 리뷰 아이템의 uid
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("reviews/{uid}")
+    public ReviewsResDtoWeb getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                       @PathVariable String uid) {
+        return reviewsService.getReviews(principalDetails.getAccountDto(), uid);
+    }
 
-        reviewsService.createReview(principalDetails.getAccountDto(), reviewReqDtoWeb);
+    /**
+     * 리뷰 수정
+     * @param uid - 수정할 리뷰 아이템의 uid
+     * @return 마이페이지 - 상품 후기 탭
+     */
+    @PostMapping("reviews/update/{uid}")
+    public String updateReviews (@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
+                                           @PathVariable String uid) {
+        reviewsService.updateReviews(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
         return "redirect:/mypage/reviews";
     }
 

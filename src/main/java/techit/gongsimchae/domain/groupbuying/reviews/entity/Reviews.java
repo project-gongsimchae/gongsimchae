@@ -43,4 +43,11 @@ public class Reviews extends BaseEntity {
         this.user = user;
         this.item = item;
     }
+
+    public void update(ReviewsReqDtoWeb reviewsReqDtoWeb) {
+        this.title = reviewsReqDtoWeb.getTitle();
+        this.starPoint = reviewsReqDtoWeb.getStarPoint();
+        this.content = reviewsReqDtoWeb.getContent();
+        this.secretStatus = reviewsReqDtoWeb.getSecretStatus() ? SecretStatus.SECRET : SecretStatus.NORMAL;
+    }
 }

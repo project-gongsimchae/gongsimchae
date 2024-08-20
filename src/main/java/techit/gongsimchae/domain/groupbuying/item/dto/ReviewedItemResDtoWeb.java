@@ -12,12 +12,10 @@ public class ReviewedItemResDtoWeb {
     private String thumbnailUrl;
     private String UID;
 
-    public ReviewedItemResDtoWeb(Item item, String thumbnailUrl){
+    public ReviewedItemResDtoWeb(Item item, String thumbnailUrl, LocalDateTime createDate){
         this.itemName = item.getName();
-        this.reviewAbleDate = LocalDateTime.now();
+        this.reviewAbleDate = createDate;
         this.thumbnailUrl = thumbnailUrl;
         this.UID = item.getUID();
     }
-
-
 }
