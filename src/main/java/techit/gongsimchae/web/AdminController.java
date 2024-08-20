@@ -11,8 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techit.gongsimchae.domain.common.address.dto.AddressCreateReqDtoWeb;
-import techit.gongsimchae.domain.common.address.dto.AddressRespDtoWeb;
-import techit.gongsimchae.domain.common.address.dto.AddressUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.address.service.AddressService;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryAdminReplyReqDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
@@ -60,6 +58,7 @@ public class AdminController {
     public String userUpdateForm(@PathVariable("id") Long id, Model model) {
         UserRespDtoWeb user = userService.getUser(id);
         user.setAddress(addressService.getDefaultAddress(id));
+
         model.addAttribute("user", user);
         return "admin/users/userUpdate";
     }

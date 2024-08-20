@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import techit.gongsimchae.domain.common.imagefile.dto.ImageFileRespDto;
-import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
-import techit.gongsimchae.domain.common.imagefile.entity.S3VO;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;

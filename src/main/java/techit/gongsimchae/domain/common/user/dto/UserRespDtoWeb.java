@@ -65,9 +65,12 @@ public class UserRespDtoWeb {
      */
 
     public void setAddress(AddressRespDtoWeb address) {
-        this.address = address.getAddress();
-        this.detailAddress = address.getDetailAddress();
-        this.zipcode = address.getZipcode();
-        this.additionalAddress = address.getAdditionalAddress();
+        if (address != null) {
+            this.address = address.getAddress();
+            this.detailAddress = address.getDetailAddress();
+            this.zipcode = address.getZipcode();
+            this.additionalAddress = address.getAdditionalAddress();
+        }
+
     }
 }

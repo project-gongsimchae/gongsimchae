@@ -14,7 +14,6 @@ import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
-import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.common.wishlist.service.WishListService;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
