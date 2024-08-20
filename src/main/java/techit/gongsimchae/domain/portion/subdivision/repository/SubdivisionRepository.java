@@ -24,4 +24,5 @@ public interface SubdivisionRepository extends JpaRepository<Subdivision, Long> 
             "   LOWER(s.address) LIKE LOWER(CONCAT('%', REPLACE(:address, ' ', '%'), '%'))) " +
             "AND (:content IS NULL OR LOWER(s.content) LIKE LOWER(CONCAT('%', :content, '%')) OR LOWER(s.title) LIKE LOWER(CONCAT('%', :content, '%')))")
     List<Subdivision> searchSubdivisions(@Param("address") String address, @Param("content") String content);
+
 }

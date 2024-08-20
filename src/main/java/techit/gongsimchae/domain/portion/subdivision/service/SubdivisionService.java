@@ -17,6 +17,7 @@ import techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -129,9 +130,23 @@ public class SubdivisionService {
 
     @Transactional(readOnly = true)
     public List<SubdivisionRespDto> searchSubdivisions(String address, String content) {
-        List<Subdivision> subdivisions = subdivisionRepository.searchSubdivisions(address, content);
-        return subdivisions.stream()
+        // 콤마(,)로 구분된 주소를 여러 개로 나누기
+        String[] addresses = address != null ? address.split(",") : new String[]{};
+
+        List<Subdivision> results = new ArrayList<>();
+
+        for (String addr : addresses) {
+            // 각 주소에 대해 쿼리 실행
+            List<Subdivision> partialResults = subdivisionRepository.searchSubdivisions(addr.trim(), content);
+            results.addAll(partialResults);
+        }
+
+        // 중복된 결과를 제거 (필요시)
+        results = results.stream().distinct().collect(Collectors.toList());
+
+        return results.stream()
                 .map(SubdivisionRespDto::new)
                 .collect(Collectors.toList());
     }
+
 }

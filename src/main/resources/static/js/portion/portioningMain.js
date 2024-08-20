@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 document.getElementById('searchBtn').addEventListener('click', function() {
-    const address = tags.filter(tag => tag.trim() !== '').join(' ');
+    const address = tags.filter(tag => tag.trim() !== '').join(',');
     const content = document.querySelector('.content-wrapper input').value;
 
     $.get(`${contextPath}portioning/search?address=${encodeURIComponent(address)}&content=${encodeURIComponent(content)}`, function(data) {
