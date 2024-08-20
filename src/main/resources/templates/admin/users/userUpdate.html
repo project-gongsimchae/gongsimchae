@@ -73,8 +73,8 @@
 
             <div class="form-group">
                 <label for="type">회원가입 종류</label>
-                <select id="type" class="form-control" th:field="*{role}">
-                    <option value="">==유저 권한==</option>
+                <select id="type" class="form-control" th:field="*{joinType}">
+                    <option value="">==회원가입 종류==</option>
                     <option th:each="type : ${T(techit.gongsimchae.domain.common.user.entity.JoinType).values()}"
                             th:value="${type.name()}"
                             th:text="${type.description}"></option>

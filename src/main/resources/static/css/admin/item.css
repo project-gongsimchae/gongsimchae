@@ -44,6 +44,7 @@ table td {
     border-radius: 5px;
     color: white;
     text-decoration: none;
+    width: 60px;
 }
 
 .btn-edit {

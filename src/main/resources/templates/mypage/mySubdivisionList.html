@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html th:replace="~{layout/mypage :: mypage(~{::section}, 'write')}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>내가 쓴 글</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>내가 쓴 글</title>
 </head>
 <body>
 <section class="picklist-section">
-  <link th:href="@{/css/portion/subdivisionWishlist.css}" rel="stylesheet">
 
   <div class="container">
     <h3 class="section-title">내가 쓴 글</h3>
@@ -41,7 +40,6 @@
     </div>
   </div>
 
-  <script th:src="@{/js/portion/subdivisionWishlist.js}"></script>
 </section>
 </body>
 </html>

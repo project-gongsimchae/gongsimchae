@@ -1,21 +1,14 @@
-/* 공통 스타일 */
-body {
-    font-family: 'Noto Sans KR', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f8f8;
-}
-
 .admin-container {
-    display: flex;
-    margin: 20px 0;
-    margin-left: 40px;
+    display: flex !important;
+    margin: 20px 0;;
+    align-items: center;
+    max-width: 1800px;
 }
 
 /* 사이드바 스타일 */
 .sidebar {
     width: 220px;
-    margin-right: 40px;
+    margin: 20px 0 0 120px;
 }
 
 .user-info {
@@ -200,7 +193,8 @@ body {
 }
 
 .admin-section-container {
-    margin-right: 40px
+    margin-right: 40px;
+    justify-items: center;
 }
 
 .form-style {

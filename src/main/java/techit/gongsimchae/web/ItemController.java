@@ -1,5 +1,6 @@
 package techit.gongsimchae.web;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemCardResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
@@ -112,7 +114,8 @@ public class ItemController {
                                            @RequestParam Integer per_page,
                                            @RequestParam Integer sorted_type, Model model){
         Category category = categoryService.getCategoryById(category_id);
-        Page<Item> itemsPage = itemService.getItemsPageByCategory(category, page - 1, per_page, sorted_type);
+        List<ItemCardResDtoWeb> itemsPage = itemService.getItemsPageByCategory(category, page - 1,
+                per_page, sorted_type);
         model.addAttribute("categoryId", category_id);
         model.addAttribute("categoryName", category.getName());
         model.addAttribute("itemsPage", itemsPage);
@@ -128,7 +131,7 @@ public class ItemController {
     public String getNewItems(@RequestParam(defaultValue = "1") Integer page,
                               @RequestParam(defaultValue = "96") Integer per_page,
                               @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
-        Page<Item> newItemsPage = itemService.getTop200NewItemsPage(page - 1, per_page, sorted_type);
+        List<ItemCardResDtoWeb> newItemsPage = itemService.getTop200NewItemsPage(page - 1, per_page, sorted_type);
         model.addAttribute("newItemsPage", newItemsPage);
         return "category/newItem";
     }
@@ -143,7 +146,7 @@ public class ItemController {
     public String getBestItems(@RequestParam(defaultValue = "1") Integer page,
                               @RequestParam(defaultValue = "96") Integer per_page,
                               @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
-        Page<Item> bestItemsPage = itemService.getTop200BestItemsPage(page - 1, per_page, sorted_type);
+        List<ItemCardResDtoWeb> bestItemsPage = itemService.getTop200BestItemsPage(page - 1, per_page, sorted_type);
         model.addAttribute("bestItemsPage", bestItemsPage);
         return "category/bestItem";
     }
