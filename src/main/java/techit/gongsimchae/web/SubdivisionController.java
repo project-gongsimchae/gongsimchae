@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
+import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
@@ -27,6 +29,7 @@ public class SubdivisionController {
     private final SubdivisionService subdivisionService;
     private final WishListService wishListService;
     private final UserService userService;
+    private final ChatRoomService chatRoomService;
 
     @GetMapping("/write")
     public String subdivisionRegisterForm(Model model) {
@@ -52,6 +55,10 @@ public class SubdivisionController {
 
         SubdivisionRespDto subdivisionRespDto = subdivisionService.findSubdivisionByUID(UID);
 
+        // post에 있는 chatRoom 가져오기
+        ChatRoomRespDto chatRoom = chatRoomService.getChatRoom(subdivisionRespDto.getId());
+        model.addAttribute("room", chatRoom);
+
         model.addAttribute("subdivisionRespDto", subdivisionRespDto);
 
         boolean isLoggedIn = userDetails != null;
@@ -69,12 +76,6 @@ public class SubdivisionController {
         }
 
         return "portion/subdivisionDetail";
-    }
-
-    @GetMapping("/{UID}/join")
-    public String subdivisionJoinChatRoom(@PathVariable("UID") String UID) {
-
-        return "portion/chattingRoom";
     }
 
     @GetMapping("/{UID}/update")

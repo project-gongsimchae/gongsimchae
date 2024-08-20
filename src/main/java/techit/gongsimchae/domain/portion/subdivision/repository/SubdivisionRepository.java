@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SubdivisionRepository extends JpaRepository<Subdivision, Long> {
+public interface SubdivisionRepository extends JpaRepository<Subdivision, Long>, SubdivisionCustomRepository {
 
     Optional<Subdivision> findByUID(String UID);
 

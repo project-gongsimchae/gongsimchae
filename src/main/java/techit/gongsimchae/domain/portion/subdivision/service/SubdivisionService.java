@@ -8,13 +8,16 @@ import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.domain.portion.participants.service.ParticipantService;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
+import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 
 import java.util.List;
@@ -32,6 +35,7 @@ public class SubdivisionService {
     private final UserRepository userRepository;
     private final ImageS3Service imageS3Service;
     private final ImageFileRepository imageFileRepository;
+    private final ChatRoomService chatRoomService;
 
     @Transactional(readOnly = true)
     public List<SubdivisionRespDto> getAllSubdivisions(){
@@ -93,7 +97,10 @@ public class SubdivisionService {
                 .user(user)
                 .build();
 
-        subdivisionRepository.save(subdivision);
+        Subdivision savedSubdivision = subdivisionRepository.save(subdivision);
+
+        // chatroom 생성
+        chatRoomService.create(savedSubdivision);
 
         imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", subdivision);
 
@@ -125,5 +132,13 @@ public class SubdivisionService {
         Subdivision subdivision = subdivisionRepository.findByUID(UID).orElseThrow(() -> new CustomWebException("Subdivision not found"));
 
         subdivision.deleteSubdivision();
+    }
+
+    /**
+     * 마이페이지에서 참여중인 소분글 찾는 메서드
+     */
+    @Transactional(readOnly = true)
+    public List<SubdivisionChatRoomRespDto> getUserSubdivisions(PrincipalDetails principalDetails) {
+        return subdivisionRepository.findUserSubdivisions(principalDetails.getAccountDto().getId());
     }
 }
