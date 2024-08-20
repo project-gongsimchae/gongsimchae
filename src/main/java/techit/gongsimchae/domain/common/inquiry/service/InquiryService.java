@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import techit.gongsimchae.domain.common.imagefile.entity.S3VO;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryAdminReplyReqDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryCreateDtoWeb;
@@ -43,8 +44,8 @@ public class InquiryService {
         if (dtoWeb.getInquiryType() == null) {
             dtoWeb.setInquiryType(InquiryType.ETC);
         }
-        Inquiry inquiry = new Inquiry(dtoWeb, user);
-        inquiryRepository.save(inquiry);
+        Inquiry savedInquiry = inquiryRepository.save(new Inquiry(dtoWeb, user));
+        imageS3Service.storeFiles(dtoWeb.getImageFiles(), S3VO.INQUIRY_IMAGE_UPLOAD_DIRECTORY, savedInquiry);
     }
 
     public List<InquiryRespDtoWeb> getInquiry(PrincipalDetails principalDetails) {

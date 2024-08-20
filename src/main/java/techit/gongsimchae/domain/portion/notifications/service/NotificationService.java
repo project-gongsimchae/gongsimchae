@@ -66,7 +66,7 @@ public class NotificationService {
     public void alertAboutChat(ChatNotiEvent chatNotiEvent) {
         Notifications notifications = Notifications.builder()
                 .user(chatNotiEvent.getUser()).isRead(0).url("/chat/room?roomId=" + chatNotiEvent.getUrl())
-                .notificationType(NotificationType.CHAT).content("채팅방에 새로운 메시지가 왔습니다.").build();
+                .notificationType(NotificationType.CHAT).content("["+chatNotiEvent.getContent()+"]" + " 새로운 메시지가 왔습니다.").build();
 
         notificationRepository.save(notifications);
     }

@@ -33,22 +33,6 @@ public class Address {
     @JoinColumn(name = "user_id")
     private User user;
 
-
-    /**
-     * 저장한 주소가 이미 있으면 Second 배송지
-     */
-    public Address(AddressCreateReqDtoWeb addressCreateReqDtoWeb, User user) {
-        this.zipcode = addressCreateReqDtoWeb.getZipcode();
-        this.address = addressCreateReqDtoWeb.getAddress();
-        this.detailAddress = addressCreateReqDtoWeb.getDetailAddress();
-        this.phoneNumber = addressCreateReqDtoWeb.getPhoneNumber();
-        this.UID = UUID.randomUUID().toString().substring(0, 8);
-        this.receiver = addressCreateReqDtoWeb.getReceiver();
-        this.additionalAddress = addressCreateReqDtoWeb.getAdditionalAddress();
-        this.defaultAddressStatus = DefaultAddressStatus.SECONDARY;
-        if(user != null) addUser(user);
-    }
-
     /**
      * 앞서 저장한 주소가 없으면 이게 기본 배송지
      */

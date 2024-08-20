@@ -3,10 +3,13 @@ package techit.gongsimchae.domain.common.inquiry.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.inquiry.entity.Inquiry;
 import techit.gongsimchae.domain.common.inquiry.entity.InquiryType;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +25,8 @@ public class InquiryRespDtoWeb {
     private LocalDateTime updateDate;
     private String UID;
     private String answer;
+
+    private List<ImageFile> imageFiles = new ArrayList<>();
 
 
     // 문의를 작성한 사용자 정보

@@ -132,14 +132,14 @@ public class ChatController {
         senderService.sendToAI(chatMessageDto);
     }
 
-    // 유저 퇴장 시에는 EventListener 을 통해서 유저 퇴장을 확인
+
     @EventListener
     public void webSocketDisconnectListener(SessionDisconnectEvent event) {
         log.info("DisConnEvent {}", event);
 
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        // stomp 세션에 있던 uuid 와 roomId 를 확인해서 채팅방 유저 리스트와 room 에서 해당 유저를 삭제
+
         String userUUID = (String) headerAccessor.getSessionAttributes().get("userUUID");
         String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
         String nickname = (String) headerAccessor.getSessionAttributes().get("nickname");

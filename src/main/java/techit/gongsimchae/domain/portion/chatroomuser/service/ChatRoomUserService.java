@@ -29,7 +29,7 @@ public class ChatRoomUserService {
     public void getUserInactiveAndNotNotified(ChatMessageDto chatMessageDto) {
         List<ChatRoomUser> chatRoomUsers = chatRoomUserRepository.findAllByInactiveAndNotNotified(chatMessageDto.getRoomId());
         for (ChatRoomUser chatRoomUser : chatRoomUsers) {
-            publisher.publishEvent(new ChatNotiEvent(chatRoomUser.getUser(), chatMessageDto.getRoomId()) );
+            publisher.publishEvent(new ChatNotiEvent(chatRoomUser.getUser(), chatRoomUser.getChatRoom().getRoomName(),chatMessageDto.getRoomId()) );
             chatRoomUser.sendNotification();
         }
     }
@@ -55,6 +55,9 @@ public class ChatRoomUserService {
         return present;
     }
 
+    /**
+     * 방에 들어오면 다시 활성화
+     */
     @Transactional
     public void activateUser(ChatMessageDto message) {
         Optional<ChatRoomUser> _chatRoomUser = chatRoomUserRepository.findByChatUser(message.getRoomId(), message.getSender());
