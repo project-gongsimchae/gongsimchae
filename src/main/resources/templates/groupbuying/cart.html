@@ -78,7 +78,9 @@
                 <span>결제예정금액</span>
                 <span id="total-payment-price" th:text="${#numbers.formatDecimal(cartSummary.totalPaymentPrice ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</span>
             </div>
+            <form  th:action="@{/order}" method="GET">
             <button class="order-button">주문하기</button>
+            </form>
         </div>
     </div>
 </div>

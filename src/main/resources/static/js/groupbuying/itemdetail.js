@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const updateDetails = () => {
         const selectedOption = optionSelect.options[optionSelect.selectedIndex];
         const optionValue = selectedOption.value;
-        const optionPrice = selectedOption ? parseInt(selectedOption.getAttribute('data-price')) : 0;
+        const originalPrice  = selectedOption ? parseInt(selectedOption.getAttribute('data-price')) : 0;
+        const discountPrice = selectedOption ? parseInt(selectedOption.getAttribute('data-discount-price')) : 0;
+        const discountRate = selectedOption ? parseInt(selectedOption.getAttribute('data-discount-rate')) : 0;
         const optionText = selectedOption ? selectedOption.text : '없음';
 
         if (optionValue) {
@@ -16,15 +18,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 optionDetail.id = `option-${optionValue}`;
                 optionDetail.className = 'option-detail';
                 optionDetail.innerHTML = `
-                    <span>${optionText}:</span>
-                    <div class="quantity-controls">
-                        <button type="button" class="quantity-decrease">-</button>
-                        <span class="quantity-value">1</span>
-                        <button type="button" class="quantity-increase">+</button>
-                        <span class="option-price" data-price="${optionPrice}">${optionPrice.toLocaleString()}원</span>
+                <div class="option">
+                    <div class="option-info">
+                        <span class="option-name">${optionText}</span>
+                        <div class="quantity-controls">
+                            <button type="button" class="quantity-decrease">-</button>
+                            <span class="quantity-value">1</span>
+                            <button type="button" class="quantity-increase">+</button>
+                        </div>
                     </div>
-                    <button type="button" class="remove-option-btn" aria-label="옵션 삭제">x</button>
-                `;
+                    <div class="price-display">
+                        <span class="original-price">${originalPrice.toLocaleString()}원</span>
+                        <div class="discount-info">
+                            <span class="discount-rate">${discountRate}%</span>
+                            <span class="discount-price">${discountPrice.toLocaleString()}원</span>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="remove-option-btn" aria-label="옵션 삭제">x</button>
+            `;
                 selectedOptionsEl.appendChild(optionDetail);
                 updateTotalPrice();
             }
@@ -33,14 +45,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const updateTotalPrice = () => {
         const optionDetails = document.querySelectorAll('.option-detail');
-        let total = 0;
+        let totalOriginal = 0;
+        let totalDiscount = 0;
         optionDetails.forEach(detail => {
             const quantity = parseInt(detail.querySelector('.quantity-value').textContent);
-            const pricePerUnit = parseInt(detail.querySelector('.option-price').getAttribute('data-price'));
-            const optionTotal = pricePerUnit * quantity;
-            total += optionTotal;
+            const discountPrice = parseInt(detail.querySelector('.discount-price').textContent.replace(/[^0-9]/g, ''));
+            totalDiscount += discountPrice * quantity;
         });
-        totalPriceEl.textContent = `총 가격: ${total.toLocaleString()}원`;
+        totalPriceEl.innerHTML = `
+            <span class="total-discount-price">${totalDiscount.toLocaleString()}원</span>
+        `;
     };
 
     const changeQuantity = (event) => {
