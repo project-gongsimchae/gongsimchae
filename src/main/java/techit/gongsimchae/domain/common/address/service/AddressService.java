@@ -41,9 +41,24 @@ public class AddressService {
         addressRepository.save(address);
     }
 
+    @Transactional
+    public void addAddress(AddressCreateReqDtoWeb addressCreateReqDtoWeb, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
+        addressCreateReqDtoWeb.applySetting(user);
+        unsetAsDefault();
+        Address address = new Address(addressCreateReqDtoWeb, user, DefaultAddressStatus.PRIMARY);
+
+        addressRepository.save(address);
+    }
+
     public AddressRespDtoWeb getAddress(String id) {
         Address address = addressRepository.findByUID(id).orElseThrow(() -> new CustomWebException(ErrorMessage.ADDRESS_NOT_FOUND));
         return new AddressRespDtoWeb(address);
+    }
+
+    public AddressRespDtoWeb getDefaultAddress(Long userId) {
+        Optional<Address> _address = addressRepository.findDefaultAddressByUser(userId);
+        return _address.map(AddressRespDtoWeb::new).orElse(null);
     }
 
     @Transactional

@@ -21,4 +21,11 @@ public class AddressCreateReqDtoWeb {
         this.receiver = user.getName();
         this.phoneNumber = user.getPhoneNumber();
     }
+
+    public AddressCreateReqDtoWeb(String zipcode, String address, String detailAddress, String additionalAddress) {
+        this.zipcode = zipcode;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.additionalAddress = additionalAddress;
+    }
 }
