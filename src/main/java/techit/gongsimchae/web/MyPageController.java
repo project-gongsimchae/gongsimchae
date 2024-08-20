@@ -255,7 +255,7 @@ public class MyPageController {
             log.debug("Invalid coupon code: {}", couponCode);
             return ResponseEntity.badRequest().body("유효하지 않는 쿠폰 코드입니다.");
         }
-        userService.addCoupon(couponCode, principalDetails);
+        couponService.addCoupon(couponCode, principalDetails);
         return ResponseEntity.ok().build();
     }
 

@@ -160,17 +160,11 @@ function displayMessage(chat) {
     if (chat.s3DataUrl != null) {
         var imgElement = document.createElement('img');
         imgElement.setAttribute("src", chat.s3DataUrl);
-        imgElement.setAttribute("width", "300");
-        imgElement.setAttribute("height", "300");
+        imgElement.setAttribute("width", "250");
+        imgElement.setAttribute("height", "250");
 
-        var downBtnElement = document.createElement('button');
-        downBtnElement.setAttribute("class", "btn fa fa-download");
-        downBtnElement.setAttribute("id", "downBtn");
-        downBtnElement.setAttribute("name", chat.fileName);
-        downBtnElement.setAttribute("onclick", `downloadFile('${chat.fileName}', '${chat.fileDir}')`);
 
         contentElement.appendChild(imgElement);
-        contentElement.appendChild(downBtnElement);
     } else {
         var messageText = document.createTextNode(chat.message);
         contentElement.appendChild(messageText);
@@ -192,6 +186,50 @@ function displayMessage(chat) {
 
     messageArea.appendChild(messageElement);
     messageArea.scrollTop = messageArea.scrollHeight;
+}
+
+/// 파일 업로드 부분 ////
+function uploadFile(){
+    var file = $("#file")[0].files[0];
+    var formData = new FormData();
+    formData.append("file",file);
+    formData.append("roomId", roomId);
+
+    console.log(file)
+
+    // ajax 로 multipart/form-data 를 넘겨줄 때는
+    //         processData: false,
+    //         contentType: false
+    // 처럼 설정해주어야 한다.
+
+    // 동작 순서
+    // post 로 rest 요청한다.
+    // 1. 먼저 upload 로 파일 업로드를 요청한다.
+    // 2. upload 가 성공적으로 완료되면 data 에 upload 객체를 받고,
+    // 이를 이용해 chatMessage 를 작성한다.
+    $.ajax({
+        type : 'POST',
+        url : '/chat/s3/upload',
+        data : formData,
+        processData: false,
+        contentType: false
+    }).done(function (data){
+        console.log("업로드 성공")
+
+        var chatMessage = {
+            "roomId": roomId,
+            sender: username,
+            message: username+"님의 파일 업로드",
+            type: 'TALK',
+            s3DataUrl : data.storeFilename, // Dataurl
+            "fileName": data.originalFilename, // 원본 파일 이름
+        };
+
+        // 해당 내용을 발신한다.
+        stompClient.send("/pub/chat/sendMessage", {}, JSON.stringify(chatMessage));
+    }).fail(function (error){
+        alert(error);
+    })
 }
 
 // createDate를 HH:mm 형식으로 변환하는 함수

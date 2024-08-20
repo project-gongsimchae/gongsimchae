@@ -23,7 +23,8 @@ public class ChatMessage {
     private String sender;
     private String message;
     private LocalDateTime createDate;
-    private String imageUrl;
+    private String s3DataUrl;
+    private String fileName;
     private Boolean isRead;
 
     public ChatMessage(ChatMessageDto messagedDto) {
@@ -32,6 +33,7 @@ public class ChatMessage {
         this.sender = messagedDto.getSender();
         this.message = messagedDto.getMessage();
         this.createDate = messagedDto.getCreateDate();
-        this.imageUrl = messagedDto.getImageUrl();
+        this.s3DataUrl = messagedDto.getS3DataUrl();
+        this.fileName = messagedDto.getFileName();
     }
 }

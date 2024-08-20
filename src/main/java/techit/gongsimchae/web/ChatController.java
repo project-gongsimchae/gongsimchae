@@ -11,19 +11,19 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import techit.gongsimchae.domain.common.imagefile.dto.ImageFileRespDto;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.entity.S3VO;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
 import techit.gongsimchae.domain.portion.chatmessage.service.ChatMessageService;
+import techit.gongsimchae.domain.portion.chatmessage.service.MessageSenderService;
 import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
-import techit.gongsimchae.domain.portion.chatmessage.service.MessageSenderService;
-import techit.gongsimchae.domain.portion.chatroomuser.entity.ChatRoomUser;
 import techit.gongsimchae.domain.portion.chatroomuser.service.ChatRoomUserService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
@@ -99,7 +99,7 @@ public class ChatController {
     // 해당 유저
     @MessageMapping("/chat/sendMessage")
     public void sendMessage(@Payload ChatMessageDto chat) {
-        log.info("CHAT {}", chat);
+        log.info("send message chat {}", chat);
         senderService.send(chat);
 
     }
@@ -130,6 +130,14 @@ public class ChatController {
     public void AISendMessage(@Payload ChatMessageDto chatMessageDto) {
         log.debug("chat message: {}", chatMessageDto);
         senderService.sendToAI(chatMessageDto);
+    }
+
+    @PostMapping("/chat/s3/upload")
+    @ResponseBody
+    public ImageFileRespDto uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("roomId") String roomId) {
+        ImageFileRespDto imageFileRespDto = chatRoomService.uploadPhotoToChat(roomId, file);
+        log.debug("imageFileRespDto {}", imageFileRespDto);
+        return imageFileRespDto;
     }
 
 
