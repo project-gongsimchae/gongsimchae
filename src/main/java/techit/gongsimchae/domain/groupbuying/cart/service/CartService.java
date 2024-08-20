@@ -5,12 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.groupbuying.cart.dto.CartAddRequest;
 import techit.gongsimchae.domain.groupbuying.cart.dto.CartItemDto;
 import techit.gongsimchae.domain.groupbuying.cart.dto.CartPriceInfoDto;
 import techit.gongsimchae.domain.groupbuying.cart.entity.Cart;
 import techit.gongsimchae.domain.groupbuying.cart.repository.CartRepository;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
-import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
+import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
+import techit.gongsimchae.domain.groupbuying.itemoption.repository.ItemOptionRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
 
 import java.util.List;
@@ -21,49 +23,48 @@ import java.util.stream.Collectors;
 public class CartService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
-    private final ItemRepository itemRepository;
-
+    private final ItemOptionRepository itemOptionRepository;
     @Transactional
-    public void addToCart(Long userId, Long itemId, int count) {
+    public void addToCart(Long userId, List<CartAddRequest.CartItemRequest> cartItems) {
 
         // 유저 아이디로 유저를 찾는다
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomWebException("유효하지 않은 회원입니다."));
 
-        // 아이템 아이디로 아이디를 찾는다
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new CustomWebException("유효하지 않은 상품입니다."));
+        for (CartAddRequest.CartItemRequest item : cartItems){
+            ItemOption itemOption = itemOptionRepository.findById(item.getItemOptionId())
+                    .orElseThrow(() -> new CustomWebException("유효하지 않은 상품 옵션입니다."));
 
-        // 카트에 넣은 아이템인지 확인을한다
-        Cart duplicateCart = cartRepository.findByUserIdAndItemId(userId, itemId)
-                .orElse(null);
+            Cart duplicateCart = cartRepository.findByUserIdAndItemOptionId(userId,itemOption.getId())
+                    .orElse(null);
 
-        if (duplicateCart != null) {
-            duplicateCart.addCount(count);
-        } else {
-            Cart cart = new Cart(count, item, user);
-            cartRepository.save(cart);
+            if (duplicateCart != null) {
+                duplicateCart.addCount(item.getQuantity());
+            } else {
+                Cart cart = new Cart(item.getQuantity(), itemOption, user);
+                cartRepository.save(cart);
+            }
         }
     }
 
     @Transactional
-    public void removeFromCart(Long userId, Long itemId) {
-        cartRepository.deleteCartByUserIdAndItemId(userId, itemId);
+    public void removeFromCart(Long userId, Long itemOptionId) {
+        cartRepository.deleteCartByUserIdAndItemOptionId(userId, itemOptionId);
     }
 
     @Transactional
-    public void removeMultipleItems(Long userId, List<Long> itemId) {
-        cartRepository.deleteAllByUserIdAndItemIdIn(userId, itemId);
+    public void removeMultipleItems(Long userId, List<Long> itemOptionId) {
+        cartRepository.deleteAllByUserIdAndItemOptionIdIn(userId, itemOptionId);
     }
 
     @Transactional
-    public CartItemDto updateCartItemQuantity(Long userId, Long itemId, int quantity) {
-        Cart cart = cartRepository.findByUserIdAndItemId(userId, itemId)
-                .orElseThrow(() -> new CustomWebException("장바구니에 해당 상품이 없습니다."));
+    public CartItemDto updateCartItemQuantity(Long userId, Long itemOptionId, int quantity) {
+        Cart cart = cartRepository.findByUserIdAndItemOptionId(userId, itemOptionId)
+                .orElseThrow(() -> new CustomWebException("장바구니에 해당 상품이 없습니다. itemOptionId: " + itemOptionId + ", UserId: " + userId + "quantity: " + quantity));
 
         cart.updateCount(quantity);
-        cartRepository.save(cart);
-        return convertToCartItemDto(cart);
+        Cart updateCart = cartRepository.save(cart);
+        return convertToCartItemDto(updateCart);
     }
 
     @Transactional(readOnly = true)
@@ -75,19 +76,26 @@ public class CartService {
     }
 
     private CartItemDto convertToCartItemDto(Cart cart) {
-        Item item = cart.getItem();
-        int originalPrice = item.getOriginalPrice() * cart.getCount();
-        int discountPrice = (int) (originalPrice * (item.getDiscountRate() / 100.0));
-        int totalPrice = originalPrice - discountPrice;
+        ItemOption itemOption = cart.getItemOption();
+        Item item = itemOption.getItem();
+
+        int originalPrice = item.getOriginalPrice();
+        int optionPrice = itemOption.getPrice();
+        int totalPrice = (originalPrice + optionPrice) * cart.getCount();
+        int discountAmount = (int) (totalPrice * (item.getDiscountRate() / 100.0));
+        int discountedPrice = totalPrice - discountAmount;
 
         return CartItemDto.builder()
                 .cartId(cart.getId())
                 .itemId(item.getId())
                 .itemName(item.getName())
-                .originalPrice(originalPrice)
+                .itemOptionId(itemOption.getId())
+                .content(itemOption.getContent())
+                .originalPrice(originalPrice + optionPrice)
                 .discountRate(item.getDiscountRate())
                 .groupBuyingQuantity(item.getGroupBuyingQuantity())
-                .discountPrice(discountPrice)
+                .discountPrice(discountedPrice)
+                .options(itemOption.getOptions())
                 .quantity(cart.getCount())
                 .totalPrice(totalPrice)
                 .groupBuyingLimitTime(item.getGroupBuyingLimitTime())
@@ -101,8 +109,10 @@ public class CartService {
         int totalDiscountAmount = 0;
 
         for (Cart cart : cartItems) {
-            Item item = cart.getItem();
-            int originalPrice = item.getOriginalPrice() * cart.getCount();
+            Item item = cart.getItemOption().getItem();
+            ItemOption itemOption = cart.getItemOption();
+
+            int originalPrice = (item.getOriginalPrice() + itemOption.getPrice()) * cart.getCount();
             int discountAmount = (int) (originalPrice * (item.getDiscountRate() / 100.0));
 
             totalOriginalPrice += originalPrice;
@@ -117,6 +127,4 @@ public class CartService {
                 .totalPaymentPrice(totalFinalPrice)
                 .build();
     }
-
-
 }

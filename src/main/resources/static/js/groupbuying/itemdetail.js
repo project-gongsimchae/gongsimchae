@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const optionSelect = document.getElementById('product-options');
     const totalPriceEl = document.getElementById('total-price');
     const selectedOptionsEl = document.getElementById('selected-options');
+    const addToCartForm = document.getElementById('addToCartForm');
+
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
     const updateDetails = () => {
         const selectedOption = optionSelect.options[optionSelect.selectedIndex];
@@ -88,4 +92,47 @@ document.addEventListener('DOMContentLoaded', function() {
     optionSelect.addEventListener('change', updateDetails);
     document.addEventListener('click', changeQuantity);
     document.addEventListener('click', removeOption);
+
+    const addToCart = (event) => {
+        event.preventDefault();
+
+        const selectedOptions = document.querySelectorAll('.option-detail');
+        if (selectedOptions.length === 0) {
+            alert('최소 하나의 옵션을 선택해주세요.');
+            return;
+        }
+
+        const cartItems = Array.from(selectedOptions).map(option => {
+            const optionId = option.id.replace('option-', '');
+            const quantity = parseInt(option.querySelector('.quantity-value').textContent);
+            return { itemOptionId: optionId, quantity: quantity };
+        });
+
+        fetch(addToCartForm.action, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify({ cartItems: cartItems })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('장바구니에 상품이 추가되었습니다.');
+                    // 필요하다면 여기에 장바구니 페이지로 리다이렉트 로직 추가
+                } else {
+                    alert('장바구니 추가에 실패했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('장바구니 추가 중 오류가 발생했습니다.');
+            });
+    };
+
+    optionSelect.addEventListener('change', updateDetails);
+    document.addEventListener('click', changeQuantity);
+    document.addEventListener('click', removeOption);
+    addToCartForm.addEventListener('submit', addToCart);
 });
