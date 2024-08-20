@@ -96,7 +96,7 @@ public class MessageSenderService {
 
     private ChatMessageDto AiResponse(ChatMessageDto message) {
         String content = chatClient.prompt()
-                .system("쇼핑몰 관련해서 채팅해줘")
+                .system(AITrainingScript.INFORMATION)
                 .user(message.getMessage())
                 .call()
                 .content();

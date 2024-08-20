@@ -106,6 +106,7 @@ input {
 
 .input-group {
     width: 80.5%;
+    margin: 0 auto;
 }
 
 .chat-container {
