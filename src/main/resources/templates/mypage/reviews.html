@@ -22,7 +22,7 @@
         <!-- 작성 가능 후기 섹션 -->
         <div id="reviewable-section" class="review-section active">
             <div id="review-container" class="container mt-2">
-                <div th:each="item : ${reviewAbleItems}" class="reviewable-item row mb-4">
+                <div th:each="item : ${reviewAbleItems}" class="review-item row mb-4">
                     <div class="col-md-2">
                         <div class="image-container">
                             <div th:if="${!item.getThumbnailUrl().isEmpty()}">
@@ -35,7 +35,7 @@
                     </div>
                     <div class="info col-md-10">
                         <h5 th:text="${item.itemName}">제목</h5>
-                        <p th:text="${#temporals.format(item.getReviewAbleDate(), 'yyyy.MM.dd') + '까지 작성 가능'}" class="reviewable-date">작성 기한</p>
+                        <p th:text="${#temporals.format(item.getReviewAbleDate(), 'yyyy.MM.dd') + '까지 작성 가능'}" class="review-date">작성 기한</p>
                     </div>
                     <div class="col-md-3">
                         <button type="button" class="btn btn-success openModalButton" th:data-uid="${item.UID}">리뷰작성</button>
@@ -101,7 +101,7 @@
         <!-- 작성한 후기 섹션 -->
         <div id="reviewed-section" class="review-section">
             <div id="review-container" class="container mt-2">
-                <div th:each="item : ${reviewedItems}" class="reviewed-item row mb-4">
+                <div th:each="item : ${reviewedItems}" class="review-item row mb-4">
                     <div class="col-md-2">
                         <div class="image-container">
                             <div th:if="${!item.getThumbnailUrl().isEmpty()}">
@@ -112,9 +112,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="info col-md-8">
+                    <div class="info col-md-10">
                         <h5 th:text="${item.itemName}">제목</h5>
-                        <p th:text="${#temporals.format(item.getReviewAbleDate(), 'yyyy.MM.dd') + '에 작성됨'}" class="reviewed-date">작성 날짜</p>
+                        <p th:text="${#temporals.format(item.getReviewAbleDate(), 'yyyy.MM.dd') + '에 작성됨'}" class="review-date">작성 날짜</p>
                     </div>
                 </div>
             </div>

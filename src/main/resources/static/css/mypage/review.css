@@ -1,5 +1,5 @@
 /* 아이템 css */
-.reviewable-item {
+.review-item {
     display: flex;
     align-items: center;
     border: 1px solid #ddd;
@@ -9,25 +9,25 @@
     background-color: #fff;
 }
 
-.reviewable-item img {
+.review-item img {
     width: 100px;
     height: 100px;
     object-fit: cover;
     border-radius: 4px;
 }
 
-.reviewable-item .info {
+.review-item .info {
     flex: 1;
     margin-left: 15px;
     position: relative;
 }
 
-.reviewable-item .info h5 {
+.review-item .info h5 {
     margin: 0;
     font-size: 1.25rem;
 }
 
-.reviewable-item .info .reviewable-date {
+.review-item .info .review-date {
     font-size: 0.75rem;
 }
 
