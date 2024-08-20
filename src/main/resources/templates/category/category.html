@@ -15,7 +15,7 @@
     <h1 class="category-alert" th:text="${categoryName}"></h1>
     <div class="item-grid-view-main">
         <div class="header">
-            <div class="category-alert-cnt" th:text="'총 ' + ${itemsPage.numberOfElements} + '건'"></div>
+            <div class="category-alert-cnt" th:text="'총 ' + ${itemsPage.size()} + '건'"></div>
             <ul class="category-sort-standard-ul">
                 <li class="category-sort-standard-li"><a th:href="@{/category/{category_id}(category_id=${categoryId}, page=1, per_page=96, sorted_type=1)}" class="category-sort-standard-alink">신상품순<p class="perpendicular-divider">|</p></a></li>
                 <li class="category-sort-standard-li"><a th:href="@{/category/{category_id}(category_id=${categoryId}, page=1, per_page=96, sorted_type=2)}"  class="category-sort-standard-alink">판매량순<p class="perpendicular-divider">|</p></a></li>
@@ -30,7 +30,7 @@
 <section class="product-section">
     <div class="product-list">
         <div th:each="item : ${itemsPage}" class="product-item">
-            <div class="product-image-placeholder">[상품 이미지]</div>
+            <img class="product-image-placeholder" th:src="${item.itemBannerImage}" alt="썸네일 이미지" />
             <button class="add-to-cart" th:data-item-id="${item.id}">
                 <i class="fa fa-shopping-cart"></i> 장바구니에 담기
             </button>

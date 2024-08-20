@@ -5,10 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
-import org.springframework.transaction.annotation.Transactional;
-import techit.gongsimchae.domain.common.user.entity.User;
-import techit.gongsimchae.domain.common.user.repository.UserRepository;
-
 import techit.gongsimchae.domain.common.wishlist.dto.SubdivisionWishListRespDto;
 import techit.gongsimchae.domain.common.wishlist.entity.WishList;
 import techit.gongsimchae.domain.common.wishlist.repository.WishListRepository;
@@ -19,7 +15,6 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
-import techit.gongsimchae.global.exception.CustomWebException;
 
 
 import java.util.List;

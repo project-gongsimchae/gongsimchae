@@ -1,36 +1,35 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head th:replace="~{layout/fragments :: header}"></head>
+<html th:replace="~{admin/admin :: admin(~{::section})}">
 <body>
-<div th:replace="~{layout/fragments :: product_navbar}"></div>
+<section class="container picklist-section admin-section-container">
+        <div class="custom-inquiry-header">
+            <div class="custom-inquiry-title" th:text="'제목: '+ ${inquiry.title}"></div>
+        </div>
+        <div class="custom-inquiry-info">
+            <div th:text="'작성자: ' + ${inquiry.nickname}"></div>
+            <div th:text="'작성일: ' + ${#temporals.format(inquiry.createDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
+            <div th:text="'이메일: ' + ${inquiry.email}"></div>
+        </div>
+        <div class="custom-inquiry-content">
+            <h5>문의 내용</h5>
+            <p th:text="${inquiry.content}"></p>
+        </div>
+        <div class="custom-inquiry-actions">
+            <form th:action method="post" th:object="${inquiry}">
+                <div class="custom-form-group">
+                    <input type="hidden" th:field="*{title}">
+                    <label for="answer" class="custom-form-label">답변 작성</label>
+                    <textarea id="answer" name="answer" class="custom-form-control" rows="8" cols="10" required th:field="*{answer}"></textarea>
+                </div>
+                <button type="submit" class="custom-btn custom-btn-primary">답변 제출</button>
+                <a class="custom-btn custom-btn-secondary" th:href="@{/admin/inquires}">목록으로 돌아가기</a>
+            </form>
+        </div>
 
-<div class="custom-admin-inquiry-reply">
-    <div class="custom-inquiry-header">
-        <div class="custom-inquiry-title" th:text="'제목: '+ ${inquiry.title}"></div>
-    </div>
-    <div class="custom-inquiry-info">
-        <div th:text="'작성자: ' + ${inquiry.nickname}"></div>
-        <div th:text="'작성일: ' + ${#temporals.format(inquiry.createDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
-        <div th:text="'이메일: ' + ${inquiry.email}"></div>
-    </div>
-    <div class="custom-inquiry-content">
-        <h5>문의 내용</h5>
-        <p th:text="${inquiry.content}"></p>
-    </div>
-    <div class="custom-inquiry-actions">
-        <form th:action method="post" th:object="${inquiry}">
-            <div class="custom-form-group">
-                <input type="hidden" th:field="*{title}">
-                <label for="answer" class="custom-form-label">답변 작성</label>
-                <textarea id="answer" name="answer" class="custom-form-control" rows="8" cols="10" required th:field="*{answer}"></textarea>
-            </div>
-            <button type="submit" class="custom-btn custom-btn-primary">답변 제출</button>
-            <a class="custom-btn custom-btn-secondary" th:href="@{/admin/inquires}">목록으로 돌아가기</a>
-        </form>
-    </div>
-</div>
 
-<!-- Bootstrap JS and dependencies -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</section>
+
+
+
 </body>
 </html>

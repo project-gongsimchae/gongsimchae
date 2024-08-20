@@ -13,6 +13,8 @@ public interface ImageFileRepository extends JpaRepository<ImageFile, Long> {
 
     List<ImageFile> findALlByEventId(Long eventId);
 
+    List<ImageFile> findAllByItemIn(List<Item> recentItems);
+
     ImageFile findByItem(Item item);
 
     List<ImageFile> findAllByItem(Item item);
