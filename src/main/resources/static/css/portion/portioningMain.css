@@ -305,6 +305,7 @@ ul {
     border: 1px solid #ccc;
     border-radius: 8px;
     transition: background-color 0.3s ease;
+    position: relative;
 }
 
 .write-subdivision:hover {
@@ -331,6 +332,11 @@ ul {
     font-size: 16px;
     margin-bottom: 10px;
     font-weight: bold;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .write-price {
@@ -355,9 +361,13 @@ ul {
 }
 
 .write-interest {
-    text-align: right;
+    position: absolute; /* 절대 위치로 설정 */
+    bottom: 6px; /* 박스 아래쪽에서 10px */
+    right: 10px; /* 박스 오른쪽에서 10px */
     font-size: 13px;
-    padding: 10px;
+    padding: 5px;
+    text-align: right;
+    /*box-sizing: border-box; !* 패딩과 테두리가 전체 너비에 포함되도록 설정 *!*/
 }
 
 .interest-value {
