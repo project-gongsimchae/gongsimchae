@@ -8,35 +8,120 @@
     <title>리뷰</title>
 </head>
 <body>
-
 <section class="picklist-section">
+    <link rel="stylesheet" href="" th:href="@{/css/mypage/review.css}">
     <div class="container">
         <h3 class="section-title">상품 후기</h3>
-        <div class="row gy-4">
-            <!-- 상품 후기 리스트 -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div th:if="${reviews != null && reviews.size() > 0}">
-                        <div th:each="review : ${reviews}" class="card mb-3">
-                            <div class="card-body">
-                                <img src="" alt="주문한 상품 사진">
-                                <h5 class="card-title" th:text="${review.productName}">상품명</h5>
-                                <h6 class="card-subtitle mb-2 text-muted" th:text="${review.reviewDate}">작성일자</h6>
-                                <p class="card-text" th:text="${review.content}">리뷰 내용</p>
-                                <div>
-                                    <span class="badge bg-success" th:text="'평점: ' + ${review.rating}">평점</span>
-                                </div>
+
+        <!-- 탭 버튼 -->
+        <div class="tabs">
+            <div class="tab active" data-target="reviewable-section">작성 가능 리뷰</div>
+            <div class="tab" data-target="reviewed-section">작성한 리뷰</div>
+        </div>
+
+        <!-- 작성 가능 후기 섹션 -->
+        <div id="reviewable-section" class="review-section active">
+            <div id="review-container" class="container mt-2">
+                <div th:each="item : ${reviewAbleItems}" class="review-item row mb-4">
+                    <div class="col-md-2">
+                        <div class="image-container">
+                            <div th:if="${!item.getThumbnailUrl().isEmpty()}">
+                                <img src="" th:src="${item.getThumbnailUrl()}" alt="thumbnail" class="img-thumbnail">
+                            </div>
+                            <div th:if="${item.getThumbnailUrl().isEmpty()}">
+                                <img th:src="@{'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}" class="d-block w-100" alt="Image">
                             </div>
                         </div>
+                    </div>
+                    <div class="info col-md-10">
+                        <h5 th:text="${item.itemName}">제목</h5>
+                        <p th:text="${#temporals.format(item.getReviewAbleDate(), 'yyyy.MM.dd') + '까지 작성 가능'}" class="review-date">작성 기한</p>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-success openModalButton" th:data-uid="${item.UID}">리뷰작성</button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 작성한 후기 섹션 -->
+        <div id="reviewed-section" class="review-section">
+            <div id="review-container" class="container mt-2">
+                <div th:each="item : ${reviewedItems}" class="review-item row mb-4">
+                    <div class="col-md-2">
+                        <div class="image-container">
+                            <div th:if="${!item.getThumbnailUrl().isEmpty()}">
+                                <img src="" th:src="${item.getThumbnailUrl()}" alt="thumbnail" class="img-thumbnail">
+                            </div>
+                            <div th:if="${item.getThumbnailUrl().isEmpty()}">
+                                <img th:src="@{'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}" class="d-block w-100" alt="Image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info col-md-10">
+                        <h5 th:text="${item.itemName}">제목</h5>
+                        <p th:text="${#temporals.format(item.getReviewAbleDate(), 'yyyy.MM.dd') + '에 작성'}" class="review-date">작성 날짜</p>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-success openUpdateModalButton" th:data-uid="${item.UID}">리뷰수정</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 모달 배경 -->
+        <div class="modal-overlay" id="modalOverlay"></div>
+
+        <!-- 리뷰 작성 모달 -->
+        <div class="review-modal-body" id="reviewModal">
+            <div class="container">
+                <form id="reviewForm" method="post" enctype="multipart/form-data">
+                    <!-- 사진 업로드 -->
+                    <div class="form-group">
+                        <div class="form-group-image">
+                            <label for="imageFile" class="custom-file-upload">
+                                <i class="fa fa-camera"></i> +
+                            </label>
+                            <input type="file" id="imageFile" name="images" accept="image/*" multiple>
+                        </div>
+                        <div id="imagePreview" class="image-preview"></div>
+                    </div>
+                    <!-- 제목 작성 -->
+                    <div class="form-group" style="display: block">
+                        <label for="title">제목</label>
+                        <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+                    </div>
+                    <!-- 평점 -->
+                    <div class="form-group" style="display: block">
+                        <label for="starPoint" class="form-label">평점</label>
+                        <select class="form-select" id="starPoint" name="starPoint" required>
+                            <option value="5">★★★★★ (5점)</option>
+                            <option value="4">★★★★☆ (4점)</option>
+                            <option value="3">★★★☆☆ (3점)</option>
+                            <option value="2">★★☆☆☆ (2점)</option>
+                            <option value="1">★☆☆☆☆ (1점)</option>
+                        </select>
+                    </div>
+                    <!-- 내용 작성 -->
+                    <div class="form-group" style="display: block">
+                        <label for="content">내용</label>
+                        <textarea id="content" name="content" placeholder="내용을 입력하세요" required></textarea>
+                    </div>
+                    <!-- 비공개 여부 -->
+                    <div class="form-group">
+                        <label for="secretStatus">비공개</label>
+                        <input type="checkbox" id="secretStatus" name="secretStatus" value="true">
+                    </div>
+                    <!-- 제출 버튼 -->
+                    <div class="form-group form-group-submit text-right">
+                        <button type="button" id="submitReviewButton">작성하기</button>
+                        <button type="button" id="closeModalButton" style="background-color: grey; margin-left: 10px;">닫기</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <!-- 리뷰가 없을 경우 표시 -->
-    <div th:if="${reviews == null || reviews.size() == 0}">
-        <p>작성한 상품 후기가 없습니다.</p>
-    </div>
+    <script th:src="@{/js/groupbuying/review.js}"></script>
 </section>
 </body>
 </html>

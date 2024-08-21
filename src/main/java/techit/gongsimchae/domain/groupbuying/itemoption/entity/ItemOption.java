@@ -1,12 +1,10 @@
 package techit.gongsimchae.domain.groupbuying.itemoption.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
+import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 
 @Entity
 @Getter
@@ -20,4 +18,8 @@ public class ItemOption extends BaseEntity {
     private String options;
     private String content;
     private Integer price;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private Item item;
 }

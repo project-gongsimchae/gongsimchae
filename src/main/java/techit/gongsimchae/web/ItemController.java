@@ -18,7 +18,11 @@ import techit.gongsimchae.domain.groupbuying.item.dto.ItemCardResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
+import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionDto;
+import techit.gongsimchae.domain.groupbuying.itemoption.service.ItemOptionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -27,6 +31,7 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 public class ItemController {
     private final ItemService itemService;
     private final CategoryService categoryService;
+    private final ItemOptionService itemOptionService;
 
     /**
      * 검색
@@ -90,8 +95,8 @@ public class ItemController {
      */
 
     @GetMapping("/product/{id}")
-    public String itemDetails(@PathVariable("id") String id, Model model) {
-        ItemRespDtoWeb item = itemService.getItem(id);
+    public String itemDetails(@PathVariable("id") Long id, Model model) {
+        List<ItemOptionDto> item = itemOptionService.getItemOptionById(id);
         model.addAttribute("item",item);
         return "groupbuying/itemDetails";
     }

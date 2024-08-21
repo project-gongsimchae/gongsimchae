@@ -38,10 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Cart item not found');
             return;
         }
-        const itemId = cartItem.dataset.itemId;
+        const itemOptionId = cartItem.dataset.itemOptionId; // 변경된 부분
         const quantity = container.querySelector('input').value;
 
-        fetch(`/product/cart/update/${itemId}`, {
+        fetch(`/product/cart/update/${itemOptionId}`, { // 변경된 부분
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 장바구니 요약 정보 업데이트
     function updateCartSummary() {
         const checkedItems = document.querySelectorAll('.cart-item input[type="checkbox"]:checked');
-        const itemIds = Array.from(checkedItems).map(checkbox => checkbox.closest('.cart-item').dataset.itemId);
+        const itemOptionIds = Array.from(checkedItems).map(checkbox => checkbox.closest('.cart-item').dataset.itemOptionId); // 변경된 부분
 
         fetch('/product/cart/summary', {
             method: 'POST',
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json',
                 [csrfHeader]: csrfToken
             },
-            body: JSON.stringify({ itemIds: itemIds })
+            body: JSON.stringify({ itemOptionIds: itemOptionIds }) // 변경된 부분
         })
             .then(response => {
                 if (!response.ok) {
@@ -130,9 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-
-
-
     // 체크박스 변경 이벤트에 대한 리스너 추가
     document.querySelectorAll('.cart-item input[type="checkbox"]').forEach(checkbox => {
         checkbox.addEventListener('change', updateCartSummary);
@@ -145,6 +142,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 초기 장바구니 요약 정보 업데이트
     updateCartSummary();
-
-
 });

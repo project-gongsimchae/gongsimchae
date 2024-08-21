@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.reviews.entity.Reviews;
 
 @Repository
 public interface ImageFileRepository extends JpaRepository<ImageFile, Long> {
@@ -18,4 +19,6 @@ public interface ImageFileRepository extends JpaRepository<ImageFile, Long> {
     ImageFile findByItem(Item item);
 
     List<ImageFile> findAllByItem(Item item);
+
+    ImageFile findByReviews(Reviews reviews);
 }
