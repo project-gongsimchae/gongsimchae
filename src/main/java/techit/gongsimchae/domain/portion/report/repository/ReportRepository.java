@@ -1,4 +1,7 @@
 package techit.gongsimchae.domain.portion.report.repository;
 
-public class ReportRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import techit.gongsimchae.domain.portion.report.entity.Report;
+
+public interface ReportRepository extends JpaRepository<Report, Long> {
 }
