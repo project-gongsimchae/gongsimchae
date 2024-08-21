@@ -1,0 +1,38 @@
+<html th:replace="~{admin/admin :: admin(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>유저</title>
+</head>
+<body>
+<section class="container picklist-section admin-section-container">
+
+    <div class="row user-container form-container">
+        <div class="col-12">
+            <h1 class="mb-4 section-title">신고글 관리</h1>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>제목</th>
+                    <th>닉네임</th>
+                    <th>신고건수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="report : ${reports}">
+                    <th th:text="${reportStat.index + 1}"></th>
+                    <td><a href="" th:href="@{|/admin/reports/${report.subdivisionId}|}" th:text="${report.title}"></a></td>
+                    <td th:text="${report.nickname}"></td>
+                    <td th:text="${report.reportCount}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

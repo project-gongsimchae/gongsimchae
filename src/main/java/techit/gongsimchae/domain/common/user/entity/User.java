@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
-import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
@@ -44,10 +43,6 @@ public class User extends BaseEntity {
     private String UID;
     @Enumerated(EnumType.STRING)
     private JoinType joinType;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_file_id")
-    private ImageFile imageFile;
 
     /**
      * 생성자

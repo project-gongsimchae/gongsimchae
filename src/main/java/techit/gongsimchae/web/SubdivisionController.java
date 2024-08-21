@@ -121,27 +121,27 @@ public class SubdivisionController {
 
     }
 
-/*    *//**
+    /**
      * 게시글 신고하기
-     *//*
+     **/
     @GetMapping("/report/write")
     public String reportSubdivisionForm(@RequestParam("uid") String uid, Model model, @ModelAttribute("report")ReportCreateReqDtoWeb reportCreateReqDtoWeb) {
         model.addAttribute("uid", uid);
         return "portion/report";
-
-    }*/
+    }
 
     @PostMapping("/report/write")
-    @ResponseBody
-    public ResponseEntity<?> reportSubdivision(@Valid @RequestBody ReportCreateReqDtoWeb reportCreateReqDtoWeb,
-                                    BindingResult bindingResult, @AuthenticationPrincipal PrincipalDetails principalDetails
+    public String reportSubdivision(@Valid @ModelAttribute("report") ReportCreateReqDtoWeb reportCreateReqDtoWeb,
+                                    BindingResult bindingResult, @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                    RedirectAttributes rttr
                                     ) {
         log.debug("report subdivision request: {}", reportCreateReqDtoWeb);
         if(bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(reportCreateReqDtoWeb);
+            return "portion/report";
         }
         reportService.createReport(reportCreateReqDtoWeb, principalDetails);
+        rttr.addAttribute("uid", reportCreateReqDtoWeb.getUid());
 
-        return ResponseEntity.ok().build();
+        return "redirect:/portioning/{uid}";
     }
 }

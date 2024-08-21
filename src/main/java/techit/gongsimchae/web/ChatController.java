@@ -115,14 +115,14 @@ public class ChatController {
 
     // ai 채팅
     @GetMapping("/chat/ai")
-    public String chatRoom(@AuthenticationPrincipal PrincipalDetails principal, Model model) {
-        String name = principal.getUsername();
+    public String chatRoom(Model model) {
+        String name = "유저";
         String roomId = UUID.randomUUID().toString().substring(0, 8) + name;
         ChatRoomRespDto chatRoomRespDto = new ChatRoomRespDto();
         chatRoomRespDto.setRoomId(roomId);
         chatRoomRespDto.setRoomName(name);
         model.addAttribute("room", chatRoomRespDto);
-        model.addAttribute("user", principal.getAccountDto());
+        model.addAttribute("user", name);
         return "ai";
     }
 

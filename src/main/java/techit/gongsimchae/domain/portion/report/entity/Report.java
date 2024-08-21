@@ -13,9 +13,11 @@ import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "report")
 public class Report extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "report_id")
     private Long id;
 
     private String title;

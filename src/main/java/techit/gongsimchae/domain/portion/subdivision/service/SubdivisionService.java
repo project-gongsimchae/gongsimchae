@@ -1,6 +1,8 @@
 package techit.gongsimchae.domain.portion.subdivision.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
@@ -10,10 +12,8 @@ import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.domain.portion.participants.service.ParticipantService;
-import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
-import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
-import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
-import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
+import techit.gongsimchae.domain.portion.report.repository.ReportRepository;
+import techit.gongsimchae.domain.portion.subdivision.dto.*;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
@@ -38,6 +38,7 @@ public class SubdivisionService {
     private final ImageS3Service imageS3Service;
     private final ImageFileRepository imageFileRepository;
     private final ChatRoomService chatRoomService;
+    private final ReportRepository reportRepository;
 
     @Transactional(readOnly = true)
     public List<SubdivisionRespDto> getAllSubdivisions(){
@@ -173,4 +174,9 @@ public class SubdivisionService {
         subdivision.changeType(status);
 
     }
+    @Transactional(readOnly = true)
+    public Page<SubdivisionReportRespDto> getMostReported() {
+        return subdivisionRepository.findMostFrequentReports(PageRequest.of(0, 10));
+    }
+
 }

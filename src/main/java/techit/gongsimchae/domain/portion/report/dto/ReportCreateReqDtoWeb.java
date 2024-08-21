@@ -12,7 +12,7 @@ public class ReportCreateReqDtoWeb {
     @NotEmpty
     private String title;
     private String content;
-    private String post;
+    private String uid;
 
     private ReportType reportType;
 }
