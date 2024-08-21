@@ -87,4 +87,10 @@ public class Subdivision extends BaseEntity {
     public void deleteSubdivision() {
         this.deleteStatus = true;
     }
+
+
+    public void changeType(String status) {
+        this.subdivisionType = SubdivisionType.valueOf(status);
+
+    }
 }

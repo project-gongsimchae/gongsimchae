@@ -19,7 +19,7 @@
           <div th:each="imageFile, iterStat : ${subdivisionRespDto.imageFileList}"
                th:classappend="${iterStat.index == 0} ? 'active' : ''"
                class="carousel-item">
-            <img th:src="@{${imageFile.storeFilename}}" class="d-block w-100" alt="Image">
+            <img th:src="@{${imageFile.storeFilename}}" class="d-block w-100" alt="Image" style="width: 1000px; height: 600px">
           </div>
         </div>
         <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
@@ -54,7 +54,30 @@
 
     <div class="content">
       <div class="content-header">
+
         <h1 class="title" th:text="${subdivisionRespDto.title}"></h1>
+
+
+        <!-- Ellipsis icon -->
+        <div class="custom-unique">
+          <i class="fa-solid fa-ellipsis-vertical" id="dropdownToggle"></i>
+
+          <!-- Dropdown menu -->
+          <div class="dropdown-content" id="dropdownMenu">
+            <div class="custom-report-button">
+            <button  th:onclick="|location.herf=@{/}|">신고하기</button>
+            </div>
+            <div th:if="${#authentication.principal.username} == ${subdivisionRespDto.user.loginId}" th:each="type : ${T(techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType).values()}">
+              <form th:if="${subdivisionRespDto.subdivisionType != type}"
+                    th:action="@{/portioning/{UID}/status(UID=${subdivisionRespDto.UID}, type=${type})}" method="post">
+
+                <!-- 상태 변경 버튼 -->
+                <input type="hidden" name="status" th:value="${type.name()}" />
+                <button type="submit" th:text="${type.description}"></button>
+              </form>
+            </div>
+          </div>
+        </div>
         <button sec:authorize="isAnonymous()"
                 id="wishlistButtonAnonymous"
                 onclick="alert('로그인 후 이용해 주세요.');">
@@ -70,8 +93,14 @@
       </div>
       <p class="date" th:text="${subdivisionRespDto.updateDate != null ? #temporals.format(subdivisionRespDto.updateDate, 'yyyy-MM-dd') : #temporals.format(subdivisionRespDto.createDate, 'yyyy-MM-dd')}"></p>
       <p class="content-text" th:text="${subdivisionRespDto.content}"></p>
-      <div class="price-box">
-        <label>모집 인원 수</label>
+      <div class="price-box" style="position: relative">
+        <div class="custom-type" th:classappend="${subdivisionRespDto.subdivisionType.name().toLowerCase()}">
+          <i class="fa-solid fa-circle-exclamation" ></i>
+          <span
+                th:text="'['+ ${subdivisionRespDto.subdivisionType.description} +']'"></span>
+        </div>
+
+        <div>모집 인원 수</div>
         <p th:text="${subdivisionRespDto.numOfParticipants} + '명'"></p>
 
         <label>가격</label>
@@ -93,12 +122,12 @@
         <span>[[${room.maxUserCnt}]]</span>
       </div>
       <div sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username} == ${subdivisionRespDto.user.loginId}">
-        <a th:href="@{'/chat/room?roomId=' + ${room.roomId}}" class="btn btn-success">입장하기</a>
+        <a class="btn btn-success" id="EnterRoom" th:data-room-id="${room.roomId}">입장하기</a>
         <button id="editButton" class="btn btn-success">수정</button>
         <button id="deleteButton" class="btn btn-danger">삭제</button>
       </div>
       <div sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username} != ${subdivisionRespDto.user.loginId}">
-        <a th:href="@{'/chat/room?roomId=' + ${room.roomId}}" class="btn btn-success">입장하기</a>
+        <a class="btn btn-success" id="EnterRoom" th:data-room-id="${room.roomId}">입장하기</a>
       </div>
     </div>
   </div>
@@ -135,6 +164,55 @@
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4a7673bf164245754c968e7459217a90"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script th:src="@{/js/portion/subdivisionDetail.js}"></script>
+  <script>
+    document.getElementById('dropdownToggle').addEventListener('click', function() {
+      var menu = document.getElementById('dropdownMenu');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+    window.addEventListener('click', function(event) {
+      if (!event.target.matches('#dropdownToggle')) {
+        var dropdowns = document.getElementsByClassName('dropdown-content');
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.style.display === 'block') {
+            openDropdown.style.display = 'none';
+          }
+        }
+      }
+    });
+
+    const joinButton = document.getElementById('EnterRoom');
+
+    joinButton.addEventListener('click', (event) => {
+      event.preventDefault(); // 기본 링크 동작 막기
+
+      const roomId = event.target.getAttribute('data-room-id');
+      console.log('Room ID:', roomId); // 디버깅을 위해 추가
+
+      if (!roomId) {
+        console.error('Room ID is null or undefined');
+        alert('방 정보를 찾을 수 없습니다.');
+        return;
+      }
+
+      fetch(`/chat/chkUserCnt/${roomId}`, {
+        method: 'GET'
+      })
+              .then(response => {
+                if (response.ok) {
+                  // 사용자 수 체크 통과, 입장 허용
+                  window.location.href = `/chat/room?roomId=${roomId}`;
+                } else {
+                  // 사용자 수 체크 실패, 입장 불가
+                  alert('입장할 수 없습니다.');
+                }
+              })
+              .catch(error => {
+                console.error('Error checking user count:', error);
+                alert('입장할 수 없습니다.');
+              });
+    });
+  </script>
 </section>
 </body>
 </html>

@@ -25,9 +25,13 @@ public interface ErrorMessage {
     /**
      * portion 에러
      */
+    // 소분글
+    String SUBDIVISION_NOT_FOUND = "존재하지 않는 소분글입니다.";
 
     // 채팅방
     String CHATTING_ROOM_NOT_FOUND = "존재하지 않는 채팅방입니다.";
+
+
 
 
     /**

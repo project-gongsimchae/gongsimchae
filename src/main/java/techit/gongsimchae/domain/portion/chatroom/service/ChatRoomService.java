@@ -17,6 +17,8 @@ import techit.gongsimchae.domain.portion.chatroom.repository.ChatRoomRepository;
 import techit.gongsimchae.domain.portion.chatroomuser.entity.ChatRoomUser;
 import techit.gongsimchae.domain.portion.chatroomuser.repository.ChatRoomUserRepository;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
+import techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType;
+import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
@@ -80,10 +82,17 @@ public class ChatRoomService {
     /**
      * maxUserCnt에 따른 채팅방 입장 여부
      */
-    public boolean checkRoomUserCount(String roomId) {
+    public boolean checkRoomUserCount(String roomId, PrincipalDetails principalDetails) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
+        SubdivisionType subdivisionType = chatRoom.getSubdivision().getSubdivisionType();
+        String loginId = principalDetails.getUsername();
+        if (chatRoom.getChatRoomUsers().stream()
+                .map(user -> user.getUser().getLoginId())
+                .anyMatch(id -> id.equals(loginId))) {
+            return true;
+        }
         int currentUserCount = chatRoom.getChatRoomUsers().size();
-        if (currentUserCount + 1 > chatRoom.getMaxUserCnt()) {
+        if (currentUserCount + 1 > chatRoom.getMaxUserCnt() || !subdivisionType.equals(SubdivisionType.RECRUITING)) {
             return false;
         }
         return true;

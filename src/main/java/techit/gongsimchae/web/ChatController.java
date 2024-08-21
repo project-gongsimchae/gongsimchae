@@ -71,9 +71,12 @@ public class ChatController {
 
     @GetMapping("/chat/chkUserCnt/{roomId}")
     @ResponseBody
-    public boolean chUserCnt(@PathVariable("roomId") String roomId) {
-
-        return chatRoomService.checkRoomUserCount(roomId);
+    public ResponseEntity<?> chUserCnt(@PathVariable("roomId") String roomId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        boolean result = chatRoomService.checkRoomUserCount(roomId, principalDetails);
+        if (result) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @MessageMapping("/chat/enterUser")

@@ -108,4 +108,11 @@ public class SubdivisionController {
 
         return "redirect:/portioning";
     }
+
+    @PostMapping("/{UID}/status")
+    public String changeSubdivisionStatus(@PathVariable("UID") String UID, @RequestParam("type") String status) {
+        subdivisionService.changeStatus(UID, status);
+        return "redirect:/portioning/{UID}";
+
+    }
 }

@@ -19,6 +19,7 @@ import techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
+import techit.gongsimchae.global.message.ErrorMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,5 +163,14 @@ public class SubdivisionService {
     @Transactional(readOnly = true)
     public List<SubdivisionChatRoomRespDto> getUserSubdivisions(PrincipalDetails principalDetails) {
         return subdivisionRepository.findUserSubdivisions(principalDetails.getAccountDto().getId());
+    }
+
+    /**
+     * 소분글 상태를 바꾸는 메서드
+     */
+    public void changeStatus(String uid, String status) {
+        Subdivision subdivision = subdivisionRepository.findByUID(uid).orElseThrow(() -> new CustomWebException(ErrorMessage.SUBDIVISION_NOT_FOUND));
+        subdivision.changeType(status);
+
     }
 }
