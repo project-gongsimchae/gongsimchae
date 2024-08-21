@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import techit.gongsimchae.domain.groupbuying.cart.dto.CartAddRequest;
 import techit.gongsimchae.domain.groupbuying.cart.dto.CartItemDto;
 import techit.gongsimchae.domain.groupbuying.cart.dto.CartPriceInfoDto;
 import techit.gongsimchae.domain.groupbuying.cart.service.CartService;
@@ -21,22 +22,21 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/add/{itemId}")
-    public ResponseEntity<Void> addToCart(@AuthenticationPrincipal PrincipalDetails userDetails,
-                                          @PathVariable Long itemId,
-                                          @RequestParam(defaultValue = "1") int count) {
+    @PostMapping("/add")
+    public ResponseEntity<Map<String, Boolean>> addToCart(@AuthenticationPrincipal PrincipalDetails userDetails,
+                                          @RequestBody CartAddRequest request) {
         Long userId = userDetails.getAccountDto().getId();
-        cartService.addToCart(userId, itemId, count);
-        return ResponseEntity.ok().build();
+        cartService.addToCart(userId, request.getCartItems());
+        return ResponseEntity.ok(Map.of("success",true));
     }
 
-    @PostMapping("/update/{itemId}")
+    @PostMapping("/update/{itemOptionId}")
     public ResponseEntity<Map<String, Object>> updateCartItem(@AuthenticationPrincipal PrincipalDetails userDetails,
-                                                              @PathVariable Long itemId,
+                                                              @PathVariable Long itemOptionId,
                                                               @RequestBody Map<String, Integer> payload) {
         Long userId = userDetails.getAccountDto().getId();
         int quantity = payload.get("quantity");
-        CartItemDto updatedItem = cartService.updateCartItemQuantity(userId, itemId, quantity);
+        CartItemDto updatedItem = cartService.updateCartItemQuantity(userId, itemOptionId, quantity);
         CartPriceInfoDto cartSummary = cartService.getCartSummary(userId);
 
         return ResponseEntity.ok().body(Map.of(

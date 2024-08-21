@@ -5,37 +5,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>공심채 - 공동구매</title>
 </head>
 <body>
 <section class="product-detail-section">
-    <div class="product-detail-image" th:each="itemImage : ${item.getImageUrls()}">
-        <img th:src="${itemImage}" alt="no image"/>
-    </div>
-    <div class="product-detail-info">
-        <h3 class="product-detail-title" th:text="${item.name}"></h3>
+<!--    <div class="product-detail-image" th:each="itemImage : ${item.getImageUrls()}">-->
+<!--        <img th:src="${itemImage}" alt="no image"/>-->
+    <form id="addToCartForm" th:action="@{/product/cart/add}" method="post">
+        <div class="product-detail-info">
+            <h3 class="product-detail-title" th:text="${item[0].itemName}">에어프라이어 용 미니 돈까스</h3>
 
-        <div class="btn-detail-container">
-            <select class="form-select" id="product-options" aria-label="상품 선택">
-                <option value="" selected>상품 선택</option>
-                <option value="1" data-price="10000">옵션 1 (10,000원)</option>
-                <option value="2" data-price="15000">옵션 2 (15,000원)</option>
-                <option value="3" data-price="20000">옵션 3 (20,000원)</option>
-            </select>
-            <div id="selected-options">
-                <!-- 선택한 옵션이 여기 표시됩니다. -->
-            </div>
-            <div class="total-price-container" id="total-price">
-                총 가격: 0원
-            </div>
-            <div class="btn-detail-row">
-                <button sec:authorize="isAuthenticated()" class="custom-btn-outline-secondary" id="wishlist-btn" th:data-item-id="${item.UID}" >
-                    <i id="wishlist-icon" class="bi"></i> 찜하기
-                </button>
-                <button class="custom-btn-success" id="purchase-btn">공동구매 참여하기</button>
+            <div class="btn-detail-container">
+                <select class="form-select" id="product-options" aria-label="상품 선택">
+                    <option value="" selected>상품 선택</option>
+                    <option th:each="option : ${item}"
+                            th:value="${option.itemOptionId}"
+                            th:data-price="${option.totalPrice}"
+                            th:data-discount-price="${option.discountPrice}"
+                            th:data-discount-rate="${option.discountRate}"
+                            th:text="${option.content + ' (' + #numbers.formatInteger(option.totalPrice, 3, 'COMMA') + '원)'}">
+                    </option>
+                </select>
+                <div id="selected-options">
+                    <!-- 선택한 옵션이 여기 표시됩니다. -->
+                </div>
+                <div class="total-price-container" id="total-price">
+                    총 가격: 0원
+                </div>
+                <div class="btn-detail-row">
+                    <button class="custom-btn-outline-secondary" id="wishlist-btn" th:data-item-id="${item[0].itemUID}">
+                        <i id="wishlist-icon" class="bi"></i> 찜하기
+                    </button>
+                    <button class="custom-btn-success" id="purchase-btn" type="submit">장바구니에 담기</button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </section>
 <div class="separator-detail"></div>
 <section class="status-detail-container">
@@ -53,8 +60,6 @@
     <p>여기에 상품 후기가 들어갑니다. 고객들이 작성한 후기를 포함시킬 수 있습니다.</p>
 
     <!-- CSRF 토큰을 메타 태그로 삽입 -->
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
     <script th:fragment="pick">
         document.addEventListener('DOMContentLoaded', function () {
@@ -116,8 +121,5 @@
     </script>
     <script th:src="@{/js/groupbuying/itemdetail.js}"></script>
 </section>
-
-
-
 </body>
 </html>

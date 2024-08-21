@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
 
 @Entity
 @Table(name = "cart")
@@ -20,8 +21,8 @@ public class Cart extends BaseEntity {
     private Integer count;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @JoinColumn(name = "itemOption_id")
+    private ItemOption itemOption;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",unique = false)
@@ -30,9 +31,9 @@ public class Cart extends BaseEntity {
     /**
      * 차후에 orderItem과의 관계를 의논후 정의 **/
 
-    public Cart(Integer count, Item item, User user) {
+    public Cart(Integer count, ItemOption itemOption, User user) {
         this.count = count;
-        this.item = item;
+        this.itemOption = itemOption;
         this.user = user;
     }
 
