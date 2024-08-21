@@ -1,6 +1,8 @@
 package techit.gongsimchae.web;
 
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -8,27 +10,34 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryCreateDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
-import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.common.wishlist.service.WishListService;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.dto.ReviewItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
+import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
+import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsResDtoWeb;
+import techit.gongsimchae.domain.groupbuying.reviews.service.ReviewsService;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
-
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/mypage")
@@ -43,6 +52,7 @@ public class MyPageController {
     private final InquiryService inquiryService;
     private final OrdersService ordersService;
     private final ItemService itemService;
+    private final ReviewsService reviewsService;
 
 
     @GetMapping("/orders")
@@ -152,18 +162,57 @@ public class MyPageController {
     /**
      * 상품 후기
      */
+
+    /**
+     *
+     * @param principalDetails - 사용자 정보
+     * @param model - "reviewAbleItems" : 작성가능한 아이템 / "reviewedItems" : 작성한 아이템
+     * @return
+     */
     @GetMapping("/reviews")
-    public String reviews(Model model) {
+    public String getReviewPage(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
+        ReviewItemResDtoWeb reviewItemResDtoWeb = itemService.getReviewItems(principalDetails.getAccountDto());
+        model.addAttribute("reviewAbleItems", reviewItemResDtoWeb.getReviewAbleItemResDtoWebs());
+        model.addAttribute("reviewedItems", reviewItemResDtoWeb.getReviewedItemResDtoWebs());
         return "mypage/reviews";
     }
 
-    @GetMapping("/reviews/write")
-    public String reviewForm() {
-        return "mypage/reviewForm";
+    /**
+     * 리뷰 생성
+     * @param principalDetails - 사용자 정보
+     * @param reviewReqDtoWeb - "reviewReqDtoWeb" : 작성 리뷰 데이터
+     * @return
+     */
+    @PostMapping("/reviews/write/{uid}")
+    public String createReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
+                                @PathVariable String uid) {
+        reviewsService.createReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
+        return "redirect:/mypage/reviews";
     }
 
-    @PostMapping("/reviews/write")
-    public String viewsWrite(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    /**
+     * 리뷰 조회
+     * @param uid - 가져올 리뷰 아이템의 uid
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("reviews/{uid}")
+    public ReviewsResDtoWeb getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                       @PathVariable String uid) {
+        return reviewsService.getReviews(principalDetails.getAccountDto(), uid);
+    }
+
+    /**
+     * 리뷰 수정
+     * @param uid - 수정할 리뷰 아이템의 uid
+     * @return 마이페이지 - 상품 후기 탭
+     */
+    @PostMapping("reviews/update/{uid}")
+    public String updateReviews (@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
+                                           @PathVariable String uid) {
+        reviewsService.updateReviews(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
         return "redirect:/mypage/reviews";
     }
 
@@ -225,9 +274,8 @@ public class MyPageController {
     @GetMapping("/join")
     public String SubdivisionJoinList(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                       Model model) {
-
-        model.addAttribute("SubdivisionJoinRespDtoList",
-                subdivisionService.findJoinSubdivisionByUserId(principalDetails.getAccountDto().getId()));
+        List<SubdivisionChatRoomRespDto> subdivisions = subdivisionService.getUserSubdivisions(principalDetails);
+        model.addAttribute("subdivisions", subdivisions);
 
         return "mypage/subdivisionJoinList";
     }
@@ -258,6 +306,4 @@ public class MyPageController {
         userService.addCoupon(couponCode, principalDetails);
         return ResponseEntity.ok().build();
     }
-
-
 }

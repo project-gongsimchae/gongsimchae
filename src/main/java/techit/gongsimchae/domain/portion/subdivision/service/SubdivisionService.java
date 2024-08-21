@@ -8,15 +8,19 @@ import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.domain.portion.participants.service.ParticipantService;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
+import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -32,6 +36,7 @@ public class SubdivisionService {
     private final UserRepository userRepository;
     private final ImageS3Service imageS3Service;
     private final ImageFileRepository imageFileRepository;
+    private final ChatRoomService chatRoomService;
 
     @Transactional(readOnly = true)
     public List<SubdivisionRespDto> getAllSubdivisions(){
@@ -93,7 +98,10 @@ public class SubdivisionService {
                 .user(user)
                 .build();
 
-        subdivisionRepository.save(subdivision);
+        Subdivision savedSubdivision = subdivisionRepository.save(subdivision);
+
+        // chatroom 생성
+        chatRoomService.create(savedSubdivision);
 
         imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", subdivision);
 
@@ -125,5 +133,34 @@ public class SubdivisionService {
         Subdivision subdivision = subdivisionRepository.findByUID(UID).orElseThrow(() -> new CustomWebException("Subdivision not found"));
 
         subdivision.deleteSubdivision();
+    }
+
+    @Transactional(readOnly = true)
+    public List<SubdivisionRespDto> searchSubdivisions(String address, String content) {
+        // 콤마(,)로 구분된 주소를 여러 개로 나누기
+        String[] addresses = address != null ? address.split(",") : new String[]{};
+
+        List<Subdivision> results = new ArrayList<>();
+
+        for (String addr : addresses) {
+            // 각 주소에 대해 쿼리 실행
+            List<Subdivision> partialResults = subdivisionRepository.searchSubdivisions(addr.trim(), content);
+            results.addAll(partialResults);
+        }
+
+        // 중복된 결과를 제거 (필요시)
+        results = results.stream().distinct().collect(Collectors.toList());
+
+        return results.stream()
+                .map(SubdivisionRespDto::new)
+                .collect(Collectors.toList());
+    }
+  
+    /**
+     * 마이페이지에서 참여중인 소분글 찾는 메서드
+     */
+    @Transactional(readOnly = true)
+    public List<SubdivisionChatRoomRespDto> getUserSubdivisions(PrincipalDetails principalDetails) {
+        return subdivisionRepository.findUserSubdivisions(principalDetails.getAccountDto().getId());
     }
 }

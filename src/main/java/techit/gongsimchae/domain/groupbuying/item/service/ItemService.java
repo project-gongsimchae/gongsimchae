@@ -22,10 +22,22 @@ import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
+import techit.gongsimchae.domain.groupbuying.item.dto.ReviewAbleItemResDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.dto.ReviewItemResDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.dto.ReviewedItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderStatus;
+import techit.gongsimchae.domain.groupbuying.orderitem.repository.OrderItemRepository;
+import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
+import techit.gongsimchae.domain.groupbuying.orders.repository.OrdersRepository;
+import techit.gongsimchae.domain.groupbuying.reviews.entity.Reviews;
+import techit.gongsimchae.domain.groupbuying.reviews.repository.ReviewsRepository;
+import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.exception.CustomWebException;
+import techit.gongsimchae.global.message.ErrorMessage;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +46,10 @@ public class ItemService {
     private final CategoryRepository categoryRepository;
 
     private final ImageS3Service imageS3Service;
+    private final OrderItemRepository orderItemRepository;
+    private final OrdersRepository ordersRepository;
     private final ImageFileRepository imageFileRepository;
+    private final ReviewsRepository reviewsRepository;
 
     public void save(Item item) {
         itemRepository.save(item);
@@ -200,5 +215,32 @@ public class ItemService {
 
     public Page<ItemRespDtoWeb> searchItems(ItemSearchForm itemSearchForm, Pageable pageable) {
         return itemRepository.findItemsByKeyword(itemSearchForm, pageable);
+    }
+
+    public ReviewItemResDtoWeb getReviewItems(AccountDto accountDto) {
+        List<Orders> orders = ordersRepository.findAllByUserIdAndOrderStatus(accountDto.getId(), OrderStatus.완료);
+        List<OrderItem> ordersItems = orderItemRepository.findAllByOrdersIn(orders);
+        List<Item> items = ordersItems.stream()
+                .map((ordersItem) -> itemRepository.findById(ordersItem.getItem().getId()).orElseThrow(
+                        () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
+                )).toList();
+        List<Reviews> reviews = reviewsRepository.findAllByUserId(accountDto.getId());
+
+        List<ReviewAbleItemResDtoWeb> reviewAbleItemResDtoWebs = new ArrayList<>();
+        List<ReviewedItemResDtoWeb> reviewedItemResDtoWebs = new ArrayList<>();
+        for (Item item : items) {
+            ImageFile imageFile = imageFileRepository.findByItem(item);
+            Reviews matchingReview = reviews.stream()
+                    .filter(review -> review.getItem().equals(item))
+                    .findFirst()
+                    .orElse(null);
+
+            if (matchingReview != null) {
+                reviewedItemResDtoWebs.add(new ReviewedItemResDtoWeb(item, imageFile.getStoreFilename(), matchingReview.getCreateDate()));
+            } else {
+                reviewAbleItemResDtoWebs.add(new ReviewAbleItemResDtoWeb(item, imageFile.getStoreFilename()));
+            }
+        }
+        return new ReviewItemResDtoWeb(reviewAbleItemResDtoWebs, reviewedItemResDtoWebs);
     }
 }

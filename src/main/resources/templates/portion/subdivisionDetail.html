@@ -88,12 +88,17 @@
 
     <div class="footer">
       <span class="views" th:text="'조회수: ' + ${subdivisionRespDto.views}"></span>
+      <div>
+        <span>[[${room.userCount}]]</span> /
+        <span>[[${room.maxUserCnt}]]</span>
+      </div>
       <div sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username} == ${subdivisionRespDto.user.loginId}">
+        <a th:href="@{'/chat/room?roomId=' + ${room.roomId}}" class="btn btn-success">입장하기</a>
         <button id="editButton" class="btn btn-success">수정</button>
         <button id="deleteButton" class="btn btn-danger">삭제</button>
       </div>
       <div sec:authorize="isAuthenticated()" th:if="${#authentication.principal.username} != ${subdivisionRespDto.user.loginId}">
-        <button id="joinButton" class="btn btn-success">참여하기</button>
+        <a th:href="@{'/chat/room?roomId=' + ${room.roomId}}" class="btn btn-success">입장하기</a>
       </div>
     </div>
   </div>
