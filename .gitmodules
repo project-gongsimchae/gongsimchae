@@ -1,0 +1,3 @@
+[submodule "gongsimchae_yml"]
+	path = gongsimchae_yml
+	url = https://github.com/project-gongsimchae/gongsimchae_yml.git
