@@ -1,17 +1,12 @@
 package techit.gongsimchae.domain.portion.subdivision.repository;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
-import techit.gongsimchae.domain.portion.report.entity.QReport;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReportRespDto;
 
@@ -22,8 +17,7 @@ import static techit.gongsimchae.domain.common.imagefile.entity.QImageFile.image
 import static techit.gongsimchae.domain.common.user.entity.QUser.user;
 import static techit.gongsimchae.domain.portion.chatroom.entity.QChatRoom.chatRoom;
 import static techit.gongsimchae.domain.portion.chatroomuser.entity.QChatRoomUser.chatRoomUser;
-
-import static techit.gongsimchae.domain.portion.report.entity.QReport.*;
+import static techit.gongsimchae.domain.portion.report.entity.QReport.report;
 import static techit.gongsimchae.domain.portion.subdivision.entity.QSubdivision.subdivision;
 
 @RequiredArgsConstructor
@@ -42,7 +36,7 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
                 .join(chatRoomUser.user, user)
                 .join(chatRoomUser.chatRoom, chatRoom)
                 .join(chatRoom.subdivision, subdivision)
-                .where(user.id.eq(userId))
+                .where(user.id.eq(userId).and(subdivision.deleteStatus.eq(false)))
                 .fetch();
 
         for (SubdivisionChatRoomRespDto subdivisionChatRoomRespDto : subdivisions) {
@@ -77,6 +71,7 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
                         subdivision.id.as("subdivisionId"), report.count().as("reportCount")))
                 .from(report)
                 .join(report.subdivision, subdivision)
+                .where(subdivision.deleteStatus.eq(false))
                 .groupBy(subdivision.id)
                 .orderBy(report.count().desc())
                 .limit(pageable.getPageSize())
@@ -95,7 +90,7 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
                 .from(report)
                 .join(report.subdivision, subdivision)
                 .join(subdivision.user, user)
-                .where(subdivision.id.in(subdivisionIds))
+                .where(subdivision.id.in(subdivisionIds).and(subdivision.deleteStatus.eq(false)))
                 .groupBy(subdivision.id, subdivision.title, user.email, user.name, user.nickname)
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())

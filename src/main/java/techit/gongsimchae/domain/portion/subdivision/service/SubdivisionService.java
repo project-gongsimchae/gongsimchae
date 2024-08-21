@@ -10,6 +10,7 @@ import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.portion.chatroom.repository.ChatRoomRepository;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.domain.portion.participants.service.ParticipantService;
 import techit.gongsimchae.domain.portion.report.repository.ReportRepository;
@@ -39,6 +40,7 @@ public class SubdivisionService {
     private final ImageFileRepository imageFileRepository;
     private final ChatRoomService chatRoomService;
     private final ReportRepository reportRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     @Transactional(readOnly = true)
     public List<SubdivisionRespDto> getAllSubdivisions(){
@@ -129,7 +131,7 @@ public class SubdivisionService {
 
         return subdivision.getUID();
     }
-
+    @Transactional
     public void deleteSubdivision(String UID) {
 
         Subdivision subdivision = subdivisionRepository.findByUID(UID).orElseThrow(() -> new CustomWebException("Subdivision not found"));
@@ -174,6 +176,10 @@ public class SubdivisionService {
         subdivision.changeType(status);
 
     }
+
+    /**
+     * 신고를 많이받은 소분글 불러오는 메서드
+     */
     @Transactional(readOnly = true)
     public Page<SubdivisionReportRespDto> getMostReported() {
         return subdivisionRepository.findMostFrequentReports(PageRequest.of(0, 10));

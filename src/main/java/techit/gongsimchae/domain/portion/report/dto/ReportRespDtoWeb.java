@@ -16,7 +16,7 @@ public class ReportRespDtoWeb {
     private String content;
     private ReportType reportType;
 
-    private String userUID;
+    private Long userId;
     private String subdivisionUID;
 
 }

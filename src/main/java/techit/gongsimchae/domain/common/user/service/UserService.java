@@ -20,6 +20,7 @@ import techit.gongsimchae.domain.common.wishlist.repository.WishListRepository;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
+import techit.gongsimchae.global.message.ErrorMessage;
 import techit.gongsimchae.global.util.AuthCode;
 
 import java.time.Duration;
@@ -193,7 +194,7 @@ public class UserService {
      * DB에 있는 유저 전체정보를 반환하는 메서드
      */
     public List<UserRespDtoWeb> getUsers() {
-        return userRepository.findAll().stream().map(u -> new UserRespDtoWeb(u)).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(UserRespDtoWeb::new).collect(Collectors.toList());
     }
 
     /**
@@ -201,8 +202,12 @@ public class UserService {
      */
     @Transactional
     public void updateByAdmin(UserAdminUpdateReqDtoWeb updateDto) {
-        User findUser = userRepository.findById(updateDto.getId()).orElseThrow(() -> new CustomWebException("not found user"));
+        User findUser = userRepository.findById(updateDto.getId()).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         findUser.changeInfoByAdmin(updateDto);
     }
-
+    @Transactional
+    public void banUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
+        user.ban();
+    }
 }

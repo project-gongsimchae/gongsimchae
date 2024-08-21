@@ -145,4 +145,12 @@ public class User extends BaseEntity {
         this.joinType = updateDto.getJoinType();
 
     }
+
+    public void ban() {
+        this.userStatus = UserStatus.PENALTY;
+    }
+
+    public void decrementMannerPoints() {
+        this.mannerPoint--;
+    }
 }

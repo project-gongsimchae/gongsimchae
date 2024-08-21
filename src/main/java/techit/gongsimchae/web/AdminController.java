@@ -78,7 +78,9 @@ public class AdminController {
         }
 
         userService.updateByAdmin(user);
-        addressService.addAddress(new AddressCreateReqDtoWeb(user.getZipcode(), user.getAddress(), user.getDetailAddress(), user.getAdditionalAddress()),user.getId());
+        if(user.getAddress() != null)
+            addressService.addAddress(new AddressCreateReqDtoWeb(user.getZipcode(), user.getAddress(), user.getDetailAddress(), user.getAdditionalAddress()),user.getId());
+
         rttr.addAttribute("id",id);
 
         return "redirect:/admin/users/{id}";
@@ -160,6 +162,35 @@ public class AdminController {
         List<ReportRespDtoWeb> reports = reportService.getSubdivisionReport(id);
         model.addAttribute("reports", reports);
         return "admin/reports/subdivisionReport";
+    }
+
+    /**
+     * 신고 초기화
+     */
+    @PostMapping("/reports/reset/{subdivisionUID}")
+    public String restReport(@PathVariable("subdivisionUID") String subdivisionUID) {
+        reportService.deleteAllReport(subdivisionUID);
+        return "redirect:/admin/reports";
+    }
+
+
+    /**
+     * 글 삭제
+     */
+    @PostMapping("/subdivision/delete/{subdivisionId}")
+    public String deleteSubdivision(@PathVariable("subdivisionId") String subdivisionId) {
+        subdivisionService.deleteSubdivision(subdivisionId);
+        return "redirect:/admin/reports";
+    }
+
+    /**
+     * 유저 제재
+     */
+
+    @PostMapping("/users/ban/{userId}")
+    public String deleteSubdivision(@PathVariable("userId") Long userId) {
+        userService.banUser(userId);
+        return "redirect:/admin/reports";
     }
 
 

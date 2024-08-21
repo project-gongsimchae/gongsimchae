@@ -33,10 +33,23 @@ public class ReportService {
         Subdivision subdivision = subdivisionRepository.findByUID(reportCreateReqDto.getUid()).orElseThrow(() -> new CustomWebException(ErrorMessage.SUBDIVISION_NOT_FOUND));
         Report report = new Report(reportCreateReqDto, user, subdivision);
         Report savedReport = reportRepository.save(report);
+        isReportCountMultipleOfFive(subdivision);
         return savedReport.getId();
     }
 
     public List<ReportRespDtoWeb> getSubdivisionReport(Long id) {
         return reportRepository.findReportsForSubdivision(id);
+    }
+    @Transactional
+    public void deleteAllReport(String subdivisionUID) {
+        reportRepository.deleteAllBySubdivisionUID(subdivisionUID);
+    }
+
+    private void isReportCountMultipleOfFive(Subdivision subdivision) {
+        Long count = reportRepository.countBySubdivision(subdivision);
+        if (count != 0 && count % 5 == 0) {
+            User user = subdivision.getUser();
+            user.decrementMannerPoints();
+        }
     }
 }
