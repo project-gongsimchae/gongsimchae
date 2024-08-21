@@ -16,7 +16,11 @@ import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.post.entity.Post;
+
 import techit.gongsimchae.domain.portion.chatroom.entity.ChatRoom;
+
+import techit.gongsimchae.domain.groupbuying.reviews.entity.Reviews;
+
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 
 @Entity
@@ -53,12 +57,17 @@ public class ImageFile extends BaseEntity {
     private Subdivision subdivision;
 
     @ManyToOne(fetch = FetchType.LAZY)
+
     @JoinColumn(name = "inquiry_id")
     private Inquiry inquiry;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
+
+    @JoinColumn(name = "reviews_id")
+    private Reviews reviews;
+
 
     public ImageFile(String originalFilename, String storeFilename, User user) {
         this.originalFilename = originalFilename;
@@ -105,6 +114,13 @@ public class ImageFile extends BaseEntity {
         this.originalFilename = originalFilename;
         this.storeFilename = storeFilename;
         this.chatRoom = chatRoom;
+        this.imageFileStatus = 0;
+    }
+
+    public ImageFile(String originalFilename, String storeFilename, Reviews reviews) {
+        this.originalFilename = originalFilename;
+        this.storeFilename = storeFilename;
+        this.reviews = reviews;
         this.imageFileStatus = 0;
     }
 
