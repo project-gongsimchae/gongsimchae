@@ -35,6 +35,7 @@ import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.service.ReviewsService;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
@@ -273,9 +274,8 @@ public class MyPageController {
     @GetMapping("/join")
     public String SubdivisionJoinList(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                       Model model) {
-
-        model.addAttribute("SubdivisionJoinRespDtoList",
-                subdivisionService.findJoinSubdivisionByUserId(principalDetails.getAccountDto().getId()));
+        List<SubdivisionChatRoomRespDto> subdivisions = subdivisionService.getUserSubdivisions(principalDetails);
+        model.addAttribute("subdivisions", subdivisions);
 
         return "mypage/subdivisionJoinList";
     }
