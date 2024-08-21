@@ -14,6 +14,7 @@ import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
 import techit.gongsimchae.domain.groupbuying.itemoption.repository.ItemOptionRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
+import techit.gongsimchae.global.message.ErrorMessage;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,11 +30,11 @@ public class CartService {
 
         // 유저 아이디로 유저를 찾는다
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomWebException("유효하지 않은 회원입니다."));
+                .orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
 
         for (CartAddRequest.CartItemRequest item : cartItems){
             ItemOption itemOption = itemOptionRepository.findById(item.getItemOptionId())
-                    .orElseThrow(() -> new CustomWebException("유효하지 않은 상품 옵션입니다."));
+                    .orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_OPTION_NOT_FOUND));
 
             Cart duplicateCart = cartRepository.findByUserIdAndItemOptionId(userId,itemOption.getId())
                     .orElse(null);

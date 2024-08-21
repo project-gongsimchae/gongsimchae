@@ -18,6 +18,7 @@ public interface ErrorMessage {
     String EVENT_BANNER_IMAGE_EMPTY = "이벤트 배너 이미지가 존재하지 않습니다.";
     String EVENT_NOT_FOUND = "이벤트가 존재하지 않습니다.";
     String ITEM_NOT_FOUND = "아이템이 존재하지 않습니다.";
+    String ITEM_OPTION_NOT_FOUND = "유효하지 않은 상품 옵션입니다.";
 
     /**
      * portion 에러
