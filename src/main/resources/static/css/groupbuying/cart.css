@@ -75,6 +75,9 @@ body {
 
 .quantity {
     display: flex;
+    margin-right: 40px;
+    margin-top: 15px;
+    margin-bottom: 15px;
     align-items: center;
 }
 
@@ -162,5 +165,16 @@ body {
 
 .text-muted {
     font-size: 0.8em;
+    margin-top: 5px;
+}
+
+.item-info-name {
+    display: flex;
+    margin-right: 20px;
+}
+.item-option-info {
+    display: flex;
+    font-size: 0.8em;
+    color: #888;
     margin-top: 5px;
 }

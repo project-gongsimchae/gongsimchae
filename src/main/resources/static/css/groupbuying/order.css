@@ -1,0 +1,67 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+}
+
+.container {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.section {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-control {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.btn-primary {
+    background-color: #5f0080;
+    border-color: #5f0080;
+}
+
+.btn-primary:hover {
+    background-color: #4a0062;
+    border-color: #4a0062;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.order-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.payment-method {
+    margin-bottom: 10px;
+}
+
+#totalAmount {
+    font-size: 24px;
+    font-weight: bold;
+    color: #5f0080;
+}
