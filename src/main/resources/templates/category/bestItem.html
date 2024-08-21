@@ -31,10 +31,10 @@
     <div class="product-list">
         <div th:each="item : ${bestItemsPage}" class="product-item">
             <img class="product-image-placeholder" th:src="${item.itemBannerImage}" alt="썸네일 이미지" />
-            <button class="add-to-cart" th:data-item-id="${item.id}">
-                <i class="fa fa-shopping-cart"></i> 장바구니에 담기
-            </button>
-            <h3 class="item-name" ><a href="" th:href="@{|/product/${item.UID}|}" th:text="${item.name}"></a></h3>
+<!--            <button class="add-to-cart" th:data-item-id="${item.id}">-->
+<!--                <i class="fa fa-shopping-cart"></i> 장바구니에 담기-->
+<!--            </button>-->
+            <h3 class="item-name" ><a href="" th:href="@{|/product/${item.id}|}" th:text="${item.name}"></a></h3>
             <div class="price-container">
                 <div class="price-progress-container">
                     <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
