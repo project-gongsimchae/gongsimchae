@@ -64,10 +64,6 @@ public class Address {
         this.defaultAddressStatus = DefaultAddressStatus.SECONDARY;
     }
 
-    public void unsetDefaultAddress() {
-        this.defaultAddressStatus = DefaultAddressStatus.SECONDARY;
-    }
-
     public void setDefaultAddress() {
         this.defaultAddressStatus = DefaultAddressStatus.PRIMARY;
     }
