@@ -39,6 +39,9 @@ public class UserRespDtoWeb {
     private String additionalAddress;
     private String sigungu;
 
+    // 신고 횟수
+    private Long reportCount;
+
 
     /**
      * 유저정보가 다 담기는 생성자

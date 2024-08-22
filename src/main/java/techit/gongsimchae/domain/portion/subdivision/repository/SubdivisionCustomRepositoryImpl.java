@@ -72,8 +72,6 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
                 .join(report.subdivision, subdivision)
                 .where(subdivision.deleteStatus.eq(false))
                 .groupBy(subdivision.id)
-                .orderBy(report.count().desc())
-                .limit(pageable.getPageSize())
                 .fetch();
 
         // 2. 서브쿼리 결과에서 subdivisionId 목록을 추출
@@ -89,13 +87,20 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
                 .from(report)
                 .join(report.subdivision, subdivision)
                 .join(subdivision.user, user)
-                .where(subdivision.id.in(subdivisionIds).and(subdivision.deleteStatus.eq(false)))
-                .groupBy(subdivision.id, subdivision.title, user.email, user.name, user.nickname)
+                .where(subdivision.id.in(subdivisionIds))
+                .groupBy(subdivision.id, user.email, user.nickname)
+                .orderBy(report.count().desc())
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();
 
+        Long size = queryFactory.select(subdivision.countDistinct())
+                .from(report)
+                .join(report.subdivision, subdivision)
+                .where(subdivision.deleteStatus.eq(false))
+                .fetchOne();
+
         // 4. 결과를 Page로 래핑하여 반환
-        return new PageImpl<>(results, pageable, subQueryResults.size());
+        return new PageImpl<>(results, pageable,size);
     }
 }

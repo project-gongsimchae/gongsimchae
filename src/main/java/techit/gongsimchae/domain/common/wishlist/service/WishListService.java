@@ -1,6 +1,8 @@
 package techit.gongsimchae.domain.common.wishlist.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.user.entity.User;
@@ -19,7 +21,6 @@ import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepos
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -60,11 +61,10 @@ public class WishListService {
     /**
      * 찜목록에 넣은 아이템 가져오기
      */
-    public List<ItemRespDtoWeb> getPickItems(PrincipalDetails principalDetails) {
-        return wishListRepository.findWishListsItemByUserIdAndSubdivisionIsNull(principalDetails.getAccountDto().getId())
-                .stream()
-                .map(wishList -> new ItemRespDtoWeb(wishList.getItem()))
-                .collect(Collectors.toList());
+    public Page<ItemRespDtoWeb> getPickItems(PrincipalDetails principalDetails, Pageable pageable) {
+        return wishListRepository.findWishListsItemByUserIdAndSubdivisionIsNullOrderByCreateDateDesc(principalDetails.getAccountDto().getId(),
+                        pageable)
+                .map(wishList -> new ItemRespDtoWeb(wishList.getItem()));
 
     }
 
