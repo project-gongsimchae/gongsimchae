@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import techit.gongsimchae.domain.common.address.dto.AddressCreateReqDtoWeb;
+import techit.gongsimchae.domain.common.address.service.AddressService;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryAdminReplyReqDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
@@ -26,6 +28,7 @@ import java.util.List;
 public class AdminController {
     private final UserService userService;
     private final InquiryService inquiryService;
+    private final AddressService addressService;
 
 
     @GetMapping
@@ -46,6 +49,7 @@ public class AdminController {
     @GetMapping("/users/{id}")
     public String detailsUser(@PathVariable("id") Long id, Model model) {
         UserRespDtoWeb user = userService.getUser(id);
+        user.setAddress(addressService.getDefaultAddress(id));
         model.addAttribute("user", user);
         return "admin/users/userDetail";
     }
@@ -53,6 +57,8 @@ public class AdminController {
     @GetMapping("/users/update/{id}")
     public String userUpdateForm(@PathVariable("id") Long id, Model model) {
         UserRespDtoWeb user = userService.getUser(id);
+        user.setAddress(addressService.getDefaultAddress(id));
+
         model.addAttribute("user", user);
         return "admin/users/userUpdate";
     }
@@ -66,6 +72,7 @@ public class AdminController {
         }
 
         userService.updateByAdmin(user);
+        addressService.addAddress(new AddressCreateReqDtoWeb(user.getZipcode(), user.getAddress(), user.getDetailAddress(), user.getAdditionalAddress()),user.getId());
         rttr.addAttribute("id",id);
 
         return "redirect:/admin/users/{id}";

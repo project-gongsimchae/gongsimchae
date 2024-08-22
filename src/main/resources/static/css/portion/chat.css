@@ -106,6 +106,7 @@ input {
 
 .input-group {
     width: 80.5%;
+    margin: 0 auto;
 }
 
 .chat-container {
@@ -114,8 +115,8 @@ input {
 
 .chat-container .btn-group {
     position: absolute;
-    bottom: -12px;
-    right: -50px;
+    bottom: -20px;
+    right: -5px;
     transform: translate(-50%, -50%);
 }
 

@@ -11,17 +11,13 @@ import org.springframework.transaction.support.TransactionSynchronizationAdapter
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import techit.gongsimchae.domain.common.user.dto.*;
 import techit.gongsimchae.domain.common.user.entity.User;
-import techit.gongsimchae.domain.common.user.repository.UserRepository;
-import techit.gongsimchae.domain.common.wishlist.repository.WishListRepository;
-import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
-import techit.gongsimchae.domain.groupbuying.coupon.repository.CouponRepository;
-import techit.gongsimchae.domain.groupbuying.couponuser.entity.CouponUser;
-import techit.gongsimchae.domain.groupbuying.couponuser.repository.CouponUserRepository;
-import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
 import techit.gongsimchae.domain.common.user.mail.event.AuthCodeEvent;
 import techit.gongsimchae.domain.common.user.mail.event.JoinMailEvent;
 import techit.gongsimchae.domain.common.user.mail.event.LoginIdEvent;
 import techit.gongsimchae.domain.common.user.mail.event.PasswordEvent;
+import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.common.wishlist.repository.WishListRepository;
+import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.util.AuthCode;
@@ -44,8 +40,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher publisher;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final CouponRepository couponRepository;
-    private final CouponUserRepository couponUserRepository;
     private final WishListRepository wishListRepository;
     private final ItemRepository itemRepository;
 
@@ -132,7 +126,7 @@ public class UserService {
 
 
     /**
-     * 개인정보 수정할 때 기존비밀번호와 입력한 비밀번확 맞는지 확인하는 메서드
+     * 개인정보 수정할 때 기존비밀번호와 입력한 비밀번호가 맞는지 확인하는 메서드
      */
 
     public boolean checkPassword(String loginId, String password) {
@@ -211,11 +205,4 @@ public class UserService {
         findUser.changeInfoByAdmin(updateDto);
     }
 
-    public void addCoupon(String couponCode, PrincipalDetails principalDetails) {
-        Coupon coupon = couponRepository.findByCouponCode(couponCode).orElseThrow(() -> new CustomWebException("not found coupon"));
-        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
-        CouponUser couponUser = new CouponUser(coupon, user);
-        couponUserRepository.save(couponUser);
-
-    }
 }

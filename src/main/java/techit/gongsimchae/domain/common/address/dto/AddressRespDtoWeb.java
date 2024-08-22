@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.common.address.entity.Address;
+import techit.gongsimchae.domain.common.address.entity.DefaultAddressStatus;
 
 @Data
 @NoArgsConstructor
@@ -16,6 +17,7 @@ public class AddressRespDtoWeb {
     private String UID;
     private String receiver;
     private String phoneNumber;
+    private DefaultAddressStatus defaultAddressStatus;
 
     public AddressRespDtoWeb(Address address) {
         this.address = address.getAddress();
@@ -25,5 +27,6 @@ public class AddressRespDtoWeb {
         this.receiver = address.getReceiver();
         this.phoneNumber = address.getPhoneNumber();
         this.additionalAddress = address.getAdditionalAddress();
+        this.defaultAddressStatus = address.getDefaultAddressStatus();
     }
 }

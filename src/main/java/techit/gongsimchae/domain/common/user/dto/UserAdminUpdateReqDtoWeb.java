@@ -13,11 +13,14 @@ public class UserAdminUpdateReqDtoWeb {
     private String loginId;
     private String nickname;
     private String phoneNumber;
-    private String zipcode;
-    private String address;
-    private String detailAddress;
     private UserStatus userStatus;
     private UserRole role;
     private JoinType joinType;
+
+    // 주소
+    private String zipcode;
+    private String address;
+    private String detailAddress;
+    private String additionalAddress;
 
 }

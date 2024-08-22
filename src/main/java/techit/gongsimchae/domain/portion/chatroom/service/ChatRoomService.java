@@ -4,6 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import techit.gongsimchae.domain.common.imagefile.dto.ImageFileRespDto;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.entity.S3VO;
+import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
@@ -12,6 +17,8 @@ import techit.gongsimchae.domain.portion.chatroom.repository.ChatRoomRepository;
 import techit.gongsimchae.domain.portion.chatroomuser.entity.ChatRoomUser;
 import techit.gongsimchae.domain.portion.chatroomuser.repository.ChatRoomUserRepository;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
+import techit.gongsimchae.global.exception.CustomWebException;
+import techit.gongsimchae.global.message.ErrorMessage;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -24,6 +31,7 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
     private final ChatRoomUserRepository chatRoomUserRepository;
+    private final ImageS3Service imageS3Service;
 
     /**
      * 채팅방 만드는 메서드
@@ -47,7 +55,7 @@ public class ChatRoomService {
      */
 
     public ChatRoomRespDto getChatRoom(Long subdivisionId) {
-        ChatRoom chatRoom = chatRoomRepository.findBySubdivisionId(subdivisionId).orElseThrow(() -> new RuntimeException("Room not found"));
+        ChatRoom chatRoom = chatRoomRepository.findBySubdivisionId(subdivisionId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
         return new ChatRoomRespDto(chatRoom);
     }
 
@@ -56,9 +64,9 @@ public class ChatRoomService {
      */
     @Transactional
     public void updateUserInChat(String roomId, String nickname) {
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
-        User user = userRepository.findByNickname(nickname).orElseThrow(() -> new RuntimeException("User not found"));
-        Optional<ChatRoomUser> _chatRoomUser = chatRoomUserRepository.findByUserIdAndChatRoomId(user.getId(), chatRoom.getId());
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
+        User user = userRepository.findByNickname(nickname).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
+        Optional<ChatRoomUser> _chatRoomUser = chatRoomUserRepository.findByChatUser(roomId, nickname);
         if(_chatRoomUser.isPresent()) {
             ChatRoomUser chatRoomUser = _chatRoomUser.get();
             chatRoomUserRepository.delete(chatRoomUser);
@@ -73,7 +81,7 @@ public class ChatRoomService {
      * maxUserCnt에 따른 채팅방 입장 여부
      */
     public boolean checkRoomUserCount(String roomId) {
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
         int currentUserCount = chatRoom.getChatRoomUsers().size();
         if (currentUserCount + 1 > chatRoom.getMaxUserCnt()) {
             return false;
@@ -87,18 +95,19 @@ public class ChatRoomService {
     public ArrayList<String> getUserList(String roomId){
         ArrayList<String> list = new ArrayList<>();
 
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
         chatRoom.getChatRoomUsers().forEach(i -> list.add(i.getUser().getName()));
         return list;
     }
 
-    /**
-     * 채팅방에 해당 유저가 있는지 확인
-     */
-    public boolean checkIsUser(String roomId, String nickname) {
-        boolean present = chatRoomUserRepository.findByChatUser(roomId, nickname).isPresent();
-        log.debug("check user present {}", present);
-        return present;
+    @Transactional
+    public ImageFileRespDto uploadPhotoToChat(String roomId, MultipartFile file) {
+        log.debug("uploadPhotoToChat {} ", file);
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
+        ImageFile imageFile = imageS3Service.storeFile(file, S3VO.CHATTING_IMAGE_UPLOAD_DIRECTORY, chatRoom);
+        return ImageFileRespDto.builder()
+                .roomId(chatRoom.getRoomId())
+                .originalFilename(imageFile.getOriginalFilename())
+                .storeFilename(imageFile.getStoreFilename()).build();
     }
-
 }

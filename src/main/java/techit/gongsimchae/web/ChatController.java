@@ -2,24 +2,27 @@ package techit.gongsimchae.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import techit.gongsimchae.domain.common.imagefile.dto.ImageFileRespDto;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
 import techit.gongsimchae.domain.portion.chatmessage.service.ChatMessageService;
+import techit.gongsimchae.domain.portion.chatmessage.service.MessageSenderService;
 import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
-import techit.gongsimchae.global.config.fafka.MessageSenderService;
+import techit.gongsimchae.domain.portion.chatroomuser.service.ChatRoomUserService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ public class ChatController {
     private final ChatMessageService chatMessageService;
     private final MessageSenderService senderService;
     private final UserService userService;
+    private final ChatRoomUserService chatRoomUserService;
 
 
     // 채팅방 입장 화면
@@ -82,9 +86,9 @@ public class ChatController {
 
 
         // 반환 결과를 socket session 에 userUUID 로 저장
-        headerAccessor.getSessionAttributes().put("userUUID",user.getUID());
+        headerAccessor.getSessionAttributes().put("userUUID", user.getUID());
         headerAccessor.getSessionAttributes().put("roomId", chat.getRoomId());
-        headerAccessor.getSessionAttributes().put("username", chat.getSender());
+        headerAccessor.getSessionAttributes().put("nickname", chat.getSender());
 
         senderService.send(chat);
 
@@ -93,7 +97,7 @@ public class ChatController {
     // 해당 유저
     @MessageMapping("/chat/sendMessage")
     public void sendMessage(@Payload ChatMessageDto chat) {
-        log.info("CHAT {}", chat);
+        log.info("send message chat {}", chat);
         senderService.send(chat);
 
     }
@@ -110,7 +114,7 @@ public class ChatController {
     @GetMapping("/chat/ai")
     public String chatRoom(@AuthenticationPrincipal PrincipalDetails principal, Model model) {
         String name = principal.getUsername();
-        String roomId = UUID.randomUUID().toString().substring(0, 8) +name;
+        String roomId = UUID.randomUUID().toString().substring(0, 8) + name;
         ChatRoomRespDto chatRoomRespDto = new ChatRoomRespDto();
         chatRoomRespDto.setRoomId(roomId);
         chatRoomRespDto.setRoomName(name);
@@ -125,5 +129,30 @@ public class ChatController {
         log.debug("chat message: {}", chatMessageDto);
         senderService.sendToAI(chatMessageDto);
     }
+
+    @PostMapping("/chat/s3/upload")
+    @ResponseBody
+    public ImageFileRespDto uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("roomId") String roomId) {
+        ImageFileRespDto imageFileRespDto = chatRoomService.uploadPhotoToChat(roomId, file);
+        log.debug("imageFileRespDto {}", imageFileRespDto);
+        return imageFileRespDto;
+    }
+
+
+    @EventListener
+    public void webSocketDisconnectListener(SessionDisconnectEvent event) {
+        log.info("DisConnEvent {}", event);
+
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+
+
+        String userUUID = (String) headerAccessor.getSessionAttributes().get("userUUID");
+        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
+        String nickname = (String) headerAccessor.getSessionAttributes().get("nickname");
+
+        chatRoomUserService.disableChatRoomOnLeave(roomId, nickname);
+
+    }
+
 
 }

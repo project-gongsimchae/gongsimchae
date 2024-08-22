@@ -34,7 +34,10 @@
     </div>
     <div class="chat-container">
         <div class="chat-header">
+            <a href="" th:href="@{|/portioning/${room.subDivisionUID}|}">이전</a>
             <h2>[[${room.roomName}]]</h2>
+            <button id="leaveButton">참여취소</button>
+
         </div>
         <div class="connecting">
             Connecting...
@@ -42,7 +45,7 @@
         <ul id="messageArea">
 
         </ul>
-        <form id="messageForm" name="messageForm" nameForm="messageForm">
+        <form id="messageForm" name="messageForm" nameForm="messageForm" enctype="multipart/form-data">
             <div class="form-group">
                 <div class="input-group clearfix">
                     <input type="text" id="message" placeholder="Type a message..." autocomplete="off"
@@ -55,17 +58,15 @@
         <div class="btn-group dropend">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="showMenu" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                파일 업로드
+                <i class="fa-solid fa-plus"></i>
             </button>
             <div id="menu" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <input type="file" id="file">
+                <input type="file" id="file" name="file">
                 <button type="button" class="btn btn-primary" id="uploadFile" onclick="uploadFile()">저장</button>
 
             </div>
         </div>
-        <!-- 나가기 버튼 추가 -->
-        <button id="leaveButton">참여취소</button>
-        <a href="" th:href="@{|/portioning/${room.subDivisionUID}|}">이전</a>
+
     </div>
 
 </div>

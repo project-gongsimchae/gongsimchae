@@ -7,7 +7,13 @@ public interface ErrorMessage {
      * common 에러
      */
 
-    String USER_NOT_FOUND = "존재하지 않는 유저입니다.";
+
+    // 유저
+    String USER_NOT_FOUND = "존재하지 않는 회원입니다.";
+
+    // 주소
+    String ADDRESS_NOT_FOUND = "존재하지 않는 주소입니다.";
+
 
     /**
      * groupBuying 에러
@@ -23,6 +29,9 @@ public interface ErrorMessage {
     /**
      * portion 에러
      */
+
+    // 채팅방
+    String CHATTING_ROOM_NOT_FOUND = "존재하지 않는 채팅방입니다.";
 
 
     /**
