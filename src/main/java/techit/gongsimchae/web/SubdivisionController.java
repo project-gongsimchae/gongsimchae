@@ -1,5 +1,7 @@
 package techit.gongsimchae.web;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,12 +53,13 @@ public class SubdivisionController {
 
     @GetMapping("/{UID}")
     public String subdivisionDetail(@PathVariable("UID") String UID,
-                                     @AuthenticationPrincipal PrincipalDetails userDetails,
-                                     Model model) {
+                                    @AuthenticationPrincipal PrincipalDetails userDetails,
+                                    Model model, HttpServletRequest request, HttpServletResponse response) {
 
         SubdivisionRespDto subdivisionRespDto = subdivisionService.findSubdivisionByUID(UID);
+        subdivisionService.viewCountValidation(UID,request,response);
 
-        // post에 있는 chatRoom 가져오기
+        // subdivision에 있는 chatRoom 가져오기
         ChatRoomRespDto chatRoom = chatRoomService.getChatRoom(subdivisionRespDto.getId());
         model.addAttribute("room", chatRoom);
 
