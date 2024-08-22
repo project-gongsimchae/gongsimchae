@@ -87,12 +87,14 @@ document.addEventListener('DOMContentLoaded', function () {
             searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
                 if (status === kakao.maps.services.Status.OK) {
                     let detailAddr = result[0].address.address_name;
+                    let sigungu = result[0].address.region_2depth_name;
 
                     marker.setPosition(mouseEvent.latLng);
                     marker.setMap(map);
 
                     // 도로명 주소, 위도, 경도 값을 hidden input에 설정합니다
                     document.getElementById('address').value = detailAddr;
+                    document.getElementById('sigungu').value = sigungu;
                     document.getElementById('latitude').value = mouseEvent.latLng.getLat();
                     document.getElementById('longitude').value = mouseEvent.latLng.getLng();
                 }

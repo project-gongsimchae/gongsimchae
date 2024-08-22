@@ -22,5 +22,6 @@ public class UserAdminUpdateReqDtoWeb {
     private String address;
     private String detailAddress;
     private String additionalAddress;
+    private String sigungu;
 
 }

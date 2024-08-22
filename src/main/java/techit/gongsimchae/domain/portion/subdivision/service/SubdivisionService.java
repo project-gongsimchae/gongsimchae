@@ -1,19 +1,22 @@
 package techit.gongsimchae.domain.portion.subdivision.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
-import techit.gongsimchae.domain.portion.chatroom.repository.ChatRoomRepository;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
-import techit.gongsimchae.domain.portion.participants.service.ParticipantService;
-import techit.gongsimchae.domain.portion.report.repository.ReportRepository;
+import techit.gongsimchae.domain.portion.notifications.dto.NotificationKeywordUserDto;
+import techit.gongsimchae.domain.portion.notifications.event.KeywordNotiEvent;
 import techit.gongsimchae.domain.portion.subdivision.dto.*;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType;
@@ -31,16 +34,15 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class SubdivisionService {
 
     private final SubdivisionRepository subdivisionRepository;
-    private final ParticipantService participantService;
     private final UserRepository userRepository;
     private final ImageS3Service imageS3Service;
     private final ImageFileRepository imageFileRepository;
     private final ChatRoomService chatRoomService;
-    private final ReportRepository reportRepository;
-    private final ChatRoomRepository chatRoomRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional(readOnly = true)
     public List<SubdivisionRespDto> getAllSubdivisions(){
@@ -73,16 +75,6 @@ public class SubdivisionService {
         return subdivisionRepository.findAllByUserIdAndDeleteStatusIsFalse(userId).stream().map(SubdivisionRespDto::new).toList();
     }
 
-    /**
-     * UserId를 기반으로 해당 유저가 참여중인 소분글 가져오는 메서드
-     *
-     */
-    @Transactional(readOnly = true)
-    public List<SubdivisionRespDto> findJoinSubdivisionByUserId(Long userId) {
-
-        return participantService.findByUserId(userId).stream().map(participant -> participant.getSubdivision()).toList();
-    }
-
     public String saveSubdivision(SubdivisionReqDto subdivisionReqDto,
                                   Long userId) {
 
@@ -99,10 +91,13 @@ public class SubdivisionService {
                 .views(0)
                 .UID(UUID.randomUUID().toString())
                 .subdivisionType(SubdivisionType.RECRUITING)
+                .sigungu(subdivisionReqDto.getSigungu())
                 .user(user)
                 .build();
 
         Subdivision savedSubdivision = subdivisionRepository.save(subdivision);
+
+        notifyKeyword(savedSubdivision.getSigungu(), savedSubdivision.getTitle(),savedSubdivision.getUID());
 
         // chatroom 생성
         chatRoomService.create(savedSubdivision);
@@ -114,8 +109,12 @@ public class SubdivisionService {
 
     public String updateSubdivision(SubdivisionUpdateReqDto subdivisionUpdateReqDto) {
 
+        log.debug("subdivisionUpdateReqDto {}", subdivisionUpdateReqDto);
+
         Subdivision subdivision = subdivisionRepository.findById(subdivisionUpdateReqDto.getId()).orElseThrow(() -> new CustomWebException("Subdivision not found"));
         subdivision.updateSubdivision(subdivisionUpdateReqDto);
+
+        notifyKeyword(subdivision.getSigungu(), subdivision.getTitle(),subdivision.getUID());
 
         imageS3Service.storeFiles(subdivisionUpdateReqDto.getImages(), "images", subdivision);
 
@@ -184,5 +183,24 @@ public class SubdivisionService {
     public Page<SubdivisionReportRespDto> getMostReported() {
         return subdivisionRepository.findMostFrequentReports(PageRequest.of(0, 10));
     }
+
+    /**
+     * 키워드에 등록된 글이 올라오면 알림이 가도록 설정
+     */
+
+    private void notifyKeyword(String sigungu, String title, String url) {
+        List<NotificationKeywordUserDto> users = userRepository.findUsersByKeyword(sigungu, title);
+        for (NotificationKeywordUserDto taget : users) {
+            TransactionSynchronizationManager.registerSynchronization(
+                    new TransactionSynchronizationAdapter() {
+                        @Override
+                        public void afterCommit() {
+                            publisher.publishEvent(new KeywordNotiEvent(taget.getUser(),taget.getKeyword(),url,sigungu,title));
+                        }
+                    }
+            );
+        }
+    }
+
 
 }

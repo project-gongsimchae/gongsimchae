@@ -23,6 +23,7 @@ public class Address {
     private String address;
     private String detailAddress;
     private String additionalAddress;
+    private String sigungu;
     private String UID;
     private String receiver;
     private String phoneNumber;
@@ -40,12 +41,13 @@ public class Address {
         this.zipcode = addressCreateReqDtoWeb.getZipcode();
         this.address = addressCreateReqDtoWeb.getAddress();
         this.detailAddress = addressCreateReqDtoWeb.getDetailAddress();
+        this.sigungu = addressCreateReqDtoWeb.getSigungu();
         this.phoneNumber = addressCreateReqDtoWeb.getPhoneNumber();
         this.UID = UUID.randomUUID().toString().substring(0, 8);
         this.receiver = addressCreateReqDtoWeb.getReceiver();
         this.additionalAddress = addressCreateReqDtoWeb.getAdditionalAddress();
         this.defaultAddressStatus = defaultAddressStatus;
-        if(user != null) addUser(user);
+        this.user = user;
     }
 
     /**
@@ -55,14 +57,6 @@ public class Address {
         this.detailAddress = addressUpdateReqDtoWeb.getDetailAddress();
         this.receiver = addressUpdateReqDtoWeb.getReceiver();
         this.phoneNumber = addressUpdateReqDtoWeb.getPhoneNumber();
-    }
-
-
-    /**
-     * 편의 메서드
-     */
-    public void addUser(User user) {
-        this.user = user;
     }
 
 

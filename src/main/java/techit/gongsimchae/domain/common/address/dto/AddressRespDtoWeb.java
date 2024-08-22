@@ -14,6 +14,7 @@ public class AddressRespDtoWeb {
     private String address;
     private String detailAddress;
     private String additionalAddress;
+    private String sigungu;
     private String UID;
     private String receiver;
     private String phoneNumber;
@@ -23,6 +24,7 @@ public class AddressRespDtoWeb {
         this.address = address.getAddress();
         this.zipcode = address.getZipcode();
         this.detailAddress = address.getDetailAddress();
+        this.sigungu = address.getSigungu();
         this.UID = address.getUID();
         this.receiver = address.getReceiver();
         this.phoneNumber = address.getPhoneNumber();

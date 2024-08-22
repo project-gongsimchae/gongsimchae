@@ -79,7 +79,7 @@ public class AdminController {
 
         userService.updateByAdmin(user);
         if(user.getAddress() != null)
-            addressService.addAddress(new AddressCreateReqDtoWeb(user.getZipcode(), user.getAddress(), user.getDetailAddress(), user.getAdditionalAddress()),user.getId());
+            addressService.addAddress(new AddressCreateReqDtoWeb(user),user.getId());
 
         rttr.addAttribute("id",id);
 
