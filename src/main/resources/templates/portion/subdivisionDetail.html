@@ -227,13 +227,8 @@
 
     // '신고하기' 버튼 클릭 시 모달 창 열기
     btn.onclick = function() {
-      // UID 값 가져오기
       var uid = btn.getAttribute("data-uid");
-
-      // iframe의 src를 신고 폼 URL로 설정
       document.getElementById("reportFormFrame").src = `/portioning/report/write?uid=${uid}`;
-
-      // 모달 창 열기
       modal.style.display = "block";
     }
 
@@ -248,6 +243,40 @@
         modal.style.display = "none";
       }
     }
+
+    // 신고 폼을 제출할 때 AJAX로 처리
+    document.getElementById('reportFormFrame').addEventListener('load', function() {
+      var iframeDocument = this.contentDocument || this.contentWindow.document;
+      var reportForm = iframeDocument.getElementById('reportForm'); // iframe 내 폼의 id가 'reportForm'이라고 가정
+
+      if (reportForm) {
+        reportForm.addEventListener('submit', function(event) {
+          event.preventDefault(); // 기본 폼 제출 막기
+
+          // 폼 데이터를 AJAX로 전송
+          var formData = new FormData(reportForm);
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', reportForm.action, true);
+
+          xhr.onload = function() {
+            if (xhr.status === 200) {
+              // 폼 제출 성공 시 모달을 닫고 성공 메시지 표시
+              modal.style.display = "none";
+              alert('신고가 정상적으로 되었습니다.');
+            } else {
+              alert('신고 처리 중 오류가 발생했습니다.');
+            }
+          };
+
+          xhr.onerror = function() {
+            alert('서버와 통신 중 문제가 발생했습니다.');
+          };
+
+          xhr.send(formData);
+        });
+      }
+    });
+
   </script>
 </section>
 </body>

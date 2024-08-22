@@ -3,6 +3,7 @@ package techit.gongsimchae.web;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -129,17 +130,18 @@ public class SubdivisionController {
     }
 
     @PostMapping("/report/write")
-    public String reportSubdivision(@Valid @ModelAttribute("report") ReportCreateReqDtoWeb reportCreateReqDtoWeb,
+    @ResponseBody
+    public ResponseEntity<?> reportSubdivision(@Valid @ModelAttribute("report") ReportCreateReqDtoWeb reportCreateReqDtoWeb,
                                     BindingResult bindingResult, @AuthenticationPrincipal PrincipalDetails principalDetails,
                                     RedirectAttributes rttr
                                     ) {
         log.debug("report subdivision request: {}", reportCreateReqDtoWeb);
         if(bindingResult.hasErrors()) {
-            return "portion/report";
+            return ResponseEntity.badRequest().body("신고 내용에 오류가 있습니다.");
         }
         reportService.createReport(reportCreateReqDtoWeb, principalDetails);
         rttr.addAttribute("uid", reportCreateReqDtoWeb.getUid());
 
-        return "redirect:/portioning/{uid}";
+        return ResponseEntity.ok("신고가 정상적으로 처리되었습니다.");
     }
 }

@@ -12,6 +12,9 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -22,13 +25,20 @@ public class NotiKeywordService {
 
 
     @Transactional
-    public Long createKeyword(NotiKeywordCreateDtoWeb createDto, PrincipalDetails principalDetails) {
+    public Long createKeyword(String keyword, PrincipalDetails principalDetails) {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
-        NotificationKeyword notificationKeyword = new NotificationKeyword(createDto.getNotiKeword(), user);
+        NotificationKeyword notificationKeyword = new NotificationKeyword(keyword, user);
         NotificationKeyword savedKeyword = notiKeywordRepository.save(notificationKeyword);
         return savedKeyword.getId();
     }
 
 
-
+    public List<String> getNotificationKeywords(PrincipalDetails principalDetails) {
+        return notiKeywordRepository.findAllByUserId(principalDetails.getAccountDto().getId())
+                .stream().map(NotificationKeyword::getKeyword).collect(Collectors.toList());
+    }
+    @Transactional
+    public void deleteNotificationKeyword(String keyword, PrincipalDetails principalDetails) {
+        notiKeywordRepository.deleteKeywordByUser(keyword, principalDetails.getAccountDto().getId());
+    }
 }

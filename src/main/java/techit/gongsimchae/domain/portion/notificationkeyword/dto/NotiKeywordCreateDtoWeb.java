@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class NotiKeywordCreateDtoWeb {
 
-    private String notiKeword;
+    private String keyword;
 
 }

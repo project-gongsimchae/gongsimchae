@@ -32,5 +32,20 @@
 <script th:src="@{/js/sendmail.js}"></script>
 <script src="" th:src="@{/js/authcode.js}"></script>
 <script th:src="@{/js/modalnoti.js}"></script>
+<script th:fragment="keyword">
+    function openKeywordPopup() {
+        var popupWidth = 500;
+        var popupHeight = 600;
+        var left = (screen.width - popupWidth) / 2;
+        var top = (screen.height - popupHeight) / 2;
+
+        window.open('/portioning/keywords/create', 'KeywordPopup',
+            'width=' + popupWidth +
+            ',height=' + popupHeight +
+            ',left=' + left +
+            ',top=' + top +
+            ',resizable=yes,scrollbars=yes,status=no,location=no,menubar=no');
+    }
+</script>
 </body>
 </html>

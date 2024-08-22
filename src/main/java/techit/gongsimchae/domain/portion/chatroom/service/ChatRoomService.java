@@ -10,6 +10,7 @@ import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.entity.S3VO;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.common.user.entity.UserStatus;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
 import techit.gongsimchae.domain.portion.chatroom.entity.ChatRoom;
@@ -80,19 +81,20 @@ public class ChatRoomService {
     }
 
     /**
-     * maxUserCnt에 따른 채팅방 입장 여부
+     * 유저 상태 또는 maxUserCnt에 따른 채팅방 입장 여부
      */
     public boolean checkRoomUserCount(String roomId, PrincipalDetails principalDetails) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
+        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         SubdivisionType subdivisionType = chatRoom.getSubdivision().getSubdivisionType();
-        String loginId = principalDetails.getUsername();
+
         if (chatRoom.getChatRoomUsers().stream()
-                .map(user -> user.getUser().getLoginId())
-                .anyMatch(id -> id.equals(loginId))) {
+                .map(u -> u.getUser().getLoginId())
+                .anyMatch(id -> id.equals(user.getLoginId()))) {
             return true;
         }
         int currentUserCount = chatRoom.getChatRoomUsers().size();
-        if (currentUserCount + 1 > chatRoom.getMaxUserCnt() || !subdivisionType.equals(SubdivisionType.RECRUITING)) {
+        if (currentUserCount + 1 > chatRoom.getMaxUserCnt() || !subdivisionType.equals(SubdivisionType.RECRUITING) || !user.getUserStatus().equals(UserStatus.NORMAL)) {
             return false;
         }
         return true;
