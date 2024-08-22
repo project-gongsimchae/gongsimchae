@@ -16,11 +16,8 @@ import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.post.entity.Post;
-
 import techit.gongsimchae.domain.portion.chatroom.entity.ChatRoom;
-
 import techit.gongsimchae.domain.groupbuying.reviews.entity.Reviews;
-
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 
 @Entity
@@ -57,7 +54,6 @@ public class ImageFile extends BaseEntity {
     private Subdivision subdivision;
 
     @ManyToOne(fetch = FetchType.LAZY)
-
     @JoinColumn(name = "inquiry_id")
     private Inquiry inquiry;
 
@@ -65,6 +61,8 @@ public class ImageFile extends BaseEntity {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviews_id")
     private Reviews reviews;
 

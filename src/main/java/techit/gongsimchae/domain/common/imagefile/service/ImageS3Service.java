@@ -20,8 +20,9 @@ import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.post.entity.Post;
-
 import techit.gongsimchae.domain.portion.chatroom.entity.ChatRoom;
+import techit.gongsimchae.domain.portion.chatroom.entity.ChatRoom;
+
 
 import techit.gongsimchae.domain.groupbuying.reviews.entity.Reviews;
 
@@ -80,12 +81,10 @@ public class ImageS3Service {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (User) object);
             }  else if (object instanceof Event) {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Event) object);
-
             } else if (object instanceof Inquiry) {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory,storeFileName), (Inquiry) object);
             } else if (object instanceof ChatRoom) {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory,storeFileName), (ChatRoom) object);
-
             } else if (object instanceof Reviews) {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Reviews) object);
 

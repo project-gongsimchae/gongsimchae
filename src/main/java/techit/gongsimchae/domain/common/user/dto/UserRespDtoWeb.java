@@ -37,6 +37,7 @@ public class UserRespDtoWeb {
     private String address;
     private String detailAddress;
     private String additionalAddress;
+    private String sigungu;
 
 
     /**
@@ -70,6 +71,7 @@ public class UserRespDtoWeb {
             this.detailAddress = address.getDetailAddress();
             this.zipcode = address.getZipcode();
             this.additionalAddress = address.getAdditionalAddress();
+            this.sigungu = address.getSigungu();
         }
 
     }

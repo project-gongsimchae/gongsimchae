@@ -7,13 +7,11 @@ public interface ErrorMessage {
      * common 에러
      */
 
-
     // 유저
     String USER_NOT_FOUND = "존재하지 않는 회원입니다.";
 
     // 주소
     String ADDRESS_NOT_FOUND = "존재하지 않는 주소입니다.";
-
 
     /**
      * groupBuying 에러
@@ -29,6 +27,13 @@ public interface ErrorMessage {
     /**
      * portion 에러
      */
+    // 소분글
+    String SUBDIVISION_NOT_FOUND = "존재하지 않는 소분글입니다.";
+
+    // 채팅방
+    String CHATTING_ROOM_NOT_FOUND = "존재하지 않는 채팅방입니다.";
+
+
 
     // 채팅방
     String CHATTING_ROOM_NOT_FOUND = "존재하지 않는 채팅방입니다.";

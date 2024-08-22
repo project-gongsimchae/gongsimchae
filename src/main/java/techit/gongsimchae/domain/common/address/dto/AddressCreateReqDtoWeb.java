@@ -3,6 +3,7 @@ package techit.gongsimchae.domain.common.address.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.entity.User;
 
 @Data
@@ -13,7 +14,7 @@ public class AddressCreateReqDtoWeb {
     private String address;
     private String detailAddress;
     private String additionalAddress;
-    private String UID;
+    private String sigungu;
     private String receiver;
     private String phoneNumber;
 
@@ -22,10 +23,11 @@ public class AddressCreateReqDtoWeb {
         this.phoneNumber = user.getPhoneNumber();
     }
 
-    public AddressCreateReqDtoWeb(String zipcode, String address, String detailAddress, String additionalAddress) {
-        this.zipcode = zipcode;
-        this.address = address;
-        this.detailAddress = detailAddress;
-        this.additionalAddress = additionalAddress;
-    }
+    public AddressCreateReqDtoWeb(UserAdminUpdateReqDtoWeb user) {
+        this.zipcode = user.getZipcode();
+        this.address = user.getAddress();
+        this.detailAddress = user.getDetailAddress();
+        this.additionalAddress = user.getAdditionalAddress();
+        this.sigungu = user.getSigungu();
+
 }
