@@ -205,9 +205,11 @@ public class UserService {
         User findUser = userRepository.findById(updateDto.getId()).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         findUser.changeInfoByAdmin(updateDto);
     }
+
     @Transactional
     public void banUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         user.ban();
     }
+
 }

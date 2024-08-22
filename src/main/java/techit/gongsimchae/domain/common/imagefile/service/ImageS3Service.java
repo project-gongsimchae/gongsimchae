@@ -21,7 +21,11 @@ import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.post.entity.Post;
 import techit.gongsimchae.domain.portion.chatroom.entity.ChatRoom;
+import techit.gongsimchae.domain.portion.chatroom.entity.ChatRoom;
+
+
 import techit.gongsimchae.domain.groupbuying.reviews.entity.Reviews;
+
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 import techit.gongsimchae.global.exception.CustomWebException;
 
@@ -83,6 +87,7 @@ public class ImageS3Service {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory,storeFileName), (ChatRoom) object);
             } else if (object instanceof Reviews) {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Reviews) object);
+
             } else {
                 throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
             }

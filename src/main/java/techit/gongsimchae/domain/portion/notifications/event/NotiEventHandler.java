@@ -29,6 +29,7 @@ public class NotiEventHandler {
         log.debug("noti to inquiry {}", event);
     }
 
+
     @TransactionalEventListener
     @Async("customTaskExecutor")
     public void SendKeywordNotifications(KeywordNotiEvent event) throws InterruptedException {

@@ -61,9 +61,11 @@ public class ImageFile extends BaseEntity {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reviews_id")
     private Reviews reviews;
+
 
     public ImageFile(String originalFilename, String storeFilename, User user) {
         this.originalFilename = originalFilename;
