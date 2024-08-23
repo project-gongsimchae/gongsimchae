@@ -32,6 +32,14 @@ public class UserRespDtoWeb {
     private String passwordChange;
     private String passwordChangeConfirm;
 
+    // 주소
+    private String zipcode;
+    private String address;
+    private String detailAddress;
+    private String additionalAddress;
+    private String sigungu;
+
+
     /**
      * 유저정보가 다 담기는 생성자
      *
@@ -50,6 +58,21 @@ public class UserRespDtoWeb {
         this.UID = user.getUID();
         this.mannerPoint = user.getMannerPoint();
         this.joinType = user.getJoinType();
+
+    }
+
+    /**
+     * 주소 세팅
+     */
+
+    public void setAddress(AddressRespDtoWeb address) {
+        if (address != null) {
+            this.address = address.getAddress();
+            this.detailAddress = address.getDetailAddress();
+            this.zipcode = address.getZipcode();
+            this.additionalAddress = address.getAdditionalAddress();
+            this.sigungu = address.getSigungu();
+        }
 
     }
 }

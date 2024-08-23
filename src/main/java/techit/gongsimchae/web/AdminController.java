@@ -10,12 +10,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import techit.gongsimchae.domain.common.address.dto.AddressCreateReqDtoWeb;
+import techit.gongsimchae.domain.common.address.service.AddressService;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryAdminReplyReqDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
+import techit.gongsimchae.domain.portion.report.dto.ReportRespDtoWeb;
+import techit.gongsimchae.domain.portion.report.service.ReportService;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReportRespDto;
+import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 
 import java.util.List;
 
@@ -26,6 +32,9 @@ import java.util.List;
 public class AdminController {
     private final UserService userService;
     private final InquiryService inquiryService;
+    private final AddressService addressService;
+    private final SubdivisionService subdivisionService;
+    private final ReportService reportService;
 
 
     @GetMapping
@@ -46,6 +55,7 @@ public class AdminController {
     @GetMapping("/users/{id}")
     public String detailsUser(@PathVariable("id") Long id, Model model) {
         UserRespDtoWeb user = userService.getUser(id);
+        user.setAddress(addressService.getDefaultAddress(id));
         model.addAttribute("user", user);
         return "admin/users/userDetail";
     }
@@ -53,6 +63,8 @@ public class AdminController {
     @GetMapping("/users/update/{id}")
     public String userUpdateForm(@PathVariable("id") Long id, Model model) {
         UserRespDtoWeb user = userService.getUser(id);
+        user.setAddress(addressService.getDefaultAddress(id));
+
         model.addAttribute("user", user);
         return "admin/users/userUpdate";
     }
@@ -66,6 +78,9 @@ public class AdminController {
         }
 
         userService.updateByAdmin(user);
+        if(user.getAddress() != null)
+            addressService.addAddress(new AddressCreateReqDtoWeb(user),user.getId());
+
         rttr.addAttribute("id",id);
 
         return "redirect:/admin/users/{id}";
@@ -130,6 +145,52 @@ public class AdminController {
     public String DeleteInquiry(@PathVariable("id") String id) {
         inquiryService.deleteInquiry(id);
         return "redirect:/admin/inquires";
+    }
+
+    /**
+     * 신고수가 제일 많은 신고글 보기
+     */
+    @GetMapping("/reports")
+    public String ReportList(Model model) {
+        Page<SubdivisionReportRespDto> reports = subdivisionService.getMostReported();
+        model.addAttribute("reports", reports);
+        return "admin/reports/reportList";
+    }
+
+    @GetMapping("/reports/{id}")
+    public String SubdivisionReport(@PathVariable("id") Long id, Model model) {
+        List<ReportRespDtoWeb> reports = reportService.getSubdivisionReport(id);
+        model.addAttribute("reports", reports);
+        return "admin/reports/subdivisionReport";
+    }
+
+    /**
+     * 신고 초기화
+     */
+    @PostMapping("/reports/reset/{subdivisionUID}")
+    public String restReport(@PathVariable("subdivisionUID") String subdivisionUID) {
+        reportService.deleteAllReport(subdivisionUID);
+        return "redirect:/admin/reports";
+    }
+
+
+    /**
+     * 글 삭제
+     */
+    @PostMapping("/subdivision/delete/{subdivisionId}")
+    public String deleteSubdivision(@PathVariable("subdivisionId") String subdivisionId) {
+        subdivisionService.deleteSubdivision(subdivisionId);
+        return "redirect:/admin/reports";
+    }
+
+    /**
+     * 유저 제재
+     */
+
+    @PostMapping("/users/ban/{userId}")
+    public String deleteSubdivision(@PathVariable("userId") Long userId) {
+        userService.banUser(userId);
+        return "redirect:/admin/reports";
     }
 
 

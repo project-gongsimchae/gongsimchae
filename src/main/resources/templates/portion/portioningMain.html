@@ -83,10 +83,12 @@
                         </div>
                         <div class="write-simple-info">
                             <h3 class="write-title" th:text="${subdivision.title}"></h3>
+                            <h4 class="write-address" th:text="${subdivision.address}"></h4>
                             <h4 class="write-price">
-                             가격: <span class="price-value" th:text="${subdivision.price}"></span>원
+                                <span th:if="${subdivision.subdivisionType != T(techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType).RECRUITING}" th:text="'['+ ${subdivision.subdivisionType.description} +']'"></span>
+                                <span class="price-value" th:text="${subdivision.price}"></span>원
                            </h4>
-                          <h4 class="write-address" th:text="'희망 장소: ' + ${subdivision.address}"></h4>
+
                            <div class="write-interest">
                                 views <span class="interest-value" th:text="${subdivision.views}"></span>
                             </div>
@@ -116,6 +118,8 @@
         window.location.href = '/portioning/write';
     });
 </script>>
+<script th:replace="~{layout/portionHeader :: keyword}"></script>
+
 
 </body>
 

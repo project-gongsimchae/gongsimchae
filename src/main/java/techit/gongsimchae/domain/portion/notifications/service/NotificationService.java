@@ -12,6 +12,8 @@ import techit.gongsimchae.domain.portion.notifications.dto.NotificationRespDtoWe
 import techit.gongsimchae.domain.portion.notifications.dto.NotificationResponse;
 import techit.gongsimchae.domain.portion.notifications.entity.NotificationType;
 import techit.gongsimchae.domain.portion.notifications.entity.Notifications;
+import techit.gongsimchae.domain.portion.notifications.event.ChatNotiEvent;
+import techit.gongsimchae.domain.portion.notifications.event.KeywordNotiEvent;
 import techit.gongsimchae.domain.portion.notifications.repository.EmitterRepository;
 import techit.gongsimchae.domain.portion.notifications.repository.NotificationRepository;
 import techit.gongsimchae.global.dto.PrincipalDetails;
@@ -59,6 +61,18 @@ public class NotificationService {
     }
 
     /**
+     * 채팅방 알림을 알려주는 메서드
+     */
+    @Transactional
+    public void alertAboutChat(ChatNotiEvent chatNotiEvent) {
+        Notifications notifications = Notifications.builder()
+                .user(chatNotiEvent.getUser()).isRead(0).url("/chat/room?roomId=" + chatNotiEvent.getUrl())
+                .notificationType(NotificationType.CHAT).content("["+chatNotiEvent.getContent()+"방]" + " 새로운 메시지가 왔습니다.").build();
+
+        notificationRepository.save(notifications);
+    }
+
+    /**
      * 1:1 문의 답변이 왔을 때 알려주는 메서드
      */
     @Transactional
@@ -76,6 +90,18 @@ public class NotificationService {
                     sendToClient(emitter, key, notificationResponse);
                 }
         );
+    }
+
+    /**
+     * 키워드 알림 메서드
+     */
+    @Transactional
+    public void alertAboutKeyword(KeywordNotiEvent event) {
+        Notifications notifications = Notifications.builder()
+                .user(event.getUser()).isRead(0).url("/portioning/" + event.getUrl())
+                .notificationType(NotificationType.KEYWORD).content("["+event.getKeyword()+"] "+event.getTitle() +" ("+event.getAddress()+")").build();
+
+        notificationRepository.save(notifications);
     }
 
     public  NotificationResponse getAllNotifications(PrincipalDetails principalDetails) {

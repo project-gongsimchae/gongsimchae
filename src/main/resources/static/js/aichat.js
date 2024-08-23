@@ -137,7 +137,6 @@ function displayMessage(chat) {
         downBtnElement.setAttribute("class", "btn fa fa-download");
         downBtnElement.setAttribute("id", "downBtn");
         downBtnElement.setAttribute("name", chat.fileName);
-        downBtnElement.setAttribute("onclick", `downloadFile('${chat.fileName}', '${chat.fileDir}')`);
 
         contentElement.appendChild(imgElement);
         contentElement.appendChild(downBtnElement);
