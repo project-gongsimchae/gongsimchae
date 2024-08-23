@@ -29,5 +29,5 @@ public class AddressCreateReqDtoWeb {
         this.detailAddress = user.getDetailAddress();
         this.additionalAddress = user.getAdditionalAddress();
         this.sigungu = user.getSigungu();
-
+    }
 }

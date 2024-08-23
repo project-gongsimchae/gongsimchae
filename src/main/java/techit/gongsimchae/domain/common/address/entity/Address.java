@@ -59,11 +59,6 @@ public class Address {
         this.phoneNumber = addressUpdateReqDtoWeb.getPhoneNumber();
     }
 
-
-    public void unsetDefaultAddress() {
-        this.defaultAddressStatus = DefaultAddressStatus.SECONDARY;
-    }
-
     public void unsetDefaultAddress() {
         this.defaultAddressStatus = DefaultAddressStatus.SECONDARY;
     }
