@@ -1,0 +1,43 @@
+<html th:replace="~{layout/mypage :: mypage(~{::section}, 'pick')}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>찜한 상품들</title>
+</head>
+<body>
+<section class="picklist-section">
+    <div class="container">
+        <h3 class="section-title">찜한 상품들</h3>
+        <div class="row" th:each="item : ${items}">
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="custom-picklist-item-card">
+                    <div class="custom-picklist-image-wrapper" th:if="${item.getImageUrls != null}" th:with="image=${item.getImageUrls.getFirst()}">
+                        <img th:src="${image.getStoreFileName()}" class="custom-picklist-image" alt="상품 이미지">
+                    </div>
+                    <div class="custom-picklist-item-details">
+                        <h4 class="custom-picklist-item-title">
+                            <a th:href="@{|/product/${item.UID}|}" th:text="${item.name}"></a>
+                        </h4>
+                        <div class="custom-price-detail-container">
+                            <span class="custom-discount-rate-detail" th:text="${item.discountRate} + '%'">50%</span>
+                            <span class="custom-discount-price-detail"
+                                  th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
+                                  th:text="${#numbers.formatDecimal(discountPrice, 0, 'COMMA', 0, 'POINT')} + '원'">8,950원</span>
+                            <span class="custom-original-price-detail" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">17,900원</span>
+                        </div>
+                        <div class="custom-picklist-button-group">
+                            <button class="custom-picklist-button custom-picklist-delete-button" th:data-item-id="${item.UID}">
+                                <i class="fas fa-trash-alt"></i> 삭제
+                            </button>
+                            <button class="custom-picklist-button custom-picklist-cart-button">
+                                <i class="fas fa-shopping-cart"></i> 담기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

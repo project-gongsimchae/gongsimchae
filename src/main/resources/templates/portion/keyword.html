@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>키워드 등록</title>
+
+    <!-- CSRF 토큰을 메타 태그로 추가 -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .keywords-list {
+            margin-top: 20px;
+        }
+
+        .keyword-item {
+            display: inline-block;
+            background-color: #e0f7fa;
+            color: #00796b;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .delete-button {
+            background: none;
+            color: #ff6f61;
+            border: none;
+            padding: 0 4px;
+            font-size: 14px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .delete-button:hover {
+            color: #e65c50;
+        }
+    </style>
+</head>
+<body>
+<div class="subdivision-register-body">
+
+    <div class="container">
+        <!-- 키워드 입력 폼 -->
+        <form id="keywordForm">
+            <!-- CSRF 토큰 필드 -->
+            <input type="hidden" name="_csrf" value="${_csrf.token}" />
+
+            <div>
+                <label for="notiKeyword">알림 키워드 입력</label>
+                <input type="text" id="notiKeyword" name="keyword" placeholder="키워드를 입력하고 엔터를 누르세요">
+                <div id="errorMessage" style="color:red;"></div>
+            </div>
+        </form>
+
+        <!-- 입력된 키워드를 보여주는 영역 -->
+        <div class="keywords-list" id="keywordsList">
+            <h4>입력한 키워드:</h4>
+            <!-- 키워드가 추가될 위치 -->
+            <span th:each="keyword : ${whiteList}" class="keyword-item">
+                <span th:text="${keyword}"></span>
+                <button class="delete-button" th:data-keyword="${keyword}" >X</button>
+            </span>
+        </div>
+    </div>
+
+</div>
+<script  th:inline="javascript">
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    // 키워드를 저장할 whiteList 배열
+    let whiteList = [[${whiteList}]];
+    console.log(whiteList);
+
+    // 문자열을 JSON 배열로 변환
+    whiteList = JSON.parse(whiteList);
+
+    // 이제 whiteList는 JavaScript 배열입니다.
+    console.log(whiteList);
+
+    // 키워드 폼 요소
+    const keywordInput = document.getElementById('notiKeyword');
+    const keywordsListDiv = document.getElementById('keywordsList');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // 엔터 키 이벤트를 처리하는 함수
+    keywordInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+
+            const keyword = keywordInput.value.trim();
+
+            if (keyword !== '') {
+                if (!whiteList.includes(keyword)) {
+                    fetch('/portioning/keywords/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            [csrfHeader]: csrfToken
+                        },
+                        body: new URLSearchParams({
+                            keyword: keyword
+                        }).toString()
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                whiteList.push(keyword);
+                                updateKeywordsList();
+                                keywordInput.value = '';
+                                errorMessage.textContent = '';
+                            } else {
+                                errorMessage.textContent = '키워드 등록 실패';
+                            }
+                        })
+                        .catch(error => {
+                            errorMessage.textContent = '등록 요청 중 오류 발생';
+                            console.error('등록 요청 중 오류 발생:', error);
+                        });
+                } else {
+                    errorMessage.textContent = '이미 추가된 키워드입니다.';
+                }
+            } else {
+                errorMessage.textContent = '키워드를 입력하세요.';
+            }
+        }
+    });
+
+    // 키워드 삭제 함수
+    function deleteKeyword(keyword) {
+        fetch(`/portioning/keywords/delete?keyword=${encodeURIComponent(keyword)}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                [csrfHeader]: csrfToken
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    whiteList = whiteList.filter(item => item !== keyword);
+                    updateKeywordsList();
+                } else {
+                    console.error('키워드 삭제 실패');
+                }
+            })
+            .catch(error => console.error('삭제 요청 중 오류 발생:', error));
+    }
+
+    // whiteList 배열을 이용해 화면에 키워드를 동적으로 추가하는 함수
+    function updateKeywordsList() {
+        keywordsListDiv.innerHTML = '<h4>입력한 키워드:</h4>';
+
+        whiteList.forEach(function (word) {
+            const keywordItem = document.createElement('span');
+            keywordItem.className = 'keyword-item';
+
+            const keywordText = document.createTextNode(word);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'delete-button';
+            deleteButton.textContent = 'X';
+            deleteButton.onclick = function() {
+                deleteKeyword(word);
+            };
+
+            keywordItem.appendChild(keywordText);
+            keywordItem.appendChild(deleteButton);
+
+            keywordsListDiv.appendChild(keywordItem);
+        });
+    }
+
+    // 페이지 로드 시 키워드 목록 업데이트
+    updateKeywordsList();
+
+    // 초기화: 기존에 Thymeleaf에서 렌더링된 키워드의 삭제 버튼에 이벤트 리스너를 추가
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function() {
+            deleteKeyword(this.dataset.keyword);
+        });
+    });
+
+</script>
+</body>
+</html>

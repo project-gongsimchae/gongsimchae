@@ -1,0 +1,382 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.area-filter {
+    max-width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-top: 20px;
+    border: 2px solid #ccc;
+}
+
+.filter-container {
+    padding: 0;
+    margin: 0;
+}
+
+.sido-areas ul, .sigungu-list, .myeondongeup-list{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 한 줄에 7개의 항목을 배치 */
+    gap: 10px; /* 각 항목 사이의 간격 */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.portioning-section li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center; /* 텍스트 가운데 정렬 */
+    background-color: #f9f9f9; /* 각 항목의 배경색 설정 */
+    border-radius: 4px; /* 각 항목의 모서리를 둥글게 설정 */
+}
+
+.portioning-section li:hover {
+    background-color: #f0f0f0;
+}
+
+.portioning-section li.active {
+    background-color: #e0e0e0;
+    font-weight: bold;
+}
+
+.myeondongeup-areas{
+    border-top: 1px solid #e0e0e0;
+    margin-top: 10px;
+    padding-top: 10px;
+    display: none;
+
+}
+
+.sigungu-areas {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.sigungu-list, .myeondongeup-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar-bottom ul {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+}
+
+.navbar-bottom li {
+    margin: 0 20px;
+}
+
+.navbar-bottom a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.banner {
+    background-color: #f7f7f7;
+    text-align: center;
+    padding: 40px 0;
+}
+
+
+.selector-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 100%;
+}
+
+.area-filter{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.search-section {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    align-items: center;
+    margin-top: 5px;
+    width: 100%;
+}
+
+.search-section .label {
+    font-weight: bold;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.search-section .input-container {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    box-sizing: border-box;
+    border-radius: 8px;
+    height: 50px;
+    flex-wrap: wrap;
+}
+
+.input-container:focus {
+    outline: none;
+    border: 1px solid #ccc;
+}
+
+.tag {
+    background-color: #e0e0e0;
+    padding: 5px 10px;
+    margin: 2px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.tag .close-btn {
+    margin-left: 5px;
+    cursor: pointer;
+    color: #888;
+    font-size: 14px;
+}
+
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.search-btn {
+    height: 50px;
+    border: none; /* 연두색 테두리 추가 */
+    background-color: #4CAF50;
+    color: #ffffff;
+    font-weight: bold; /* 버튼 텍스트를 굵게 */
+    border-radius: 8px; /* 버튼 모서리 둥글게 */
+    padding: 0 40px; /* 버튼의 좌우 패딩 */
+    transition: all 0.3s ease; /* 호버 시 애니메이션 효과 추가 */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space:nowrap;
+}
+
+.search-btn:hover {
+    background-color: #4CAF50; /* 호버 시 버튼 배경색을 연두색으로 변경 */
+    color: #fff; /* 호버 시 버튼 텍스트 색상을 흰색으로 변경 */
+    border-color: #4CAF50; /* 호버 시 테두리 색상 유지 */
+}
+
+.section-divider {
+    border: none;
+    border-top: 2px solid #ccc;
+    margin: 40px 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.write-section {
+    text-align: center;
+    padding: 20px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.write-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+
+.write-btn {
+    background-color: #fff; /* 버튼 배경색 */
+    color: #4CAF50; /* 버튼 텍스트 색상 */
+    border: 1px solid #4CAF50;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    height: 30px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.write-button:hover {
+    background-color: #4CAF50; /* 호버 시 배경색 변경 */
+    color: #fff; /* 호버 시 텍스트 색상 변경 */
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+}
+
+.sort-options span {
+    color: #aaa; /* 구분선의 색상 */
+    font-size: 15px;
+}
+
+.write-sort-new, .write-sort-deadline {
+    color: #aaa;
+    text-decoration: none;
+    padding: 0 18px;
+    font-size: 14px;
+    transition: color 0.3s, text-decoration 0.3s;
+}
+
+.write-sort-new:hover,
+.write-sort-deadline:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
+
+.write-section h2 {
+    text-align: center;
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.write-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px 18px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* 링크 스타일 초기화 */
+.write-subdivision a {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* a 태그가 감싸는 요소를 전체로 적용 */
+}
+
+/* 제목, 가격, 주소를 일반 텍스트처럼 표시 */
+.write-title, .write-price, .write-address {
+    color: inherit; /* 기본 텍스트 색상 유지 */
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+/* 마우스 오버 시에도 기본 텍스트 스타일 유지 */
+.write-subdivision a:hover .write-title,
+.write-subdivision a:hover .write-price,
+.write-subdivision a:hover .write-address {
+    color: inherit; /* 링크 색상 변경 없음 */
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+/* write-subdivision 기본 스타일 */
+.write-subdivision {
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    color: rgb(51, 51, 51);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.write-subdivision:hover {
+    background-color: #f9f9f9; /* 마우스 오버 시 배경색 변경 */
+}
+.thumbnail-image-placeholder {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    background-color: #f4f4f4;
+    margin-bottom: 10px;
+    overflow: hidden; /* 이미지가 카드 영역을 넘지 않도록 설정 */
+}
+
+.thumbnail-image-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지가 영역에 맞게 크기를 조정하고 넘치는 부분은 잘라냄 */
+    display: block;
+}
+
+
+.write-title {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.write-price {
+    margin-bottom: 7px;
+    font-size: 15px;
+
+}
+
+.write-address {
+    font-size: 14px;
+}
+
+.price-value {
+    color: #45a049;
+    font-weight: bold;
+}
+
+
+.write-simple-info{
+    padding: 10px;
+    text-align: left;
+}
+
+.write-interest {
+    position: absolute; /* 절대 위치로 설정 */
+    bottom: 6px; /* 박스 아래쪽에서 10px */
+    right: 10px; /* 박스 오른쪽에서 10px */
+    font-size: 13px;
+    padding: 5px;
+    text-align: right;
+    /*box-sizing: border-box; !* 패딩과 테두리가 전체 너비에 포함되도록 설정 *!*/
+}
+
+.interest-value {
+    font-size: 14px;
+}
+
+footer {
+    background-color: #f7f7f7;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}

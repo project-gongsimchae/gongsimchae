@@ -1,53 +1,251 @@
-<div th:fragment="navbar">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" xmlns:sec="http://www.w3.org/1999/xhtml">
-        <a class="navbar-brand" href="#" th:href="@{/}">홈</a>
-        <div sec:authorize="hasRole('ADMIN')">
-            <a class="navbar-brand" href="#" th:href="@{/admin/users}">관리자</a>
-        </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <form th:action="@{/posts}" method="get" class="w-25">
-            <div class="input-group">
-                <select class="form-control w-auto" name="key" style="width: 5px; text-align: center">
-                    <option value="title" name="title">제목+내용</option>
-                    <option value="name" name="name">작성자</option>
-                </select>
-                <input type="text" class="form-control" name="value" style="flex: 2;">
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">검색</button>
+<div class="container-nav" th:fragment="product_navbar">
+    <nav class="navbar navbar-light bg-white" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/main}">
+                <img th:src="@{/img/logo.png}" alt="공심채 로고" style="height: 30px;">
+            </a>
+            <div class="navbar-collapse show" id="navbarNav">
+                <ul class="me-auto mb-2 mb-lg-0 d-flex align-items-center shop-division">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/main}">공동구매</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/portioning}">소분나눔</a>
+                    </li>
+                </ul>
+                <form class="d-flex mx-auto form-style" method="get" action="/search">
+                    <input class="form-control me-2" type="search" name="keyword" placeholder="검색" aria-label="Search"
+                           style="max-width: 700px; flex-grow: 1;">
+                    <button class="btn btn-outline-success search-btn" type="submit">검색</button>
+                </form>
+                <div sec:authorize="isAnonymous()">
+                    <button class="btn btn-success ms-3" th:onclick="|location.href='@{/signup}'|">회원가입</button>
+                    <button class="btn btn-success ms-3" th:onclick="|location.href='@{/login}'|">로그인</button>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <button class="btn btn-outline-success ms-3"><span
+                            th:text="${#authentication.principal.getNickname()}"></span> 님
+                    </button>
+                    <form th:action="@{/logout}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-success ms-3">로그아웃</button>
+                    </form>
                 </div>
             </div>
-        </form>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a class="nav-link" href="" th:href="@{/login}">로그인</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a class="nav-link" href="" th:href="@{/join}">회원가입</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    </form>
-                    <a class="nav-link" href="#" onclick="document.getElementById('logoutForm').submit();">로그아웃</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="" th:href="@{/account}">개인정보</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" th:href="@{/posts/create}">글 작성</a>
-                </li>
+        </div>
+        <div sec:authorize="isAuthenticated()" class="navbar-links nav-container mt-1 text-end">
+            <a th:href="@{/mypage/pick/list}" class="btn btn-link nav-list-a">
+                <i class="fas fa-heart"></i> 찜
+            </a>
+            <a th:href="@{/product/cart}" class="btn btn-link nav-list-a">
+                <i class="fas fa-shopping-cart"></i> 장바구니
+            </a>
+            <a th:href="@{/mypage/orders}" class="btn btn-link nav-list-a">
+                <i class="fas fa-user"></i> 마이페이지
+            </a>
+            <a id="notificationButton" class="btn btn-link nav-list-a">
+                <i th:classappend="${hasNotification} ? 'fa-solid' : 'fa-regular'"
+                   class="fa-bell"
+                   th:text="${hasNotification}?:_"></i>
+            </a>
+            <!-- 모달 -->
+            <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog"
+                 aria-labelledby="notificationModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="notificationModalLabel">알림</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="notificationContent">
+                            <!-- 서버에서 받아온 알림 데이터가 여기에 렌더링됩니다. -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" th:href="@{|/@${#authentication.getPrincipal().getName()}|}">내 벨로그</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" th:href="@{/posts/saves}">임시글</a>
-                </li>
-            </ul>
+
+        <div class="navbar-links nav-container mt-3 text-center">
+
+        <div class="d-flex justify-content-center mt-2">
+            <div class="navbar-menu">카테고리
+                <ul class="dropdown-menu">
+                    <li th:each="category : ${categories}">
+                        <a class="dropdown-item" th:text="${category.name}"
+                           th:href="@{/category/{category_id}(category_id=${category.id}, page=1, per_page=96, sorted_type=1)}"></a>
+                    </li>
+                </ul>
+            </div>
+            <a th:href="@{/collection-groups/new-item}" class="btn btn-link nav-list-a">신상품</a>
+            <a th:href="@{/collection-groups/best-item}" class="btn btn-link nav-list-a">베스트</a>
+            <a th:href="@{/event}" class="btn btn-link nav-list-a">이벤트</a>
+            <div sec:authorize="hasRole('USER')">
+                <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
+            </div>
+        </div>
+        <div sec:authorize="isAnonymous()">
+            <a> </a>
+        </div>
+
+            <div sec:authorize="hasRole('ADMIN')" class="text-end-admin">
+                <a th:href="@{/admin/users}" class="btn btn-link nav-list-a">관리자 페이지</a>
+            </div>
         </div>
     </nav>
 </div>
+
+<div class="container-nav" th:fragment="portion_navbar">
+    <nav class="navbar navbar-light bg-white" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/main}">
+                <img th:src="@{/img/logo.png}" alt="공심채 로고" style="height: 30px;">
+            </a>
+            <div class="navbar-collapse show" id="navbarNav">
+                <ul class="me-auto mb-2 mb-lg-0 d-flex align-items-center shop-division">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/main}">공동구매</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/portioning}">소분나눔</a>
+                    </li>
+                </ul>
+                <form class="d-flex mx-auto form-style">
+                    <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search"
+                           style="max-width: 700px; flex-grow: 1;">
+                    <button class="btn btn-outline-success search-btn" type="submit">검색</button>
+                </form>
+                <div sec:authorize="isAnonymous()">
+                    <button class="btn btn-success ms-3" th:onclick="|location.href='@{/signup}'|">회원가입</button>
+                    <button class="btn btn-success ms-3" th:onclick="|location.href='@{/login}'|">로그인</button>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <button class="btn btn-outline-success ms-3"><span
+                            th:text="${#authentication.principal.getNickname()}"></span> 님
+                    </button>
+                    <form th:action="@{/logout}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-success ms-3">로그아웃</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div sec:authorize="isAuthenticated()" class="navbar-links nav-container mt-1 text-end">
+            <a th:href="@{/mypage/interest}" class="btn btn-link nav-list-a">
+                <i class="fas fa-heart"></i> 찜
+            </a>
+            <a th:href="@{/product/cart}" class="btn btn-link nav-list-a">
+                <i class="fas fa-shopping-cart"></i> 장바구니
+            </a>
+            <a th:href="@{/mypage/orders}" class="btn btn-link nav-list-a">
+                <i class="fas fa-user"></i> 마이페이지
+            </a>
+            <a id="notificationButton" class="btn btn-link nav-list-a">
+                <i th:classappend="${hasNotification} ? 'fa-solid' : 'fa-regular'"
+                   class="fa-bell"
+                   th:text="${hasNotification}?:_"></i>
+            </a>
+            <!-- 모달 -->
+            <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog"
+                 aria-labelledby="notificationModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="notificationModalLabel">알림</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="notificationContent">
+                            <!-- 서버에서 받아온 알림 데이터가 여기에 렌더링됩니다. -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="navbar-links nav-container mt-3 text-center">
+            <div class="navbar-menu">
+                <a th:href="@{/}" class="btn btn-link nav-list-a">소분 글 리스트</a>
+            </div>
+            <div class="d-flex justify-content-center mt-2">
+                <a th:href="@{/portioning/write}" class="btn btn-link nav-list-a">글 작성</a>
+            </div>
+            <div sec:authorize="isAnonymous()">
+                <a> </a>
+            </div>
+            <div sec:authorize="hasRole('USER')">
+                <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
+            </div>
+            <div sec:authorize="hasRole('USER')">
+                <a href="#" onclick="openKeywordPopup(); return false;" class="btn btn-link nav-list-a">키워드 등록</a>
+            </div>
+            <div sec:authorize="hasRole('ADMIN')" class="text-end">
+                <a th:href="@{/admin/users}" class="btn btn-link nav-list-a">관리자 페이지</a>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<aside th:fragment="mypage_side_navbar" class="sidebar">
+    <div class="user-info">
+        <p class="user-name" th:text="${#authentication.principal.getNickname()} + ' 님'"></p>
+        <div class="user-points-coupons">
+            <div class="item-wrap">
+                <button class="menu-item">
+                    <div class="name-text">적립금</div>
+                    <div class="amount-text">
+                        <div class="number-text" th:text="${userPoints != null ? userPoints : '0'}">0</div>원
+                    </div>
+                </button>
+            </div>
+            <div class="item-divider"></div>
+            <div class="item-wrap">
+                <button class="menu-item">
+                    <div class="name-text">쿠폰</div>
+                    <div class="amount-text">
+                        <div class="number-text" th:text="${userCoupons != null ? userCoupons : '0'}">0</div>개
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar menu">
+        <ul>
+            <li class="menu-text">자주 찾는 메뉴</li>
+            <li><a href="/mypage/orders" class="active">주문 내역</a></li>
+            <li><a href="/mypage/coupons">쿠폰</a></li>
+            <li><a href="/mypage/pick/list">찜한상품</a></li>
+            <li class="menu-text divider">쇼핑</li>
+            <li><a href="/mypage/reviews">상품 후기</a></li>
+            <li><a href="/mypage/inquiry/list">상품 문의</a></li>
+            <li class="menu-text divider">소분</li>
+            <li><a href="/mypage/interest/list">관심 목록</a></li>
+            <li><a href="/mypage/write">내가 쓴글</a></li>
+            <li><a href="/mypage/join">참여중인 소분</a></li>
+            <li class="menu-text divider">내정보</li>
+            <li><a href="/mypage/address">배송지 관리</a></li>
+            <li><a href="/mypage/info">개인정보 수정</a></li>
+        </ul>
+    </div>
+</aside>
+
+<aside th:fragment="admin_side_navbar" class="sidebar">
+    <div class="sidebar menu" style="position: fixed; top: 200px; left: 50px; width: 200px; z-index: 1000;">
+        <ul>
+            <li class="menu-text">관리 메뉴</li>
+            <li><a th:href="@{/admin/users}">유저 관리</a></li>
+            <li><a th:href="@{/admin/item}">상품 관리</a></li>
+            <li><a th:href="@{/admin/event}">이벤트 관리</a></li>
+            <li><a th:href="@{/admin/banners}">배너 관리</a></li>
+            <li><a th:href="@{/admin/inquires}">문의 관리</a></li>
+            <li><a th:href="@{/admin/reports}">신고글 관리</a></li>
+        </ul>
+    </div>
+</aside>

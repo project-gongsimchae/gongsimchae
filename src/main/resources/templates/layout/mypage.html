@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:fragment="mypage(main,sidebarMenu)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공심채 - 마이페이지</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+
+    <link rel="stylesheet" href="" th:href="@{/css/mypage/picklist.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/mypage/coupon.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/mypage/inquiry.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/mypage/inquiryList.css}">
+    <link th:href="@{/css/portion/subdivisionWishlist.css}" rel="stylesheet">
+    <link th:href="@{/css/mypage/picklist.css}" rel="stylesheet">
+    <link th:href="@{/css/ordersDetail.css}" rel="stylesheet">
+    <link th:href="@{/css/navbar.css}" rel="stylesheet">
+    <link th:href="@{/css/mypage.css}" rel="stylesheet">
+    <link rel="stylesheet" href="" th:href="@{/css/user/update.css}">
+</head>
+<body>
+<header>
+    <div th:replace="~{layout/navbar :: product_navbar}"></div>
+</header>
+<main class="mypage-container">
+    <aside class="sidebar">
+        <div class="user-info">
+            <p class="user-name" th:text="${#authentication.principal.getNickname()} + ' 님'"></p>
+            <div class="user-points-coupons">
+                <div class="item-wrap">
+                    <button class="menu-item">
+                        <div class="name-text">적립금</div>
+                        <div class="amount-text">
+                            <div class="number-text" th:text="${userPoints != null ? userPoints : '0'}">0</div>
+                            원
+                        </div>
+                    </button>
+                </div>
+                <div class="item-divider"></div>
+                <div class="item-wrap">
+                    <button class="menu-item">
+                        <div class="name-text">쿠폰</div>
+                        <div class="amount-text">
+                            <div class="number-text" th:text="${userCoupons != null ? userCoupons : '0'}">0</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div th:fragment="sidebar-menu (sidebarMenu)" class="sidebar menu">
+            <ul>
+                <li class="menu-text">자주 찾는 메뉴</li>
+                <li><a href="/mypage/orders" th:classappend="${sidebarMenu == 'orders'} ? active">주문 내역</a></li>
+                <li><a href="/mypage/coupons" th:classappend="${sidebarMenu == 'coupons'} ? active">쿠폰</a></li>
+                <li><a href="/mypage/pick/list" th:classappend="${sidebarMenu == 'pick'} ? active">찜한상품</a></li>
+                <li class="menu-text divider">쇼핑</li>
+                <li><a href="/mypage/reviews" th:classappend="${sidebarMenu == 'reviews'} ? active">상품 후기</a></li>
+                <li><a href="/mypage/inquiry/list" th:classappend="${sidebarMenu == 'inquiry'} ? active">상품 문의</a></li>
+                <li class="menu-text divider">소분</li>
+                <li><a href="/mypage/interest/list" th:classappend="${sidebarMenu == 'interest'} ? active">관심 목록</a></li>
+                <li><a href="/mypage/write" th:classappend="${sidebarMenu == 'write'} ? active">내가 쓴글</a></li>
+                <li><a href="/mypage/join" th:classappend="${sidebarMenu == 'join'} ? active">참여중인 소분</a></li>
+                <li class="menu-text divider">내정보</li>
+                <li><a href="/mypage/address" th:classappend="${sidebarMenu == 'address'} ? active">배송지 관리</a></li>
+                <li><a href="/mypage/info" th:classappend="${sidebarMenu == 'info'} ? active">개인정보 수정</a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <div th:replace="${main}"></div>
+
+
+</main>
+
+<footer>
+    <p class="footer">&copy; 2024 공심채. All rights reserved.</p>
+</footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f87234e8635a427cd0f2a6dcdf8b0597&libraries=services" type="text/javascript" ></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="" th:src="@{/js/map.js}"></script>
+<script th:src="@{/js/modalnoti.js}"></script>
+<script th:src="@{/js/groupbuying/removepick.js}"></script>
+<script th:src="@{/js/portion/subdivisionWishlist.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const updateButtons = document.querySelectorAll('.update-address');
+        const updateModal = new bootstrap.Modal(document.getElementById('updateAddressModal'));
+
+        updateButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                fetch(`/mypage/address/update/${id}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('updateAddressModalBody').innerHTML = html;
+                        updateModal.show();
+                    });
+            });
+        });
+    });
+
+
+    $(document).ready(function () {
+        $('#confirmButton').click(function () {
+            var couponCode = $('#couponCode').val();
+
+            $.ajax({
+                url: '/mypage/coupons',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ code: couponCode }), // JSON 객체로 감싸서 전송
+                success: function (response) {
+                    $('#couponModal').modal('hide'); // 모달을 닫습니다
+                    // 성공 후 페이지를 새로 고침하거나 쿠폰 리스트를 갱신할 수 있습니다.
+                    location.reload(); // 페이지를 새로 고침하여 쿠폰 리스트 갱신
+                },
+                error: function (xhr) {
+                    var errorMessage = xhr.responseText || '서버 오류';
+                    $('#error-message').text(errorMessage).show(); // 오류 메시지를 표시합니다
+                }
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const inquiryTable = document.querySelector('.inquiry-table');
+
+        inquiryTable.addEventListener('click', function(e) {
+            if (e.target.classList.contains('inquiry-title-cell')) {
+                const row = e.target.closest('tr');
+                const id = row.getAttribute('data-id');
+
+                // 이미 상세 내용이 표시되어 있다면 제거
+                const existingDetail = row.nextElementSibling;
+                if (existingDetail && existingDetail.classList.contains('inquiry-detail-row')) {
+                    existingDetail.remove();
+                    return;
+                }
+
+                // 서버에서 상세 정보를 가져오는 AJAX 요청
+                fetch(`/mypage/inquiry/${id}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const detailContent = doc.querySelector('section');
+
+                        const newRow = document.createElement('tr');
+                        newRow.classList.add('inquiry-detail-row');
+                        const newCell = newRow.insertCell();
+                        newCell.colSpan = 3;
+                        newCell.appendChild(detailContent);
+
+                        row.parentNode.insertBefore(newRow, row.nextSibling);
+                    });
+            }
+        });
+    });
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<html th:replace="layout/mypage :: mypage(~{::section},'info')">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>개인정보 수정</title>
+
+</head>
+<body>
+<section class="picklist-section">
+    <div class="container">
+        <h5>개인 정보 수정</h5>
+        <p class="sub-title">비밀번호 재확인</p>
+        <hr class="section-divider">
+
+        <form th:action method="post" th:object="${user}">
+            <div th:replace="~{layout/fielderror :: fielderror}"></div>
+
+            <div class="form-group">
+                <label for="loginId" class="form-label">아이디</label>
+                <input type="text" id="loginId" class="form-control" th:field="*{loginId}" required>
+                <div th:errors="*{loginId}" class="text-danger small"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">비밀번호</label>
+                <input type="password" id="password" class="form-control" th:field="*{password}" required>
+                <div th:errors="*{password}" class="text-danger small"></div>
+            </div>
+
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-info">확인</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+</body>
+</html>

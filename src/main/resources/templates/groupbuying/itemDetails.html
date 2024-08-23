@@ -1,0 +1,125 @@
+<!DOCTYPE html >
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/productHeader :: header(~{::title}, ~{:: section})}"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>공심채 - 공동구매</title>
+</head>
+<body>
+<section class="product-detail-section">
+<!--    <div class="product-detail-image" th:each="itemImage : ${item.getImageUrls()}">-->
+<!--        <img th:src="${itemImage}" alt="no image"/>-->
+    <form id="addToCartForm" th:action="@{/product/cart/add}" method="post">
+        <div class="product-detail-info">
+            <h3 class="product-detail-title" th:text="${item[0].itemName}">에어프라이어 용 미니 돈까스</h3>
+
+            <div class="btn-detail-container">
+                <select class="form-select" id="product-options" aria-label="상품 선택">
+                    <option value="" selected>상품 선택</option>
+                    <option th:each="option : ${item}"
+                            th:value="${option.itemOptionId}"
+                            th:data-price="${option.totalPrice}"
+                            th:data-discount-price="${option.discountPrice}"
+                            th:data-discount-rate="${option.discountRate}"
+                            th:text="${option.content + ' (' + #numbers.formatInteger(option.totalPrice, 3, 'COMMA') + '원)'}">
+                    </option>
+                </select>
+                <div id="selected-options">
+                    <!-- 선택한 옵션이 여기 표시됩니다. -->
+                </div>
+                <div class="total-price-container" id="total-price">
+                    총 가격: 0원
+                </div>
+                <div class="btn-detail-row">
+                    <button class="custom-btn-outline-secondary" id="wishlist-btn" th:data-item-id="${item[0].itemUID}">
+                        <i id="wishlist-icon" class="bi"></i> 찜하기
+                    </button>
+                    <button class="custom-btn-success" id="purchase-btn" type="submit">장바구니에 담기</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+<div class="separator-detail"></div>
+<section class="status-detail-container">
+    <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <span>목표 수량: 100 / 달성량: 50</span>
+</section>
+<section class="product-description-detail">
+    <h4>상품 설명</h4>
+    <p>여기에 상세 설명이 들어갑니다. 제품의 특징, 사용 방법, 주의 사항 등을 포함시킬 수 있습니다.</p>
+</section>
+<section class="reviews-detail">
+    <h4>후기</h4>
+    <p>여기에 상품 후기가 들어갑니다. 고객들이 작성한 후기를 포함시킬 수 있습니다.</p>
+
+    <!-- CSRF 토큰을 메타 태그로 삽입 -->
+
+    <script th:fragment="pick">
+        document.addEventListener('DOMContentLoaded', function () {
+            const wishlistBtn = document.getElementById('wishlist-btn');
+            const wishlistIcon = document.getElementById('wishlist-icon');
+            const itemId = wishlistBtn.getAttribute('data-item-id');
+
+            // CSRF 토큰과 헤더 가져오기
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            // 페이지 로드 시 찜 여부 확인
+            fetch(`/mypage/pick/check/${itemId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken // CSRF 토큰을 헤더에 추가
+                },
+                credentials: 'same-origin' // 쿠키를 포함하여 요청
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data === true) {
+                        wishlistIcon.classList.add('bi-heart-fill'); // 속이 채워진 하트
+                        wishlistIcon.classList.remove('bi-heart'); // 빈 하트 제거
+                    } else {
+                        wishlistIcon.classList.add('bi-heart'); // 빈 하트
+                        wishlistIcon.classList.remove('bi-heart-fill'); // 속이 채워진 하트 제거
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+
+            // 찜하기 버튼 클릭 이벤트
+            wishlistBtn.addEventListener('click', function () {
+                fetch(`/mypage/pick/${itemId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken // CSRF 토큰을 헤더에 추가
+                    },
+                    credentials: 'same-origin' // 쿠키를 포함하여 요청
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // 토글 하트 아이콘
+                            if (wishlistIcon.classList.contains('bi-heart')) {
+                                wishlistIcon.classList.remove('bi-heart');
+                                wishlistIcon.classList.add('bi-heart-fill');
+                            } else {
+                                wishlistIcon.classList.remove('bi-heart-fill');
+                                wishlistIcon.classList.add('bi-heart');
+                            }
+                        } else {
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+    <script th:src="@{/js/groupbuying/itemdetail.js}"></script>
+</section>
+</body>
+</html>

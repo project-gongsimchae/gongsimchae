@@ -1,0 +1,52 @@
+<html th:replace="~{admin/admin :: admin(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>유저</title>
+</head>
+<body>
+<section class="container picklist-section admin-section-container">
+
+    <div class="row user-container form-container">
+        <div class="col-12">
+            <span class="mb-4 section-title">신고</span>
+            <div class="button-container" th:with="report =${reports[0]}">
+                <!-- 신고 초기화 버튼 -->
+                <form action="" th:action="@{|/admin/reports/reset/${report.subdivisionUID}|}" method="post">
+                    <button type="submit" class="reset-btn">신고 초기화</button>
+                </form>
+                <!-- 글 삭제 버튼 -->
+                <form action="" th:action="@{|/admin/subdivision/delete/${report.subdivisionUID}|}" method="post">
+                    <button type="submit" class="delete-btn">글 삭제</button>
+                </form>
+                <!-- 유저 제재 버튼 -->
+                <form action="" th:action="@{|/admin/users/ban/${report.userId}|}" method="post">
+                    <button type="submit" class="ban-btn">유저 제재</button>
+                </form>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>제목</th>
+                    <th>타입</th>
+                    <th>내용</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="report : ${reports}">
+                    <th th:text="${reportStat.index + 1}"></th>
+                    <td th:text="${report.title}"></td>
+                    <td th:text="${report.reportType.description}"></td>
+                    <td th:text="${report.content}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
