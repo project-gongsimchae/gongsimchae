@@ -25,7 +25,7 @@ import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
-import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsResDtoWeb;
+import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.service.ReviewsService;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
@@ -193,8 +193,8 @@ public class MyPageController {
      */
     @ResponseBody
     @GetMapping("reviews/{uid}")
-    public ReviewsResDtoWeb getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                       @PathVariable String uid) {
+    public ReviewResDtoWeb getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                      @PathVariable String uid) {
         return reviewsService.getReviews(principalDetails.getAccountDto(), uid);
     }
 
@@ -207,7 +207,7 @@ public class MyPageController {
     public String updateReviews (@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
                                            @PathVariable String uid) {
-        reviewsService.updateReviews(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
+        reviewsService.updateReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
         return "redirect:/mypage/reviews";
     }
 

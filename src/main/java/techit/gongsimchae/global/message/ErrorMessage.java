@@ -23,17 +23,13 @@ public interface ErrorMessage {
     String EVENT_NOT_FOUND = "이벤트가 존재하지 않습니다.";
     String ITEM_NOT_FOUND = "아이템이 존재하지 않습니다.";
     String ITEM_OPTION_NOT_FOUND = "유효하지 않은 상품 옵션입니다.";
+    String CATEGORY_NOT_FOUND = "존재하지 않는 카테고리입니다.";
 
     /**
      * portion 에러
      */
     // 소분글
     String SUBDIVISION_NOT_FOUND = "존재하지 않는 소분글입니다.";
-
-    // 채팅방
-    String CHATTING_ROOM_NOT_FOUND = "존재하지 않는 채팅방입니다.";
-
-
 
     // 채팅방
     String CHATTING_ROOM_NOT_FOUND = "존재하지 않는 채팅방입니다.";

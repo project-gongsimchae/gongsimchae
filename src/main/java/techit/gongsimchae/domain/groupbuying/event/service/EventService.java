@@ -79,7 +79,12 @@ public class EventService {
                 EntityStatus.EXIST);
         List<EventResUserDtoWeb> eventResAdminDtoWebs = new ArrayList<>();
         for (Event activatedEvent : activatedEvents) {
-            eventResAdminDtoWebs.add(new EventResUserDtoWeb(activatedEvent, imageFileRepository.findByEvent(activatedEvent).getStoreFilename()));
+            List<EventCategory> eventCategories = eventCategoryRepository.findAllByEventId(activatedEvent.getId());
+            List<Category> categories = eventCategories.stream()
+                    .map((eventCategory) -> categoryRepository.findById(eventCategory.getId()).orElseThrow(
+                            () -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND)
+                    )).toList();
+            eventResAdminDtoWebs.add(new EventResUserDtoWeb(activatedEvent, imageFileRepository.findByEvent(activatedEvent).getStoreFilename(), categories));
         }
         return eventResAdminDtoWebs;
     }

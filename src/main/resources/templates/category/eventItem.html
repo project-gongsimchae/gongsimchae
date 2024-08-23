@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <title>공심채</title>
+  <link th:href="@{/css/navbar.css}" rel="stylesheet">
+  <link th:href="@{/css/category.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{layout/navbar :: product_navbar}"></div>
+<section>
+  <h1 class="category-alert" th:each="eventCategory : ${eventCategories}">
+    <p th:text="${eventCategory.name}"></p>
+  </h1>
+  <div class="item-grid-view-main">
+    <div class="header">
+      <div class="category-alert-cnt" th:text="'총 ' + ${eventItems.size()} + '건'"></div>
+      <ul class="category-sort-standard-ul">
+        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(page=1, per_page=96, sorted_type=1)}" class="category-sort-standard-alink">신상품순<p class="perpendicular-divider">|</p></a></li>
+        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(page=1, per_page=96, sorted_type=2)}"  class="category-sort-standard-alink">판매량순<p class="perpendicular-divider">|</p></a></li>
+        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(page=1, per_page=96, sorted_type=3)}"  class="category-sort-standard-alink">리뷰 많은 순<p class="perpendicular-divider">|</p></a></li>
+        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(page=1, per_page=96, sorted_type=4)}"  class="category-sort-standard-alink">낮은 가격순<p class="perpendicular-divider">|</p></a></li>
+        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(page=1, per_page=96, sorted_type=5)}"  class="category-sort-standard-alink">높은 가격순</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+</body>
+</html>
