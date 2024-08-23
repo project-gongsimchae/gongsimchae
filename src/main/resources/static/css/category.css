@@ -1,0 +1,61 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.category-alert {
+    font-weight: bold;
+    text-align: center; /* 중앙 정렬 추가 */
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.category-alert-cnt {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.category-sort-standard-ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+}
+
+.category-sort-standard-li {
+    display: inline;
+}
+
+.category-sort-standard-alink {
+    text-decoration: none;
+    color: #aaa;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.category-sort-standard-alink:hover {
+    color: #000;
+}
+
+.perpendicular-divider {
+    text-decoration: none;
+    color: #aaa;
+    font-size: 14px;
+    transition: color 0.3s;
+    display: inline;
+    margin-left: 1rem;
+}
+
+.item-grid-view-main {
+    width: 1050px;
+    margin: 0 auto;
+    padding-top: 40px;
+    padding-bottom: 0;
+}

@@ -1,0 +1,120 @@
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    margin-bottom: 5px;
+}
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;  /* 기본 테두리 설정 */
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.form-group input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    display: inline-block;
+    width: 100px;  /* 정사각형 크기 지정 */
+    height: 100px; /* 정사각형 크기 지정 */
+    cursor: pointer;
+    border: 1px solid #ccc;  /* 기본 테두리 설정 */
+    border-radius: 4px;
+    background-color: #f7f7f7;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 24px;  /* 아이콘 크기 */
+    box-sizing: border-box; /* 패딩을 포함하여 크기 계산 */
+}
+.custom-file-upload i {
+    margin-right: 5px;
+}
+/* .image-preview 수정 */
+.image-preview {
+    display: flex;
+    flex-wrap: wrap; /* 여러 장의 이미지를 가로로 넘기지 않고 줄바꿈 */
+    gap: 10px; /* 이미지 간 간격 */
+    margin-top: 10px;
+}
+
+/* 이미지와 삭제 버튼 스타일 수정 */
+.image-preview .preview-item {
+    position: relative;
+    width: 100px; /* 각 이미지와 삭제 버튼을 포함한 크기 */
+    height: 100px; /* 각 이미지와 삭제 버튼을 포함한 크기 */
+    box-sizing: border-box;
+}
+
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.image-preview .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px; /* 중앙 정렬 */
+    cursor: pointer;
+}
+
+/* 버튼 클릭 시 스타일 */
+.image-preview .delete-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.form-group textarea {
+    height: 100px;
+}
+.form-group-submit {
+    text-align: right;
+}
+.form-group-submit button {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.form-group-submit button:hover {
+    background-color: #45a049;
+}
+.subdivision-register-body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 20px;
+}
+.form-group-image {
+    display: inline-block;
+}
+
+input[readonly] {
+    background-color: #f0f0f0;
+}

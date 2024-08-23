@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/portionHeader :: header(~{::title},~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>소분 글 업데이트</title>
+</head>
+<body>
+<section class="subdivision-register-body">
+    <link th:href="@{/css/portion/subdivisionRegister.css}" rel="stylesheet">
+
+    <div class="container">
+        <form th:action="@{/portioning/update}" method="post" enctype="multipart/form-data">
+            <input type="hidden" id="id" name="id" th:value="*{subdivisionRespDto.id}">
+
+            <!-- 삭제할 이미지 ID를 저장할 필드들 -->
+            <div id="deleteImagesContainer"></div>
+
+            <!-- 사진 업로드 -->
+            <div class="form-group">
+                <div class="form-group-image">
+                    <label for="imageFile" class="custom-file-upload">
+                        <i class="fa fa-camera"></i> +
+                    </label>
+                    <input type="file" id="imageFile" name="images" accept="image/*" multiple>
+                </div>
+                <div id="imagePreview" class="image-preview"></div>
+            </div>
+
+            <!-- 제목 작성 -->
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required
+                       th:value="*{subdivisionRespDto.title}">
+            </div>
+
+            <!-- 내용 작성 -->
+            <div class="form-group">
+                <label for="content">내용</label>
+                <textarea id="content" name="content" placeholder="내용을 입력하세요" required
+                          th:text="*{subdivisionRespDto.content}"></textarea>
+            </div>
+
+            <!-- 모집 인원 수 작성 -->
+            <div class="form-group">
+                <label for="numOfParticipants">모집 인원 수</label>
+                <input type="number" id="numOfParticipants" name="numOfParticipants" placeholder="모집 인원 수를 입력하세요" required
+                       th:value="*{subdivisionRespDto.numOfParticipants}">
+            </div>
+
+            <!-- 위치 입력 -->
+            <div class="form-group">
+                <label>모임 희망 장소</label>
+                <div class="hAddr" style="margin-bottom: 15px">
+                    <input type="text" id="address" name="address" readonly required
+                           th:value="*{subdivisionRespDto.address}">
+                </div>
+                <div id="map" style="width:350px;height:350px;"></div>
+                <input type="hidden" id="sigungu" name="sigungu" th:value="*{subdivisionRespDto.sigungu}">
+                <input type="hidden" id="latitude" name="latitude" th:value="*{subdivisionRespDto.latitude}">
+                <input type="hidden" id="longitude" name="longitude" th:value="*{subdivisionRespDto.longitude}">
+            </div>
+
+            <!-- 가격 입력 -->
+            <div class="form-group">
+                <label for="price">가격</label>
+                <input type="number" id="price" name="price" placeholder="가격을 입력하세요" required
+                       th:value="*{subdivisionRespDto.price}">
+            </div>
+
+            <!-- 제출 버튼 -->
+            <div class="form-group form-group-submit">
+                <button type="submit">수정하기</button>
+            </div>
+        </form>
+    </div>
+
+    <script th:inline="javascript">
+
+        let images = /*[[${subdivisionRespDto.imageFileList}]]*/ [];
+    </script>
+
+
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4a7673bf164245754c968e7459217a90&libraries=services"></script>
+    <script th:src="@{/js/portion/subdivisionUpdate.js}"></script>
+</section>
+</body>
+</html>

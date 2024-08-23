@@ -1,0 +1,203 @@
+
+<head th:fragment="header">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>공심채</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="" th:href="@{/css/user/login.css}">
+    <link rel="stylesheet" href="/css/category.css">
+    <link rel="stylesheet" th:href="@{/css/gongu.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" >
+    <link rel="stylesheet" th:href="@{/css/mypage.css}" >
+    <link rel="stylesheet" href="" th:href="@{/css/admin/inquirylist.css}">
+    <link rel="stylesheet" href="" th:href="@{/css/admin/inquiryReply.css}">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script th:src="@{/js/gongu.js}"></script>
+    <script th:src="@{/js/modalnoti.js}"></script>
+</head>
+
+<nav th:fragment="product_navbar" class="navbar navbar-light bg-white" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/main}">
+            <img th:src="@{/img/logo.png}" alt="공심채 로고" style="height: 30px;">
+        </a>
+        <div class="navbar-collapse show" id="navbarNav">
+            <ul class="me-auto mb-2 mb-lg-0 d-flex align-items-center shop-division">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/main}">공동구매</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/portioning}">소분나눔</a>
+                </li>
+            </ul>
+            <form class="d-flex mx-auto form-style">
+                <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search" style="max-width: 700px; flex-grow: 1;">
+                <button class="btn btn-outline-success search-btn" type="submit">검색</button>
+            </form>
+            <div sec:authorize="isAnonymous()">
+                <button class="btn btn-success ms-3" th:onclick="|location.href='@{/signup}'|">회원가입</button>
+                <button class="btn btn-success ms-3" th:onclick="|location.href='@{/login}'|">로그인</button>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <button class="btn btn-outline-success ms-3"><span th:text="${#authentication.principal.getNickname()}"></span> 님 </button>
+                <form th:action="@{/logout}" method="post" class="d-inline" >
+                    <button type="submit" class="btn btn-success ms-3">로그아웃</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div sec:authorize="isAuthenticated()" class="navbar-links nav-container mt-1 text-end">
+        <a th:href="@{/mypage/pick/list}" class="btn btn-link nav-list-a">
+            <i class="fas fa-heart"></i> 찜
+        </a>
+        <a th:href="@{/product/cart}" class="btn btn-link nav-list-a">
+            <i class="fas fa-shopping-cart"></i> 장바구니
+        </a>
+        <a th:href="@{/mypage/orders}" class="btn btn-link nav-list-a">
+            <i class="fas fa-user"></i> 마이페이지
+        </a>
+    </div>
+    <div class="navbar-links nav-container mt-3 text-center">
+        <div class="navbar-menu">카테고리
+            <ul class="dropdown-menu">
+                <li th:each="category : ${categories}">
+                    <a class="dropdown-item" th:text="${category.name}"
+                       th:href="@{/category/{category_id}(category_id=${category.id}, page=1, per_page=96, sorted_type=1)}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="d-flex justify-content-center mt-2">
+            <a th:href="@{/collection-groups/new-item}" class="btn btn-link nav-list-a">신상품</a>
+            <a th:href="@{/product/market-best}" class="btn btn-link nav-list-a">베스트</a>
+            <a th:href="@{/market-benefit}" class="btn btn-link nav-list-a">이벤트</a>
+        </div>
+        <div sec:authorize="isAnonymous()">
+            <a> </a>
+        </div>
+        <div sec:authorize="hasRole('USER')">
+            <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
+        </div>
+        <div sec:authorize="hasRole('ADMIN')" class="text-end">
+            <a th:href="@{/admin}" class="btn btn-link nav-list-a">관리자 페이지</a>
+        </div>
+    </div>
+</nav>
+
+
+<nav th:fragment="portion_navbar" class="navbar navbar-light bg-white" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/main}">
+            <img th:src="@{/img/logo.png}" alt="공심채 로고" style="height: 30px;">
+        </a>
+        <div class="navbar-collapse show" id="navbarNav">
+            <ul class="me-auto mb-2 mb-lg-0 d-flex align-items-center shop-division">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/main}">공동구매</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/portioning}">소분나눔</a>
+                </li>
+            </ul>
+            <form class="d-flex mx-auto form-style">
+                <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search" style="max-width: 700px; flex-grow: 1;">
+                <button class="btn btn-outline-success search-btn" type="submit">검색</button>
+            </form>
+            <div sec:authorize="isAnonymous()">
+                <button class="btn btn-success ms-3" th:onclick="|location.href='@{/signup}'|">회원가입</button>
+                <button class="btn btn-success ms-3" th:onclick="|location.href='@{/login}'|">로그인</button>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <button class="btn btn-outline-success ms-3"><span th:text="${#authentication.principal.getNickname()}"></span> 님 </button>
+                <form th:action="@{/logout}" method="post" class="d-inline" >
+                    <button type="submit" class="btn btn-success ms-3">로그아웃</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div sec:authorize="isAuthenticated()" class="navbar-links nav-container mt-1 text-end">
+        <a th:href="@{/myPage/interest}" class="btn btn-link nav-list-a">
+            <i class="fas fa-heart"></i> 찜
+        </a>
+        <a th:href="@{/product/cart}" class="btn btn-link nav-list-a">
+            <i class="fas fa-shopping-cart"></i> 장바구니
+        </a>
+        <a th:href="@{/myPage/orders}" class="btn btn-link nav-list-a">
+            <i class="fas fa-user"></i> 마이페이지
+        </a>
+    </div>
+    <div class="navbar-links nav-container mt-3 text-center">
+        <div class="navbar-menu">
+            <a th:href="@{/}" class="btn btn-link nav-list-a">소분 글 리스트</a>
+        </div>
+        <div class="d-flex justify-content-center mt-2">
+            <a th:href="@{/portioning/write}" class="btn btn-link nav-list-a">글 작성</a>
+        </div>
+        <div sec:authorize="isAnonymous()">
+            <a> </a>
+        </div>
+        <div sec:authorize="hasRole('USER')">
+            <a th:href="@{/inquiries}" class="btn btn-link nav-list-a">1:1 문의</a>
+        </div>
+        <div sec:authorize="hasRole('ADMIN')" class="text-end">
+            <a th:href="@{/admin}" class="btn btn-link nav-list-a">관리자 페이지</a>
+        </div>
+    </div>
+</nav>
+
+
+<aside th:fragment="mypage_side_navbar" class="sidebar">
+    <div class="user-info">
+        <p class="user-name" th:text="${#authentication.principal.getNickname()} + ' 님'"></p>
+        <div class="user-points-coupons">
+            <div class="item-wrap">
+                <button class="menu-item">
+                    <div class="name-text">적립금</div>
+                    <div class="amount-text">
+                        <div class="number-text" th:text="${userPoints != null ? userPoints : '0'}">0</div>원
+                    </div>
+                </button>
+            </div>
+            <div class="item-divider"></div>
+            <div class="item-wrap">
+                <button class="menu-item">
+                    <div class="name-text">쿠폰</div>
+                    <div class="amount-text">
+                        <div class="number-text" th:text="${userCoupons != null ? userCoupons : '0'}">0</div>개
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar menu">
+        <ul>
+            <li class="menu-text">자주 찾는 메뉴</li>
+            <li><a href="/mypage/orders" class="active">주문 내역</a></li>
+            <li><a href="/mypage/coupons">쿠폰</a></li>
+            <li><a href="/mypage/pick/list">찜한상품</a></li>
+            <li class="menu-text divider">쇼핑</li>
+            <li><a href="/mypage/reviews">상품 후기</a></li>
+            <li><a href="/mypage/inquiry/list">상품 문의</a></li>
+            <li class="menu-text divider">소분</li>
+            <li><a href="/mypage/interest/list">관심 목록</a></li>
+            <li><a href="/mypage/write">내가 쓴글</a></li>
+            <li><a href="/mypage/join">참여중인 소분</a></li>
+            <li class="menu-text divider">내정보</li>
+            <li><a href="/mypage/address">배송지 관리</a></li>
+            <li><a href="/mypage/info">개인정보 수정</a></li>
+        </ul>
+    </div>
+</aside>
+

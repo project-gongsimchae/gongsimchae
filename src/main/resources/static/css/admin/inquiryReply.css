@@ -1,0 +1,163 @@
+/* 전체 컨테이너 스타일 */
+body{
+    background: white;
+}
+.custom-admin-inquiry-reply {
+    background-color: #ffffff;
+    margin: 20px auto;
+    padding: 20px;
+    width: 1000px;
+    max-width: 1000px;
+    border-radius: 8px;
+    border: 1px solid black;
+}
+
+/* 문의 헤더 스타일 */
+.custom-inquiry-header {
+    margin-bottom: 20px;
+}
+
+.custom-inquiry-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+}
+
+/* 문의 정보 스타일 */
+.custom-inquiry-info {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #666666;
+}
+
+.custom-inquiry-info div {
+    margin-bottom: 5px;
+}
+
+/* 문의 내용 스타일 */
+.custom-inquiry-content {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* 액션 버튼 스타일 */
+.custom-inquiry-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+/* 폼 그룹 스타일 */
+.custom-form-group {
+    margin-bottom: 20px;
+}
+
+.custom-form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 폼 컨트롤 스타일 */
+.custom-form-control {
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 15px;
+    font-size: 16px;
+    color: #333333;
+    width: 800px;
+    box-sizing: border-box;
+    resize: vertical; /* 사용자가 수직으로 크기 조정 가능 */
+}
+
+.custom-form-control:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* 버튼 스타일 */
+.custom-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 버튼 기본 스타일 */
+.custom-btn-primary {
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    color: #ffffff;
+}
+
+.custom-btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+/* 버튼 세컨더리 스타일 */
+.custom-btn-secondary {
+    background-color: #6c757d;
+    border: 1px solid #6c757d;
+    color: #ffffff;
+}
+
+.custom-btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+/* 공통 버튼 스타일 */
+button {
+    color: white; /* 기본 글자색 흰색 */
+    border: none; /* 테두리 제거 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    padding: 10px 20px; /* 패딩 */
+    font-size: 16px; /* 폰트 크기 */
+    cursor: pointer; /* 커서 모양 */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 애니메이션 효과 */
+}
+
+/* 신고 초기화 버튼 */
+.reset-btn {
+    background-color: #28a745; /* 녹색 */
+}
+.reset-btn:hover {
+    background-color: #218838; /* 마우스 오버 시 어두운 녹색 */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 글 삭제 버튼 */
+.delete-btn {
+    background-color: #dc3545; /* 빨간색 */
+}
+.delete-btn:hover {
+    background-color: #c82333; /* 마우스 오버 시 어두운 빨간색 */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 유저 제재 버튼 */
+.ban-btn {
+    background-color: #ffc107; /* 노란색 */
+    color: black; /* 글자색 검정 */
+}
+.ban-btn:hover {
+    background-color: #e0a800; /* 마우스 오버 시 어두운 노란색 */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 버튼 컨테이너 스타일 */
+.button-container {
+    display: flex;
+    right: 15px;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: -20px;
+}

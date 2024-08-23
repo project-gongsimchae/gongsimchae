@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 수정</title>
+</head>
+<body>
+<h1>상품 수정</h1>
+<form th:action="@{/admin/item/update/{id}(id=${item.id})}" th:object="${item}" method="post">
+
+    <label for="name">이름:</label>
+    <input type="text" id="name" th:field="*{name}" required/><br/>
+
+    <label for="intro">소개:</label>
+    <input type="text" id="intro" th:field="*{intro}"/><br/>
+
+    <label for="originalPrice">정가:</label>
+    <input type="number" id="originalPrice" th:field="*{originalPrice}" step="0.01" required/><br/>
+
+    <label for="discountRate">할인율:</label>
+    <input type="number" id="discountRate" th:field="*{discountRate}" step="0.01" required/><br/>
+
+    <label for="pointAccumulationRate">포인트 적립률:</label>
+    <input type="number" id="pointAccumulationRate" th:field="*{pointAccumulationRate}" step="0.01" required/><br/>
+
+    <label for="groupBuyingQuantity">공동구매 수량:</label>
+    <input type="number" id="groupBuyingQuantity" th:field="*{groupBuyingQuantity}" required/><br/>
+
+    <label for="groupBuyingLimitTime">공동구매 제한 시간:</label>
+    <input type="datetime-local" id="groupBuyingLimitTime" th:field="*{groupBuyingLimitTime}"/><br/>
+
+    <label for="categoryName">카테고리:</label>
+    <select id="categoryName" name="categoryName" required>
+        <option value="">선택해주세요</option>
+        <option th:each="category : ${categories}"
+                th:value="${category.name}"
+                th:text="${category.name}"
+                th:selected="${category.name == item.categoryName}">
+        </option>
+    </select><br/>
+
+    <button type="submit">수정</button>
+</form>
+</body>
+</html>

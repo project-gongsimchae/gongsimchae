@@ -1,0 +1,64 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/productHeader :: header(~{::title},~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>공심채</title>
+    <link rel="stylesheet" href="/css/category.css">
+    <script th:src="@{/js/gongu.js}"></script>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+<section>
+    <h1 class="category-alert">베스트</h1>
+    <div class="item-grid-view-main">
+        <div class="header">
+            <div class="category-alert-cnt" th:text="'총 ' + ${bestItemsPage.size()} + '건'"></div>
+            <ul class="category-sort-standard-ul">
+                <li class="category-sort-standard-li"><a th:href="@{/collection-groups/best-item(page=1, per_page=96, sorted_type=1)}" class="category-sort-standard-alink">신상품순<p class="perpendicular-divider">|</p></a></li>
+                <li class="category-sort-standard-li"><a th:href="@{/collection-groups/best-item(page=1, per_page=96, sorted_type=2)}"  class="category-sort-standard-alink">판매량순<p class="perpendicular-divider">|</p></a></li>
+                <li class="category-sort-standard-li"><a th:href="@{/collection-groups/best-item(page=1, per_page=96, sorted_type=3)}"  class="category-sort-standard-alink">리뷰 많은 순<p class="perpendicular-divider">|</p></a></li>
+                <li class="category-sort-standard-li"><a th:href="@{/collection-groups/best-item(page=1, per_page=96, sorted_type=4)}"  class="category-sort-standard-alink">낮은 가격순<p class="perpendicular-divider">|</p></a></li>
+                <li class="category-sort-standard-li"><a th:href="@{/collection-groups/best-item(page=1, per_page=96, sorted_type=5)}"  class="category-sort-standard-alink">높은 가격순</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="product-section">
+    <div class="product-list">
+        <div th:each="item : ${bestItemsPage}" class="product-item">
+            <img class="product-image-placeholder" th:src="${item.itemBannerImage}" alt="썸네일 이미지" />
+<!--            <button class="add-to-cart" th:data-item-id="${item.id}">-->
+<!--                <i class="fa fa-shopping-cart"></i> 장바구니에 담기-->
+<!--            </button>-->
+            <h3 class="item-name" ><a href="" th:href="@{|/product/${item.id}|}" th:text="${item.name}"></a></h3>
+            <div class="price-container">
+                <div class="price-progress-container">
+                    <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
+                    <div class="progress-container">
+                        <div class="custom-progress">
+                            <div class="custom-progress-bar" role="progressbar"
+                                 th:style="'width: ' + ${(item.groupBuyingQuantity / 100.0) * 100} + '%'"
+                                 th:aria-valuenow="${item.groupBuyingQuantity}"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                <span th:text="${item.groupBuyingQuantity + '%'}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="discount-container">
+                    <span class="discount-rate" th:text="${item.discountRate} + '%'">할인율</span>
+                    <span class="discount-price"
+                          th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
+                          th:text="${#numbers.formatDecimal(discountPrice, 0, 'COMMA', 0, 'POINT')} + '원'">할인 가격</span>
+                    <span class="buying-people" th:text="${item.groupBuyingQuantity} + '명 구매중'">구매 인원</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

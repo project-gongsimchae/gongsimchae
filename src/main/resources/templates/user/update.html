@@ -1,0 +1,67 @@
+<html th:replace="layout/mypage :: mypage(~{::section},'info')">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>개인정보 수정</title>
+
+</head>
+<body>
+<section class="picklist-section">
+    <div class="container">
+        <div class="section-title">
+            <h5>개인정보 수정</h5>
+        </div>
+        <form th:action method="post" th:object="${user}">
+            <div th:replace="~{layout/fielderror :: fielderror}"></div>
+
+            <div>
+                <label for="nickname" class="unique-label">닉네임</label>
+                <input type="text" id="nickname" th:field="*{nickname}" class="unique-input-text">
+                <div th:errors="*{nickname}" class="unique-error-message"></div>
+            </div>
+
+            <div>
+                <label for="email" class="unique-label">이메일</label>
+                <input type="text" id="email" th:field="*{email}" required class="unique-input-text">
+                <div th:errors="*{email}" class="unique-error-message"></div>
+            </div>
+
+            <div>
+                <label for="phoneNumber" class="unique-label">휴대폰 번호</label>
+                <input type="text" id="phoneNumber" th:field="*{phoneNumber}" required class="unique-input-text">
+                <div th:errors="*{phoneNumber}" class="unique-error-message"></div>
+            </div>
+
+            <div>
+                <label for="password" class="unique-label">현재 비밀번호</label>
+                <input type="password" id="password" th:field="*{password}" required class="unique-input-password">
+                <div th:errors="*{password}" class="unique-error-message"></div>
+            </div>
+
+            <div>
+                <label for="passwordChange" class="unique-label">새 비밀번호</label>
+                <input type="password" id="passwordChange" th:field="*{passwordChange}" required class="unique-input-password">
+                <div th:errors="*{passwordChange}" class="unique-error-message"></div>
+            </div>
+
+            <div>
+                <label for="passwordChangeConfirm" class="unique-label">새 비밀번호 확인</label>
+                <input type="password" id="passwordChangeConfirm" th:field="*{passwordChangeConfirm}" required class="unique-input-password">
+                <div th:errors="*{passwordChangeConfirm}" class="unique-error-message"></div>
+            </div>
+
+            <input type="submit" value="회원정보수정" class="unique-submit-button">
+        </form>
+
+        <div class="unique-card-footer">
+            <form th:action="@{/mypage/delete}" method="post" class="d-inline" onsubmit="return confirm('정말로 탈퇴하시겠습니까?');">
+                <button type="submit" class="unique-delete-button">회원탈퇴</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

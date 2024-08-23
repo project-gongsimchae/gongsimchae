@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html th:replace="~{admin/admin :: admin(~{::section})}">
+<head></head>
+<body>
+<section class="container picklist-section admin-section-container">
+        <h1 class="custom-inquiry-list-title">문의 목록</h1>
+        <div class="filter-dropdown">
+            <select id="filterDropdown" onchange="updateFilter()">
+                <option value="">== 정렬 버튼 ==</option>
+                <option value="all">전체</option>
+                <option value="answered">답변 작성</option>
+                <option value="unanswered">답변 미작성</option>
+            </select>
+        </div>
+        <div id="inquiry-list">
+            <!-- 문의 목록을 여기에 렌더링 -->
+            <div th:each="inquiry : ${inquires.content}" class="inquiry-card">
+                <div class="inquiry-header">
+                    <div class="inquiry-title" th:text="${inquiry.title}"></div>
+                    <div>
+                        <span th:text="'답변 여부: ' + (${inquiry.isAnswered == 0} ? '미답변' : '답변작성')"></span>
+                    </div>
+                </div>
+                <div class="inquiry-info">
+                    <div th:text="'문의유형: ' + ${inquiry.inquiryType.getDescription()}"></div>
+                    <div th:text="'작성자: ' + ${inquiry.nickname}"></div>
+                    <div th:text="'작성일: ' + ${#temporals.format(inquiry.createDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                </div>
+                <div class="inquiry-actions">
+                    <a class="btn btn-outline-primary"
+                       th:href="@{/admin/inquires/reply/{id}(id=${inquiry.UID})}">상세보기</a>
+                </div>
+            </div>
+        </div>
+</section>
+
+
+
+</body>
+</html>
