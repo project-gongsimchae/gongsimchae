@@ -24,6 +24,7 @@ public interface ErrorMessage {
     String ITEM_NOT_FOUND = "아이템이 존재하지 않습니다.";
     String ITEM_OPTION_NOT_FOUND = "유효하지 않은 상품 옵션입니다.";
     String CATEGORY_NOT_FOUND = "존재하지 않는 카테고리입니다.";
+    String COUPON_NOT_FOUND = "존재하지 않는 쿠폰입니다.";
 
     /**
      * portion 에러
@@ -33,7 +34,6 @@ public interface ErrorMessage {
 
     // 채팅방
     String CHATTING_ROOM_NOT_FOUND = "존재하지 않는 채팅방입니다.";
-
 
     /**
      * global 에러

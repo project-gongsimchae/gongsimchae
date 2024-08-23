@@ -1,7 +1,13 @@
 package techit.gongsimchae.web;
 
+import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.COUPON;
+import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.COUPON_CODE;
+import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.DISCOUNT;
+
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -20,12 +26,9 @@ import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.event.entity.EventType;
 import techit.gongsimchae.domain.groupbuying.event.service.EventService;
 import techit.gongsimchae.domain.groupbuying.eventcategory.service.EventCategoryService;
+import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
-
-import java.util.List;
-
-import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.*;
 
 /**
  * Description
@@ -56,6 +59,13 @@ public class EventController {
         List<EventResUserDtoWeb> eventResUserDtoWebs = eventService.getActivatedEvents();
         model.addAttribute("events", eventResUserDtoWebs);
         return "/category/event";
+    }
+
+    @PostMapping("/event/coupon")
+    public String issueCouponToUser(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                            @RequestParam Long eventId){
+        couponUserService.createCouponUser(principalDetails.getAccountDto(), eventId);
+        return "redirect:/event";
     }
 
     //--------------------------------------------- admin --------------------------------------------

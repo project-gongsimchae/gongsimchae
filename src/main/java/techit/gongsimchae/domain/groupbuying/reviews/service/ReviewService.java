@@ -22,7 +22,7 @@ import techit.gongsimchae.global.message.ErrorMessage;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ReviewsService {
+public class ReviewService {
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
