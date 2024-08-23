@@ -1,16 +1,23 @@
 package techit.gongsimchae.domain.portion.subdivision.repository;
 
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import techit.gongsimchae.domain.common.imagefile.dto.ImageFileRespDto;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubSearchDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReportRespDto;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
+import techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static techit.gongsimchae.domain.common.imagefile.entity.QImageFile.imageFile;
@@ -102,5 +109,55 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
 
         // 4. 결과를 Page로 래핑하여 반환
         return new PageImpl<>(results, pageable,size);
+    }
+
+    @Override
+    public Page<SubdivisionRespDto> searchAndSortSubdivisions(SubSearchDto searchDto, Pageable pageable) {
+        List<SubdivisionRespDto> results = queryFactory.select(Projections.fields(SubdivisionRespDto.class, subdivision.id, subdivision.title,
+                        subdivision.content, subdivision.address, subdivision.price, subdivision.views,
+                        subdivision.UID, subdivision.subdivisionType, subdivision.createDate, subdivision.updateDate))
+                .from(subdivision)
+                .where(subdivision.deleteStatus.eq(false).and(IsSale(searchDto)))
+                .orderBy(sortType(searchDto))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        for (SubdivisionRespDto result : results) {
+            List<ImageFileRespDto> images = queryFactory.select(Projections.fields(ImageFileRespDto.class,
+                            imageFile.id, imageFile.originalFilename, imageFile.storeFilename))
+                    .from(imageFile)
+                    .join(imageFile.subdivision, subdivision)
+                    .where(subdivision.id.eq(result.getId()))
+                    .fetch();
+            result.setImageFileList(images);
+        }
+
+        Long size = queryFactory.select(subdivision.count())
+                .from(subdivision)
+                .where(subdivision.deleteStatus.eq(false).and(IsSale(searchDto)))
+                .fetchOne();
+
+        return new PageImpl<>(results, pageable,size);
+
+    }
+
+    private OrderSpecifier<?> sortType(SubSearchDto searchDto) {
+        if (searchDto.getSort() != null) {
+            if (searchDto.getSort().equals("new")) {
+                return subdivision.createDate.desc();
+            } else if (searchDto.getSort().equals("popular")) {
+                return subdivision.views.desc();
+            }
+
+        }
+        return subdivision.createDate.desc();
+    }
+
+    private BooleanExpression IsSale(SubSearchDto searchDto) {
+        if(Objects.isNull(searchDto.getOnSale()))
+            return null;
+        return searchDto.getOnSale().equals(true) ? subdivision.subdivisionType.eq(SubdivisionType.RECRUITING) : null;
+
     }
 }

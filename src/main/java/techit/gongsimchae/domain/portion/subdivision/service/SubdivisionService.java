@@ -1,13 +1,9 @@
 package techit.gongsimchae.domain.portion.subdivision.service;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,13 +24,11 @@ import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepos
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
-import techit.gongsimchae.global.util.ViewVO;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,11 +47,8 @@ public class SubdivisionService {
     /**
      * 소분글 메인페이지에 모든 소분글들을 보여주는 메서드
      */
-    public List<SubdivisionRespDto> getAllSubdivisions(){
-        List<Subdivision> subdivisions = subdivisionRepository.findByDeleteStatusIsFalseOrderByCreateDateDesc();
-        return subdivisions.stream()
-                .map(SubdivisionRespDto::new)
-                .collect(Collectors.toList());
+    public Page<SubdivisionRespDto> getAllSubdivisions(SubSearchDto searchDto, Pageable pageable){
+        return subdivisionRepository.searchAndSortSubdivisions(searchDto, pageable);
     }
 
     /**
@@ -115,27 +106,6 @@ public class SubdivisionService {
         imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", subdivision);
 
         return subdivision.getUID();
-    }
-
-
-    @Transactional
-    public void viewCountValidation(String UID, HttpServletRequest request, HttpServletResponse response) {
-        Cookie cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals(ViewVO.SUBDIVISIONVIEW))
-                .findFirst().orElseGet(() -> {
-                    addViews(UID);
-                    return new Cookie(ViewVO.SUBDIVISIONVIEW, UID);
-                });
-
-        long todayEndSecond = LocalDate.now().atTime(LocalTime.MAX).toEpochSecond(ZoneOffset.UTC);
-        long currentSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        cookie.setPath("/");
-        cookie.setMaxAge((int) (todayEndSecond - currentSecond));
-        response.addCookie(cookie);
-    }
-
-    private void addViews(String UID) {
-        Subdivision subdivision = subdivisionRepository.findByUID(UID).orElseThrow(() -> new CustomWebException(ErrorMessage.SUBDIVISION_NOT_FOUND));
-        subdivision.addView();
     }
 
     /**

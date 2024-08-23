@@ -54,10 +54,9 @@ public class SubdivisionController {
     @GetMapping("/{UID}")
     public String subdivisionDetail(@PathVariable("UID") String UID,
                                     @AuthenticationPrincipal PrincipalDetails userDetails,
-                                    Model model, HttpServletRequest request, HttpServletResponse response) {
+                                    Model model) {
 
         SubdivisionRespDto subdivisionRespDto = subdivisionService.findSubdivisionByUID(UID);
-        subdivisionService.viewCountValidation(UID,request,response);
 
         // subdivision에 있는 chatRoom 가져오기
         ChatRoomRespDto chatRoom = chatRoomService.getChatRoom(subdivisionRespDto.getId());

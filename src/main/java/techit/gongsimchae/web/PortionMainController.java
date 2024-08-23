@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,7 @@ import techit.gongsimchae.domain.portion.areas.service.SidoAreaService;
 import techit.gongsimchae.domain.portion.areas.service.SigunguAreaService;
 import techit.gongsimchae.domain.portion.notificationkeyword.dto.NotiKeywordCreateDtoWeb;
 import techit.gongsimchae.domain.portion.notificationkeyword.service.NotiKeywordService;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubSearchDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
@@ -39,11 +43,12 @@ public class PortionMainController {
      * 소분 메인 페이지
      */
     @GetMapping("/portioning")
-    public String showPortionPage(Model model) {
+    public String showPortionPage(@ModelAttribute SubSearchDto searchDto, Model model
+            , @PageableDefault(size = 10) Pageable pageable) {
         List<SidoArea> sidoAreas = sidoAreaService.getAllSidoAreas();
         model.addAttribute("sidoAreas", sidoAreas);
 
-        List<SubdivisionRespDto> subdivisions = subdivisionService.getAllSubdivisions();
+        Page<SubdivisionRespDto> subdivisions = subdivisionService.getAllSubdivisions(searchDto, pageable);
         model.addAttribute("subdivisions", subdivisions);
 
         return "portion/portioningMain";

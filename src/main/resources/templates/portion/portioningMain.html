@@ -68,9 +68,13 @@
         <div class="write-header">
             <button id="writeBtn" class="write-btn">글 작성</button>
             <div class="sort-options">
-                <a href="#" class="write-sort-new" id="sortNew">최신순</a>
+                <label>
+                    <input type="checkbox" id="onSaleCheckbox"> 판매중
+                </label>
                 <span>|</span>
-                <a href="#" class="write-sort-deadline" id="sortDeadline">마감순</a>
+                <a href="#" class="write-sort-new" id="sortNew">최근글</a>
+                <span>|</span>
+                <a href="#" class="write-sort-popular" id="sortPopular">인기글</a>
             </div>
         </div>
         <div id="subdivisionList">
@@ -112,6 +116,7 @@
 </script>
 
 <script th:src="@{/js/portion/portioningMain.js}" defer></script>
+<script th:src="@{/js/portion/mainsort.js}" defer></script>
 <script th:src="@{/js/modalnoti.js}"></script>
 <script>
     document.getElementById('writeBtn').addEventListener('click', function() {
@@ -119,6 +124,7 @@
     });
 </script>>
 <script th:replace="~{layout/portionHeader :: keyword}"></script>
+
 
 
 </body>
