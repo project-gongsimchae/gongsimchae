@@ -7,6 +7,7 @@ import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.DISCO
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,10 +63,9 @@ public class EventController {
     }
 
     @PostMapping("/event/coupon")
-    public String issueCouponToUser(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<String> issueCouponToUser(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                             @RequestParam Long eventId){
-        couponUserService.createCouponUser(principalDetails.getAccountDto(), eventId);
-        return "redirect:/event";
+        return couponUserService.createCouponUser(principalDetails.getAccountDto(), eventId);
     }
 
     //--------------------------------------------- admin --------------------------------------------

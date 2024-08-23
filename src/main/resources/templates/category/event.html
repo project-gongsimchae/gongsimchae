@@ -76,7 +76,6 @@
   // Event listener for the "발급" button
   $('#issueCouponButton').on('click', function () {
     var eventId = $(this).data('event-id'); // Get the event ID from the button
-    console.log(eventId)
     // Send POST request to /event/coupon with the event ID
     $.ajax({
       url: `/event/coupon?eventId=${eventId}`,
@@ -85,14 +84,12 @@
         'Content-Type': 'application/x-www-form-urlencoded',
         [csrfHeader]: csrfToken
       },
-      success: function () {
-        // If request is successful, show alert and close the modal
-        alert('쿠폰이 발급되었습니다.');
+      success: function (response) {
+        alert(response);
         $('#couponModal').modal('hide');
       },
-      error: function () {
-        // Handle any errors here
-        alert('쿠폰 발급에 실패했습니다. 다시 시도해주세요.');
+      error: function (response) {
+        alert(response.responseText);
       }
     });
   });

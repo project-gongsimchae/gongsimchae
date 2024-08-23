@@ -286,8 +286,6 @@ public class MyPageController {
     public String coupons(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
         List<CouponRespDtoWeb> coupons = couponService.getUserCoupons(principalDetails);
         model.addAttribute("coupons", coupons);
-
-
         return "mypage/coupons";
     }
 
