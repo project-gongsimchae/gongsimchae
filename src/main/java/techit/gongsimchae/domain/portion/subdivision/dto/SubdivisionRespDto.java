@@ -22,6 +22,7 @@ public class SubdivisionRespDto {
     private String address;
     private Double latitude;
     private Double longitude;
+    private String sigungu;
     private Integer numOfParticipants;
     private Integer price;
     private Integer views;
@@ -48,5 +49,6 @@ public class SubdivisionRespDto {
         this.imageFileList = subdivision.getImageFileList().stream().map(ImageFileRespDto::new).toList();
         this.createDate = subdivision.getCreateDate();
         this.updateDate = subdivision.getUpdateDate();
+        this.sigungu = subdivision.getSigungu();
     }
 }

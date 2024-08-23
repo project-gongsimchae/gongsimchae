@@ -1,10 +1,5 @@
 package techit.gongsimchae.web;
 
-import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.COUPON;
-import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.COUPON_CODE;
-import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.DISCOUNT;
-
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -27,6 +22,10 @@ import techit.gongsimchae.domain.groupbuying.event.service.EventService;
 import techit.gongsimchae.domain.groupbuying.eventcategory.service.EventCategoryService;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
+
+import java.util.List;
+
+import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.*;
 
 /**
  * Description

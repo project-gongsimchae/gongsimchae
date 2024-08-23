@@ -16,6 +16,7 @@ public class SubdivisionReqDto {
     private String address;
     private Double latitude;
     private Double longitude;
+    private String sigungu;
     private Integer numOfParticipants;
     private Integer price;
     private List<MultipartFile> images;

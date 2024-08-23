@@ -35,6 +35,8 @@ public class Subdivision extends BaseEntity {
     @Column(nullable = false)
     private Double longitude;
 
+    private String sigungu;
+
     @Column(nullable = false)
     private Integer numOfParticipants;
 
@@ -59,7 +61,7 @@ public class Subdivision extends BaseEntity {
     private List<ImageFile> imageFileList;
 
     @Builder
-    public Subdivision(String title, String content, String address, Double latitude, Double longitude, Integer numOfParticipants, Integer price, Integer views, String UID, SubdivisionType subdivisionType, User user) {
+    public Subdivision(String title, String content, String address, Double latitude, Double longitude, Integer numOfParticipants, Integer price, Integer views, String UID, SubdivisionType subdivisionType, User user, String sigungu) {
         this.title = title;
         this.content = content;
         this.address = address;
@@ -71,6 +73,7 @@ public class Subdivision extends BaseEntity {
         this.UID = UID;
         this.subdivisionType = subdivisionType;
         this.deleteStatus = false;
+        this.sigungu = sigungu;
         this.user = user;
     }
 
@@ -82,9 +85,16 @@ public class Subdivision extends BaseEntity {
         this.longitude = subdivisionUpdateReqDto.getLongitude();
         this.numOfParticipants = subdivisionUpdateReqDto.getNumOfParticipants();
         this.price = subdivisionUpdateReqDto.getPrice();
+        this.sigungu = subdivisionUpdateReqDto.getSigungu();
     }
 
     public void deleteSubdivision() {
         this.deleteStatus = true;
+    }
+
+
+    public void changeType(String status) {
+        this.subdivisionType = SubdivisionType.valueOf(status);
+
     }
 }

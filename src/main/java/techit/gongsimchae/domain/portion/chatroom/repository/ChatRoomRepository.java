@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
-    @EntityGraph(attributePaths = {"subdivision"})
+    @EntityGraph(attributePaths = {"subdivision","chatRoomUsers"})
     Optional<ChatRoom> findByRoomId(String roomId);
 
     Optional<ChatRoom> findBySubdivisionId(Long subdivisionId);
