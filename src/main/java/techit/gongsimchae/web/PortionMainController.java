@@ -3,6 +3,7 @@ package techit.gongsimchae.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.ILoggerFactory;
@@ -27,6 +28,7 @@ import techit.gongsimchae.domain.portion.subdivision.dto.SubSearchDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
+import techit.gongsimchae.global.util.CookieUtil;
 
 import java.util.List;
 
@@ -49,6 +51,8 @@ public class PortionMainController {
     @GetMapping("/portioning")
     public String showPortionPage(@ModelAttribute SubSearchDto searchDto, Model model
             , @PageableDefault(size = 4) Pageable pageable) {
+
+
         List<SidoArea> sidoAreas = sidoAreaService.getAllSidoAreas();
         model.addAttribute("sidoAreas", sidoAreas);
 

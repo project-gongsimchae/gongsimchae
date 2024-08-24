@@ -9,9 +9,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import techit.gongsimchae.domain.common.user.dto.FindIdVO;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import javax.swing.text.html.Option;
+import java.util.*;
+
 @Slf4j
 public class CookieUtil {
 
@@ -51,5 +51,20 @@ public class CookieUtil {
             log.error("write json object error", e);
             throw new RuntimeException(e);
         }
+    }
+
+    public static String createViewCookie(HttpServletRequest request,HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        Optional<Cookie> _cookie = (cookies != null)
+                ? Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals(ViewVO.SUBDIVISION_VIEW_NAME))
+                .findFirst()
+                : Optional.empty();
+        Cookie cookie = _cookie.orElse(new Cookie(ViewVO.SUBDIVISION_VIEW_NAME, UUID.randomUUID().toString().substring(0, 8)));
+
+        cookie.setMaxAge((int)CalculateTime.getSecondsUntilEndOfDay());
+        cookie.setPath("/portioning");
+        response.addCookie(cookie);
+        return cookie.getValue();
     }
 }

@@ -22,6 +22,7 @@ import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
+import techit.gongsimchae.global.util.CookieUtil;
 
 @Slf4j
 @Controller
@@ -54,7 +55,9 @@ public class SubdivisionController {
     @GetMapping("/{UID}")
     public String subdivisionDetail(@PathVariable("UID") String UID,
                                     @AuthenticationPrincipal PrincipalDetails userDetails,
-                                    Model model) {
+                                    Model model, HttpServletRequest request, HttpServletResponse response) {
+
+        String viewCookie = CookieUtil.createViewCookie(request, response);
 
         SubdivisionRespDto subdivisionRespDto = subdivisionService.findSubdivisionByUID(UID);
 

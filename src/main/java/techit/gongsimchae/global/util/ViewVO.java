@@ -1,5 +1,5 @@
 package techit.gongsimchae.global.util;
 
 public interface ViewVO {
-    String SUBDIVISIONVIEW = "view-count";
+    String SUBDIVISION_VIEW_NAME = "view-validation";
 }
