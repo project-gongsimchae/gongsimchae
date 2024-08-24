@@ -48,19 +48,8 @@ function updateURLAndFetch(page) {
     fetch(url)
         .then(response => response.text())
         .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const newSubdivisionList = doc.getElementById('subdivisionList');
-            document.getElementById('subdivisionList').innerHTML = newSubdivisionList.innerHTML;
-
-            // 현재 페이지에 active 클래스 추가
-            const currentPage = doc.querySelector('.pagination .page-item.active a')?.textContent.trim() || '1';
-            document.querySelectorAll('.pagination .page-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.querySelector('a').textContent.trim() === currentPage) {
-                    item.classList.add('active');
-                }
-            });
+            // 전체 페이지 새로 고침
+            location.reload();
         })
         .catch(error => console.error('Error:', error));
 }
@@ -81,7 +70,7 @@ document.getElementById('onSaleCheckbox').addEventListener('change', function() 
     updateURLAndFetch();
 });
 
-// 정렬 링크 클릭 시 URL 업데이트 및 스타일 변경, 데이터 가져오기
+// 정렬 링크 클릭 시 URL 업데이트 및 데이터 가져오기
 document.getElementById('sortNew').addEventListener('click', function(e) {
     e.preventDefault();
     let isActive = this.classList.contains('active');

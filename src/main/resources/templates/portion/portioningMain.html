@@ -102,7 +102,7 @@
             </div>
         </div>
         <!-- 페이징 처리 -->
-        <div th:if="${!subdivisions.isEmpty()}" class="d-flex justify-content-center py-3">
+        <div th:if="${!subdivisions.isEmpty()}" class="d-flex justify-content-center py-3 pagination-wrapper">
             <ul class="pagination mb-0">
                 <li class="page-item" th:classappend="${subdivisions.number == 0} ? 'disabled' : ''">
                     <a class="page-link" aria-label="Previous" th:data-page="${subdivisions.number - 1}">
