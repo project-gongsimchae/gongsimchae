@@ -138,7 +138,8 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
                 .where(subdivision.deleteStatus.eq(false).and(IsSale(searchDto)))
                 .fetchOne();
 
-        return new PageImpl<>(results, pageable,size);
+
+        return new PageImpl<>(results, pageable,size.intValue());
 
     }
 

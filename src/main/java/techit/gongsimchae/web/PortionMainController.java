@@ -48,15 +48,14 @@ public class PortionMainController {
      */
     @GetMapping("/portioning")
     public String showPortionPage(@ModelAttribute SubSearchDto searchDto, Model model
-            , @PageableDefault(size = 4) Pageable pageable, HttpServletRequest request) {
+            , @PageableDefault(size = 4) Pageable pageable) {
         List<SidoArea> sidoAreas = sidoAreaService.getAllSidoAreas();
         model.addAttribute("sidoAreas", sidoAreas);
-        String param = removePageParam(request.getQueryString());
-        log.debug("portion main param {}", param);
 
         Page<SubdivisionRespDto> subdivisions = subdivisionService.getAllSubdivisions(searchDto, pageable);
         model.addAttribute("subdivisions", subdivisions);
-        model.addAttribute("query",param);
+        model.addAttribute("query", searchDto);
+
 
         return "portion/portioningMain";
     }
@@ -110,19 +109,6 @@ public class PortionMainController {
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
         notiKeywordService.deleteNotificationKeyword(keyword,principalDetails);
         return ResponseEntity.ok().build();
-    }
-
-    private String removePageParam(String url) {
-        if (url != null) {
-            // 1. page=숫자 가 단독으로 있을 때는 빈 문자열 반환
-            if (url.matches("page=\\d+")) {
-                return "";
-            }
-
-            // 2. 여러 파라미터가 있을 때 page=숫자만 제거
-            return url.replaceAll("[&?]page=\\d+", "");
-        }
-       return null;
     }
 
 

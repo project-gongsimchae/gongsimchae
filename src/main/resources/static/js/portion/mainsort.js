@@ -1,5 +1,18 @@
-function updateURLAndFetch() {
+function updateURLAndFetch(page) {
     let url = new URL(window.location.origin + '/portioning');
+
+    // 페이지 번호 추가
+    if (page !== undefined) {
+        url.searchParams.set('page', page);
+    } else {
+        // 페이지 번호가 없는 경우 URL에서 기존 페이지 번호를 가져옴
+        let currentPage = new URLSearchParams(window.location.search).get('page');
+        if (currentPage) {
+            url.searchParams.set('page', currentPage);
+        } else {
+            url.searchParams.delete('page'); // 기본값은 첫 페이지이므로 삭제
+        }
+    }
 
     // 검색어 추가
     let query = document.querySelector('.content-wrapper input').value;
@@ -31,7 +44,7 @@ function updateURLAndFetch() {
     // URL 업데이트
     window.history.pushState({}, '', url);
 
-    // Ajax 요청
+    // AJAX 요청
     fetch(url)
         .then(response => response.text())
         .then(html => {
@@ -39,26 +52,62 @@ function updateURLAndFetch() {
             const doc = parser.parseFromString(html, 'text/html');
             const newSubdivisionList = doc.getElementById('subdivisionList');
             document.getElementById('subdivisionList').innerHTML = newSubdivisionList.innerHTML;
+
+            // 현재 페이지에 active 클래스 추가
+            const currentPage = doc.querySelector('.pagination .page-item.active a')?.textContent.trim() || '1';
+            document.querySelectorAll('.pagination .page-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.querySelector('a').textContent.trim() === currentPage) {
+                    item.classList.add('active');
+                }
+            });
         })
         .catch(error => console.error('Error:', error));
 }
 
+// 페이지네이션 링크 클릭 시 AJAX 요청
+document.querySelectorAll('.pagination .page-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        let page = this.getAttribute('data-page');
+        if (page) {
+            updateURLAndFetch(page);
+        }
+    });
+});
+
 // 체크박스 클릭 시 URL 업데이트 및 데이터 가져오기
-document.getElementById('onSaleCheckbox').addEventListener('change', updateURLAndFetch);
+document.getElementById('onSaleCheckbox').addEventListener('change', function() {
+    updateURLAndFetch();
+});
 
 // 정렬 링크 클릭 시 URL 업데이트 및 스타일 변경, 데이터 가져오기
 document.getElementById('sortNew').addEventListener('click', function(e) {
     e.preventDefault();
+    let isActive = this.classList.contains('active');
     document.getElementById('sortPopular').classList.remove('active');
-    this.classList.add('active');
-    updateURLAndFetch();
+
+    if (isActive) {
+        this.classList.remove('active');
+        updateURLAndFetch(); // 'new' 정렬 파라미터 제거
+    } else {
+        this.classList.add('active');
+        updateURLAndFetch(); // 'new' 정렬 파라미터 추가
+    }
 });
 
 document.getElementById('sortPopular').addEventListener('click', function(e) {
     e.preventDefault();
+    let isActive = this.classList.contains('active');
     document.getElementById('sortNew').classList.remove('active');
-    this.classList.add('active');
-    updateURLAndFetch();
+
+    if (isActive) {
+        this.classList.remove('active');
+        updateURLAndFetch(); // 'popular' 정렬 파라미터 제거
+    } else {
+        this.classList.add('active');
+        updateURLAndFetch(); // 'popular' 정렬 파라미터 추가
+    }
 });
 
 // 검색어 입력 필드에 입력할 때마다 URL 업데이트 및 데이터 가져오기
