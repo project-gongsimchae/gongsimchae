@@ -2,8 +2,11 @@ package techit.gongsimchae.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -11,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.portion.areas.entity.MyeondongeupArea;
 import techit.gongsimchae.domain.portion.areas.entity.SidoArea;
@@ -30,7 +32,9 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class PortionMainController {
+
 
     private final SidoAreaService sidoAreaService;
     private final SigunguAreaService sigunguAreaService;
@@ -44,15 +48,19 @@ public class PortionMainController {
      */
     @GetMapping("/portioning")
     public String showPortionPage(@ModelAttribute SubSearchDto searchDto, Model model
-            , @PageableDefault(size = 10) Pageable pageable) {
+            , @PageableDefault(size = 4) Pageable pageable, HttpServletRequest request) {
         List<SidoArea> sidoAreas = sidoAreaService.getAllSidoAreas();
         model.addAttribute("sidoAreas", sidoAreas);
+        String param = removePageParam(request.getQueryString());
+        log.debug("portion main param {}", param);
 
         Page<SubdivisionRespDto> subdivisions = subdivisionService.getAllSubdivisions(searchDto, pageable);
         model.addAttribute("subdivisions", subdivisions);
+        model.addAttribute("query",param);
 
         return "portion/portioningMain";
     }
+
 
     @GetMapping("/sigungus")
     public String getSigunguAreas(@RequestParam Long sidoAreaId, Model model){
@@ -102,6 +110,19 @@ public class PortionMainController {
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
         notiKeywordService.deleteNotificationKeyword(keyword,principalDetails);
         return ResponseEntity.ok().build();
+    }
+
+    private String removePageParam(String url) {
+        if (url != null) {
+            // 1. page=숫자 가 단독으로 있을 때는 빈 문자열 반환
+            if (url.matches("page=\\d+")) {
+                return "";
+            }
+
+            // 2. 여러 파라미터가 있을 때 page=숫자만 제거
+            return url.replaceAll("[&?]page=\\d+", "");
+        }
+       return null;
     }
 
 
