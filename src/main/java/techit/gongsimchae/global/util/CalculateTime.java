@@ -1,8 +1,7 @@
 package techit.gongsimchae.global.util;
 
 import java.time.*;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjusters;
+import java.time.format.DateTimeFormatter;
 
 public class CalculateTime {
 
@@ -14,20 +13,27 @@ public class CalculateTime {
 
     }
 
-
-    public static long getSecondsUntilEndOfWeek() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime endOfWeek = now.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).with(LocalTime.MAX);
-        return ChronoUnit.SECONDS.between(now, endOfWeek);
+    public static long getNowSeconds(){
+        return Instant.now().getEpochSecond();
     }
 
-    /**
-     * 현재 시점부터 이번 달의 종료까지 남은 초를 계산합니다.
-     *
-     */
-    public static long getSecondsUntilEndOfMonth() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime endOfMonth = now.with(TemporalAdjusters.lastDayOfMonth()).with(LocalTime.MAX);
-        return ChronoUnit.SECONDS.between(now, endOfMonth);
+    public static long getSecondsInAWeek() {
+        // 1주일 = 7일, 1일 = 24시간, 1시간 = 60분, 1분 = 60초
+        return getNowSeconds() - 7L * 24 * 60 * 60;
+
+    }
+
+
+    public static long getSecondsInAMonth() {
+        // 1달 = 30일, 1일 = 24시간, 1시간 = 60분, 1분 = 60초
+        return getNowSeconds() - 30L * 24 * 60 * 60;
+    }
+
+    public static String getToday() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+    }
+
+    public static String getWeek() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyww"));
     }
 }

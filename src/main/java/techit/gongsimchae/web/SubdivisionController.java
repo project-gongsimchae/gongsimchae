@@ -21,6 +21,7 @@ import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
+import techit.gongsimchae.domain.portion.subdivision.service.ViewCountService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.util.CookieUtil;
 
@@ -34,6 +35,7 @@ public class SubdivisionController {
     private final WishListService wishListService;
     private final ChatRoomService chatRoomService;
     private final ReportService reportService;
+    private final ViewCountService viewCountService;
 
     @GetMapping("/write")
     public String subdivisionRegisterForm(Model model) {
@@ -58,8 +60,11 @@ public class SubdivisionController {
                                     Model model, HttpServletRequest request, HttpServletResponse response) {
 
         String viewCookie = CookieUtil.createViewCookie(request, response);
+        viewCountService.incrementViewCount(UID, viewCookie);
+        Integer viewCount = viewCountService.getSubdivisionViewCount(UID);
 
         SubdivisionRespDto subdivisionRespDto = subdivisionService.findSubdivisionByUID(UID);
+        subdivisionRespDto.setViews(viewCount);
 
         // subdivision에 있는 chatRoom 가져오기
         ChatRoomRespDto chatRoom = chatRoomService.getChatRoom(subdivisionRespDto.getId());

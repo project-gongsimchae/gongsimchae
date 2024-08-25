@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import techit.gongsimchae.domain.common.user.dto.FindIdVO;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @Slf4j
@@ -57,10 +56,10 @@ public class CookieUtil {
         Cookie[] cookies = request.getCookies();
         Optional<Cookie> _cookie = (cookies != null)
                 ? Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals(ViewVO.SUBDIVISION_VIEW_NAME))
+                .filter(cookie -> cookie.getName().equals(ViewVO.SUBDIVISION_COOKIE_NAME))
                 .findFirst()
                 : Optional.empty();
-        Cookie cookie = _cookie.orElse(new Cookie(ViewVO.SUBDIVISION_VIEW_NAME, UUID.randomUUID().toString().substring(0, 8)));
+        Cookie cookie = _cookie.orElse(new Cookie(ViewVO.SUBDIVISION_COOKIE_NAME, UUID.randomUUID().toString().substring(0, 8)));
 
         cookie.setMaxAge((int)CalculateTime.getSecondsUntilEndOfDay());
         cookie.setPath("/portioning");

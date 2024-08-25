@@ -27,6 +27,7 @@ import techit.gongsimchae.domain.portion.notificationkeyword.service.NotiKeyword
 import techit.gongsimchae.domain.portion.subdivision.dto.SubSearchDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
+import techit.gongsimchae.domain.portion.subdivision.service.ViewCountService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.util.CookieUtil;
 
@@ -43,6 +44,7 @@ public class PortionMainController {
     private final MyeondongeupAreaService myeondongeupAreaService;
     private final SubdivisionService subdivisionService;
     private final NotiKeywordService notiKeywordService;
+    private final ViewCountService viewCountService;
 
 
     /**
@@ -57,6 +59,8 @@ public class PortionMainController {
         model.addAttribute("sidoAreas", sidoAreas);
 
         Page<SubdivisionRespDto> subdivisions = subdivisionService.getAllSubdivisions(searchDto, pageable);
+        viewCountService.setSubdivisionViews(subdivisions.getContent());
+
         model.addAttribute("subdivisions", subdivisions);
         model.addAttribute("query", searchDto);
 
