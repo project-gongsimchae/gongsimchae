@@ -1,12 +1,10 @@
 package techit.gongsimchae.domain.portion.subdivision.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
-import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
+import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
 import techit.gongsimchae.global.util.CalculateTime;
 
 import java.time.Duration;
@@ -20,6 +18,7 @@ import static techit.gongsimchae.global.util.ViewVO.*;
 public class ViewCountService {
 
     private final RedisTemplate<String, Object> redisTemplate;
+    private final SubdivisionRepository subdivisionRepository;
 
 
     private boolean isSubdivisionViewedByUser(String subdivisionId, String viewCookie) {
@@ -35,10 +34,16 @@ public class ViewCountService {
 
     public void incrementViewCount(String subdivisionId, String viewCookie) {
 
-        if(isSubdivisionViewedByUser(subdivisionId, viewCookie)) {
-            redisTemplate.opsForZSet().incrementScore(SUBDIVISION_NAME + DAY, subdivisionId + TODAY, 1);
-            redisTemplate.opsForZSet().incrementScore(SUBDIVISION_NAME + HOUR, subdivisionId, 1);
-            redisTemplate.opsForZSet().incrementScore(TOTAL_VIEWS,subdivisionId,1);
+        if (isSubdivisionViewedByUser(subdivisionId, viewCookie)) {
+
+            // 파이프라인으로 Redis 명령어 실행
+            redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+                ZSetOperations<String, Object> zSetOps = redisTemplate.opsForZSet();
+                zSetOps.incrementScore(SUBDIVISION_NAME + DAY, subdivisionId + TODAY,1);
+                zSetOps.incrementScore(SUBDIVISION_NAME + HOUR, subdivisionId,1);
+                zSetOps.incrementScore(TOTAL_VIEWS, subdivisionId,1);
+                return null; // 파이프라인의 결과는 사용하지 않으므로 null 반환
+            });
         }
         redisTemplate.expire(SUBDIVISION_NAME + DAY, Duration.ofSeconds(CalculateTime.getSecondsUntilEndOfDay() + 60));
         redisTemplate.expire(SUBDIVISION_NAME + HOUR, Duration.ofMinutes(60 + 1));
@@ -61,7 +66,6 @@ public class ViewCountService {
                 .stream()
                 .collect(Collectors.toMap(ZSetOperations.TypedTuple::getValue, ZSetOperations.TypedTuple::getScore));
     }
-
 
 
     /**
@@ -119,7 +123,7 @@ public class ViewCountService {
         Integer dailyViewCount = getDailySubViewCount(subdivisionId);
         redisTemplate.opsForZSet().incrementScore(SUBDIVISION_NAME + DAY, subdivisionId, dailyViewCount);
         Set<Object> result = redisTemplate.opsForZSet().reverseRange(SUBDIVISION_NAME + DAY, 0, 49);
-        redisTemplate.opsForZSet().remove(SUBDIVISION_NAME+DAY);
+        redisTemplate.opsForZSet().remove(SUBDIVISION_NAME + DAY);
         return result;
     }
 
@@ -131,7 +135,7 @@ public class ViewCountService {
         Integer WeekViewCount = getWeeklyViewCount(subdivisionId);
         redisTemplate.opsForZSet().incrementScore(SUBDIVISION_NAME + WEEK, subdivisionId, WeekViewCount);
         Set<Object> result = redisTemplate.opsForZSet().reverseRange(SUBDIVISION_NAME + WEEK, 0, 49);
-        redisTemplate.opsForZSet().remove(SUBDIVISION_NAME+WEEK);
+        redisTemplate.opsForZSet().remove(SUBDIVISION_NAME + WEEK);
         return result;
     }
 
