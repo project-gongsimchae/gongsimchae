@@ -59,7 +59,6 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
             dto.setChatRoomUsers(chatRoomUserCount);
             return dto;
         }).collect(Collectors.toList());
-
     }
 
     @Override
