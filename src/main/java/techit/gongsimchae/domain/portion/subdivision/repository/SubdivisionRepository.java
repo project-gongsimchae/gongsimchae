@@ -1,5 +1,6 @@
 package techit.gongsimchae.domain.portion.subdivision.repository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,5 +34,5 @@ public interface SubdivisionRepository extends JpaRepository<Subdivision, Long>,
     void updateViewCount(@Param("views") int viewCount, @Param("uid") String subdivisionId);
 
     @Query("select s from Subdivision s where s.views > :views")
-    List<Subdivision> findAllWithViews(@Param("views") int views, Pageable pageable);
+    Page<Subdivision> findAllWithViews(@Param("views") int views, Pageable pageable);
 }

@@ -38,7 +38,7 @@ public class SubViewsSyncSchedule {
      * 1시간 마다 DB로 조회수 저장하기
      */
     @Scheduled(cron = "0 0 * * * *", zone = "Asia/Seoul")
-    public void runFirstJob() throws Exception {
+    public void runSyncDB() throws Exception {
         System.out.println("syncViewJob start");
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
@@ -47,7 +47,11 @@ public class SubViewsSyncSchedule {
                 .toJobParameters();
 
         jobLauncher.run(jobRegistry.getJob("syncViewJob"), jobParameters);
+
     }
+
+
+
 
 
     /**
