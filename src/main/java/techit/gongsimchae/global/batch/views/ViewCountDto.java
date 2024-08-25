@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class ViewCountDto {
     private String subdivisionId;
-    private long viewCount;
+    private int viewCount;
 }

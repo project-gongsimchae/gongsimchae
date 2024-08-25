@@ -5,6 +5,7 @@ public interface ViewVO {
 
 
     String SUBDIVISION_NAME = "subdivision";
+    String HOUR = ":60";
     String DAY = ":1";
     String WEEK = ":7";
     String TODAY = ":" + CalculateTime.getToday();

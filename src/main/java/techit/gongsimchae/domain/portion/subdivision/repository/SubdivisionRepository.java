@@ -27,7 +27,7 @@ public interface SubdivisionRepository extends JpaRepository<Subdivision, Long>,
             "AND (:content IS NULL OR LOWER(s.content) LIKE LOWER(CONCAT('%', :content, '%')) OR LOWER(s.title) LIKE LOWER(CONCAT('%', :content, '%')))")
     List<Subdivision> searchSubdivisions(@Param("address") String address, @Param("content") String content);
 
-    @Query("update Subdivision s set s.views = :views where s.UID = :uid")
+    @Query("update Subdivision s set s.views = s.views + :views where s.UID = :uid")
     @Modifying(clearAutomatically = true)
-    void updateViewCount(@Param("views") long viewCount, @Param("uid") String subdivisionId);
+    void updateViewCount(@Param("views") int viewCount, @Param("uid") String subdivisionId);
 }

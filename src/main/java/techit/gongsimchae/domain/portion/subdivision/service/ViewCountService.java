@@ -11,6 +11,7 @@ import techit.gongsimchae.global.util.CalculateTime;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static techit.gongsimchae.global.util.ViewVO.*;
 
@@ -35,10 +36,12 @@ public class ViewCountService {
     public void incrementViewCount(String subdivisionId, String viewCookie) {
 
         if(isSubdivisionViewedByUser(subdivisionId, viewCookie)) {
-            redisTemplate.opsForHash().increment(SUBDIVISION_NAME + DAY, subdivisionId + TODAY, 1);
+            redisTemplate.opsForZSet().incrementScore(SUBDIVISION_NAME + DAY, subdivisionId + TODAY, 1);
+            redisTemplate.opsForZSet().incrementScore(SUBDIVISION_NAME + HOUR, subdivisionId, 1);
             redisTemplate.opsForZSet().incrementScore(TOTAL_VIEWS,subdivisionId,1);
         }
         redisTemplate.expire(SUBDIVISION_NAME + DAY, Duration.ofSeconds(CalculateTime.getSecondsUntilEndOfDay() + 60));
+        redisTemplate.expire(SUBDIVISION_NAME + HOUR, Duration.ofMinutes(60 + 1));
     }
 
     /**
@@ -46,15 +49,17 @@ public class ViewCountService {
      */
 
     public Integer getDailySubViewCount(String subdivisionId) {
-        return (Integer) redisTemplate.opsForHash().get(SUBDIVISION_NAME + DAY, subdivisionId + TODAY);
+        return redisTemplate.opsForZSet().score(SUBDIVISION_NAME + DAY, subdivisionId).intValue();
     }
 
     /**
      * 모든 글 하루 조회수를 조회
      */
 
-    public Map<Object, Object> getDailyViewCount() {
-        return redisTemplate.opsForHash().entries(SUBDIVISION_NAME + DAY);
+    public Map<Object, Double> getDailyViewCount() {
+        return redisTemplate.opsForZSet().rangeWithScores(SUBDIVISION_NAME + DAY, 0, -1)
+                .stream()
+                .collect(Collectors.toMap(ZSetOperations.TypedTuple::getValue, ZSetOperations.TypedTuple::getScore));
     }
 
 

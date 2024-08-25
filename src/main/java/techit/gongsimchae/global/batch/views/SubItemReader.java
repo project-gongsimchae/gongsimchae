@@ -24,8 +24,10 @@ public class SubItemReader implements ItemStreamReader<Map.Entry<String, Double>
 
     @Override
     public void open(ExecutionContext executionContext) throws ItemStreamException {
-        typedTuples = redisTemplate.opsForZSet().rangeWithScores(TOTAL_VIEWS, 0, -1);
+        typedTuples = redisTemplate.opsForZSet().rangeWithScores(SUBDIVISION_NAME + HOUR,0,-1);
         iterator = typedTuples.iterator();
+        boolean result = iterator.hasNext();
+        log.debug("result {}", result);
 
         if (executionContext.containsKey(CURRENT_KEY)) {
             currentNumber = executionContext.getInt(CURRENT_KEY);
@@ -43,6 +45,7 @@ public class SubItemReader implements ItemStreamReader<Map.Entry<String, Double>
         if (iterator != null && iterator.hasNext()) {
             currentNumber++;
             ZSetOperations.TypedTuple<Object> tuple = iterator.next();
+            log.debug("read tuple {}", tuple.getValue());
             return new AbstractMap.SimpleEntry<>((String) tuple.getValue(), tuple.getScore());
         }
         return null;
@@ -51,5 +54,10 @@ public class SubItemReader implements ItemStreamReader<Map.Entry<String, Double>
     @Override
     public void update(ExecutionContext executionContext) throws ItemStreamException {
         executionContext.putInt(CURRENT_KEY, currentNumber);
+    }
+
+    @Override
+    public void close() throws ItemStreamException {
+        redisTemplate.delete(SUBDIVISION_NAME + HOUR);
     }
 }
