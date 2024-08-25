@@ -90,3 +90,66 @@
 .input-form-container {
     margin: 0 200px;
 }
+
+.input-option-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.input-option {
+    display: flex;
+    width: 600px; /* 전체 너비를 600px로 설정 */
+}
+
+.input-option input[type="text"] {
+    width: 50%;
+    margin-right: 8px;
+}
+
+.input-option input[type="number"] {
+    width: 50%;
+}
+
+.add-option {
+    margin-left: 5px;
+}
+
+
+.custom-btn-add-option, .custom-btn-remove-option {
+    height: 36px;
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+
+}
+
+.custom-btn-add-option i,.custom-btn-remove-option i {
+    color: #999999;
+}
+
+.input-option-set {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+.input-option-content {
+    display: flex;
+    gap: 10px;
+}
+
+
+.custom-btn-remove-option {
+    background-color: transparent;
+    border: none;
+    font-size: 10px;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 15px;
+}
