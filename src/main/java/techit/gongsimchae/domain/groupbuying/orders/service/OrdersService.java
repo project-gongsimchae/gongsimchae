@@ -82,7 +82,7 @@ public class OrdersService {
     public TempUserDeliveryDto createTempUserDeliveryInfo(Long userid){
         User user = userRepository.findById(userid)
                 .orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
-        Address address = addressRepository.findByUserId(userid)
+        Address address = addressRepository.findDefaultAddressByUser(userid)
                 .orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
 
         String addressDetail = address.getAddress() + " " + address.getDetailAddress();
