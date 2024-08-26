@@ -108,7 +108,7 @@ public class AdminController {
     @GetMapping("/category")
     public String categoryDashBoard(Model model, @PageableDefault(size = 10, sort = "id") Pageable pageable) {
         Page<Category> categories = categoryService.getCategories(pageable);
-        model.addAttribute("categories", categories);
+        model.addAttribute("categoryList", categories);
         return "/admin/category/categoryList";
     }
 
