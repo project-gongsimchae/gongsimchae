@@ -30,4 +30,5 @@ public class AddressCreateReqDtoWeb {
         this.additionalAddress = user.getAdditionalAddress();
         this.sigungu = user.getSigungu();
     }
+
 }

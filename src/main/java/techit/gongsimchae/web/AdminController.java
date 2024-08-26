@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,8 +44,8 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public String usersDashboard(Model model) {
-        List<UserRespDtoWeb> users = userService.getUsers();
+    public String usersDashboard(Model model, @PageableDefault(size = 10, sort = "createDate") Pageable pageable) {
+        Page<UserRespDtoWeb> users = userService.getUsers(pageable);
         model.addAttribute("users", users);
         return "admin/users/userList";
     }
@@ -115,7 +116,7 @@ public class AdminController {
      * 유저가 쓴 1:1 문의를 관리자가 보고 작성
      */
     @GetMapping("/inquires")
-    public String InquiryList(Model model, @RequestParam(value = "filter", defaultValue = "unanswered") String filter, Pageable pageable) {
+    public String InquiryList(Model model, @RequestParam(value = "filter", defaultValue = "unanswered") String filter, @PageableDefault(size = 5) Pageable pageable) {
         Page<InquiryRespDtoWeb> inquires = inquiryService.getAllInquiries(pageable, filter);
         log.debug("admin inquires {}", inquires.getContent());
         model.addAttribute("inquires", inquires);
@@ -151,15 +152,15 @@ public class AdminController {
      * 신고수가 제일 많은 신고글 보기
      */
     @GetMapping("/reports")
-    public String ReportList(Model model) {
-        Page<SubdivisionReportRespDto> reports = subdivisionService.getMostReported();
+    public String ReportList(Model model, @PageableDefault(size = 3) Pageable pageable) {
+        Page<SubdivisionReportRespDto> reports = subdivisionService.getMostReported(pageable);
         model.addAttribute("reports", reports);
         return "admin/reports/reportList";
     }
 
     @GetMapping("/reports/{id}")
-    public String SubdivisionReport(@PathVariable("id") Long id, Model model) {
-        List<ReportRespDtoWeb> reports = reportService.getSubdivisionReport(id);
+    public String SubdivisionReport(@PathVariable("id") Long id, Model model, @PageableDefault(size = 10) Pageable pageable) {
+        Page<ReportRespDtoWeb> reports = reportService.getSubdivisionReport(id, pageable);
         model.addAttribute("reports", reports);
         return "admin/reports/subdivisionReport";
     }

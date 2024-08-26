@@ -3,6 +3,9 @@ package techit.gongsimchae.web;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -82,8 +85,8 @@ public class MyPageController {
      * 내가 작성한 1:1문의 리스트
      */
     @GetMapping("/inquiry/list")
-    public String inquiryList(Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        List<InquiryRespDtoWeb> inquires = inquiryService.getInquiry(principalDetails);
+    public String inquiryList(Model model, @AuthenticationPrincipal PrincipalDetails principalDetails, @PageableDefault(size = 10) Pageable pageable) {
+        Page<InquiryRespDtoWeb> inquires = inquiryService.getInquiry(principalDetails, pageable);
         model.addAttribute("inquires", inquires);
 
         return "mypage/inquiryList";
@@ -216,8 +219,10 @@ public class MyPageController {
      */
 
     @GetMapping("/pick/list")
-    public String PickList(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
-        List<ItemRespDtoWeb> items = wishListService.getPickItems(principalDetails);
+    public String PickList(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model,
+                           @PageableDefault(size = 5) Pageable pageable) {
+
+        Page<ItemRespDtoWeb> items = wishListService.getPickItems(principalDetails, pageable);
         log.debug("PickList {}", items);
         model.addAttribute("items", items);
         return "mypage/pickList";

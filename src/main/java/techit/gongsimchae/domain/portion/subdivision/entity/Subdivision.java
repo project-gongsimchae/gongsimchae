@@ -97,4 +97,8 @@ public class Subdivision extends BaseEntity {
         this.subdivisionType = SubdivisionType.valueOf(status);
 
     }
+
+    public void addView() {
+        this.views++;
+    }
 }

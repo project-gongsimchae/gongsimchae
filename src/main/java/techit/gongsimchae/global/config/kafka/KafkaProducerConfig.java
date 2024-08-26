@@ -1,4 +1,4 @@
-package techit.gongsimchae.global.config.fafka;
+package techit.gongsimchae.global.config.kafka;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

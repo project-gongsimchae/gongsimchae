@@ -3,6 +3,8 @@ package techit.gongsimchae.domain.common.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -193,8 +195,9 @@ public class UserService {
     /**
      * DB에 있는 유저 전체정보를 반환하는 메서드
      */
-    public List<UserRespDtoWeb> getUsers() {
-        return userRepository.findAll().stream().map(UserRespDtoWeb::new).collect(Collectors.toList());
+    public Page<UserRespDtoWeb> getUsers(Pageable pageable) {
+        return userRepository.findUsersWithReportCounts(pageable);
+
     }
 
     /**

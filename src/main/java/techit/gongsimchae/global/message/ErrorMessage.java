@@ -36,6 +36,7 @@ public interface ErrorMessage {
     // 채팅방
     String CHATTING_ROOM_NOT_FOUND = "존재하지 않는 채팅방입니다.";
 
+
     /**
      * global 에러
      */

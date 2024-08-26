@@ -5,10 +5,14 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.entity.QImageFile;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
+
 
 import java.util.List;
 
@@ -29,6 +33,8 @@ public class InquiryCustomRepositoryImpl implements InquiryCustomRepository {
                 .from(inquiry)
                 .join(inquiry.user, user)
                 .orderBy(inquiry.createDate.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
                 .where(unanswered(filter))
                 .fetch();
 

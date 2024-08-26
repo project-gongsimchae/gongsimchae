@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
@@ -32,7 +32,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class SubdivisionService {
@@ -44,19 +44,17 @@ public class SubdivisionService {
     private final ChatRoomService chatRoomService;
     private final ApplicationEventPublisher publisher;
 
-    @Transactional(readOnly = true)
-    public List<SubdivisionRespDto> getAllSubdivisions(){
-        List<Subdivision> subdivisions = subdivisionRepository.findByDeleteStatusIsFalseOrderByCreateDateDesc();
-        return subdivisions.stream()
-                .map(SubdivisionRespDto::new)
-                .collect(Collectors.toList());
+    /**
+     * 소분글 메인페이지에 모든 소분글들을 보여주는 메서드
+     */
+    public Page<SubdivisionRespDto> getAllSubdivisions(SubSearchDto searchDto, Pageable pageable){
+        return subdivisionRepository.searchAndSortSubdivisions(searchDto, pageable);
     }
 
     /**
      * URL의 Path 값으로 넘어온 UID로 DB에서 해당 소분 글을 찾아주는 메서드
      *
      */
-    @Transactional(readOnly = true)
     public SubdivisionRespDto findSubdivisionByUID(String UID) {
 
         Subdivision subdivision = subdivisionRepository.findByUID(UID).orElseThrow(() -> new CustomWebException("해당 소분 글을 찾을 수 없습니다."));
@@ -69,12 +67,15 @@ public class SubdivisionService {
      * UserId를 기반으로 자신이 작성한 소분 글 찾아주는 메서드
      *
      */
-    @Transactional(readOnly = true)
     public List<SubdivisionRespDto> findSubdivisionByUserId(Long userId) {
 
         return subdivisionRepository.findAllByUserIdAndDeleteStatusIsFalse(userId).stream().map(SubdivisionRespDto::new).toList();
     }
 
+    /**
+     * 소분글을 저장하는 메서드
+     */
+    @Transactional
     public String saveSubdivision(SubdivisionReqDto subdivisionReqDto,
                                   Long userId) {
 
@@ -107,6 +108,10 @@ public class SubdivisionService {
         return subdivision.getUID();
     }
 
+    /**
+     * 소분글을 수정하는 메서드
+     */
+    @Transactional
     public String updateSubdivision(SubdivisionUpdateReqDto subdivisionUpdateReqDto) {
 
         log.debug("subdivisionUpdateReqDto {}", subdivisionUpdateReqDto);
@@ -130,6 +135,11 @@ public class SubdivisionService {
 
         return subdivision.getUID();
     }
+
+    /**
+     * 소분글을 삭제처리하는 메서드
+     * 실제로 삭제하는 건 아니고 상태를 변환하는 것이다
+     */
     @Transactional
     public void deleteSubdivision(String UID) {
 
@@ -138,7 +148,9 @@ public class SubdivisionService {
         subdivision.deleteSubdivision();
     }
 
-    @Transactional(readOnly = true)
+    /**
+     * 소분글 메인페이지에서 주소와 내용을 가지고 검색을 하는 메서드
+     */
     public List<SubdivisionRespDto> searchSubdivisions(String address, String content) {
         // 콤마(,)로 구분된 주소를 여러 개로 나누기
         String[] addresses = address != null ? address.split(",") : new String[]{};
@@ -162,7 +174,6 @@ public class SubdivisionService {
     /**
      * 마이페이지에서 참여중인 소분글 찾는 메서드
      */
-    @Transactional(readOnly = true)
     public List<SubdivisionChatRoomRespDto> getUserSubdivisions(PrincipalDetails principalDetails) {
         return subdivisionRepository.findUserSubdivisions(principalDetails.getAccountDto().getId());
     }
@@ -170,6 +181,7 @@ public class SubdivisionService {
     /**
      * 소분글 상태를 바꾸는 메서드
      */
+    @Transactional
     public void changeStatus(String uid, String status) {
         Subdivision subdivision = subdivisionRepository.findByUID(uid).orElseThrow(() -> new CustomWebException(ErrorMessage.SUBDIVISION_NOT_FOUND));
         subdivision.changeType(status);
@@ -179,9 +191,8 @@ public class SubdivisionService {
     /**
      * 신고를 많이받은 소분글 불러오는 메서드
      */
-    @Transactional(readOnly = true)
-    public Page<SubdivisionReportRespDto> getMostReported() {
-        return subdivisionRepository.findMostFrequentReports(PageRequest.of(0, 10));
+    public Page<SubdivisionReportRespDto> getMostReported(Pageable pageable) {
+        return subdivisionRepository.findMostFrequentReports(pageable);
     }
 
     /**
