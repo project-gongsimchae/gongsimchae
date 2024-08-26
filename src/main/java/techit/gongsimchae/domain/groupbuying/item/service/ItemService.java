@@ -1,11 +1,6 @@
 package techit.gongsimchae.domain.groupbuying.item.service;
 
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.getInstanceByTypeNumber;
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.낮은가격순;
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.높은가격순;
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.리뷰많은순;
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.신상품순;
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.판매량순;
+import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +29,10 @@ import techit.gongsimchae.domain.groupbuying.item.dto.ReviewedItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
+import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionCreateDto;
+import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
+import techit.gongsimchae.domain.groupbuying.itemoption.repository.ItemOptionRepository;
+import techit.gongsimchae.domain.groupbuying.itemoption.service.ItemOptionService;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderStatus;
 import techit.gongsimchae.domain.groupbuying.orderitem.repository.OrderItemRepository;
@@ -57,6 +56,8 @@ public class ItemService {
     private final ImageFileRepository imageFileRepository;
     private final ReviewRepository reviewRepository;
     private final EventRepository eventRepository;
+    private final ItemOptionRepository itemOptionRepository;
+
 
     public void save(Item item) {
         itemRepository.save(item);
@@ -76,7 +77,7 @@ public class ItemService {
 
 
     @Transactional
-    public void createItem(ItemCreateDto itemCreateDto, Long userId) {
+    public Item createItem(ItemCreateDto itemCreateDto, Long userId) {
         Category category = categoryRepository.findByName(itemCreateDto.getCategoryName())
                 .orElseThrow(() -> {
                             throw new IllegalArgumentException("Category not found");
@@ -87,6 +88,13 @@ public class ItemService {
 
         imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item);
 
+        if (itemCreateDto.getOptions() != null) {
+            for(ItemOptionCreateDto optionCreateDto : itemCreateDto.getOptions()) {
+                ItemOption itemOption = new ItemOption(item, optionCreateDto.getContent(), optionCreateDto.getPrice());
+                itemOptionRepository.save(itemOption);
+            }
+        }
+        return item;
     }
 
     @Transactional
