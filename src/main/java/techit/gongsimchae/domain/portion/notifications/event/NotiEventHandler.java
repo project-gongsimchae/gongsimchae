@@ -37,4 +37,12 @@ public class NotiEventHandler {
         notificationService.alertAboutKeyword(event);
         log.debug("noti to inquiry {}", event);
     }
+
+    @TransactionalEventListener
+    @Async("customTaskExecutor")
+    public void SendFeedbackNotifications(FeedbackNotiEvent event) throws InterruptedException {
+        Thread.sleep(2000);
+        notificationService.alertAboutFeedback(event);
+        log.debug("noti to inquiry {}", event);
+    }
 }

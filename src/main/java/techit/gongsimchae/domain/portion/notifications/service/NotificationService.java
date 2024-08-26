@@ -13,6 +13,7 @@ import techit.gongsimchae.domain.portion.notifications.dto.NotificationResponse;
 import techit.gongsimchae.domain.portion.notifications.entity.NotificationType;
 import techit.gongsimchae.domain.portion.notifications.entity.Notifications;
 import techit.gongsimchae.domain.portion.notifications.event.ChatNotiEvent;
+import techit.gongsimchae.domain.portion.notifications.event.FeedbackNotiEvent;
 import techit.gongsimchae.domain.portion.notifications.event.KeywordNotiEvent;
 import techit.gongsimchae.domain.portion.notifications.repository.EmitterRepository;
 import techit.gongsimchae.domain.portion.notifications.repository.NotificationRepository;
@@ -100,6 +101,15 @@ public class NotificationService {
         Notifications notifications = Notifications.builder()
                 .user(event.getUser()).isRead(0).url("/portioning/" + event.getUrl())
                 .notificationType(NotificationType.KEYWORD).content("["+event.getKeyword()+"] "+event.getTitle() +" ("+event.getAddress()+")").build();
+
+        notificationRepository.save(notifications);
+    }
+
+    @Transactional
+    public void alertAboutFeedback(FeedbackNotiEvent event) {
+        Notifications notifications = Notifications.builder()
+                .user(event.getUser()).isRead(0).notificationType(NotificationType.FEEDBACK)
+                .content("[" + event.getTitle() + "] 리뷰를 남길 수 있습니다.").build();
 
         notificationRepository.save(notifications);
     }
