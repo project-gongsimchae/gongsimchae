@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import techit.gongsimchae.domain.common.user.entity.User;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class FeedbackNotiEvent {
-    private User user;
+    private List<User> users;
     private String title;
-    private String url;
 
 }
