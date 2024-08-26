@@ -15,7 +15,7 @@ public class CouponRespDtoWeb {
     private Integer discount;
     private Integer maxDiscount;
     private LocalDateTime expirationDate;
-    private String eventName;
+    private String couponName;
     private String couponCode; // 쿠폰등록 번호
 
     public CouponRespDtoWeb(Coupon coupon) {
@@ -23,7 +23,7 @@ public class CouponRespDtoWeb {
         this.discount = coupon.getDiscountRate();
         this.maxDiscount = coupon.getMaxDiscount();
         this.expirationDate = coupon.getExpirationDate();
-        this.eventName = coupon.getCouponName();
+        this.couponName = coupon.getCouponName();
         this.couponCode = coupon.getCouponCode();
     }
 }
