@@ -16,10 +16,9 @@
         </div>
 
         <div class="coupon-card" th:each="coupon : ${coupons}">
-            <div class="coupon-title" th:text="${coupon.discount + '원 할인'}"></div>
+            <div class="coupon-title" th:text="${coupon.getCouponName}"></div>
             <div class="coupon-details">
-                <div th:text="${coupon.eventName}"></div>
-                <div th:text="${coupon.maxDiscount}"></div>
+                <div th:text="${'최대 할인액 : ' + coupon.maxDiscount}"></div>
             </div>
             <div class="mt-3">
                 <span class="coupon-expiry"
