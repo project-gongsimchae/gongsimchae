@@ -2,8 +2,10 @@ package techit.gongsimchae.domain.groupbuying.item.dto;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
+import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionCreateDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,5 +19,7 @@ public class ItemCreateDto {
     private LocalDateTime groupBuyingLimitTime;
     private String categoryName;
     private List<MultipartFile> images;
+
+    private List<ItemOptionCreateDto> options = new ArrayList<>();
 
 }
