@@ -14,6 +14,7 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/product/cart")
@@ -37,7 +38,7 @@ public class CartController {
         Long userId = userDetails.getAccountDto().getId();
         int quantity = payload.get("quantity");
         CartItemDto updatedItem = cartService.updateCartItemQuantity(userId, itemOptionId, quantity);
-        CartPriceInfoDto cartSummary = cartService.getCartSummary(userId);
+        CartPriceInfoDto cartSummary = cartService.getCartSummary(userId, List.of(itemOptionId));
 
         return ResponseEntity.ok().body(Map.of(
                 "success", true,
@@ -46,11 +47,11 @@ public class CartController {
         ));
     }
 
-    @PostMapping("/remove/{itemId}")
+    @PostMapping("/remove/{itemOptionId}")
     public String removeFromCart(@AuthenticationPrincipal PrincipalDetails userDetails,
-                                 @PathVariable Long itemId) {
+                                 @PathVariable Long itemOptionId) {
         Long userId = userDetails.getAccountDto().getId();
-        cartService.removeFromCart(userId, itemId);
+        cartService.removeFromCart(userId, itemOptionId);
         return "redirect:/product/cart";
     }
 
@@ -58,7 +59,10 @@ public class CartController {
     public String getCartItems(@AuthenticationPrincipal PrincipalDetails userDetails, Model model) {
         Long userId = userDetails.getAccountDto().getId();
         List<CartItemDto> cartItems = cartService.getCartItem(userId);
-        CartPriceInfoDto cartSummary = cartService.getCartSummary(userId);
+        List<Long> allItemOptionIds = cartItems.stream()
+                .map(CartItemDto::getItemOptionId)
+                .collect(Collectors.toList());
+        CartPriceInfoDto cartSummary = cartService.getCartSummary(userId, allItemOptionIds);
 
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("cartSummary", cartSummary);
@@ -67,9 +71,11 @@ public class CartController {
     }
 
     @PostMapping("/summary")
-    public ResponseEntity<CartPriceInfoDto> getCartSummary(@AuthenticationPrincipal PrincipalDetails userDetails) {
+    public ResponseEntity<CartPriceInfoDto> getCartSummary(@AuthenticationPrincipal PrincipalDetails userDetails,
+                                                           @RequestBody Map<String, List<Long>> payLoad) {
         Long userId = userDetails.getAccountDto().getId();
-        CartPriceInfoDto summary = cartService.getCartSummary(userId);
+        List<Long> selectedItem = payLoad.get("itemOptionIds");
+        CartPriceInfoDto summary = cartService.getCartSummary(userId, selectedItem);
         return ResponseEntity.ok(summary);
     }
 }
