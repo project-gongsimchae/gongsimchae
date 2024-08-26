@@ -14,6 +14,7 @@ import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.portion.chatroom.repository.ChatRoomRepository;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.domain.portion.notifications.dto.NotificationKeywordUserDto;
 import techit.gongsimchae.domain.portion.notifications.event.KeywordNotiEvent;
@@ -43,6 +44,7 @@ public class SubdivisionService {
     private final ImageFileRepository imageFileRepository;
     private final ChatRoomService chatRoomService;
     private final ApplicationEventPublisher publisher;
+    private final ChatRoomRepository chatRoomRepository;
 
     /**
      * 소분글 메인페이지에 모든 소분글들을 보여주는 메서드
@@ -184,6 +186,9 @@ public class SubdivisionService {
     @Transactional
     public void changeStatus(String uid, String status) {
         Subdivision subdivision = subdivisionRepository.findByUID(uid).orElseThrow(() -> new CustomWebException(ErrorMessage.SUBDIVISION_NOT_FOUND));
+        if (SubdivisionType.valueOf(status).equals(SubdivisionType.END)) {
+
+        }
         subdivision.changeType(status);
 
     }

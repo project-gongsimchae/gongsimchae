@@ -15,6 +15,7 @@ import java.util.*;
 public class CookieUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final String CHAT_NAME = "chatName";
 
     public static Map<String, String> loadMapFromCookie(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
@@ -63,6 +64,21 @@ public class CookieUtil {
 
         cookie.setMaxAge((int)CalculateTime.getSecondsUntilEndOfDay());
         cookie.setPath("/portioning");
+        response.addCookie(cookie);
+        return cookie.getValue();
+    }
+
+    public static String createChatCookie(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        Optional<Cookie> _cookie = (cookies != null)
+                ? Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals(CHAT_NAME))
+                .findFirst()
+                : Optional.empty();
+        Cookie cookie = _cookie.orElse(new Cookie(CHAT_NAME, UUID.randomUUID().toString().substring(0, 8)));
+
+        cookie.setMaxAge((int)CalculateTime.getSecondsUntilEndOfDay());
+        cookie.setPath("/");
         response.addCookie(cookie);
         return cookie.getValue();
     }
