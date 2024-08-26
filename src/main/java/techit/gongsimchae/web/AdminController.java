@@ -9,7 +9,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techit.gongsimchae.domain.common.address.dto.AddressCreateReqDtoWeb;
 import techit.gongsimchae.domain.common.address.service.AddressService;
@@ -19,12 +24,14 @@ import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
+import techit.gongsimchae.domain.groupbuying.category.dto.CategoryReqDtoWeb;
+import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
+import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.portion.report.dto.ReportRespDtoWeb;
 import techit.gongsimchae.domain.portion.report.service.ReportService;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReportRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,6 +43,8 @@ public class AdminController {
     private final AddressService addressService;
     private final SubdivisionService subdivisionService;
     private final ReportService reportService;
+    private final CategoryService categoryService;
+    private final ItemService itemService;
 
 
     @GetMapping
@@ -91,6 +100,35 @@ public class AdminController {
     public String userDelete(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin/users";
+    }
+
+    /**
+     * 관리자 카테고리
+     */
+    @GetMapping("/category")
+    public String categoryDashBoard(Model model, @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        Page<Category> categories = categoryService.getCategories(pageable);
+        model.addAttribute("categoryList", categories);
+        return "/admin/category/categoryList";
+    }
+
+    /**
+     * 카테고리 생성
+     */
+    @PostMapping("/category")
+    public String createCategory(CategoryReqDtoWeb categoryReqDtoWeb){
+        categoryService.createCategory(categoryReqDtoWeb);
+        return "redirect:/admin/category";
+    }
+
+    /**
+     * 카테고리 삭제
+     * 데이터 삭제 x, status를 1로 변경
+     */
+    @PostMapping("/category/delete")
+    public String deleteCategory(CategoryReqDtoWeb categoryDtoWeb){
+        categoryService.deleteCategory(categoryDtoWeb);
+        return "redirect:/admin/category";
     }
 
     /**
