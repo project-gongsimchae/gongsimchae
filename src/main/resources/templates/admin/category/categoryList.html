@@ -18,13 +18,15 @@
         <thead>
         <tr>
           <th>#</th>
+          <th>UID</th>
           <th>카테고리명</th>
           <th>삭제</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="category, categoryStat : ${categories}">
-          <th th:text="${category.categoryNumber}"></th>
+          <th th:text="${category.getId()}"></th>
+          <th th:text="${category.getCategoryUID}"></th>
           <td th:text="${category.name}"></td>
           <td>
             <form th:action="@{/admin/category/delete}" method="post">
@@ -65,10 +67,10 @@
         <span class="close" id="closeModalBtn">&times;</span>
       </div>
       <div class="modal-body">
-        <form id="createCategoryForm" th:action="@{/admin/category/create}" method="post">
+        <form id="createCategoryForm" th:action="@{/admin/category}" method="post">
           <div class="form-group">
-            <label for="categoryName">이름</label>
-            <input type="text" class="form-control" id="categoryName" name="name" placeholder="카테고리 이름을 입력하세요">
+            <label for="categoryName" style="margin: 0 8px 0 0">이름 : </label>
+            <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="카테고리 이름을 입력하세요">
           </div>
         </form>
       </div>

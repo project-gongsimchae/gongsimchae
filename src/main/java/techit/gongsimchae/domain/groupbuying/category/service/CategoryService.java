@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.groupbuying.category.dto.CategoryCreateDtoWeb;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
 
@@ -54,5 +55,9 @@ public class CategoryService {
      */
     public Page<Category> getCategories(Pageable pageable){
         return categoryRepository.findAll(pageable);
+    }
+
+    public void createCategory(CategoryCreateDtoWeb categoryCreateDtoWeb) {
+        categoryRepository.save(new Category(categoryCreateDtoWeb.getCategoryName()));
     }
 }

@@ -24,6 +24,7 @@ import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
+import techit.gongsimchae.domain.groupbuying.category.dto.CategoryCreateDtoWeb;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
@@ -111,6 +112,14 @@ public class AdminController {
         return "/admin/category/categoryList";
     }
 
+    /**
+     * 카테고리 생성
+     */
+    @PostMapping("/category")
+    public String createCategory(CategoryCreateDtoWeb categoryCreateDtoWeb){
+        categoryService.createCategory(categoryCreateDtoWeb);
+        return "redirect:/admin/category";
+    }
     /**
      * 관리자 배너
      */
