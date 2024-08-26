@@ -183,6 +183,9 @@
             <div sec:authorize="hasRole('USER')">
                 <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
             </div>
+            <div sec:authorize="hasRole('USER')">
+                <a href="#" onclick="openKeywordPopup(); return false;" class="btn btn-link nav-list-a">키워드 등록</a>
+            </div>
             <div sec:authorize="hasRole('ADMIN')" class="text-end">
                 <a th:href="@{/admin/users}" class="btn btn-link nav-list-a">관리자 페이지</a>
             </div>
@@ -239,9 +242,11 @@
             <li class="menu-text">관리 메뉴</li>
             <li><a th:href="@{/admin/users}">유저 관리</a></li>
             <li><a th:href="@{/admin/item}">상품 관리</a></li>
+            <li><a th:href="@{/admin/category}">카테고리 관리</a></li>
             <li><a th:href="@{/admin/event}">이벤트 관리</a></li>
             <li><a th:href="@{/admin/banners}">배너 관리</a></li>
             <li><a th:href="@{/admin/inquires}">문의 관리</a></li>
+            <li><a th:href="@{/admin/reports}">신고글 관리</a></li>
         </ul>
     </div>
 </aside>

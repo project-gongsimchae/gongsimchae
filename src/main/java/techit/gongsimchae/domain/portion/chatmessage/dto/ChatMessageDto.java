@@ -16,7 +16,8 @@ public class ChatMessageDto {
     private String sender;
     private String message;
     private LocalDateTime createDate;
-    private String imageUrl;
+    private String s3DataUrl;
+    private String fileName;
     private Boolean isRead;
 
     public ChatMessageDto(ChatMessage chatMessage) {
@@ -25,7 +26,8 @@ public class ChatMessageDto {
         this.sender = chatMessage.getSender();
         this.message = chatMessage.getMessage();
         this.createDate = chatMessage.getCreateDate();
-        this.imageUrl = chatMessage.getImageUrl();
+        this.s3DataUrl = chatMessage.getS3DataUrl();
+        this.fileName = chatMessage.getFileName();
         this.isRead = chatMessage.getIsRead();
     }
 }

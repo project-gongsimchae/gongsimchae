@@ -1,6 +1,5 @@
 package techit.gongsimchae.web;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,11 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemCardResDtoWeb;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
+import techit.gongsimchae.domain.groupbuying.eventcategory.service.EventCategoryService;
+import techit.gongsimchae.domain.groupbuying.item.dto.*;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionDto;
@@ -32,6 +28,7 @@ public class ItemController {
     private final ItemService itemService;
     private final CategoryService categoryService;
     private final ItemOptionService itemOptionService;
+    private final EventCategoryService eventCategoryService;
 
     /**
      * 검색
@@ -106,13 +103,13 @@ public class ItemController {
      */
 
     /**
-     *  카테고리별 결과 가져오기
+     *  카테고리별 페이지 조회
      */
     @GetMapping("/category/{category_id}")
     public String getSelectedCategoryItems(@PathVariable Long category_id,
-                                           @RequestParam Integer page,
-                                           @RequestParam Integer per_page,
-                                           @RequestParam Integer sorted_type, Model model){
+                                           @RequestParam(defaultValue = "1") Integer page,
+                                           @RequestParam(defaultValue = "96") Integer per_page,
+                                           @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
         Category category = categoryService.getCategoryById(category_id);
         List<ItemCardResDtoWeb> itemsPage = itemService.getItemsPageByCategory(category, page - 1,
                 per_page, sorted_type);
@@ -149,5 +146,22 @@ public class ItemController {
         List<ItemCardResDtoWeb> bestItemsPage = itemService.getTop200BestItemsPage(page - 1, per_page, sorted_type);
         model.addAttribute("bestItemsPage", bestItemsPage);
         return "category/bestItem";
+    }
+
+    /**
+     * 이벤트 클릭 시 페이지 조회
+     * 상품 등록일 기준 200건을 조회
+     * 200건 내에서 sorted_type에 따라 정렬을 다르게 리턴
+     */
+    @GetMapping("/collection-groups/event-item")
+    public String getEventItems(@RequestParam Long eventId,
+                                @RequestParam(defaultValue = "1") Integer page,
+                                @RequestParam(defaultValue = "96") Integer per_page,
+                                @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
+        List<Category> categories = eventCategoryService.getCategoriesByEvent(eventId);
+        List<ItemCardResDtoWeb> eventItems = itemService.getCategoriesItems(categories, page - 1, per_page, sorted_type);
+        model.addAttribute("eventCategories", categories);
+        model.addAttribute("eventItems", eventItems);
+        return "category/eventItem";
     }
 }

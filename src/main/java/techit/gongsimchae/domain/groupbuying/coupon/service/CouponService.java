@@ -12,6 +12,8 @@ import techit.gongsimchae.domain.groupbuying.coupon.entity.Coupon;
 import techit.gongsimchae.domain.groupbuying.coupon.repository.CouponRepository;
 import techit.gongsimchae.domain.groupbuying.couponcategory.entity.CouponCategory;
 import techit.gongsimchae.domain.groupbuying.couponcategory.repository.CouponCategoryRepository;
+import techit.gongsimchae.domain.groupbuying.couponuser.entity.CouponUser;
+import techit.gongsimchae.domain.groupbuying.couponuser.repository.CouponUserRepository;
 import techit.gongsimchae.domain.groupbuying.event.dto.EventCreateReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.event.dto.EventResAdminDtoWeb;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
@@ -30,6 +32,7 @@ public class CouponService {
     private final CategoryRepository categoryRepository;
     private final CouponCategoryRepository couponCategoryRepository;
     private final EventRepository eventRepository;
+    private final CouponUserRepository couponUserRepository;
 
     public boolean isValidCode(String couponCode) {
         return couponRepository.findByCouponCode(couponCode).isPresent();
@@ -64,5 +67,13 @@ public class CouponService {
     public void deleteCoupon(Long eventId) {
         List<Coupon> coupons = couponRepository.findAllByEventId(eventId);
         coupons.forEach(Coupon::setStatusDeleted);
+    }
+
+    public void addCoupon(String couponCode, PrincipalDetails principalDetails) {
+        Coupon coupon = couponRepository.findByCouponCode(couponCode).orElseThrow(() -> new CustomWebException("not found coupon"));
+        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
+        CouponUser couponUser = new CouponUser(coupon, user);
+        couponUserRepository.save(couponUser);
+
     }
 }

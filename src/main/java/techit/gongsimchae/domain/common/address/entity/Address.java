@@ -23,6 +23,7 @@ public class Address {
     private String address;
     private String detailAddress;
     private String additionalAddress;
+    private String sigungu;
     private String UID;
     private String receiver;
     private String phoneNumber;
@@ -33,22 +34,6 @@ public class Address {
     @JoinColumn(name = "user_id")
     private User user;
 
-
-    /**
-     * 저장한 주소가 이미 있으면 Second 배송지
-     */
-    public Address(AddressCreateReqDtoWeb addressCreateReqDtoWeb, User user) {
-        this.zipcode = addressCreateReqDtoWeb.getZipcode();
-        this.address = addressCreateReqDtoWeb.getAddress();
-        this.detailAddress = addressCreateReqDtoWeb.getDetailAddress();
-        this.phoneNumber = addressCreateReqDtoWeb.getPhoneNumber();
-        this.UID = UUID.randomUUID().toString().substring(0, 8);
-        this.receiver = addressCreateReqDtoWeb.getReceiver();
-        this.additionalAddress = addressCreateReqDtoWeb.getAdditionalAddress();
-        this.defaultAddressStatus = DefaultAddressStatus.SECONDARY;
-        if(user != null) addUser(user);
-    }
-
     /**
      * 앞서 저장한 주소가 없으면 이게 기본 배송지
      */
@@ -56,12 +41,13 @@ public class Address {
         this.zipcode = addressCreateReqDtoWeb.getZipcode();
         this.address = addressCreateReqDtoWeb.getAddress();
         this.detailAddress = addressCreateReqDtoWeb.getDetailAddress();
+        this.sigungu = addressCreateReqDtoWeb.getSigungu();
         this.phoneNumber = addressCreateReqDtoWeb.getPhoneNumber();
         this.UID = UUID.randomUUID().toString().substring(0, 8);
         this.receiver = addressCreateReqDtoWeb.getReceiver();
         this.additionalAddress = addressCreateReqDtoWeb.getAdditionalAddress();
         this.defaultAddressStatus = defaultAddressStatus;
-        if(user != null) addUser(user);
+        this.user = user;
     }
 
     /**
@@ -74,12 +60,11 @@ public class Address {
     }
 
 
-    /**
-     * 편의 메서드
-     */
-    public void addUser(User user) {
-        this.user = user;
+    public void unsetDefaultAddress() {
+        this.defaultAddressStatus = DefaultAddressStatus.SECONDARY;
     }
 
-
+    public void setDefaultAddress() {
+        this.defaultAddressStatus = DefaultAddressStatus.PRIMARY;
+    }
 }

@@ -20,17 +20,19 @@
 
             <!-- 주소 목록 표시 -->
             <div class="list-group">
-                <div class="list-group-item list-group-item-action" th:each="address : ${addresses}">
-                    <div class="d-flex w-100 justify-content-between align-items-center">
-                        <div>
-                            <h5 class="mb-1"
-                                th:text="${address.getAddress() + ' ' + address.getAdditionalAddress()}"></h5>
-                            <p class="mb-0 text-muted" th:text="${address.getDetailAddress()}"></p>
+                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" th:each="address : ${addresses}">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3 default-address-toggle" th:data-id="${address.UID}">
+                            <i class="fas fa-star" th:classappend="${address.defaultAddressStatus == T(techit.gongsimchae.domain.common.address.entity.DefaultAddressStatus).PRIMARY} ? 'text-warning' : 'text-muted'"></i>
                         </div>
-                        <button class="btn btn-sm btn-outline-secondary update-address" th:data-id="${address.UID}">
-                            수정
-                        </button>
+                        <div>
+                            <span class="mb-1" th:text="${address.address + ' ' + address.detailAddress}"></span>
+                            <p th:text="${address.getAdditionalAddress()}"></p>
+                        </div>
                     </div>
+                    <button class="btn btn-sm btn-outline-secondary update-address" th:data-id="${address.UID}">
+                        수정
+                    </button>
                 </div>
             </div>
         </div>
@@ -52,6 +54,55 @@
         </div>
     </div>
     <div th:replace="~{user/addAddress}"></div>
+
+    <style>
+        .default-address-toggle {
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .default-address-toggle:hover {
+            transform: scale(1.1);
+        }
+    </style>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggles = document.querySelectorAll('.default-address-toggle');
+
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const addressId = this.getAttribute('data-id');
+                    const star = this.querySelector('i');
+
+                    if (!star.classList.contains('text-warning')) {
+                        fetch(`/change/default/address/${addressId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    toggles.forEach(t => {
+                                        t.querySelector('i').classList.remove('text-warning');
+                                        t.querySelector('i').classList.add('text-muted');
+                                    });
+                                    star.classList.remove('text-muted');
+                                    star.classList.add('text-warning');
+                                } else {
+                                    alert('기본 배송지 변경에 실패했습니다.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('기본 배송지 변경 중 오류가 발생했습니다.');
+                            });
+                    }
+                });
+            });
+        });
+    </script>
 </section>
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {

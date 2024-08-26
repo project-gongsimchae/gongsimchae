@@ -22,7 +22,8 @@
                     <th>유저상태</th>
                     <th>권한</th>
                     <th>매너포인트</th>
-                    <th>종류</th>
+                    <th>유저 상태</th>
+                    <th>신고 횟수</th>
 
                 </tr>
                 </thead>
@@ -38,10 +39,32 @@
                     <td th:text="${user.role.name()}"></td>
                     <td th:text="${user.mannerPoint}"></td>
                     <td th:text="${user.joinType.name()}"></td>
+                    <td th:text="${user.reportCount}"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <!-- 페이징 처리 -->
+    <div th:if="${!users.isEmpty()}" class="d-flex justify-content-center bg-white py-3">
+        <ul class="pagination mb-0">
+            <li class="page-item" th:classappend="${users.number == 0} ? 'disabled' : ''">
+                <a class="page-link" th:href="@{|?page=${users.number-1}|}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li th:each="page : ${#numbers.sequence(0, users.totalPages-1)}"
+                th:if="${page >= users.number-5 and page <= users.number+5}"
+                th:classappend="${page == users.number} ? 'active' : ''" class="page-item">
+                <a th:text="${page+1}" class="page-link" th:href="@{|?page=${page}|}"></a>
+            </li>
+            <li class="page-item" th:classappend="${users.number == users.totalPages-1} ? 'disabled' : ''">
+                <a class="page-link" th:href="@{|?page=${users.number+1}|}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
     </div>
 </section>
 

@@ -56,13 +56,14 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()
+                        .requestMatchers("/chat/ai").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**","/mypage/**", "/portioning/write", "/portioning/{UID}/update", "/portioning/{UID}/delete", "/portioning/{UID}/join").hasRole("USER")
+                        .requestMatchers("/user/**","/mypage/**", "/portioning/write", "/portioning/{UID}/update", "/portioning/{UID}/delete", "/portioning/{UID}/join","/chat/**").hasRole("USER")
                         .requestMatchers("/signup", "/login", "/logout","/denied/**","/reissue","/find/**","/emails/**","/subscribe").permitAll()
                         .anyRequest().permitAll())
 
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/emails/**","/find/**","/mypage/**","/subscribe/**"))
+                        .ignoringRequestMatchers("/emails/**","/find/**","/mypage/**","/subscribe/**","/chat/**"))
 
                 .formLogin(form -> form
                         .loginPage("/login")

@@ -1,22 +1,17 @@
 package techit.gongsimchae.web;
 
 import jakarta.validation.Valid;
-import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryCreateDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryRespDtoWeb;
 import techit.gongsimchae.domain.common.inquiry.dto.InquiryUpdateReqDtoWeb;
@@ -33,11 +28,14 @@ import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
-import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsResDtoWeb;
-import techit.gongsimchae.domain.groupbuying.reviews.service.ReviewsService;
+import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewResDtoWeb;
+import techit.gongsimchae.domain.groupbuying.reviews.service.ReviewService;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
+
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/mypage")
@@ -52,7 +50,7 @@ public class MyPageController {
     private final InquiryService inquiryService;
     private final OrdersService ordersService;
     private final ItemService itemService;
-    private final ReviewsService reviewsService;
+    private final ReviewService reviewService;
 
 
     @GetMapping("/orders")
@@ -87,8 +85,8 @@ public class MyPageController {
      * 내가 작성한 1:1문의 리스트
      */
     @GetMapping("/inquiry/list")
-    public String inquiryList(Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        List<InquiryRespDtoWeb> inquires = inquiryService.getInquiry(principalDetails);
+    public String inquiryList(Model model, @AuthenticationPrincipal PrincipalDetails principalDetails, @PageableDefault(size = 10) Pageable pageable) {
+        Page<InquiryRespDtoWeb> inquires = inquiryService.getInquiry(principalDetails, pageable);
         model.addAttribute("inquires", inquires);
 
         return "mypage/inquiryList";
@@ -187,7 +185,7 @@ public class MyPageController {
     public String createReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                 @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
                                 @PathVariable String uid) {
-        reviewsService.createReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
+        reviewService.createReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
         return "redirect:/mypage/reviews";
     }
 
@@ -198,9 +196,9 @@ public class MyPageController {
      */
     @ResponseBody
     @GetMapping("reviews/{uid}")
-    public ReviewsResDtoWeb getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                       @PathVariable String uid) {
-        return reviewsService.getReviews(principalDetails.getAccountDto(), uid);
+    public ReviewResDtoWeb getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                      @PathVariable String uid) {
+        return reviewService.getReviews(principalDetails.getAccountDto(), uid);
     }
 
     /**
@@ -212,7 +210,7 @@ public class MyPageController {
     public String updateReviews (@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
                                            @PathVariable String uid) {
-        reviewsService.updateReviews(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
+        reviewService.updateReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
         return "redirect:/mypage/reviews";
     }
 
@@ -221,8 +219,10 @@ public class MyPageController {
      */
 
     @GetMapping("/pick/list")
-    public String PickList(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
-        List<ItemRespDtoWeb> items = wishListService.getPickItems(principalDetails);
+    public String PickList(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model,
+                           @PageableDefault(size = 5) Pageable pageable) {
+
+        Page<ItemRespDtoWeb> items = wishListService.getPickItems(principalDetails, pageable);
         log.debug("PickList {}", items);
         model.addAttribute("items", items);
         return "mypage/pickList";
@@ -291,8 +291,6 @@ public class MyPageController {
     public String coupons(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
         List<CouponRespDtoWeb> coupons = couponService.getUserCoupons(principalDetails);
         model.addAttribute("coupons", coupons);
-
-
         return "mypage/coupons";
     }
 
@@ -303,7 +301,7 @@ public class MyPageController {
             log.debug("Invalid coupon code: {}", couponCode);
             return ResponseEntity.badRequest().body("유효하지 않는 쿠폰 코드입니다.");
         }
-        userService.addCoupon(couponCode, principalDetails);
+        couponService.addCoupon(couponCode, principalDetails);
         return ResponseEntity.ok().build();
     }
 }

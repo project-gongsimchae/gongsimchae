@@ -7,6 +7,8 @@ import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.DISCO
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -25,6 +27,7 @@ import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.event.entity.EventType;
 import techit.gongsimchae.domain.groupbuying.event.service.EventService;
 import techit.gongsimchae.domain.groupbuying.eventcategory.service.EventCategoryService;
+import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
@@ -57,6 +60,12 @@ public class EventController {
         List<EventResUserDtoWeb> eventResUserDtoWebs = eventService.getActivatedEvents();
         model.addAttribute("events", eventResUserDtoWebs);
         return "/category/event";
+    }
+
+    @PostMapping("/event/coupon")
+    public ResponseEntity<String> issueCouponToUser(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                            @RequestParam Long eventId){
+        return couponUserService.createCouponUser(principalDetails.getAccountDto(), eventId);
     }
 
     //--------------------------------------------- admin --------------------------------------------

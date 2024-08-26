@@ -1,44 +1,73 @@
 package techit.gongsimchae.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.portion.areas.entity.MyeondongeupArea;
 import techit.gongsimchae.domain.portion.areas.entity.SidoArea;
 import techit.gongsimchae.domain.portion.areas.entity.SigunguArea;
 import techit.gongsimchae.domain.portion.areas.service.MyeondongeupAreaService;
 import techit.gongsimchae.domain.portion.areas.service.SidoAreaService;
 import techit.gongsimchae.domain.portion.areas.service.SigunguAreaService;
+import techit.gongsimchae.domain.portion.notificationkeyword.dto.NotiKeywordCreateDtoWeb;
+import techit.gongsimchae.domain.portion.notificationkeyword.service.NotiKeywordService;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubSearchDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
+import techit.gongsimchae.domain.portion.subdivision.service.ViewCountService;
+import techit.gongsimchae.global.dto.PrincipalDetails;
+import techit.gongsimchae.global.util.CookieUtil;
 
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class PortionMainController {
+
 
     private final SidoAreaService sidoAreaService;
     private final SigunguAreaService sigunguAreaService;
     private final MyeondongeupAreaService myeondongeupAreaService;
     private final SubdivisionService subdivisionService;
+    private final NotiKeywordService notiKeywordService;
+    private final ViewCountService viewCountService;
 
 
     /**
      * 소분 메인 페이지
      */
     @GetMapping("/portioning")
-    public String showPortionPage(Model model) {
+    public String showPortionPage(@ModelAttribute SubSearchDto searchDto, Model model
+            , @PageableDefault(size = 4) Pageable pageable) {
+
+
         List<SidoArea> sidoAreas = sidoAreaService.getAllSidoAreas();
         model.addAttribute("sidoAreas", sidoAreas);
 
-        List<SubdivisionRespDto> subdivisions = subdivisionService.getAllSubdivisions();
+        Page<SubdivisionRespDto> subdivisions = subdivisionService.getAllSubdivisions(searchDto, pageable);
+        viewCountService.setSubdivisionViews(subdivisions.getContent());
+
         model.addAttribute("subdivisions", subdivisions);
+        model.addAttribute("query", searchDto);
+
 
         return "portion/portioningMain";
     }
+
 
     @GetMapping("/sigungus")
     public String getSigunguAreas(@RequestParam Long sidoAreaId, Model model){
@@ -61,6 +90,33 @@ public class PortionMainController {
         List<SubdivisionRespDto> searchResults = subdivisionService.searchSubdivisions(address, content);
         model.addAttribute("subdivisions", searchResults);
         return "portion/portioningMain :: #subdivisionList";
+    }
+
+    /**
+     * 키워드 등록
+     */
+
+    @GetMapping("/portioning/keywords/create")
+    public String createKeywordForm(@ModelAttribute("keyword") NotiKeywordCreateDtoWeb dtoWeb,
+                                    @AuthenticationPrincipal PrincipalDetails principalDetails, Model model) throws JsonProcessingException {
+        List<String> whiteList = notiKeywordService.getNotificationKeywords(principalDetails);
+        model.addAttribute("whiteList", new ObjectMapper().writeValueAsString(whiteList));
+        return "portion/keyword";
+    }
+
+    @PostMapping("/portioning/keywords/create")
+    @ResponseBody
+    public ResponseEntity<?> createKeyword(@RequestParam("keyword") String keyword,
+                                        @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        notiKeywordService.createKeyword(keyword,principalDetails);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/portioning/keywords/delete")
+    public ResponseEntity<?> deleteKeyword(@RequestParam("keyword") String keyword,
+                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        notiKeywordService.deleteNotificationKeyword(keyword,principalDetails);
+        return ResponseEntity.ok().build();
     }
 
 

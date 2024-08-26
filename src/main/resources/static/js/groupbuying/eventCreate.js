@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('eventBannerImage').closest('div').style.display = 'block';
         } else if (selectedType === '쿠폰발급') {
             document.getElementById('eventName').closest('.form-group').style.display = 'block';
+            document.getElementById('couponName').closest('.form-group').style.display = 'block';
             document.getElementById('discount').closest('.form-group').style.display = 'block';
             document.getElementById('maxDiscount').closest('.form-group').style.display = 'block';
             document.getElementById('expirationDate').closest('.form-group').style.display = 'block';
@@ -39,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('eventBannerImage').closest('div').style.display = 'block';
         } else if (selectedType === '쿠폰코드발급') {
             document.getElementById('eventName').closest('.form-group').style.display = 'block';
+            document.getElementById('couponName').closest('.form-group').style.display = 'block';
             document.getElementById('discount').closest('.form-group').style.display = 'block';
             document.getElementById('maxDiscount').closest('.form-group').style.display = 'block';
             document.getElementById('expirationDate').closest('.form-group').style.display = 'block';
