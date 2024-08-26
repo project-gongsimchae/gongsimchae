@@ -1,6 +1,8 @@
 package techit.gongsimchae.domain.groupbuying.category.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
@@ -45,5 +47,12 @@ public class CategoryService {
             List<Item> items = itemRepository.findAllByCategory(category);
             items.forEach((element) -> element.minusDiscountRate(event.getDiscountRate()));
         }
+    }
+
+    /**
+     * 카테고리 페이지네이션 조회
+     */
+    public Page<Category> getCategories(Pageable pageable){
+        return categoryRepository.findAll(pageable);
     }
 }

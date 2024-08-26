@@ -19,12 +19,13 @@ import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
+import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
+import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.portion.report.dto.ReportRespDtoWeb;
 import techit.gongsimchae.domain.portion.report.service.ReportService;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReportRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,6 +37,8 @@ public class AdminController {
     private final AddressService addressService;
     private final SubdivisionService subdivisionService;
     private final ReportService reportService;
+    private final CategoryService categoryService;
+    private final ItemService itemService;
 
 
     @GetMapping
@@ -91,6 +94,16 @@ public class AdminController {
     public String userDelete(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin/users";
+    }
+
+    /**
+     * 관리자 카테고리
+     */
+    @GetMapping("/category")
+    public String categoryDashBoard(Model model, @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        Page<Category> categories = categoryService.getCategories(pageable);
+        model.addAttribute("categories", categories);
+        return "/admin/category/categoryList";
     }
 
     /**
