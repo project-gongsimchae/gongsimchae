@@ -3,25 +3,31 @@ package techit.gongsimchae.domain.portion.notifications.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
+import techit.gongsimchae.domain.portion.feedback.dto.FeedbackUserRespDtoWeb;
 import techit.gongsimchae.domain.portion.notifications.dto.NotificationRespDtoWeb;
 import techit.gongsimchae.domain.portion.notifications.dto.NotificationResponse;
 import techit.gongsimchae.domain.portion.notifications.entity.NotificationType;
 import techit.gongsimchae.domain.portion.notifications.entity.Notifications;
 import techit.gongsimchae.domain.portion.notifications.event.ChatNotiEvent;
+import techit.gongsimchae.domain.portion.notifications.event.FeedbackNotiEvent;
 import techit.gongsimchae.domain.portion.notifications.event.KeywordNotiEvent;
 import techit.gongsimchae.domain.portion.notifications.repository.EmitterRepository;
 import techit.gongsimchae.domain.portion.notifications.repository.NotificationRepository;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
+import techit.gongsimchae.global.message.ErrorMessage;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +40,7 @@ public class NotificationService {
     private final EmitterRepository emitterRepository;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public SseEmitter subscribe(PrincipalDetails principalDetails, String lastEventId) {
         Long userId = getCurrentUser(principalDetails).getId();
@@ -102,6 +109,27 @@ public class NotificationService {
                 .notificationType(NotificationType.KEYWORD).content("["+event.getKeyword()+"] "+event.getTitle() +" ("+event.getAddress()+")").build();
 
         notificationRepository.save(notifications);
+    }
+
+    @Transactional
+    public void alertAboutFeedback(FeedbackNotiEvent event) {
+        try {
+            String url = UUID.randomUUID().toString();
+            String dtos = objectMapper.writeValueAsString(FeedbackUserRespDtoWeb.toDto(event.getUsers()));
+            redisTemplate.opsForValue().set(url, dtos);
+            for (User user : event.getUsers()) {
+                Notifications notifications = Notifications.builder()
+                        .user(user).isRead(0).notificationType(NotificationType.FEEDBACK)
+                        .content("[" + event.getTitle() + "] 리뷰를 남길 수 있습니다.").url("/portioning/feedback/write?url="+url).build();
+
+                notificationRepository.save(notifications);
+
+            }
+
+        } catch (Exception e) {
+            throw new CustomWebException(e);
+        }
+
     }
 
     public  NotificationResponse getAllNotifications(PrincipalDetails principalDetails) {

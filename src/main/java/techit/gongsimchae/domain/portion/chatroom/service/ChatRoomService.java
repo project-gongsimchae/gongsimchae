@@ -45,6 +45,8 @@ public class ChatRoomService {
         chatRoomRepository.save(chatRoom);
     }
 
+
+
     /**
      * roomId를 기준으로 채팅방을 찾는 메서드
      */
