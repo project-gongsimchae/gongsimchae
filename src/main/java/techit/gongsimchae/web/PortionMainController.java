@@ -2,13 +2,18 @@ package techit.gongsimchae.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.portion.areas.entity.MyeondongeupArea;
 import techit.gongsimchae.domain.portion.areas.entity.SidoArea;
@@ -18,6 +23,7 @@ import techit.gongsimchae.domain.portion.areas.service.SidoAreaService;
 import techit.gongsimchae.domain.portion.areas.service.SigunguAreaService;
 import techit.gongsimchae.domain.portion.notificationkeyword.dto.NotiKeywordCreateDtoWeb;
 import techit.gongsimchae.domain.portion.notificationkeyword.service.NotiKeywordService;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubSearchDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
@@ -26,7 +32,9 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class PortionMainController {
+
 
     private final SidoAreaService sidoAreaService;
     private final SigunguAreaService sigunguAreaService;
@@ -39,15 +47,19 @@ public class PortionMainController {
      * 소분 메인 페이지
      */
     @GetMapping("/portioning")
-    public String showPortionPage(Model model) {
+    public String showPortionPage(@ModelAttribute SubSearchDto searchDto, Model model
+            , @PageableDefault(size = 4) Pageable pageable) {
         List<SidoArea> sidoAreas = sidoAreaService.getAllSidoAreas();
         model.addAttribute("sidoAreas", sidoAreas);
 
-        List<SubdivisionRespDto> subdivisions = subdivisionService.getAllSubdivisions();
+        Page<SubdivisionRespDto> subdivisions = subdivisionService.getAllSubdivisions(searchDto, pageable);
         model.addAttribute("subdivisions", subdivisions);
+        model.addAttribute("query", searchDto);
+
 
         return "portion/portioningMain";
     }
+
 
     @GetMapping("/sigungus")
     public String getSigunguAreas(@RequestParam Long sidoAreaId, Model model){

@@ -1,5 +1,7 @@
 package techit.gongsimchae.domain.common.wishlist.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,7 +16,7 @@ public interface WishListRepository extends JpaRepository <WishList, Long> {
     Optional<WishList> findByUserIdAndItemId(Long userId, Long itemId);
 
     @EntityGraph(attributePaths = {"user","item"})
-    List<WishList> findWishListsItemByUserIdAndSubdivisionIsNull(Long userId);
+    Page<WishList> findWishListsItemByUserIdAndSubdivisionIsNullOrderByCreateDateDesc(Long userId, Pageable pageable);
 
     List<WishList> findWishListsByUserIdAndItemIsNullAndSubdivisionDeleteStatusIsFalse(Long userId);
 
