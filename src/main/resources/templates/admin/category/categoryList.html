@@ -30,7 +30,7 @@
           <td th:text="${category.name}"></td>
           <td>
             <form th:action="@{/admin/category/delete}" method="post">
-              <input type="hidden" th:value="${category.getId()}" th:name="category_id"/>
+              <input type="hidden" th:value="${category.getId()}" th:name="categoryId"/>
               <button type="submit" class="btn btn-danger">삭제</button>
             </form>
           </td>

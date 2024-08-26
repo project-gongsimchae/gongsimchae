@@ -24,7 +24,7 @@ import techit.gongsimchae.domain.common.inquiry.service.InquiryService;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.service.UserService;
-import techit.gongsimchae.domain.groupbuying.category.dto.CategoryCreateDtoWeb;
+import techit.gongsimchae.domain.groupbuying.category.dto.CategoryReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
@@ -116,10 +116,21 @@ public class AdminController {
      * 카테고리 생성
      */
     @PostMapping("/category")
-    public String createCategory(CategoryCreateDtoWeb categoryCreateDtoWeb){
-        categoryService.createCategory(categoryCreateDtoWeb);
+    public String createCategory(CategoryReqDtoWeb categoryReqDtoWeb){
+        categoryService.createCategory(categoryReqDtoWeb);
         return "redirect:/admin/category";
     }
+
+    /**
+     * 카테고리 삭제
+     * 데이터 삭제 x, status를 1로 변경
+     */
+    @PostMapping("/category/delete")
+    public String deleteCategory(CategoryReqDtoWeb categoryDtoWeb){
+        categoryService.deleteCategory(categoryDtoWeb);
+        return "redirect:/admin/category";
+    }
+
     /**
      * 관리자 배너
      */
