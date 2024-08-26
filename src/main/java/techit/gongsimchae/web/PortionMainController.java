@@ -2,12 +2,8 @@ package techit.gongsimchae.web;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.ILoggerFactory;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -29,7 +25,6 @@ import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
 import techit.gongsimchae.domain.portion.subdivision.service.ViewCountService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
-import techit.gongsimchae.global.util.CookieUtil;
 
 import java.util.List;
 
@@ -52,7 +47,7 @@ public class PortionMainController {
      */
     @GetMapping("/portioning")
     public String showPortionPage(@ModelAttribute SubSearchDto searchDto, Model model
-            , @PageableDefault(size = 4) Pageable pageable) {
+            , @PageableDefault(size = 12) Pageable pageable) {
 
 
         List<SidoArea> sidoAreas = sidoAreaService.getAllSidoAreas();
