@@ -240,7 +240,7 @@ public class ItemService {
         List<Orders> orders = ordersRepository.findAllByUserIdAndOrderStatus(accountDto.getId(), OrderStatus.완료);
         List<OrderItem> ordersItems = orderItemRepository.findAllByOrdersIn(orders);
         List<Item> items = ordersItems.stream()
-                .map((ordersItem) -> itemRepository.findById(ordersItem.getItem().getId()).orElseThrow(
+                .map((ordersItem) -> itemRepository.findById(ordersItem.getItemOption().getItem().getId()).orElseThrow(
                         () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
                 )).toList();
         List<Review> reviews = reviewRepository.findAllByUserId(accountDto.getId());
