@@ -2,6 +2,7 @@ package techit.gongsimchae.domain.portion.chatroomuser.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import techit.gongsimchae.domain.common.user.entity.User;
@@ -18,5 +19,7 @@ public interface ChatRoomUserRepository extends JpaRepository<ChatRoomUser, Long
     @EntityGraph(attributePaths = {"user"})
     List<ChatRoomUser> findAllByChatRoomId(Long chatRoomId);
 
-    void deleteByUserAndChatRoom(User user, ChatRoom chatRoom);
+    @Modifying(clearAutomatically = true)
+    @Query("delete from ChatRoomUser cru where cru.user.id = :userId and cru.chatRoom.id = :chatRoomId")
+    void deleteByUserAndChatRoom(@Param("userId") Long userId, @Param("chatRoomId") Long chatRoomId);
 }

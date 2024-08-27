@@ -1,7 +1,5 @@
 package techit.gongsimchae.web;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -26,9 +24,7 @@ import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.domain.portion.chatroomuser.service.ChatRoomUserService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
-import techit.gongsimchae.global.util.CookieUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -150,7 +146,10 @@ public class ChatController {
         String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
         String loginId = (String) headerAccessor.getSessionAttributes().get("loginId");
 
-        chatRoomUserService.disableChatRoomOnLeave(roomId, loginId);
+        if (chatRoomUserService.isUserAlreadyInRoom(roomId, loginId)) {
+            chatRoomUserService.disableChatRoomOnLeave(roomId, loginId);
+        }
+
 
     }
 

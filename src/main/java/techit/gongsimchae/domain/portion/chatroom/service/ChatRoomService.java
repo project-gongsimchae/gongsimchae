@@ -78,7 +78,7 @@ public class ChatRoomService {
 
         ChatRoomUser chatRoomUser = new ChatRoomUser(user, chatRoom);
         chatRoomUserRepository.save(chatRoomUser);
-        redisTemplate.opsForHash().put(roomId, loginId, 1);
+        redisTemplate.opsForHash().put(roomId, loginId, "1");
     }
 
     /**
@@ -88,10 +88,11 @@ public class ChatRoomService {
     public void deleteUserInChat(String roomId, String loginId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
         User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
+        Long delete = redisTemplate.opsForHash().delete(roomId, loginId);
+        chatRoomUserRepository.deleteByUserAndChatRoom(user.getId(), chatRoom.getId());
+        log.debug("delete User roomId {}, loginId {}", roomId, loginId);
 
-        chatRoomUserRepository.deleteByUserAndChatRoom(user,chatRoom);
-        redisTemplate.opsForHash().delete(roomId, loginId);
-
+        log.debug("delete User delete {}", delete);
 
     }
 
