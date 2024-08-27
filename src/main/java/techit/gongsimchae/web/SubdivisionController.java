@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -15,13 +16,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techit.gongsimchae.domain.common.wishlist.service.WishListService;
 import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
+import techit.gongsimchae.domain.portion.feedback.dto.FeedbackReqDtoWeb;
+import techit.gongsimchae.domain.portion.feedback.dto.FeedbackUserRespDtoWeb;
+import techit.gongsimchae.domain.portion.feedback.service.FeedbackService;
 import techit.gongsimchae.domain.portion.report.dto.ReportCreateReqDtoWeb;
 import techit.gongsimchae.domain.portion.report.service.ReportService;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReqDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionUpdateReqDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
+import techit.gongsimchae.domain.portion.subdivision.service.ViewCountService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
+import techit.gongsimchae.global.util.CookieUtil;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -33,6 +41,8 @@ public class SubdivisionController {
     private final WishListService wishListService;
     private final ChatRoomService chatRoomService;
     private final ReportService reportService;
+    private final ViewCountService viewCountService;
+    private final FeedbackService feedbackService;
 
     @GetMapping("/write")
     public String subdivisionRegisterForm(Model model) {
@@ -54,9 +64,14 @@ public class SubdivisionController {
     @GetMapping("/{UID}")
     public String subdivisionDetail(@PathVariable("UID") String UID,
                                     @AuthenticationPrincipal PrincipalDetails userDetails,
-                                    Model model) {
+                                    Model model, HttpServletRequest request, HttpServletResponse response) {
+
+        String viewCookie = CookieUtil.createViewCookie(request, response);
+        viewCountService.incrementViewCount(UID, viewCookie);
+        Integer viewCount = viewCountService.getSubdivisionViewCount(UID);
 
         SubdivisionRespDto subdivisionRespDto = subdivisionService.findSubdivisionByUID(UID);
+        subdivisionRespDto.setViews(viewCount);
 
         // subdivision에 있는 chatRoom 가져오기
         ChatRoomRespDto chatRoom = chatRoomService.getChatRoom(subdivisionRespDto.getId());
@@ -145,5 +160,30 @@ public class SubdivisionController {
         rttr.addAttribute("uid", reportCreateReqDtoWeb.getUid());
 
         return ResponseEntity.ok("신고가 정상적으로 처리되었습니다.");
+    }
+
+
+    /**
+     * 피드백
+     */
+
+    @GetMapping("/feedback/write")
+    public String feedbackForm(@RequestParam("url") String url, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails,
+                               @ModelAttribute("feedback") FeedbackReqDtoWeb feedbackReqDtoWeb) {
+        List<FeedbackUserRespDtoWeb> users = feedbackService.findUsersForFeedback(url, principalDetails);
+        model.addAttribute("users", users);
+        model.addAttribute("url", url);
+        return "portion/feedback";
+
+    }
+
+    @PostMapping("/feedback/write")
+    @ResponseBody
+    public ResponseEntity<?> feedback(@Valid @ModelAttribute("feedback") FeedbackReqDtoWeb reqDtoWeb, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+        feedbackService.createFeedback(reqDtoWeb);
+        return ResponseEntity.ok().build();
     }
 }

@@ -17,7 +17,7 @@ public class GlobalControllerAdvice {
 
     @ModelAttribute
     public void addCategoriesToModel(Model model) {
-        List<Category> categories = categoryService.getAllCategories();
+        List<Category> categories = categoryService.getAllRemainingCategories();
         model.addAttribute("categories", categories);
     }
 

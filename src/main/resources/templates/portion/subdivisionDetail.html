@@ -65,7 +65,7 @@
                         <div sec:authorize="isAuthenticated()"
                              th:if="${#authentication.principal.username} == ${subdivisionRespDto.user.loginId}"
                              th:each="type : ${T(techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType).values()}">
-                            <form th:if="${subdivisionRespDto.subdivisionType != type}"
+                            <form th:if="${subdivisionRespDto.subdivisionType != type and subdivisionRespDto.getSubdivisionType() != type.END}"
                                   th:action="@{/portioning/{UID}/status(UID=${subdivisionRespDto.UID}, type=${type})}"
                                   method="post">
 

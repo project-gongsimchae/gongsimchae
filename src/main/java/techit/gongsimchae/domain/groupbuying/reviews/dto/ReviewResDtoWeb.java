@@ -2,12 +2,12 @@ package techit.gongsimchae.domain.groupbuying.reviews.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import techit.gongsimchae.domain.groupbuying.reviews.entity.Reviews;
+import techit.gongsimchae.domain.groupbuying.reviews.entity.Review;
 import techit.gongsimchae.domain.groupbuying.reviews.entity.SecretStatus;
 
 @Data
 @NoArgsConstructor
-public class ReviewsResDtoWeb {
+public class ReviewResDtoWeb {
 
     private String title;
     private int starPoint;
@@ -15,11 +15,11 @@ public class ReviewsResDtoWeb {
     private Boolean secretStatus;
     private String images;
 
-    public ReviewsResDtoWeb(Reviews reviews, String images){
-        this.title = reviews.getTitle();
-        this.starPoint = reviews.getStarPoint();
-        this.content = reviews.getContent();
-        this.secretStatus = reviews.getSecretStatus().equals(SecretStatus.SECRET);
+    public ReviewResDtoWeb(Review review, String images){
+        this.title = review.getTitle();
+        this.starPoint = review.getStarPoint();
+        this.content = review.getContent();
+        this.secretStatus = review.getSecretStatus().equals(SecretStatus.SECRET);
         this.images = images;
     }
 }

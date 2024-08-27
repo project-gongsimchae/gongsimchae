@@ -46,6 +46,14 @@
             </div>
 
             <div class="form-group">
+                <label for="couponName">쿠폰 이름</label>
+                <input type="text" id="couponName" th:field="*{couponName}" class="form-control" required />
+                <div class="invalid-feedback">
+                    쿠폰 이름을 입력해주세요.
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label for="discount">할인율</label>
                 <input type="number" id="discount" th:field="*{discountRate}" class="form-control" required />
                 <div class="invalid-feedback">

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
@@ -15,6 +16,7 @@ import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
+import techit.gongsimchae.domain.portion.chatroomuser.event.RoomUserEndEvent;
 import techit.gongsimchae.domain.portion.notifications.dto.NotificationKeywordUserDto;
 import techit.gongsimchae.domain.portion.notifications.event.KeywordNotiEvent;
 import techit.gongsimchae.domain.portion.subdivision.dto.*;
@@ -185,6 +187,16 @@ public class SubdivisionService {
     public void changeStatus(String uid, String status) {
         Subdivision subdivision = subdivisionRepository.findByUID(uid).orElseThrow(() -> new CustomWebException(ErrorMessage.SUBDIVISION_NOT_FOUND));
         subdivision.changeType(status);
+        if (SubdivisionType.valueOf(status).equals(SubdivisionType.END)) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    publisher.publishEvent(new RoomUserEndEvent(subdivision.getId(), subdivision.getTitle()));
+                }
+            });
+
+
+        }
 
     }
 
