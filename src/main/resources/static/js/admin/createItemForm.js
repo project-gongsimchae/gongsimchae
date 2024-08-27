@@ -1,22 +1,69 @@
+let selectedFiles = []; // 모든 선택된 파일을 저장할 배열
+
 // 이미지 미리보기 함수
 function previewImages(event) {
+    const files = Array.from(event.target.files);  // 새로운 파일을 배열로 변환
+    selectedFiles = selectedFiles.concat(files);  // 새로운 파일을 기존 배열에 추가
+
+    updateImagePreview();  // 미리보기 업데이트
+}
+
+// 미리보기 업데이트 함수
+function updateImagePreview() {
     const previewContainer = document.getElementById('image-preview-container');
     previewContainer.innerHTML = '';  // 기존 미리보기 이미지 초기화
 
-    const files = event.target.files;
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+    selectedFiles.forEach((file, index) => {
         const reader = new FileReader();
 
         reader.onload = function(e) {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('image-preview-wrapper');
+
             const img = document.createElement('img');
             img.src = e.target.result;
             img.classList.add('image-preview');
-            previewContainer.appendChild(img);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerHTML = 'X';
+            deleteButton.classList.add('image-delete-button');
+            deleteButton.onclick = function() {
+                removeImage(index);
+            };
+
+            wrapper.appendChild(img);
+            wrapper.appendChild(deleteButton);
+            previewContainer.appendChild(wrapper);
         };
 
-        reader.readAsDataURL(file);
-    }
+        reader.readAsDataURL(file);  // 파일을 읽어서 미리보기로 표시
+    });
+}
+
+// 이미지 제거 함수
+function removeImage(index) {
+    selectedFiles.splice(index, 1);  // 해당 인덱스의 파일을 배열에서 제거
+    updateImagePreview();  // 미리보기 업데이트
+}
+
+// 폼 제출 전에 파일들을 폼에 추가
+function beforeSubmit() {
+    const form = document.querySelector('form');
+
+    // DataTransfer 객체를 사용하여 모든 파일을 추가
+    const dataTransfer = new DataTransfer();
+    selectedFiles.forEach(file => {
+        dataTransfer.items.add(file);
+    });
+
+    // 기존 파일 인풋 필드를 가져와 파일들을 설정
+    const fileInput = document.getElementById('images');
+    fileInput.files = dataTransfer.files;
+}
+
+// 파일 선택창을 열기 위한 함수
+function triggerFileInput() {
+    document.getElementById('images').click();  // 이미지 선택 창 열기
 }
 
 // 옵션 추가 및 제거 기능
