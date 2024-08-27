@@ -104,6 +104,42 @@
         });
     </script>
 </section>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggles = document.querySelectorAll('.default-address-toggle');
 
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const addressId = this.getAttribute('data-id');
+                    const star = this.querySelector('i');
+
+                    if (!star.classList.contains('text-warning')) {
+                        fetch(`/change/default/address/${addressId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    toggles.forEach(t => {
+                                        t.querySelector('i').classList.remove('text-warning');
+                                        t.querySelector('i').classList.add('text-muted');
+                                    });
+                                    star.classList.remove('text-muted');
+                                    star.classList.add('text-warning');
+                                } else {
+                                    alert('기본 배송지 변경에 실패했습니다.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('기본 배송지 변경 중 오류가 발생했습니다.');
+                            });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

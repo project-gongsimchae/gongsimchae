@@ -1,10 +1,17 @@
 package techit.gongsimchae.domain.common.user.repository;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import techit.gongsimchae.domain.common.address.entity.DefaultAddressStatus;
+import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.portion.notifications.dto.NotificationKeywordUserDto;
+import techit.gongsimchae.domain.portion.report.entity.QReport;
+import techit.gongsimchae.domain.portion.subdivision.entity.QSubdivision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +19,8 @@ import java.util.List;
 import static techit.gongsimchae.domain.common.address.entity.QAddress.address1;
 import static techit.gongsimchae.domain.common.user.entity.QUser.user;
 import static techit.gongsimchae.domain.portion.notificationkeyword.entity.QNotificationKeyword.notificationKeyword;
+import static techit.gongsimchae.domain.portion.report.entity.QReport.*;
+import static techit.gongsimchae.domain.portion.subdivision.entity.QSubdivision.*;
 
 @RequiredArgsConstructor
 public class UserCustomRepositoryImpl implements UserCustomRepository{
@@ -34,5 +43,32 @@ public class UserCustomRepositoryImpl implements UserCustomRepository{
             list.add(new NotificationKeywordUserDto(tuple.get(user), tuple.get(notificationKeyword.keyword)));
         }
         return list;
+    }
+
+    @Override
+    public Page<UserRespDtoWeb> findUsersWithReportCounts(Pageable pageable) {
+        List<UserRespDtoWeb> results = queryFactory.select(Projections.fields(UserRespDtoWeb.class, user.id, user.nickname, user.loginId, user.name,
+                        user.mannerPoint, user.role, user.userStatus, user.createDate, user.updateDate, user.email, user.joinType))
+                .from(user)
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .orderBy(user.createDate.desc())
+                .fetch();
+
+        for (UserRespDtoWeb result : results) {
+            Long reportCount = queryFactory.select(report.count())
+                    .from(report)
+                    .join(report.subdivision, subdivision)
+                    .join(subdivision.user, user)
+                    .where(user.id.eq(result.getId()))
+                    .fetchOne();
+            result.setReportCount(reportCount);
+        }
+
+        Long size = queryFactory.select(user.count())
+                .from(user)
+                .fetchOne();
+
+        return new PageImpl<>(results, pageable, size);
     }
 }

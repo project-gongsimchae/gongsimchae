@@ -48,9 +48,9 @@ public class InquiryService {
         imageS3Service.storeFiles(dtoWeb.getImageFiles(), S3VO.INQUIRY_IMAGE_UPLOAD_DIRECTORY, savedInquiry);
     }
 
-    public List<InquiryRespDtoWeb> getInquiry(PrincipalDetails principalDetails) {
+    public Page<InquiryRespDtoWeb> getInquiry(PrincipalDetails principalDetails, Pageable pageable) {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
-        return inquiryRepository.findByUserIdOrderByCreateDateDesc(user.getId()).stream().map(InquiryRespDtoWeb::new).collect(Collectors.toList());
+        return inquiryRepository.findByUserIdOrderByCreateDateDesc(user.getId(), pageable).map(InquiryRespDtoWeb::new);
     }
 
     public InquiryRespDtoWeb getInquiry(String UID) {

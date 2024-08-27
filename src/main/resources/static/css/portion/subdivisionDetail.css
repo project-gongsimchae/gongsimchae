@@ -34,14 +34,10 @@
 }
 
 .user-info-subdivision {
-    margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fff;
-    border: 1px solid #e2e2e2;
-    border-radius: 10px;
-    padding: 20px;
+    padding: 10px 20px;
 }
 
 .user-info-subdivision .user-details {
@@ -56,7 +52,7 @@
 }
 
 .user-info-subdivision .manner-point label {
-    margin-right: 10px;
+    margin-right: 20px;
 }
 
 .user-info-subdivision .manner-point progress {
@@ -64,6 +60,7 @@
     appearance: none;
     width: 100px;
     height: 10px;
+    margin: 0 10px 5px 0;
 }
 
 .user-info-subdivision .manner-point progress::-webkit-progress-bar {
@@ -98,8 +95,16 @@
     font-size: 1.1em;
 }
 
+.content-text{
+    margin-left: 15px;
+    white-space: normal;     /* 줄바꿈을 허용 */
+    word-wrap: break-word;   /* 긴 단어가 컨테이너를 넘어가지 않도록 자동으로 줄바꿈 */
+    overflow-wrap: break-word; /* 긴 단어가 컨테이너를 넘어가지 않도록 자동으로 줄바꿈 */
+}
+
 .date {
     color: #999;
+    margin-left: 15px;
 }
 
 .content-header{
@@ -107,11 +112,22 @@
     justify-content: space-between;
     align-items: center;
 }
+.content-container{
+    background-color: #FFFFFF;
+}
 
 .title {
     flex-grow: 1;
     font-size: 35px;
     margin-bottom: 5px;
+}
+
+.content-header-title {
+    white-space: nowrap;      /* 텍스트가 한 줄로 유지되도록 설정 */
+    overflow: hidden;         /* 넘치는 텍스트 숨기기 */
+    text-overflow: ellipsis;  /* 넘치는 텍스트를 ...으로 표시 */
+    max-width: 600px;         /* 최대 너비 설정 */
+    margin-left: 10px;
 }
 
 
@@ -248,11 +264,17 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    margin-right: -10px;
 }
 
 .fa-ellipsis-vertical {
     cursor: pointer;
     font-size: 1.2rem;
+}
+.nickname{
+    font-size: 16px;
+    font-weight: bold;
+
 }
 
 .dropdown-content {

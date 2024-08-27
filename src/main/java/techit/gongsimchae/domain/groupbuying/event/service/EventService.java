@@ -14,6 +14,7 @@ import techit.gongsimchae.domain.groupbuying.category.repository.CategoryReposit
 import techit.gongsimchae.domain.groupbuying.event.dto.EventCreateReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.event.dto.EventResUserDtoWeb;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
+import techit.gongsimchae.domain.groupbuying.event.entity.EventType;
 import techit.gongsimchae.domain.groupbuying.event.repository.EventRepository;
 import techit.gongsimchae.domain.groupbuying.eventcategory.entity.EventCategory;
 import techit.gongsimchae.domain.groupbuying.eventcategory.repository.EventCategoryRepository;
@@ -75,13 +76,18 @@ public class EventService {
     }
 
     public List<EventResUserDtoWeb> getActivatedEvents(){
-        List<Event> activatedEvents = eventRepository.findByExpirationDateAfterAndEventStatusEquals(LocalDateTime.now(),
-                EntityStatus.EXIST);
-        List<EventResUserDtoWeb> eventResAdminDtoWebs = new ArrayList<>();
+        List<Event> activatedEvents = eventRepository.findByExpirationDateAfterAndEventStatusEqualsAndEventTypeNot(LocalDateTime.now(),
+                EntityStatus.EXIST, EventType.COUPON_CODE);
+        List<EventResUserDtoWeb> eventResUserDtoWebs = new ArrayList<>();
         for (Event activatedEvent : activatedEvents) {
-            eventResAdminDtoWebs.add(new EventResUserDtoWeb(activatedEvent, imageFileRepository.findByEvent(activatedEvent).getStoreFilename()));
+            List<EventCategory> eventCategories = eventCategoryRepository.findAllByEventId(activatedEvent.getId());
+            List<Category> categories = eventCategories.stream()
+                    .map((eventCategory) -> categoryRepository.findById(eventCategory.getId()).orElseThrow(
+                            () -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND)
+                    )).toList();
+            eventResUserDtoWebs.add(new EventResUserDtoWeb(activatedEvent, imageFileRepository.findByEvent(activatedEvent).getStoreFilename(), categories));
         }
-        return eventResAdminDtoWebs;
+        return eventResUserDtoWebs;
     }
 
     public void deleteEvent(Long eventId) {

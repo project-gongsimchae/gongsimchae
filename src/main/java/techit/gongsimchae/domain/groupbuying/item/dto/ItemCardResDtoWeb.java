@@ -36,7 +36,8 @@ public class ItemCardResDtoWeb {
         this.UID = item.getUID();
         this.cumulativeSalesVolume = item.getCumulativeSalesVolume();
         this.reviewCount = item.getReviewCount();
-        this.itemBannerImage = imageFile.getStoreFilename();
+        if(imageFile != null)
+            this.itemBannerImage = imageFile.getStoreFilename();
     }
 
 }

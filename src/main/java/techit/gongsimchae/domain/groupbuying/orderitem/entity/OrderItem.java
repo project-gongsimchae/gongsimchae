@@ -1,15 +1,11 @@
 package techit.gongsimchae.domain.groupbuying.orderitem.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
-import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 
 @Entity
@@ -22,10 +18,18 @@ public class OrderItem extends BaseEntity {
     private Long id;
     private Integer price;
     private Integer count;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orders_id")
     private Orders orders;
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "itemOption_id")
+    private ItemOption itemOption;
+
+    @Builder
+    public OrderItem(Integer price, Integer count, Orders orders, ItemOption itemOption) {
+        this.price = price;
+        this.count = count;
+        this.orders = orders;
+        this.itemOption = itemOption;
+    }
 }
