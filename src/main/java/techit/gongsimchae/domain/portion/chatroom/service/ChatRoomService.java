@@ -2,6 +2,7 @@ package techit.gongsimchae.domain.portion.chatroom.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +25,10 @@ import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,6 +39,7 @@ public class ChatRoomService {
     private final UserRepository userRepository;
     private final ChatRoomUserRepository chatRoomUserRepository;
     private final ImageS3Service imageS3Service;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 채팅방 만드는 메서드
@@ -75,9 +80,11 @@ public class ChatRoomService {
         if(_chatRoomUser.isPresent()) {
             ChatRoomUser chatRoomUser = _chatRoomUser.get();
             chatRoomUserRepository.delete(chatRoomUser);
+            redisTemplate.opsForHash().delete(roomId,nickname);
         } else{
             ChatRoomUser chatRoomUser = new ChatRoomUser(user, chatRoom);
             chatRoomUserRepository.save(chatRoomUser);
+            redisTemplate.opsForHash().put(roomId, nickname,1);
         }
 
     }
@@ -90,12 +97,12 @@ public class ChatRoomService {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         SubdivisionType subdivisionType = chatRoom.getSubdivision().getSubdivisionType();
 
-        if (chatRoom.getChatRoomUsers().stream()
-                .map(u -> u.getUser().getLoginId())
-                .anyMatch(id -> id.equals(user.getLoginId()))) {
+        boolean isChatUser = redisTemplate.opsForHash()
+                .entries(roomId).entrySet().stream().anyMatch(i -> i.getKey().equals(principalDetails.getNickname()));
+        if (isChatUser) {
             return true;
         }
-        int currentUserCount = chatRoom.getChatRoomUsers().size();
+        Long currentUserCount = redisTemplate.opsForHash().size(roomId);
         if (currentUserCount + 1 > chatRoom.getMaxUserCnt() || !subdivisionType.equals(SubdivisionType.RECRUITING) || !user.getUserStatus().equals(UserStatus.NORMAL)) {
             return false;
         }
@@ -105,12 +112,10 @@ public class ChatRoomService {
     /**
      * 채팅방 전체 유저 조회
      */
-    public ArrayList<String> getUserList(String roomId){
-        ArrayList<String> list = new ArrayList<>();
+    public List<String> getUserList(String roomId){
 
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
-        chatRoom.getChatRoomUsers().forEach(i -> list.add(i.getUser().getName()));
-        return list;
+        return redisTemplate.opsForHash().entries(roomId)
+                .entrySet().stream().map(i -> (String) i.getValue()).collect(Collectors.toList());
     }
 
     @Transactional

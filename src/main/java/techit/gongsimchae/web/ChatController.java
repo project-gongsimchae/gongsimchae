@@ -111,7 +111,7 @@ public class ChatController {
     // 채팅에 참여한 유저 리스트 반환
     @GetMapping("/chat/userlist")
     @ResponseBody
-    public ArrayList<String> userList(String roomId) {
+    public List<String> userList(String roomId) {
 
         return chatRoomService.getUserList(roomId);
     }
