@@ -92,9 +92,8 @@ public class ChatController {
 
 
         // 반환 결과를 socket session 에 userUUID 로 저장
-        headerAccessor.getSessionAttributes().put("userUUID", user.getUID());
         headerAccessor.getSessionAttributes().put("roomId", chat.getRoomId());
-        headerAccessor.getSessionAttributes().put("nickname", chat.getSender());
+        headerAccessor.getSessionAttributes().put("loginId", chat.getLoginId());
 
         senderService.send(chat);
 
@@ -112,7 +111,6 @@ public class ChatController {
     @GetMapping("/chat/userlist")
     @ResponseBody
     public List<String> userList(String roomId) {
-
         return chatRoomService.getUserList(roomId);
     }
 
@@ -149,11 +147,10 @@ public class ChatController {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
 
-        String userUUID = (String) headerAccessor.getSessionAttributes().get("userUUID");
         String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
-        String nickname = (String) headerAccessor.getSessionAttributes().get("nickname");
+        String loginId = (String) headerAccessor.getSessionAttributes().get("loginId");
 
-        chatRoomUserService.disableChatRoomOnLeave(roomId, nickname);
+        chatRoomUserService.disableChatRoomOnLeave(roomId, loginId);
 
     }
 

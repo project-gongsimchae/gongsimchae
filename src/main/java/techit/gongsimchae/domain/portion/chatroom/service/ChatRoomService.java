@@ -24,9 +24,7 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -51,7 +49,6 @@ public class ChatRoomService {
     }
 
 
-
     /**
      * roomId를 기준으로 채팅방을 찾는 메서드
      */
@@ -66,26 +63,36 @@ public class ChatRoomService {
 
     public ChatRoomRespDto getChatRoom(Long subdivisionId) {
         ChatRoom chatRoom = chatRoomRepository.findBySubdivisionId(subdivisionId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
-        return new ChatRoomRespDto(chatRoom);
+
+        ChatRoomRespDto chatRoomRespDto = new ChatRoomRespDto(chatRoom);
+        chatRoomRespDto.setUserCount(redisTemplate.opsForHash().size(chatRoomRespDto.getRoomId()));
+        return chatRoomRespDto;
     }
 
     /**
-     * 채팅방에 유저 넣고 빼기
+     * 채팅방에 유저 넣기
      */
     @Transactional
-    public void updateUserInChat(String roomId, String nickname) {
+    public void addUserInChat(String roomId, String loginId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
-        User user = userRepository.findByNickname(nickname).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
-        Optional<ChatRoomUser> _chatRoomUser = chatRoomUserRepository.findByChatUser(roomId, nickname);
-        if(_chatRoomUser.isPresent()) {
-            ChatRoomUser chatRoomUser = _chatRoomUser.get();
-            chatRoomUserRepository.delete(chatRoomUser);
-            redisTemplate.opsForHash().delete(roomId,nickname);
-        } else{
-            ChatRoomUser chatRoomUser = new ChatRoomUser(user, chatRoom);
-            chatRoomUserRepository.save(chatRoomUser);
-            redisTemplate.opsForHash().put(roomId, nickname,1);
-        }
+        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
+
+        ChatRoomUser chatRoomUser = new ChatRoomUser(user, chatRoom);
+        chatRoomUserRepository.save(chatRoomUser);
+        redisTemplate.opsForHash().put(roomId, loginId, 1);
+    }
+
+    /**
+     * 채팅방에 유저 빼기
+     */
+    @Transactional
+    public void deleteUserInChat(String roomId, String loginId) {
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new CustomWebException(ErrorMessage.CHATTING_ROOM_NOT_FOUND));
+        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
+
+        chatRoomUserRepository.deleteByUserAndChatRoom(user,chatRoom);
+        redisTemplate.opsForHash().delete(roomId, loginId);
+
 
     }
 
@@ -98,7 +105,7 @@ public class ChatRoomService {
         SubdivisionType subdivisionType = chatRoom.getSubdivision().getSubdivisionType();
 
         boolean isChatUser = redisTemplate.opsForHash()
-                .entries(roomId).entrySet().stream().anyMatch(i -> i.getKey().equals(principalDetails.getNickname()));
+                .entries(roomId).entrySet().stream().anyMatch(i -> i.getKey().equals(principalDetails.getUsername()));
         if (isChatUser) {
             return true;
         }
@@ -112,10 +119,10 @@ public class ChatRoomService {
     /**
      * 채팅방 전체 유저 조회
      */
-    public List<String> getUserList(String roomId){
+    public List<String> getUserList(String roomId) {
 
         return redisTemplate.opsForHash().entries(roomId)
-                .entrySet().stream().map(i -> (String) i.getValue()).collect(Collectors.toList());
+                .entrySet().stream().map(i -> (String) i.getKey()).collect(Collectors.toList());
     }
 
     @Transactional
