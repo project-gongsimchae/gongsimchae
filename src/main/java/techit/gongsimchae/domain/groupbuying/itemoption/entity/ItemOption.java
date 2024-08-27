@@ -34,4 +34,5 @@ public class ItemOption extends BaseEntity {
         this.content = content;
         this.price = price;
     }
+
 }
