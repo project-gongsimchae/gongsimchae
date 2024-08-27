@@ -53,7 +53,18 @@
                 </div>
 
                 <div id="added-options">
-                    <!-- 옵션이 동적으로 추가되는 영역 -->
+                    <th:block th:each="option, stat : ${item.itemOptions}">
+                        <div class="input-option-set">
+                            <div class="input-option-content">
+                                <input type="hidden" th:name="'options[' + ${stat.index} + '].id'" th:value="${option.id}" />
+                                <input type="text" class="form-control" th:name="'options[' + ${stat.index} + '].content'" th:value="${option.content}" readonly />
+                                <input type="number" class="form-control" th:name="'options[' + ${stat.index} + '].price'" th:value="${option.price}" step="0.01" readonly />
+                            </div>
+                            <button type="button" class="custom-btn-outline custom-btn-remove-option" onclick="removeOption(this)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </th:block>
                 </div>
             </div>
 
@@ -105,7 +116,8 @@
                     <option value="">선택해주세요</option>
                     <option th:each="category : ${categories}"
                             th:value="${category.name}"
-                            th:text="${category.name}">
+                            th:text="${category.name}"
+                            th:selected="${category == item.category}">
                     </option>
                 </select>
                 <div class="invalid-feedback">
@@ -120,6 +132,15 @@
     </div>
 
     <script src="/js/admin/updateItemForm.js"></script>
+    <!-- 기존 공동구매 제한시간 렌더링 -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var limitTime = /*[[${item.groupBuyingLimitTime}]]*/ null;
+        if (limitTime) {
+            document.getElementById('groupBuyingLimitTime').value = limitTime.substring(0, 16);
+        }
+        /*]]>*/
+    </script>
 </section>
 </body>
 </html>

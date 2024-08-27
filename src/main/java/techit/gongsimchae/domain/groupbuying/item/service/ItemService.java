@@ -9,6 +9,8 @@ import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.판매�
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -120,15 +122,31 @@ public class ItemService {
 
         item.UpdateDto(itemUpdateDto, category);
 
-        if (itemUpdateDto.getOptions() != null) {
-            for (ItemOptionUpdateDto optionUpdateDto : itemUpdateDto.getOptions()) {
-                ItemOption itemOption = itemOptionRepository.findById(optionUpdateDto.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("ItemOption not found"));
+        // 아이템에 연결된 기존 옵션들을 가져옴
+        List<ItemOption> existingOptions = itemOptionRepository.findAllByItemId(item.getId());
+        List<Long> updatedOptionIds = new ArrayList<>();
 
-                itemOption.updateOption(optionUpdateDto.getContent(), optionUpdateDto.getPrice());
-                itemOptionRepository.save(itemOption);
+
+        for (ItemOptionUpdateDto optionUpdateDto : itemUpdateDto.getOptions()) {
+            if (optionUpdateDto.getId() == null || optionUpdateDto.getId() == 0) {
+                // 새로운 옵션 추가
+                ItemOption newItemOption = new ItemOption(item, optionUpdateDto.getContent(), optionUpdateDto.getPrice());
+                itemOptionRepository.save(newItemOption);
+                updatedOptionIds.add(newItemOption.getId());
+            } else {
+                // 기존 옵션 업데이트
+                ItemOption existingOption = existingOptions.stream()
+                        .filter(option -> option.getId().equals(optionUpdateDto.getId()))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("Option not found"));
+                existingOption.updateOption(optionUpdateDto.getContent(), optionUpdateDto.getPrice());
+                updatedOptionIds.add(existingOption.getId());
             }
         }
+
+        existingOptions.stream()
+                .filter(option -> !updatedOptionIds.contains(option.getId()))
+                .forEach(itemOptionRepository::delete);
 
 
         itemRepository.save(item);

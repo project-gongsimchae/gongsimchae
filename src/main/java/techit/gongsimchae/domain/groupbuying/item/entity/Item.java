@@ -12,6 +12,8 @@ import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -40,6 +42,9 @@ public class Item extends BaseEntity {
 
     @OneToMany(mappedBy = "item")
     private List<ImageFile> imageFiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item")
+    private List<ItemOption> itemOptions = new ArrayList<>();
 
     public Item (ItemCreateDto itemCreateDto, Category category) {
         this.name = itemCreateDto.getName();

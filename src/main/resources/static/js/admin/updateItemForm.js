@@ -1,7 +1,8 @@
 function previewImages(event) {
     const previewContainer = document.getElementById('image-preview-container');
-
+    previewContainer.innerHTML = ''; // 이전 미리보기 이미지 삭제
     const files = event.target.files;
+
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const reader = new FileReader();
@@ -19,23 +20,51 @@ function previewImages(event) {
 
 function addOptionField() {
     const container = document.getElementById('added-options');
-    const index = container.children.length;
-    const newOption = document.createElement('div');
-    newOption.className = 'input-option-group';
-    newOption.innerHTML = `
-        <div class="input-option">
-            <input type="text" class="form-control" name="options[${index}].content" placeholder="옵션명" aria-label="옵션명">
-            <input type="number" class="form-control" name="options[${index}].price" placeholder="가격" aria-label="가격" step="0.01">
-        </div>
-        <div class="remove-option">
-            <button class="custom-btn-outline custom-btn-remove-option" type="button" onclick="removeOptionField(this)">
+    const currentOptionContent = document.getElementById('optionContent').value.trim();
+    const currentOptionPrice = document.getElementById('optionPrice').value.trim();
+
+    if (currentOptionContent !== '' && currentOptionPrice !== '') {
+        const newOption = document.createElement('div');
+        newOption.className = 'input-option-set';
+        newOption.innerHTML = `
+            <div class="input-option-content">
+                <input type="hidden" name="options[${container.children.length}].id" value="0">
+                <input type="text" class="form-control" name="options[${container.children.length}].content" value="${currentOptionContent}" readonly>
+                <input type="number" class="form-control" name="options[${container.children.length}].price" value="${currentOptionPrice}" readonly step="0.01">
+            </div>
+            <button type="button" class="custom-btn-outline custom-btn-remove-option" onclick="removeOption(this)">
                 <i class="fas fa-minus"></i>
             </button>
-        </div>
-    `;
-    container.appendChild(newOption);
+        `;
+        container.appendChild(newOption);
+
+        document.getElementById('optionContent').value = '';
+        document.getElementById('optionPrice').value = '';
+        updateOptionIndexes();
+    } else {
+        alert('옵션명과 가격을 입력해주세요.');
+    }
 }
 
-function removeOptionField(button) {
-    button.closest('.input-option-group').remove();
+function removeOption(button) {
+    const optionSet = button.closest('.input-option-set');
+    optionSet.remove();
+    updateOptionIndexes();
 }
+
+function updateOptionIndexes() {
+    const container = document.getElementById('added-options');
+    const options = container.getElementsByClassName('input-option-set');
+
+    for (let i = 0; i < options.length; i++) {
+        const inputs = options[i].getElementsByTagName('input');
+        inputs[0].name = `options[${i}].id`;
+        inputs[1].name = `options[${i}].content`;
+        inputs[2].name = `options[${i}].price`;
+    }
+}
+
+// 페이지 로드 시 옵션 인덱스 업데이트
+document.addEventListener('DOMContentLoaded', function() {
+    updateOptionIndexes();
+});
