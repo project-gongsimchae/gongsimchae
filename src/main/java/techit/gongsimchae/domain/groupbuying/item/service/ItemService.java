@@ -1,6 +1,11 @@
 package techit.gongsimchae.domain.groupbuying.item.service;
 
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.*;
+import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.getInstanceByTypeNumber;
+import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.낮은가격순;
+import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.높은가격순;
+import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.리뷰많은순;
+import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.신상품순;
+import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.판매량순;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +22,7 @@ import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
+import techit.gongsimchae.domain.groupbuying.event.repository.EventRepository;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCardResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
@@ -38,8 +44,8 @@ import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderStatus;
 import techit.gongsimchae.domain.groupbuying.orderitem.repository.OrderItemRepository;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.repository.OrdersRepository;
-import techit.gongsimchae.domain.groupbuying.reviews.entity.Reviews;
-import techit.gongsimchae.domain.groupbuying.reviews.repository.ReviewsRepository;
+import techit.gongsimchae.domain.groupbuying.reviews.entity.Review;
+import techit.gongsimchae.domain.groupbuying.reviews.repository.ReviewRepository;
 import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
@@ -54,9 +60,9 @@ public class ItemService {
     private final OrderItemRepository orderItemRepository;
     private final OrdersRepository ordersRepository;
     private final ImageFileRepository imageFileRepository;
-    private final ReviewsRepository reviewsRepository;
+    private final ReviewRepository reviewRepository;
+    private final EventRepository eventRepository;
     private final ItemOptionRepository itemOptionRepository;
-
 
     public void save(Item item) {
         itemRepository.save(item);
@@ -247,16 +253,16 @@ public class ItemService {
         List<Orders> orders = ordersRepository.findAllByUserIdAndOrderStatus(accountDto.getId(), OrderStatus.완료);
         List<OrderItem> ordersItems = orderItemRepository.findAllByOrdersIn(orders);
         List<Item> items = ordersItems.stream()
-                .map((ordersItem) -> itemRepository.findById(ordersItem.getItem().getId()).orElseThrow(
+                .map((ordersItem) -> itemRepository.findById(ordersItem.getItemOption().getItem().getId()).orElseThrow(
                         () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
                 )).toList();
-        List<Reviews> reviews = reviewsRepository.findAllByUserId(accountDto.getId());
+        List<Review> reviews = reviewRepository.findAllByUserId(accountDto.getId());
 
         List<ReviewAbleItemResDtoWeb> reviewAbleItemResDtoWebs = new ArrayList<>();
         List<ReviewedItemResDtoWeb> reviewedItemResDtoWebs = new ArrayList<>();
         for (Item item : items) {
             ImageFile imageFile = imageFileRepository.findByItem(item);
-            Reviews matchingReview = reviews.stream()
+            Review matchingReview = reviews.stream()
                     .filter(review -> review.getItem().equals(item))
                     .findFirst()
                     .orElse(null);
@@ -268,5 +274,15 @@ public class ItemService {
             }
         }
         return new ReviewItemResDtoWeb(reviewAbleItemResDtoWebs, reviewedItemResDtoWebs);
+    }
+
+    public List<ItemCardResDtoWeb> getCategoriesItems(List<Category> categories, Integer page, Integer perPage, Integer sortedType) {
+        List<Item> items = itemRepository.findAllByCategoryIn(categories);
+        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
+        for (Item item : items) {
+            ImageFile imageFile = imageFileRepository.findByItem(item);
+            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
+        }
+        return itemCardResDtoWebs;
     }
 }

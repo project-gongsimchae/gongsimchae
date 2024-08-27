@@ -14,7 +14,7 @@ import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
 @AllArgsConstructor
 @Entity
 @Getter
-public class Reviews extends BaseEntity {
+public class Review extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,7 +34,7 @@ public class Reviews extends BaseEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    public Reviews(ReviewsReqDtoWeb reviewsReqDtoWeb, User user, Item item){
+    public Review(ReviewsReqDtoWeb reviewsReqDtoWeb, User user, Item item){
         this.title = reviewsReqDtoWeb.getTitle();
         this.starPoint = reviewsReqDtoWeb.getStarPoint();
         this.content = reviewsReqDtoWeb.getContent();

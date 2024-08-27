@@ -1,4 +1,4 @@
-package techit.gongsimchae.global.config.fafka;
+package techit.gongsimchae.global.config.kafka;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package techit.gongsimchae.global.config.fafka;
+package techit.gongsimchae.global.config.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;

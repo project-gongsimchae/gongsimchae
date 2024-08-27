@@ -30,4 +30,9 @@ public class ChatRoomRespDto {
         this.subDivisionUID = chatRoom.getSubdivision().getUID();
 
     }
+
+    public ChatRoomRespDto(String roomId, String roomName) {
+        this.roomId = roomId;
+        this.roomName = roomName;
+    }
 }

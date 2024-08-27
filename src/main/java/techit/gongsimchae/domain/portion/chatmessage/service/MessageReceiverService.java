@@ -5,7 +5,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
-import techit.gongsimchae.global.config.fafka.KafkaConstants;
+import techit.gongsimchae.global.config.kafka.KafkaConstants;
 
 @Service
 @RequiredArgsConstructor

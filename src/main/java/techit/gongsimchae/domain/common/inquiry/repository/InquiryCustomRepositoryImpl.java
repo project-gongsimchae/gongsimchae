@@ -33,6 +33,8 @@ public class InquiryCustomRepositoryImpl implements InquiryCustomRepository {
                 .from(inquiry)
                 .join(inquiry.user, user)
                 .orderBy(inquiry.createDate.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
                 .where(unanswered(filter))
                 .fetch();
 

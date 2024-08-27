@@ -1,6 +1,8 @@
 package techit.gongsimchae.domain.portion.report.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.user.entity.User;
@@ -14,8 +16,6 @@ import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepos
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +37,8 @@ public class ReportService {
         return savedReport.getId();
     }
 
-    public List<ReportRespDtoWeb> getSubdivisionReport(Long id) {
-        return reportRepository.findReportsForSubdivision(id);
+    public Page<ReportRespDtoWeb> getSubdivisionReport(Long id, Pageable pageable) {
+        return reportRepository.findReportsForSubdivision(id,pageable);
     }
     @Transactional
     public void deleteAllReport(String subdivisionUID) {

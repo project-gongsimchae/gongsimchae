@@ -1,5 +1,7 @@
 package techit.gongsimchae.web;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -24,6 +26,7 @@ import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.domain.portion.chatroomuser.service.ChatRoomUserService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
+import techit.gongsimchae.global.util.CookieUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,11 +119,8 @@ public class ChatController {
     // ai 채팅
     @GetMapping("/chat/ai")
     public String chatRoom(Model model) {
-        String name = "유저";
-        String roomId = UUID.randomUUID().toString().substring(0, 8) + name;
-        ChatRoomRespDto chatRoomRespDto = new ChatRoomRespDto();
-        chatRoomRespDto.setRoomId(roomId);
-        chatRoomRespDto.setRoomName(name);
+        String name = "user";
+        ChatRoomRespDto chatRoomRespDto = new ChatRoomRespDto(UUID.randomUUID().toString().substring(0,8),"AI");
         model.addAttribute("room", chatRoomRespDto);
         model.addAttribute("user", name);
         return "ai";

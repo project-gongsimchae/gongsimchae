@@ -9,7 +9,7 @@ import techit.gongsimchae.domain.portion.chatmessage.dto.ChatMessageDto;
 import techit.gongsimchae.domain.portion.chatmessage.entity.MessageType;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.domain.portion.chatroomuser.service.ChatRoomUserService;
-import techit.gongsimchae.global.config.fafka.KafkaConstants;
+import techit.gongsimchae.global.config.kafka.KafkaConstants;
 
 import java.time.LocalDateTime;
 
