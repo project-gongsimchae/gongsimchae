@@ -1,4 +1,3 @@
-// 이미지 미리보기 함수
 function previewImages(event) {
     const previewContainer = document.getElementById('image-preview-container');
     previewContainer.innerHTML = '';  // 기존 미리보기 이미지 초기화

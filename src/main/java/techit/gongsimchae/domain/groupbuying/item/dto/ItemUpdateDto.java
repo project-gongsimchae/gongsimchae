@@ -1,8 +1,11 @@
 package techit.gongsimchae.domain.groupbuying.item.dto;
 
 import lombok.Data;
+import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionUpdateDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ItemUpdateDto {
@@ -14,6 +17,6 @@ public class ItemUpdateDto {
     private Integer groupBuyingQuantity;
     private LocalDateTime groupBuyingLimitTime;
     private String categoryName;
-
+    private List<ItemOptionUpdateDto> options = new ArrayList<>();
 
 }

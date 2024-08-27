@@ -29,4 +29,9 @@ public class ItemOption extends BaseEntity {
         this.content = content;
         this.price = price;
     }
+
+    public void updateOption(String content, Integer price) {
+        this.content = content;
+        this.price = price;
+    }
 }

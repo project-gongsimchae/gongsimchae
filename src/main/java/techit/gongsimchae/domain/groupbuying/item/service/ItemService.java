@@ -29,6 +29,7 @@ import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionCreateDto;
+import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionUpdateDto;
 import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
 import techit.gongsimchae.domain.groupbuying.itemoption.repository.ItemOptionRepository;
 import techit.gongsimchae.domain.groupbuying.itemoption.service.ItemOptionService;
@@ -108,6 +109,18 @@ public class ItemService {
                 );
 
         item.UpdateDto(itemUpdateDto, category);
+
+        if (itemUpdateDto.getOptions() != null) {
+            for (ItemOptionUpdateDto optionUpdateDto : itemUpdateDto.getOptions()) {
+                ItemOption itemOption = itemOptionRepository.findById(optionUpdateDto.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("ItemOption not found"));
+
+                itemOption.updateOption(optionUpdateDto.getContent(), optionUpdateDto.getPrice());
+                itemOptionRepository.save(itemOption);
+            }
+        }
+
+
         itemRepository.save(item);
     }
 
