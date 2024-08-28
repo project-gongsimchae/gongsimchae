@@ -77,4 +77,8 @@ public class Item extends BaseEntity {
     public void minusDiscountRate(Integer discountRate) {
         this.discountRate -= discountRate;
     }
+
+    public void updateItemStatus(ItemStatus itemStatus) {
+        this.itemStatus = itemStatus;
+    }
 }
