@@ -17,8 +17,16 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemCustomRep
     List<Item> findAllByCategoryIn(List<Category> categories);
     Page<Item> findAllByCategory(Category category, Pageable pageable);
     Optional<Item> findByUID(String id);
+
+    /**
+     * 신상품 - 신상품순
+     */
+    @Query(
+            value = "SELECT * FROM (SELECT * FROM item ORDER BY create_date DESC LIMIT 200) sub",
+            countQuery = "SELECT COUNT(*) FROM (SELECT * FROM item ORDER BY create_date DESC LIMIT 200) sub",
+            nativeQuery = true
+    )
     Page<Item> findTop200ByOrderByCreateDateDesc(Pageable pageable);
-    Page<Item> findTop200ByOrderByCumulativeSalesVolumeDesc(Pageable pageable);
 
     /**
      * 신상품 - 판매량순
@@ -71,7 +79,17 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemCustomRep
     Page<Item> findTop200ByCumulativeSalesVolumeAndSortByCreateDateDesc(Pageable pageable);
 
     /**
-     * 신상품 - 리뷰많은순
+     * 베스트 - 판매량순
+     */
+    @Query(
+            value = "SELECT * FROM (SELECT * FROM item ORDER BY cumulative_sales_volume DESC LIMIT 200) sub",
+            countQuery = "SELECT COUNT(*) FROM (SELECT * FROM item ORDER BY cumulative_sales_volume DESC LIMIT 200) sub",
+            nativeQuery = true
+    )
+    Page<Item> findTop200ByOrderByCumulativeSalesVolumeDesc(Pageable pageable);
+
+    /**
+     * 베스트 - 리뷰많은순
      */
     @Query(
             value = "SELECT * FROM (SELECT * FROM item ORDER BY cumulative_sales_volume DESC LIMIT 200) sub ORDER BY review_count DESC",
@@ -81,7 +99,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemCustomRep
     Page<Item> findTop200ByCumulativeSalesVolumeAndSortByReviewCountDesc(Pageable pageable);
 
     /**
-     * 신상품 - 낮은가격순
+     * 베스트 - 낮은가격순
      */
     @Query(
             value = "SELECT * FROM (SELECT * FROM item ORDER BY cumulative_sales_volume DESC LIMIT 200) sub ORDER BY original_price ASC",
@@ -91,7 +109,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemCustomRep
     Page<Item> findTop200ByCumulativeSalesVolumeAndSortByOriginalPriceAsc(Pageable pageable);
 
     /**
-     * 신상품 - 높은 가격순
+     * 베스트 - 높은 가격순
      */
     @Query(
             value = "SELECT * FROM (SELECT * FROM item ORDER BY cumulative_sales_volume DESC LIMIT 200) sub ORDER BY original_price DESC",
@@ -99,4 +117,30 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemCustomRep
             nativeQuery = true
     )
     Page<Item> findTop200ByCumulativeSalesVolumeAndSortByOriginalPriceDesc(Pageable pageable);
+
+    // ------------------------------------------ 이벤트 아이템 ------------------------------------------------
+    /**
+     * 이벤트 - 신상품순
+     */
+    Page<Item> findAllByCategoryInOrderByCreateDateDesc(List<Category> categories, Pageable pageable);
+
+    /**
+     * 이벤트 - 판매량순
+     */
+    Page<Item> findAllByCategoryInOrderByCumulativeSalesVolumeDesc(List<Category> categories, Pageable pageable);
+
+    /**
+     * 이벤트 - 리뷰많은순
+     */
+    Page<Item> findAllByCategoryInOrderByReviewCount(List<Category> categories, Pageable pageable);
+
+    /**
+     * 이벤트 - 낮은가격순
+     */
+    Page<Item> findAllByCategoryInOrderByOriginalPriceAsc(List<Category> categories, Pageable pageable);
+
+    /**
+     * 이벤트 - 높은 가격순
+     */
+    Page<Item> findAllByCategoryInOrderByOriginalPriceDesc(List<Category> categories, Pageable pageable);
 }

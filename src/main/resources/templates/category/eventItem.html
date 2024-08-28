@@ -14,18 +14,16 @@
 <body>
 <div th:replace="~{layout/navbar :: product_navbar}"></div>
 <section>
-  <h1 class="category-alert" th:each="eventCategory : ${eventCategories}">
-    <p th:text="${eventCategory.name}"></p>
-  </h1>
+  <h1 class="category-alert" th:text="${eventName}"></h1>
   <div class="item-grid-view-main">
     <div class="header">
-      <div class="category-alert-cnt" th:text="'총 ' + ${eventItems.size()} + '건'"></div>
+      <div class="category-alert-cnt" th:text="'총 ' + ${eventItems.totalElements} + '건'"></div>
       <ul class="category-sort-standard-ul">
-        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(page=1, per_page=96, sorted_type=1)}" class="category-sort-standard-alink">신상품순<p class="perpendicular-divider">|</p></a></li>
-        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(page=1, per_page=96, sorted_type=2)}"  class="category-sort-standard-alink">판매량순<p class="perpendicular-divider">|</p></a></li>
-        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(page=1, per_page=96, sorted_type=3)}"  class="category-sort-standard-alink">리뷰 많은 순<p class="perpendicular-divider">|</p></a></li>
-        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(page=1, per_page=96, sorted_type=4)}"  class="category-sort-standard-alink">낮은 가격순<p class="perpendicular-divider">|</p></a></li>
-        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(page=1, per_page=96, sorted_type=5)}"  class="category-sort-standard-alink">높은 가격순</a></li>
+        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(eventId = ${eventId}, page=1, per_page=48, sorted_type=1)}" class="category-sort-standard-alink">신상품순<p class="perpendicular-divider">|</p></a></li>
+        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(eventId = ${eventId}, page=1, per_page=48, sorted_type=2)}"  class="category-sort-standard-alink">판매량순<p class="perpendicular-divider">|</p></a></li>
+        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(eventId = ${eventId}, page=1, per_page=48, sorted_type=3)}"  class="category-sort-standard-alink">리뷰 많은 순<p class="perpendicular-divider">|</p></a></li>
+        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(eventId = ${eventId}, page=1, per_page=48, sorted_type=4)}"  class="category-sort-standard-alink">낮은 가격순<p class="perpendicular-divider">|</p></a></li>
+        <li class="category-sort-standard-li"><a th:href="@{/collection-groups/event-item(eventId = ${eventId}, page=1, per_page=48, sorted_type=5)}"  class="category-sort-standard-alink">높은 가격순</a></li>
       </ul>
     </div>
   </div>
@@ -61,6 +59,26 @@
         </div>
       </div>
     </div>
+  </div>
+  <!-- 페이징 처리 -->
+  <div th:if="${!eventItems.isEmpty()}" class="d-flex justify-content-center bg-white py-3">
+    <ul class="pagination mb-0">
+      <li class="page-item" th:classappend="${eventItems.number == 0} ? 'disabled' : ''">
+        <a class="page-link" th:href="@{|?page=${eventItems.number-1}|}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li th:each="page : ${#numbers.sequence(0, eventItems.totalPages-1)}"
+          th:if="${page >= eventItems.number-5 and page <= eventItems.number+5}"
+          th:classappend="${page == eventItems.number} ? 'active' : ''" class="page-item">
+        <a th:text="${page+1}" class="page-link" th:href="@{|?page=${page+1}|}"></a>
+      </li>
+      <li class="page-item" th:classappend="${eventItems.number == eventItems.totalPages-1} ? 'disabled' : ''">
+        <a class="page-link" th:href="@{|?page=${eventItems.number+1}|}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
   </div>
 </section>
 </body>
