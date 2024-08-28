@@ -40,7 +40,7 @@ public class EventService {
             throw new CustomWebException(ErrorMessage.EVENT_BANNER_IMAGE_EMPTY);
         }
         List<Category> categories = categoryRepository.findAllByNameIn(eventDto.getCategoryNames());
-        List<Item> categoryItems = itemRepository.findAllByCategoryIn(categories);
+        List<Item> categoryItems = itemRepository.findAllByCategoryInAndDeleteStatus(categories, 0);
         for (Item categoryItem : categoryItems) {
             categoryItem.plusDiscountRate(eventDto.getDiscountRate());
         }
