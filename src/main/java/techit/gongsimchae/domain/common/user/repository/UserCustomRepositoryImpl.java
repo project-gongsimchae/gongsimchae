@@ -80,13 +80,14 @@ public class UserCustomRepositoryImpl implements UserCustomRepository{
 
     @Override
     public List<User> findUsersByItemIdWithOrderItem(Long itemId) {
-        List<User> result = queryFactory.selectDistinct(Projections.constructor(User.class,
-                user)).from(user)
-                .join(user, orders.user)
+        List<User> result = queryFactory.selectDistinct(Projections.fields(User.class,
+                        user.id, user.name, user.password, user.loginId, user.role, user.email, user.nickname, user.phoneNumber,
+                        user.mannerPoint, user.userStatus, user.UID, user.joinType)).from(orders)
+                .join(orders.user, user)
                 .join(orders.orderItems, orderItem)
                 .join(orderItem.itemOption, itemOption)
                 .join(itemOption.item, item)
-                .where(item.id.eq(itemId).and(orderItem.orderItemStatus.eq(OrderItemStatus.결제완료)))
+                .where(item.id.eq(itemId).and(orderItem.orderItemStatus.eq(OrderItemStatus.공동구매성공)))
                 .fetch();
 
         return result;

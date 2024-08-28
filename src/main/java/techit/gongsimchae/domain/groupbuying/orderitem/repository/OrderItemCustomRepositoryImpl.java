@@ -31,8 +31,9 @@ public class OrderItemCustomRepositoryImpl implements OrderItemCustomRepository 
 
     @Override
     public List<OrderItem> findOrderItemsByItemId(Long itemId) {
-        List<OrderItem> result = queryFactory.select(Projections.constructor(OrderItem.class,
-                orderItem)).from(orderItem)
+        List<OrderItem> result = queryFactory.select(Projections.fields(OrderItem.class,
+                        orderItem.id, orderItem.price, orderItem.count, orderItem.orders, orderItem.itemOption, orderItem.orderItemStatus))
+                .from(orderItem)
                 .join(orderItem.itemOption, itemOption)
                 .join(itemOption.item, item)
                 .where(item.id.eq(itemId).and(orderItem.orderItemStatus.eq(OrderItemStatus.결제완료)))

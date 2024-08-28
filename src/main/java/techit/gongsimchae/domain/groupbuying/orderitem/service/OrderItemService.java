@@ -2,6 +2,7 @@ package techit.gongsimchae.domain.groupbuying.orderitem.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.groupbuying.orderitem.dto.CompletionAmountOrderItemCntDto;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItemStatus;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class OrderItemService {
 
     private final OrderItemRepository orderItemRepository;
@@ -32,11 +34,13 @@ public class OrderItemService {
      * @param itemId
      * @param orderItemStatus
      */
+    @Transactional
     public void changeOrderItemStatusWithItemId(Long itemId, OrderItemStatus orderItemStatus) {
         List<OrderItem> orderItems = orderItemRepository.findOrderItemsByItemId(itemId);
 
         for (OrderItem orderItem : orderItems) {
             orderItem.updateOrderItemStatus(orderItemStatus);
+            orderItemRepository.save(orderItem);
         }
     }
 
