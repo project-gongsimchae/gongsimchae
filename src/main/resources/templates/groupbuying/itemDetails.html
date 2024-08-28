@@ -47,9 +47,14 @@
 <div class="separator-detail"></div>
 <section class="status-detail-container">
     <div class="progress">
-        <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="progress-bar bg-success" role="progressbar"
+             th:style="'width:' + (${completionAmountItemCntDto.completionAmountCnt} / ${item[0].quantity} * 100) + '%;'"
+             aria-valuenow="[[${completionAmountItemCntDto.completionAmountCnt}]]"
+             aria-valuemin="0"
+             aria-valuemax="[[${item[0].quantity}]]">
+        </div>
     </div>
-    <span>목표 수량: 100 / 달성량: 50</span>
+    <span>목표 수량: <span th:text="${item[0].quantity}"></span> / 달성량: <span th:text="${completionAmountItemCntDto.completionAmountCnt}"></span></span>
 </section>
 <section class="product-description-detail">
     <h4>상품 설명</h4>
