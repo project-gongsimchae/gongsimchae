@@ -35,4 +35,8 @@ public class OrderItem extends BaseEntity {
         this.itemOption = itemOption;
         this.orderItemStatus = orderItemStatus;
     }
+
+    public void updateOrderItemStatus(OrderItemStatus orderItemStatus) {
+        this.orderItemStatus = orderItemStatus;
+    }
 }

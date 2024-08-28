@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import techit.gongsimchae.domain.groupbuying.delivery.service.DeliveryService;
 import techit.gongsimchae.domain.groupbuying.item.entity.ItemStatus;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItemStatus;
 import techit.gongsimchae.domain.groupbuying.orderitem.service.OrderItemService;
 import techit.gongsimchae.global.event.TargetCountAchievedEvent;
 
@@ -24,7 +25,7 @@ public class GroupBuyingSuccessEventHandler {
 
     @EventListener
     public void changeOrderItemStatus(TargetCountAchievedEvent event) {
-
+        orderItemService.changeOrderItemStatusWithItemId(event.getItemId(), OrderItemStatus.공동구매성공);
     }
 
     @EventListener
