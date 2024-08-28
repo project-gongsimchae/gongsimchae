@@ -14,15 +14,13 @@
 
     <div class="form-container">
         <h1 class="mb-4 section-title">상품 생성</h1>
-        <form th:action="@{/admin/item/create}" th:object="${item}" method="post" enctype="multipart/form-data" class="needs-validation input-form-container" novalidate>
+        <form th:action="@{/admin/item/create}" th:object="${item}" method="post" enctype="multipart/form-data" class="needs-validation input-form-container" onsubmit="beforeSubmit()" novalidate>
 
             <div class="form-group" style="width: 600px">
                 <label for="images" class="form-label">이미지 파일들</label>
-                <div class="custom-file-upload">
-                    <label for="images">
-                        <i class="fas fa-plus"></i>
-                    </label>
-                    <input type="file" class="form-control-file" id="images" name="images" multiple onchange="previewImages(event)"/>
+                <div class="custom-file-upload" onclick="triggerFileInput()"> <!-- 이미지 업로드 박스 전체 클릭 이벤트 추가 -->
+                    <input type="file" class="form-control-file" id="images" name="images" multiple onchange="previewImages(event)" style="display: none;" />
+                    <i class="fas fa-plus"></i> <!-- + 아이콘만 남겨둠 -->
                 </div>
                 <div id="image-preview-container" class="image-preview-container"></div>
             </div>
