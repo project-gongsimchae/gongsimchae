@@ -39,4 +39,14 @@ public class OrderItemService {
             orderItem.updateOrderItemStatus(orderItemStatus);
         }
     }
+
+    /**
+     * 해당 itemId로 orderItem들을 찾아 반환하는 메서드입니다.
+     *
+     * @param itemId
+     * @return
+     */
+    public List<OrderItem> getOrderItemsByItemId(Long itemId) {
+        return orderItemRepository.findOrderItemsByItemId(itemId);
+    }
 }

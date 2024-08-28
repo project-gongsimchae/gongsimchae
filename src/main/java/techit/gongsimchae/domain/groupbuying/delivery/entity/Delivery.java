@@ -1,6 +1,7 @@
 package techit.gongsimchae.domain.groupbuying.delivery.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
@@ -20,4 +21,10 @@ public class Delivery {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_item_id")
     private OrderItem orderItem;
+
+    @Builder
+    public Delivery(DeliveryStatus deliveryStatus, OrderItem orderItem) {
+        this.deliveryStatus = deliveryStatus;
+        this.orderItem = orderItem;
+    }
 }
