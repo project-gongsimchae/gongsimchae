@@ -88,10 +88,7 @@ public class ItemService {
     @Transactional
     public Item createItem(ItemCreateDto itemCreateDto, Long userId) {
         Category category = categoryRepository.findByName(itemCreateDto.getCategoryName())
-                .orElseThrow(() -> {
-                            throw new IllegalArgumentException("Category not found");
-                        }
-                );
+                .orElseThrow(() -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND));
         Item item = new Item(itemCreateDto, category);
         itemRepository.save(item);
 
@@ -109,39 +106,37 @@ public class ItemService {
     @Transactional
     public void updateItem(Long id, ItemUpdateDto itemUpdateDto) {
         Item item = itemRepository.findById(id).filter(i -> i.getDeleteStatus() == 0)
-                .orElseThrow(() -> new IllegalArgumentException("Item not found"));
+                .orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND));
 
         Category category = categoryRepository.findByName(itemUpdateDto.getCategoryName())
-                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+                .orElseThrow(() -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         item.UpdateDto(itemUpdateDto, category);
 
         // 아이템에 연결된 기존 옵션들을 가져옴
         List<ItemOption> existingOptions = itemOptionRepository.findAllByItemId(item.getId());
-        List<Long> updatedOptionIds = new ArrayList<>();
 
-
+        // 모든 옵션을 업데이트하고 새 옵션 추가
         for (ItemOptionUpdateDto optionUpdateDto : itemUpdateDto.getOptions()) {
-            if (optionUpdateDto.getId() == null || optionUpdateDto.getId() == 0) {
-                // 새로운 옵션 추가
-                ItemOption newItemOption = new ItemOption(item, optionUpdateDto.getContent(), optionUpdateDto.getPrice());
-                itemOptionRepository.save(newItemOption);
-                updatedOptionIds.add(newItemOption.getId());
-            } else {
-                // 기존 옵션 업데이트
-                ItemOption existingOption = existingOptions.stream()
-                        .filter(option -> option.getId().equals(optionUpdateDto.getId()))
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("Option not found"));
-                existingOption.updateOption(optionUpdateDto.getContent(), optionUpdateDto.getPrice());
-                updatedOptionIds.add(existingOption.getId());
-            }
+            ItemOption existingOption = existingOptions.stream()
+                    .filter(option -> option.getId().equals(optionUpdateDto.getId()))
+                    .findFirst()
+                    .orElseGet(() -> {
+                        ItemOption newOption = new ItemOption(item, optionUpdateDto.getContent(), optionUpdateDto.getPrice());
+                        itemOptionRepository.save(newOption);
+                        return newOption;
+                    });
+
+            existingOption.updateOption(optionUpdateDto.getContent(), optionUpdateDto.getPrice());
         }
 
+        // 기존 옵션 중 업데이트 목록에 없는 옵션 삭제
+        List<Long> updatedOptionIds = itemUpdateDto.getOptions().stream()
+                .map(ItemOptionUpdateDto::getId)
+                .toList();
         existingOptions.stream()
                 .filter(option -> !updatedOptionIds.contains(option.getId()))
                 .forEach(itemOptionRepository::delete);
-
 
         itemRepository.save(item);
     }
@@ -150,7 +145,7 @@ public class ItemService {
     public void deleteItem(Long id) {
 
         Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Item not found"));
+                .orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND));
         item.markAsDeleted();
 
     }
@@ -199,7 +194,7 @@ public class ItemService {
         } else if (sortType.equals(높은가격순)) {
             pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC, "originalPrice"));
         } else {
-            throw new CustomWebException("존재하지 않는 정렬기준입니다.");
+            throw new CustomWebException(ErrorMessage.SORT_TYPE_NOT_FOUND);
         }
         Page<Item> items = itemRepository.findAllByCategoryAndDeleteStatus(category, 0, pageable);
         List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
@@ -259,7 +254,7 @@ public class ItemService {
         } else if (sortType.equals(높은가격순)) {
             bestItemsPage = itemRepository.findTop200ByCumulativeSalesVolumeAndSortByOriginalPriceDesc(pageable);
         } else {
-            throw new CustomWebException("존재하지 않는 정렬기준입니다.");
+            throw new CustomWebException(ErrorMessage.SORT_TYPE_NOT_FOUND);
         }
         List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
         for (Item item : bestItemsPage) {

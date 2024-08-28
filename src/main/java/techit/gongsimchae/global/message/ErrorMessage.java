@@ -26,6 +26,7 @@ public interface ErrorMessage {
     String CATEGORY_NOT_FOUND = "존재하지 않는 카테고리입니다.";
     String COUPON_NOT_FOUND = "존재하지 않는 쿠폰입니다.";
     String COUPON_USER_ALREADY_EXIST = "이미 쿠폰을 발급받은 유저입니다.";
+    String SORT_TYPE_NOT_FOUND = "존재하지 않는 정렬기준입니다.";
 
     /**
      * portion 에러
@@ -35,7 +36,6 @@ public interface ErrorMessage {
 
     // 채팅방
     String CHATTING_ROOM_NOT_FOUND = "존재하지 않는 채팅방입니다.";
-
 
     /**
      * global 에러
