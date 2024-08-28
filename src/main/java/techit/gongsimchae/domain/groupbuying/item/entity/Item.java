@@ -31,7 +31,9 @@ public class Item extends BaseEntity {
     private Integer pointAccumulationRate;
     private Integer groupBuyingQuantity;
     private LocalDateTime groupBuyingLimitTime;
-    private Boolean deleteStatus;
+
+    @Column(name = "delete_status")
+    private Integer deleteStatus = 0;
     private String UID;
     private Long cumulativeSalesVolume;
     private Long reviewCount;
@@ -69,6 +71,14 @@ public class Item extends BaseEntity {
         this.groupBuyingQuantity = itemUpdateDto.getGroupBuyingQuantity();
         this.groupBuyingLimitTime = itemUpdateDto.getGroupBuyingLimitTime();
         this.category = category;
+    }
+
+    public void markAsDeleted(){
+        this.deleteStatus = 1;
+    }
+
+    public boolean isDeleted() {
+        return this.deleteStatus == 1;
     }
 
     public void plusDiscountRate(Integer discountRate) {

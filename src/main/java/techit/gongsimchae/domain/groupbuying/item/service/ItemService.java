@@ -75,17 +75,15 @@ public class ItemService {
     }
 
     public List<Item> getAllItems() {
-        return itemRepository.findAll();
+        return itemRepository.findAllByDeleteStatus(0);
     }
 
-    public void deleteItem(Long id) {
-        itemRepository.deleteById(id);
-    }
 
     public Item getItemById(Long id) {
-        return itemRepository.findById(id).orElse(null);
+        return itemRepository.findById(id)
+                .filter(item -> item.getDeleteStatus() == 0)
+                .orElse(null);
     }
-
 
     @Transactional
     public Item createItem(ItemCreateDto itemCreateDto, Long userId) {
@@ -110,15 +108,11 @@ public class ItemService {
 
     @Transactional
     public void updateItem(Long id, ItemUpdateDto itemUpdateDto) {
-        Item item = itemRepository.findById(id).orElseThrow(() -> {
-            throw new IllegalArgumentException("Item not found");
-        });
+        Item item = itemRepository.findById(id).filter(i -> i.getDeleteStatus() == 0)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found"));
 
         Category category = categoryRepository.findByName(itemUpdateDto.getCategoryName())
-                .orElseThrow(() -> {
-                            throw new IllegalArgumentException("Category not found");
-                        }
-                );
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
         item.UpdateDto(itemUpdateDto, category);
 
@@ -152,13 +146,21 @@ public class ItemService {
         itemRepository.save(item);
     }
 
+    @Transactional
+    public void deleteItem(Long id) {
+
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found"));
+        item.markAsDeleted();
+
+    }
 
 
     /**
      * 최신등록 8개 아이템
      * 참여가 많은 8개 아이템을 리스트형태로 반환하는 메서드입니다. **/
     public List<ItemCardResDtoWeb> getRecentItems(){
-        List<Item> items = itemRepository.findTop8ByOrderByCreateDateDesc();
+        List<Item> items = itemRepository.findTop8ByDeleteStatusOrderByCreateDateDesc(0);
         List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
         for (Item item : items) {
             ImageFile imageFile = imageFileRepository.findByItem(item);
@@ -168,7 +170,7 @@ public class ItemService {
     }
 
     public List<ItemCardResDtoWeb> getPopularItems(){
-        List<Item> items = itemRepository.findTop8ByOrderByGroupBuyingQuantityDesc();
+        List<Item> items = itemRepository.findTop8ByDeleteStatusOrderByGroupBuyingQuantityDesc(0);
         List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
         for (Item item : items) {
             ImageFile imageFile = imageFileRepository.findByItem(item);
@@ -178,7 +180,7 @@ public class ItemService {
     }
 
     public List<Item> getItemsByCategory(Category category) {
-        return itemRepository.findAllByCategory(category);
+        return itemRepository.findAllByCategoryAndDeleteStatus(category, 0);
     }
 
     @Transactional(readOnly = true)
@@ -199,7 +201,7 @@ public class ItemService {
         } else {
             throw new CustomWebException("존재하지 않는 정렬기준입니다.");
         }
-        Page<Item> items = itemRepository.findAllByCategory(category, pageable);
+        Page<Item> items = itemRepository.findAllByCategoryAndDeleteStatus(category, 0, pageable);
         List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
         for (Item item : items) {
             ImageFile imageFile = imageFileRepository.findByItem(item);
@@ -209,7 +211,7 @@ public class ItemService {
     }
 
     public ItemRespDtoWeb getItem(String id) {
-        Item item = itemRepository.findByUID(id).orElseThrow(() -> new CustomWebException("not found item"));
+        Item item = itemRepository.findByUIDAndDeleteStatus(id, 0).orElseThrow(() -> new CustomWebException("not found item"));
         List<ImageFile> imageFiles = imageFileRepository.findAllByItem(item);
         List<String> imageUrls = imageFiles.stream().map(ImageFile::getStoreFilename).toList();
         return new ItemRespDtoWeb(item, imageUrls);
@@ -221,7 +223,7 @@ public class ItemService {
         Pageable pageable = PageRequest.of(page, per_page);
         Page<Item> newItemsPage;
         if (sortType.equals(신상품순)){
-            newItemsPage = itemRepository.findTop200ByOrderByCreateDateDesc(pageable);
+            newItemsPage = itemRepository.findTop200ByDeleteStatusOrderByCreateDateDesc(0, pageable);
         } else if (sortType.equals(판매량순)) {
             newItemsPage = itemRepository.findTop200ByCreateDateAndSortByCumulativeSalesVolumeDesc(pageable);
         } else if (sortType.equals(리뷰많은순)){
@@ -249,7 +251,7 @@ public class ItemService {
         if (sortType.equals(신상품순)){
             bestItemsPage = itemRepository.findTop200ByCumulativeSalesVolumeAndSortByCreateDateDesc(pageable);
         } else if (sortType.equals(판매량순)) {
-            bestItemsPage = itemRepository.findTop200ByOrderByCumulativeSalesVolumeDesc(pageable);
+            bestItemsPage = itemRepository.findTop200ByDeleteStatusOrderByCumulativeSalesVolumeDesc(0, pageable);
         } else if (sortType.equals(리뷰많은순)){
             bestItemsPage = itemRepository.findTop200ByCumulativeSalesVolumeAndSortByReviewCountDesc(pageable);
         } else if (sortType.equals(낮은가격순)){
@@ -299,7 +301,7 @@ public class ItemService {
     }
 
     public List<ItemCardResDtoWeb> getCategoriesItems(List<Category> categories, Integer page, Integer perPage, Integer sortedType) {
-        List<Item> items = itemRepository.findAllByCategoryIn(categories);
+        List<Item> items = itemRepository.findAllByCategoryInAndDeleteStatus(categories, 0);
         List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
         for (Item item : items) {
             ImageFile imageFile = imageFileRepository.findByItem(item);
