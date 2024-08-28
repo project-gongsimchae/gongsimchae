@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.service.UserService;
@@ -29,18 +30,21 @@ public class GroupBuyingSuccessEventHandler {
     private final ApplicationEventPublisher publisher;
     private final UserService userService;
 
+    @Async
     @Order(1)
     @EventListener
     public void changeItemStatus(TargetCountAchievedEvent event) {
         itemService.changeItemStatus(event.getItemId(), ItemStatus.공동구매_마감);
     }
 
+    @Async
     @Order(2)
     @EventListener
     public void changeOrderItemStatus(TargetCountAchievedEvent event) {
         orderItemService.changeOrderItemStatusWithItemId(event.getItemId(), OrderItemStatus.공동구매성공);
     }
 
+    @Async
     @Order(3)
     @EventListener
     public void sendNotification(TargetCountAchievedEvent event) {
@@ -52,6 +56,7 @@ public class GroupBuyingSuccessEventHandler {
         }
     }
 
+    @Async
     @Order(4)
     @EventListener
     public void createDelivery(TargetCountAchievedEvent event) {
