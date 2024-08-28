@@ -77,7 +77,7 @@
                 <ul class="dropdown-menu">
                     <li th:each="category : ${categories}">
                         <a class="dropdown-item" th:text="${category.name}"
-                           th:href="@{/category/{category_id}(category_id=${category.id}, page=1, per_page=96, sorted_type=1)}"></a>
+                           th:href="@{/category/{category_id}(category_id=${category.id}, page=1, per_page=48, sorted_type=1)}"></a>
                     </li>
                 </ul>
             </div>

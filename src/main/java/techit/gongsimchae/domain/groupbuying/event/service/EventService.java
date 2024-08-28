@@ -105,4 +105,10 @@ public class EventService {
 
 
     }
+
+    public Event getEvent(Long eventId) {
+        return eventRepository.findById(eventId).orElseThrow(
+                () -> new CustomWebException(ErrorMessage.EVENT_NOT_FOUND)
+        );
+    }
 }
