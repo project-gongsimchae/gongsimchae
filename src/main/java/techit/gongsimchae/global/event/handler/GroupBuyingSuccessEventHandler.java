@@ -39,27 +39,6 @@ public class GroupBuyingSuccessEventHandler {
         orderItemService.changeOrderItemStatusWithItemId(event.getItemId(), OrderItemStatus.공동구매성공);
     }
 
-    /*@Async
-    @Order(3)
-    @EventListener
-    public void sendNotification(TargetCountAchievedEvent event) {
-        List<User> users = userService.findUsersByItemId(event.getItemId());
-        Item item = itemService.getItemById(event.getItemId());
-
-        for (User user : users) {
-            TransactionSynchronizationManager.registerSynchronization(
-                    new TransactionSynchronizationAdapter() {
-                        @Override
-                        public void afterCommit() {
-                            log.debug("group buying event");
-                            publisher.publishEvent(new GroupBuyingNotiEvent(user, item.getName() + "에 대한 공동구매가 성공했습니다! 배송 준비 중에 있으니 잠시만 기다려주세요."));
-
-                        }
-                    }
-            );
-        }
-    }*/
-
     @Async
     @Order(3)
     @EventListener

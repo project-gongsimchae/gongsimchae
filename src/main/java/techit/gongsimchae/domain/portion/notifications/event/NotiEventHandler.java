@@ -47,7 +47,7 @@ public class NotiEventHandler {
         log.debug("noti to inquiry {}", event);
     }
 
-    @TransactionalEventListener
+    @EventListener
     @Async("customTaskExecutor")
     public void SendGroupBuyingNotifications(GroupBuyingNotiEvent event) throws InterruptedException {
         Thread.sleep(2000);
