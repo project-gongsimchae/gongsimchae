@@ -26,7 +26,7 @@ public class ItemScheduler {
     private final OrderItemService orderItemService;
     private final ApplicationEventPublisher publisher;
 
-    @Scheduled(cron = "0 */1 * * * *", zone = "Asia/Seoul") // 10분 마다 실행
+    @Scheduled(cron = "0 */10 * * * *", zone = "Asia/Seoul") // 10분 마다 실행
     @Transactional
     public void checkAndChangeItemStatus() {
         LocalDateTime now = LocalDateTime.now();
