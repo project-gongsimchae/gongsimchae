@@ -97,21 +97,6 @@ public class ViewCountService {
         return score != null ? score.intValue() : 0;
     }
 
-
-    /**
-     * 전체 글 조회수 조회하기
-     */
-    public Map<String, Integer> getTotalViewsCount() {
-        Map<String, Integer> viewsCount = new HashMap<>();
-        Set<ZSetOperations.TypedTuple<Object>> tuples = redisTemplate.opsForZSet().rangeWithScores(TOTAL_VIEWS, 0, -1);
-        if (tuples != null) {
-            for (ZSetOperations.TypedTuple<Object> tuple : tuples) {
-                viewsCount.put((String) tuple.getValue(), tuple.getScore().intValue());
-            }
-        }
-        return viewsCount;
-    }
-
     /**
      * 조회수 기준으로 Ranking된 subdivision 찾기
      */
