@@ -78,7 +78,7 @@ public class ChatRoomService {
 
         ChatRoomUser chatRoomUser = new ChatRoomUser(user, chatRoom);
         chatRoomUserRepository.save(chatRoomUser);
-        redisTemplate.opsForHash().put(roomId, loginId, "1");
+        redisTemplate.opsForHash().put(roomId, loginId, 1);
     }
 
     /**
