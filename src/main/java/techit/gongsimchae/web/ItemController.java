@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
+import techit.gongsimchae.domain.groupbuying.event.entity.Event;
+import techit.gongsimchae.domain.groupbuying.event.service.EventService;
 import techit.gongsimchae.domain.groupbuying.eventcategory.service.EventCategoryService;
 import techit.gongsimchae.domain.groupbuying.item.dto.*;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
@@ -29,6 +31,7 @@ public class ItemController {
     private final CategoryService categoryService;
     private final ItemOptionService itemOptionService;
     private final EventCategoryService eventCategoryService;
+    private final EventService eventService;
 
     /**
      * 검색
@@ -108,10 +111,10 @@ public class ItemController {
     @GetMapping("/category/{category_id}")
     public String getSelectedCategoryItems(@PathVariable Long category_id,
                                            @RequestParam(defaultValue = "1") Integer page,
-                                           @RequestParam(defaultValue = "96") Integer per_page,
+                                           @RequestParam(defaultValue = "48") Integer per_page,
                                            @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
         Category category = categoryService.getCategoryById(category_id);
-        List<ItemCardResDtoWeb> itemsPage = itemService.getItemsPageByCategory(category, page - 1,
+        Page<ItemCardResDtoWeb> itemsPage = itemService.getItemsPageByCategory(category, page - 1,
                 per_page, sorted_type);
         model.addAttribute("categoryId", category_id);
         model.addAttribute("categoryName", category.getName());
@@ -126,9 +129,9 @@ public class ItemController {
      */
     @GetMapping("/collection-groups/new-item")
     public String getNewItems(@RequestParam(defaultValue = "1") Integer page,
-                              @RequestParam(defaultValue = "96") Integer per_page,
+                              @RequestParam(defaultValue = "48") Integer per_page,
                               @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
-        List<ItemCardResDtoWeb> newItemsPage = itemService.getTop200NewItemsPage(page - 1, per_page, sorted_type);
+        Page<ItemCardResDtoWeb> newItemsPage = itemService.getTop200NewItemsPage(page - 1, per_page, sorted_type);
         model.addAttribute("newItemsPage", newItemsPage);
         return "category/newItem";
     }
@@ -141,9 +144,9 @@ public class ItemController {
 
     @GetMapping("/collection-groups/best-item")
     public String getBestItems(@RequestParam(defaultValue = "1") Integer page,
-                              @RequestParam(defaultValue = "96") Integer per_page,
+                              @RequestParam(defaultValue = "48") Integer per_page,
                               @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
-        List<ItemCardResDtoWeb> bestItemsPage = itemService.getTop200BestItemsPage(page - 1, per_page, sorted_type);
+        Page<ItemCardResDtoWeb> bestItemsPage = itemService.getTop200BestItemsPage(page - 1, per_page, sorted_type);
         model.addAttribute("bestItemsPage", bestItemsPage);
         return "category/bestItem";
     }
@@ -156,11 +159,13 @@ public class ItemController {
     @GetMapping("/collection-groups/event-item")
     public String getEventItems(@RequestParam Long eventId,
                                 @RequestParam(defaultValue = "1") Integer page,
-                                @RequestParam(defaultValue = "96") Integer per_page,
+                                @RequestParam(defaultValue = "48") Integer per_page,
                                 @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
-        List<Category> categories = eventCategoryService.getCategoriesByEvent(eventId);
-        List<ItemCardResDtoWeb> eventItems = itemService.getCategoriesItems(categories, page - 1, per_page, sorted_type);
-        model.addAttribute("eventCategories", categories);
+        Event event = eventService.getEvent(eventId);
+        List<Category> categories = eventCategoryService.getCategoriesByEvent(event);
+        Page<ItemCardResDtoWeb> eventItems = itemService.getCategoriesItems(categories, page - 1, per_page, sorted_type);
+        model.addAttribute("eventId", eventId);
+        model.addAttribute("eventName", event.getEventName());
         model.addAttribute("eventItems", eventItems);
         return "category/eventItem";
     }
