@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.item.entity.ItemStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -143,4 +145,9 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemCustomRep
      * 이벤트 - 높은 가격순
      */
     Page<Item> findAllByCategoryInOrderByOriginalPriceDesc(List<Category> categories, Pageable pageable);
+
+    /**
+     * 스케줄러 - 해당 ItemStatus를 가진 아이템 리스트 반환
+     */
+    List<Item> findAllByItemStatusAndGroupBuyingLimitTimeBefore(ItemStatus itemStatus, LocalDateTime groupBuyingLimitTime);
 }
