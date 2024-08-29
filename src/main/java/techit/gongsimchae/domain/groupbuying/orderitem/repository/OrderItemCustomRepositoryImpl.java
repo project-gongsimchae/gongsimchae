@@ -20,7 +20,7 @@ public class OrderItemCustomRepositoryImpl implements OrderItemCustomRepository 
     @Override
     public CompletionAmountOrderItemCntDto countCompletedOrderItemsByItemId(Long itemId) {
         CompletionAmountOrderItemCntDto result = queryFactory.select(Projections.constructor(CompletionAmountOrderItemCntDto.class,
-                orderItem.count.sum())).from(orderItem)
+                orderItem.count.sum().coalesce(0))).from(orderItem)
                 .join(orderItem.itemOption, itemOption)
                 .join(itemOption.item, item)
                 .where(item.id.eq(itemId).and(orderItem.orderItemStatus.eq(OrderItemStatus.결제완료)))
