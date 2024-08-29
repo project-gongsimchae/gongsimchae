@@ -18,7 +18,7 @@
 
             <div class="form-group" style="width: 600px">
                 <label for="images" class="form-label">이미지 파일들</label>
-                <div class="custom-file-upload">
+                <div class="custom-file-upload" onclick="triggerFileInput()">
                     <label for="images">
                         <i class="fas fa-plus"></i>
                     </label>
@@ -26,7 +26,10 @@
                 </div>
                 <div id="image-preview-container" class="image-preview-container">
                     <!-- 서버에서 제공한 이미지 URL을 통해 이미지를 렌더링 -->
-                    <img th:each="imageFile : ${item.imageFiles}" th:src="@{${imageFile.storeFilename}}" class="image-preview"/>
+                    <div th:each="imageFile, iterStat : ${item.imageFiles}" class="image-preview-wrapper">
+                        <img th:src="@{${imageFile.storeFilename}}" class="image-preview"/>
+                        <button type="button" class="image-delete-button" th:onclick="'removeExistingImage(' + ${iterStat.index} + ')'">X</button>
+                    </div>
                 </div>
             </div>
 

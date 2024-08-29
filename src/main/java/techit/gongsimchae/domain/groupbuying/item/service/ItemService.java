@@ -85,6 +85,7 @@ public class ItemService {
                 .orElse(null);
     }
 
+
     @Transactional
     public Item createItem(ItemCreateDto itemCreateDto, Long userId) {
         Category category = categoryRepository.findByName(itemCreateDto.getCategoryName())
@@ -178,8 +179,11 @@ public class ItemService {
         return itemRepository.findAllByCategoryAndDeleteStatus(category, 0);
     }
 
+    /**
+     * 카테고리 선택 페이지 반환
+     */
     @Transactional(readOnly = true)
-    public List<ItemCardResDtoWeb> getItemsPageByCategory(Category category, Integer page, Integer per_page,
+    public Page<ItemCardResDtoWeb> getItemsPageByCategory(Category category, Integer page, Integer per_page,
                                                           Integer sorted_type){
         SortType sortType = getInstanceByTypeNumber(sorted_type);
         Pageable pageable;
@@ -194,15 +198,13 @@ public class ItemService {
         } else if (sortType.equals(높은가격순)) {
             pageable = PageRequest.of(page, per_page, Sort.by(Direction.DESC, "originalPrice"));
         } else {
-            throw new CustomWebException(ErrorMessage.SORT_TYPE_NOT_FOUND);
+            throw new CustomWebException(ErrorMessage.SORT_TYPE_NOR_FOUND);
         }
         Page<Item> items = itemRepository.findAllByCategoryAndDeleteStatus(category, 0, pageable);
-        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
-        for (Item item : items) {
+        return items.map(item -> {
             ImageFile imageFile = imageFileRepository.findByItem(item);
-            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
-        }
-        return itemCardResDtoWebs;
+            return new ItemCardResDtoWeb(item, imageFile);
+        });
     }
 
     public ItemRespDtoWeb getItem(String id) {
@@ -213,7 +215,7 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemCardResDtoWeb> getTop200NewItemsPage(Integer page, Integer per_page, Integer sorted_type) {
+    public Page<ItemCardResDtoWeb> getTop200NewItemsPage(Integer page, Integer per_page, Integer sorted_type) {
         SortType sortType = getInstanceByTypeNumber(sorted_type);
         Pageable pageable = PageRequest.of(page, per_page);
         Page<Item> newItemsPage;
@@ -228,18 +230,16 @@ public class ItemService {
         } else if (sortType.equals(높은가격순)) {
             newItemsPage = itemRepository.findTop200ByCreateDateAndSortByOriginalPriceDesc(pageable);
         } else {
-            throw new CustomWebException("존재하지 않는 정렬기준입니다.");
+            throw new CustomWebException(ErrorMessage.SORT_TYPE_NOR_FOUND);
         }
-        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
-        for (Item item : newItemsPage) {
+        return newItemsPage.map(item -> {
             ImageFile imageFile = imageFileRepository.findByItem(item);
-            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
-        }
-        return itemCardResDtoWebs;
+            return new ItemCardResDtoWeb(item, imageFile);
+        });
     }
 
     @Transactional(readOnly = true)
-    public List<ItemCardResDtoWeb> getTop200BestItemsPage(Integer page, Integer per_page, Integer sorted_type) {
+    public Page<ItemCardResDtoWeb> getTop200BestItemsPage(Integer page, Integer per_page, Integer sorted_type) {
         SortType sortType = getInstanceByTypeNumber(sorted_type);
         Pageable pageable = PageRequest.of(page, per_page);
         Page<Item> bestItemsPage;
@@ -256,12 +256,33 @@ public class ItemService {
         } else {
             throw new CustomWebException(ErrorMessage.SORT_TYPE_NOT_FOUND);
         }
-        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
-        for (Item item : bestItemsPage) {
+        return bestItemsPage.map(item -> {
             ImageFile imageFile = imageFileRepository.findByItem(item);
-            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
+            return new ItemCardResDtoWeb(item, imageFile);
+        });
+    }
+
+    public Page<ItemCardResDtoWeb> getCategoriesItems(List<Category> categories, Integer page, Integer per_page, Integer sorted_type) {
+        SortType sortType = getInstanceByTypeNumber(sorted_type);
+        Pageable pageable = PageRequest.of(page, per_page);
+        Page<Item> categoriesItemsPage;
+        if (sortType.equals(신상품순)){
+            categoriesItemsPage = itemRepository.findAllByCategoryInOrderByCreateDateDesc(categories, pageable);
+        } else if (sortType.equals(판매량순)) {
+            categoriesItemsPage = itemRepository.findAllByCategoryInOrderByCumulativeSalesVolumeDesc(categories, pageable);
+        } else if (sortType.equals(리뷰많은순)){
+            categoriesItemsPage = itemRepository.findAllByCategoryInOrderByReviewCount(categories, pageable);
+        } else if (sortType.equals(낮은가격순)){
+            categoriesItemsPage = itemRepository.findAllByCategoryInOrderByOriginalPriceAsc(categories, pageable);
+        } else if (sortType.equals(높은가격순)) {
+            categoriesItemsPage = itemRepository.findAllByCategoryInOrderByOriginalPriceDesc(categories, pageable);
+        } else {
+            throw new CustomWebException(ErrorMessage.SORT_TYPE_NOR_FOUND);
         }
-        return itemCardResDtoWebs;
+        return categoriesItemsPage.map(item -> {
+            ImageFile imageFile = imageFileRepository.findByItem(item);
+            return new ItemCardResDtoWeb(item, imageFile);
+        });
     }
 
     public Page<ItemRespDtoWeb> searchItems(ItemSearchForm itemSearchForm, Pageable pageable) {
@@ -295,13 +316,4 @@ public class ItemService {
         return new ReviewItemResDtoWeb(reviewAbleItemResDtoWebs, reviewedItemResDtoWebs);
     }
 
-    public List<ItemCardResDtoWeb> getCategoriesItems(List<Category> categories, Integer page, Integer perPage, Integer sortedType) {
-        List<Item> items = itemRepository.findAllByCategoryInAndDeleteStatus(categories, 0);
-        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
-        for (Item item : items) {
-            ImageFile imageFile = imageFileRepository.findByItem(item);
-            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
-        }
-        return itemCardResDtoWebs;
-    }
 }

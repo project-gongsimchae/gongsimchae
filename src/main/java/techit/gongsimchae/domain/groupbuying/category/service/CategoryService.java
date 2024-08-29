@@ -45,7 +45,7 @@ public class CategoryService {
         Event event = eventRepository.findById(eventId).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.EVENT_NOT_FOUND)
         );
-        List<EventCategory> eventCategories = eventCategoryRepository.findAllByEventId(eventId);
+        List<EventCategory> eventCategories = eventCategoryRepository.findAllByEvent(event);
         for (EventCategory eventCategory : eventCategories) {
             Category category = eventCategory.getCategory();
             List<Item> items = itemRepository.findAllByCategoryAndDeleteStatus(category, 0);

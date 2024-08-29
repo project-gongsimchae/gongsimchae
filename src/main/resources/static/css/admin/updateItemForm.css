@@ -68,6 +68,25 @@
     margin-bottom: 10px;
 }
 
+
+.image-delete-button {
+    position: absolute;
+    right: 15px;  /* 이미지 오른쪽 경계에서 약간의 간격 */
+    font-size: 16px;  /* 크기를 약간 줄임 */
+    color: red;  /* 빨간색 X */
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 2px;  /* 추가 간격 없이 바로 X 버튼만 보이도록 */
+}
+
+/* 이미지 미리보기 영역 스타일링 (필요 시 조정) */
+.image-preview-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+
 /* 수정 버튼을 포인트 컬러로 변경 */
 .btn-point-color {
     background-color: #4CAF50; /* 예시 포인트 컬러 */
