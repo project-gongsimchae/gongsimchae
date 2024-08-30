@@ -1,4 +1,4 @@
-package techit.gongsimchae.web;
+package techit.gongsimchae.domain.web.groupbuying;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -6,9 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import techit.gongsimchae.domain.common.user.service.UserService;
-import techit.gongsimchae.domain.groupbuying.cart.service.CartService;
-import techit.gongsimchae.domain.groupbuying.orderitem.service.OrderItemService;
 import techit.gongsimchae.domain.groupbuying.orders.dto.TempOrderItemDto;
 import techit.gongsimchae.domain.groupbuying.orders.dto.TempUserDeliveryDto;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class UserRespDtoWeb {
     private Long id;
     private String name;
-    private int mannerPoint;
+    private Double mannerPoint;
     private String email;
     private String loginId;
     private String nickname;

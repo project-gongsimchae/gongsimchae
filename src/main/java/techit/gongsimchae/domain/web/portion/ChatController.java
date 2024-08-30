@@ -1,7 +1,5 @@
-package techit.gongsimchae.web;
+package techit.gongsimchae.domain.web.portion;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -26,9 +24,7 @@ import techit.gongsimchae.domain.portion.chatroom.dto.ChatRoomRespDto;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
 import techit.gongsimchae.domain.portion.chatroomuser.service.ChatRoomUserService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
-import techit.gongsimchae.global.util.CookieUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -92,9 +88,8 @@ public class ChatController {
 
 
         // 반환 결과를 socket session 에 userUUID 로 저장
-        headerAccessor.getSessionAttributes().put("userUUID", user.getUID());
         headerAccessor.getSessionAttributes().put("roomId", chat.getRoomId());
-        headerAccessor.getSessionAttributes().put("nickname", chat.getSender());
+        headerAccessor.getSessionAttributes().put("loginId", chat.getLoginId());
 
         senderService.send(chat);
 
@@ -111,8 +106,7 @@ public class ChatController {
     // 채팅에 참여한 유저 리스트 반환
     @GetMapping("/chat/userlist")
     @ResponseBody
-    public ArrayList<String> userList(String roomId) {
-
+    public List<String> userList(String roomId) {
         return chatRoomService.getUserList(roomId);
     }
 
@@ -144,16 +138,23 @@ public class ChatController {
 
     @EventListener
     public void webSocketDisconnectListener(SessionDisconnectEvent event) {
-        log.info("DisConnEvent {}", event);
+        try {
+            log.info("DisConnEvent {}", event);
 
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+            StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
 
-        String userUUID = (String) headerAccessor.getSessionAttributes().get("userUUID");
-        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
-        String nickname = (String) headerAccessor.getSessionAttributes().get("nickname");
+            String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
+            String loginId = (String) headerAccessor.getSessionAttributes().get("loginId");
 
-        chatRoomUserService.disableChatRoomOnLeave(roomId, nickname);
+            if (chatRoomUserService.isUserAlreadyInRoom(roomId, loginId)) {
+                chatRoomUserService.disableChatRoomOnLeave(roomId, loginId);
+            }
+        } catch (IllegalArgumentException e) {
+            log.debug("no session Id {}", e.getMessage());
+        }
+
+
 
     }
 

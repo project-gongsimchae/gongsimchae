@@ -57,7 +57,7 @@ public class CategoryService {
      * 카테고리 페이지네이션 조회
      */
     public Page<Category> getCategories(Pageable pageable){
-        return categoryRepository.findAllByCategoryStatus(pageable, 0);
+        return categoryRepository.findAll(pageable);
     }
 
     public void createCategory(CategoryReqDtoWeb categoryReqDtoWeb) {
@@ -69,5 +69,12 @@ public class CategoryService {
                 () -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND)
         );
         category.delete();
+    }
+
+    public void restoreCategory(CategoryReqDtoWeb categoryDtoWeb) {
+        Category category = categoryRepository.findById(categoryDtoWeb.getCategoryId()).orElseThrow(
+                () -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND)
+        );
+        category.restore();
     }
 }

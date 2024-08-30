@@ -1,4 +1,4 @@
-package techit.gongsimchae.web;
+package techit.gongsimchae.domain.web.groupbuying;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

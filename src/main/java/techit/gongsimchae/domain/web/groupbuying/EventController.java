@@ -1,4 +1,4 @@
-package techit.gongsimchae.web;
+package techit.gongsimchae.domain.web.groupbuying;
 
 import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.COUPON;
 import static techit.gongsimchae.domain.groupbuying.event.entity.EventType.COUPON_CODE;
