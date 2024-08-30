@@ -55,7 +55,7 @@ public class ItemController {
     @GetMapping("/admin/item/create")
     public String showItemForm(Model model) {
         model.addAttribute("item", new ItemCreateDto());
-        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("categories", categoryService.getAllRemainingCategories());
         model.addAttribute("isNew", true);
         return "admin/item/createItemForm";
     }
@@ -90,6 +90,12 @@ public class ItemController {
     @PostMapping("/admin/item/delete")
     public String deleteItem(@RequestParam Long id){
         itemService.deleteItem(id);
+        return "redirect:/admin/item";
+    }
+
+    @PostMapping("/admin/item/restore")
+    public String restoreItem(@RequestParam Long id){
+        itemService.restoreItem(id);
         return "redirect:/admin/item";
     }
 

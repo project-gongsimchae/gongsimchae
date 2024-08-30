@@ -75,7 +75,7 @@ public class ItemService {
     }
 
     public List<Item> getAllItems() {
-        return itemRepository.findAllByDeleteStatus(0);
+        return itemRepository.findAll();
     }
 
 
@@ -158,11 +158,17 @@ public class ItemService {
 
     @Transactional
     public void deleteItem(Long id) {
-
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND));
         item.markAsDeleted();
 
+    }
+
+    @Transactional
+    public void restoreItem(Long id) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND));
+        item.restore();
     }
 
 

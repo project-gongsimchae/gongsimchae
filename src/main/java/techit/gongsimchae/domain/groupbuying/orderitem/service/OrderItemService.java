@@ -28,7 +28,7 @@ public class OrderItemService {
     }
 
     /**
-     * 공동구매가 성공되었을 때 이벤트 리스너로 실행되는 메서드입니다.
+     * 공동구매가 성공/실패되었을 때 이벤트 리스너로 실행되는 메서드입니다.
      * 해당 itemId로 결제까지 완료한 OrderItem들을 찾아 그 상태 값을 파라미터로 넘겨받은 orderItemStatus로 바꿔주는 메서드입니다.
      *
      * @param itemId

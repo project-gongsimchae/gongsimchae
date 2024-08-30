@@ -72,6 +72,10 @@ table td {
     background-color: #c82333;
 }
 
+.btn-restore {
+    background-color: #6c757d;
+}
+
 /* 페이지 컨테이너 스타일 */
 .container {
     /*margin-right: 40px;*/
