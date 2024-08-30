@@ -1,4 +1,4 @@
-package techit.gongsimchae.web;
+package techit.gongsimchae.domain.web.groupbuying;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,6 +77,7 @@ public class ItemController {
         model.addAttribute("item", item);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("isNew", false);
+        model.addAttribute("images", item.getImageFiles());
         return "admin/item/updateForm";
     }
 

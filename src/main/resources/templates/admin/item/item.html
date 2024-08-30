@@ -43,7 +43,7 @@
                 <td th:text="${item.createDate}"></td>
                 <td th:text="${item.category?.name}"></td>
                 <td>
-                    <button class="btn-custom btn-edit" th:onclick="|location.href='@{/admin/item/update/{id}(id=${item.id})'|">수정</button>
+                    <a th:href="@{/admin/item/update/{id}(id=${item.id})}" class="btn-custom btn-edit">수정</a>
                 </td>
                 <td>
                     <form th:action="@{/admin/item/delete}" method="post">

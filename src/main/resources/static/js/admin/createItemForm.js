@@ -67,11 +67,9 @@ function triggerFileInput() {
 }
 
 // 옵션 추가 및 제거 기능
-var optionIndex = 0; // 옵션 인덱스 초기화
-
 function addOptionField() {
-    const optionContent = document.getElementById('optionContent').value;
-    const optionPrice = document.getElementById('optionPrice').value;
+    const optionContent = document.getElementById('optionContent').value.trim();
+    const optionPrice = document.getElementById('optionPrice').value.trim();
 
     if (optionContent && optionPrice) {
         const optionContainer = document.getElementById('added-options');
@@ -82,10 +80,10 @@ function addOptionField() {
         newOption.className = 'input-option-set';
         newOption.innerHTML = `
             <div class="input-option-content">
-                <input type="hidden" name="options[${index}].content" value="${optionContent}" />
-                <input type="hidden" name="options[${index}].price" value="${optionPrice}" />
-                <span>옵션명: ${optionContent}</span>
-                <span>, 가격: ${optionPrice}</span>
+                <input type="hidden" name="options[${index}].content" value="${optionContent}">
+                <input type="hidden" name="options[${index}].price" value="${optionPrice}">
+                <input type="text" class="form-control" value="${optionContent}" readonly>
+                <input type="number" class="form-control" value="${optionPrice}" step="0.01" readonly>
             </div>
             <button type="button" class="custom-btn-outline custom-btn-remove-option" onclick="removeOption(this)">
                 <i class="fas fa-minus"></i>
@@ -103,13 +101,7 @@ function addOptionField() {
     }
 }
 
-
-function removeOption(element) {
-    const optionContainer = document.getElementById('added-options');
-    optionContainer.removeChild(element.parentElement);
-
-    // 히든 필드에서 해당 옵션 삭제
-    const optionsInput = document.getElementById('options');
-    const optionText = element.parentElement.children[0].innerText + ':' + element.parentElement.children[1].innerText.replace('원', '');
-    optionsInput.value = optionsInput.value.replace(optionText + ';', '');
+function removeOption(button) {
+    const optionSet = button.closest('.input-option-set');
+    optionSet.remove();
 }
