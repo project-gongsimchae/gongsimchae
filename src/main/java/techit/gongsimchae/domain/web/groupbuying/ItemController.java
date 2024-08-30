@@ -55,7 +55,7 @@ public class ItemController {
     @GetMapping("/admin/item/create")
     public String showItemForm(Model model) {
         model.addAttribute("item", new ItemCreateDto());
-        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("categories", categoryService.getAllRemainingCategories());
         model.addAttribute("isNew", true);
         return "admin/item/createItemForm";
     }
