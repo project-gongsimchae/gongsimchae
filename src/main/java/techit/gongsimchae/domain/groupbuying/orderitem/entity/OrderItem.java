@@ -24,12 +24,19 @@ public class OrderItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemOption_id")
     private ItemOption itemOption;
+    @Enumerated(EnumType.STRING)
+    private OrderItemStatus orderItemStatus;
 
     @Builder
-    public OrderItem(Integer price, Integer count, Orders orders, ItemOption itemOption) {
+    public OrderItem(Integer price, Integer count, Orders orders, ItemOption itemOption, OrderItemStatus orderItemStatus) {
         this.price = price;
         this.count = count;
         this.orders = orders;
         this.itemOption = itemOption;
+        this.orderItemStatus = orderItemStatus;
+    }
+
+    public void updateOrderItemStatus(OrderItemStatus orderItemStatus) {
+        this.orderItemStatus = orderItemStatus;
     }
 }

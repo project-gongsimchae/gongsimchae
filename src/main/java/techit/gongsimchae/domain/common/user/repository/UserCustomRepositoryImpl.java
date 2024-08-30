@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import techit.gongsimchae.domain.common.address.entity.DefaultAddressStatus;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
+import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItemStatus;
 import techit.gongsimchae.domain.portion.notifications.dto.NotificationKeywordUserDto;
 import techit.gongsimchae.domain.portion.report.entity.QReport;
 import techit.gongsimchae.domain.portion.subdivision.entity.QSubdivision;
@@ -18,7 +20,11 @@ import java.util.List;
 
 import static techit.gongsimchae.domain.common.address.entity.QAddress.address1;
 import static techit.gongsimchae.domain.common.user.entity.QUser.user;
+import static techit.gongsimchae.domain.groupbuying.item.entity.QItem.item;
+import static techit.gongsimchae.domain.groupbuying.itemoption.entity.QItemOption.itemOption;
+import static techit.gongsimchae.domain.groupbuying.orderitem.entity.QOrderItem.orderItem;
 import static techit.gongsimchae.domain.portion.notificationkeyword.entity.QNotificationKeyword.notificationKeyword;
+import static techit.gongsimchae.domain.groupbuying.orders.entity.QOrders.orders;
 import static techit.gongsimchae.domain.portion.report.entity.QReport.*;
 import static techit.gongsimchae.domain.portion.subdivision.entity.QSubdivision.*;
 
@@ -70,5 +76,20 @@ public class UserCustomRepositoryImpl implements UserCustomRepository{
                 .fetchOne();
 
         return new PageImpl<>(results, pageable, size);
+    }
+
+    @Override
+    public List<User> findUsersByItemIdWithOrderItem(Long itemId) {
+        List<User> result = queryFactory.selectDistinct(Projections.fields(User.class,
+                        user.id, user.name, user.password, user.loginId, user.role, user.email, user.nickname, user.phoneNumber,
+                        user.mannerPoint, user.userStatus, user.UID, user.joinType)).from(orders)
+                .join(orders.user, user)
+                .join(orders.orderItems, orderItem)
+                .join(orderItem.itemOption, itemOption)
+                .join(itemOption.item, item)
+                .where(item.id.eq(itemId).and(orderItem.orderItemStatus.eq(OrderItemStatus.공동구매성공)))
+                .fetch();
+
+        return result;
     }
 }

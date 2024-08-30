@@ -48,7 +48,7 @@ public class ItemOptionService {
                 .originalPrice(originalPrice)
                 .discountRate(item.getDiscountRate())
                 .discountPrice(discountPrice)
-                .quantity(1)
+                .quantity(item.getGroupBuyingQuantity())
                 .itemUID(item.getUID())
                 .build();
     }

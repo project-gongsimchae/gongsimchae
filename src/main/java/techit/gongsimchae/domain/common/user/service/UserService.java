@@ -215,4 +215,13 @@ public class UserService {
         user.ban();
     }
 
+    /**
+     * 공동구매 성공/실패 후 해당 아이템 아이디를 통해서 아이템을 주문한 유저들의 리스트를 반환합니다.
+     *
+     * @param itemId
+     * @return
+     */
+    public List<User> findUsersByItemId(Long itemId) {
+        return userRepository.findUsersByItemIdWithOrderItem(itemId);
+    }
 }
