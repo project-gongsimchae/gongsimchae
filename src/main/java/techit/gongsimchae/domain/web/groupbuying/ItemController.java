@@ -93,6 +93,12 @@ public class ItemController {
         return "redirect:/admin/item";
     }
 
+    @PostMapping("/admin/item/restore")
+    public String restoreItem(@RequestParam Long id){
+        itemService.restoreItem(id);
+        return "redirect:/admin/item";
+    }
+
     /**
      * 유저가 보는 아이템
      */
