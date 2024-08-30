@@ -178,3 +178,18 @@ body {
     color: #888;
     margin-top: 5px;
 }
+
+.cart-item.disabled {
+    opacity: 0.6;  /* 비활성화된 상품의 투명도 조절 */
+    pointer-events: none; /* 클릭 불가 처리 */
+}
+
+.cart-item.disabled .delete-item,
+.cart-item.disabled .item-checkbox {
+    cursor: not-allowed;
+}
+
+.cart-item.disabled .item-info .original-price {
+    color: red; /* 마감된 상품 표시를 위한 색상 */
+}
+

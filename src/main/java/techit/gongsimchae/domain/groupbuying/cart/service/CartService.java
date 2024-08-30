@@ -102,6 +102,7 @@ public class CartService {
                 .quantity(cart.getCount())
                 .totalPrice(totalPrice)
                 .groupBuyingLimitTime(item.getGroupBuyingLimitTime())
+                .itemStatus(item.getItemStatus())
                 .build();
     }
 
