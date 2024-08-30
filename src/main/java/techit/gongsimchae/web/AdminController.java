@@ -116,7 +116,7 @@ public class AdminController {
      * 카테고리 생성
      */
     @PostMapping("/category")
-    public String createCategory(CategoryReqDtoWeb categoryReqDtoWeb){
+    public String createCategory(@Valid CategoryReqDtoWeb categoryReqDtoWeb){
         categoryService.createCategory(categoryReqDtoWeb);
         return "redirect:/admin/category";
     }
@@ -128,6 +128,16 @@ public class AdminController {
     @PostMapping("/category/delete")
     public String deleteCategory(CategoryReqDtoWeb categoryDtoWeb){
         categoryService.deleteCategory(categoryDtoWeb);
+        return "redirect:/admin/category";
+    }
+
+    /**
+     * 카테고리 복구
+     * status를 0으로 변경
+     */
+    @PostMapping("/category/restore")
+    public String restoreCategory(CategoryReqDtoWeb categoryDtoWeb){
+        categoryService.restoreCategory(categoryDtoWeb);
         return "redirect:/admin/category";
     }
 
