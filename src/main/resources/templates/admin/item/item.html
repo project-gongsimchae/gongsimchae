@@ -43,12 +43,16 @@
                 <td th:text="${item.createDate}"></td>
                 <td th:text="${item.category?.name}"></td>
                 <td>
-                    <a th:href="@{/admin/item/update/{id}(id=${item.id})}" class="btn-custom btn-edit">수정</a>
+                    <a th:if="${item.deleteStatus == 0}" th:href="@{/admin/item/edit/{id}(id=${item.id})}" class="btn-custom btn-edit">수정</a>
                 </td>
                 <td>
-                    <form th:action="@{/admin/item/delete}" method="post">
+                    <form th:if="${item.deleteStatus.equals(0)}" th:action="@{/admin/item/delete}" method="post">
                         <input type="hidden" th:value="${item.id}" name="id"/>
                         <button type="submit" class="btn-custom btn-delete">삭제</button>
+                    </form>
+                    <form th:if="${item.deleteStatus.equals(1)}" th:action="@{/admin/item/restore}" method="post">
+                        <input type="hidden" th:value="${item.id}" name="id"/>
+                        <button type="submit" class="btn-custom btn-restore">복구</button>
                     </form>
                 </td>
             </tr>
