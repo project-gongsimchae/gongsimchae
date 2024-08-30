@@ -114,6 +114,20 @@ public class ItemService {
 
         item.UpdateDto(itemUpdateDto, category);
 
+        // 새로운 이미지 파일 저장
+        imageS3Service.storeFiles(itemUpdateDto.getImages(), "images", item);
+
+        // 삭제할 이미지 파일 처리
+        if (itemUpdateDto.getDeleteImages() != null && !itemUpdateDto.getDeleteImages().isEmpty()) {
+            for (Long deleteImageId : itemUpdateDto.getDeleteImages()) {
+                ImageFile imageFile = imageFileRepository.findById(deleteImageId)
+                        .orElseThrow(() -> new CustomWebException(ErrorMessage.IMAGE_NOT_FOUND));
+
+                imageS3Service.deleteFile(imageFile.getStoreFilename());
+                imageS3Service.deleteFileFromDb(imageFile);
+            }
+        }
+
         // 아이템에 연결된 기존 옵션들을 가져옴
         List<ItemOption> existingOptions = itemOptionRepository.findAllByItemId(item.getId());
 
@@ -159,7 +173,7 @@ public class ItemService {
         List<Item> items = itemRepository.findTop8ByDeleteStatusOrderByCreateDateDesc(0);
         List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
         for (Item item : items) {
-            ImageFile imageFile = imageFileRepository.findByItem(item);
+            ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
         }
         return itemCardResDtoWebs;
@@ -169,7 +183,7 @@ public class ItemService {
         List<Item> items = itemRepository.findTop8ByDeleteStatusOrderByGroupBuyingQuantityDesc(0);
         List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
         for (Item item : items) {
-            ImageFile imageFile = imageFileRepository.findByItem(item);
+            ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
         }
         return itemCardResDtoWebs;
@@ -202,7 +216,7 @@ public class ItemService {
         }
         Page<Item> items = itemRepository.findAllByCategoryAndDeleteStatus(category, 0, pageable);
         return items.map(item -> {
-            ImageFile imageFile = imageFileRepository.findByItem(item);
+            ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             return new ItemCardResDtoWeb(item, imageFile);
         });
     }
@@ -233,7 +247,7 @@ public class ItemService {
             throw new CustomWebException(ErrorMessage.SORT_TYPE_NOR_FOUND);
         }
         return newItemsPage.map(item -> {
-            ImageFile imageFile = imageFileRepository.findByItem(item);
+            ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             return new ItemCardResDtoWeb(item, imageFile);
         });
     }
@@ -257,7 +271,7 @@ public class ItemService {
             throw new CustomWebException(ErrorMessage.SORT_TYPE_NOT_FOUND);
         }
         return bestItemsPage.map(item -> {
-            ImageFile imageFile = imageFileRepository.findByItem(item);
+            ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             return new ItemCardResDtoWeb(item, imageFile);
         });
     }
@@ -280,7 +294,7 @@ public class ItemService {
             throw new CustomWebException(ErrorMessage.SORT_TYPE_NOR_FOUND);
         }
         return categoriesItemsPage.map(item -> {
-            ImageFile imageFile = imageFileRepository.findByItem(item);
+            ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             return new ItemCardResDtoWeb(item, imageFile);
         });
     }
@@ -301,7 +315,7 @@ public class ItemService {
         List<ReviewAbleItemResDtoWeb> reviewAbleItemResDtoWebs = new ArrayList<>();
         List<ReviewedItemResDtoWeb> reviewedItemResDtoWebs = new ArrayList<>();
         for (Item item : items) {
-            ImageFile imageFile = imageFileRepository.findByItem(item);
+            ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             Review matchingReview = reviews.stream()
                     .filter(review -> review.getItem().equals(item))
                     .findFirst()

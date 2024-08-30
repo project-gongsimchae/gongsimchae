@@ -28,9 +28,10 @@
                     <!-- 서버에서 제공한 이미지 URL을 통해 이미지를 렌더링 -->
                     <div th:each="imageFile, iterStat : ${item.imageFiles}" class="image-preview-wrapper">
                         <img th:src="@{${imageFile.storeFilename}}" class="image-preview"/>
-                        <button type="button" class="image-delete-button" th:onclick="'removeExistingImage(' + ${iterStat.index} + ')'">X</button>
+                        <button type="button" class="image-delete-button"  th:onclick="'removeExistingImage(' + ${imageFile.id} + ', this)'">X</button>
                     </div>
                 </div>
+                <input type="hidden" id="deleteImages" name="deleteImages" />
             </div>
 
             <div class="form-group">
