@@ -20,7 +20,7 @@ public class ItemRespDtoWeb {
     private Integer pointAccumulationRate;
     private Integer groupBuyingQuantity;
     private LocalDateTime groupBuyingLimitTime;
-    private Boolean deleteStatus;
+    private Integer deleteStatus;
     private String UID;
     private Long cumulativeSalesVolume;
     private Long reviewCount;
