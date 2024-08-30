@@ -138,17 +138,22 @@ public class ChatController {
 
     @EventListener
     public void webSocketDisconnectListener(SessionDisconnectEvent event) {
-        log.info("DisConnEvent {}", event);
+        try {
+            log.info("DisConnEvent {}", event);
 
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+            StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
 
-        String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
-        String loginId = (String) headerAccessor.getSessionAttributes().get("loginId");
+            String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
+            String loginId = (String) headerAccessor.getSessionAttributes().get("loginId");
 
-        if (chatRoomUserService.isUserAlreadyInRoom(roomId, loginId)) {
-            chatRoomUserService.disableChatRoomOnLeave(roomId, loginId);
+            if (chatRoomUserService.isUserAlreadyInRoom(roomId, loginId)) {
+                chatRoomUserService.disableChatRoomOnLeave(roomId, loginId);
+            }
+        } catch (IllegalArgumentException e) {
+            log.debug("no session Id {}", e.getMessage());
         }
+
 
 
     }
