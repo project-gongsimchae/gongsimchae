@@ -126,8 +126,8 @@ public class AdminController {
      * 데이터 삭제 x, status를 1로 변경
      */
     @PostMapping("/category/delete")
-    public String deleteCategory(CategoryReqDtoWeb categoryDtoWeb){
-        categoryService.deleteCategory(categoryDtoWeb);
+    public String deleteCategory(Long categoryId){
+        categoryService.deleteCategory(categoryId);
         return "redirect:/admin/category";
     }
 
