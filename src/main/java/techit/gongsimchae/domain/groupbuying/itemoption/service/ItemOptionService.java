@@ -50,6 +50,7 @@ public class ItemOptionService {
                 .discountPrice(discountPrice)
                 .quantity(item.getGroupBuyingQuantity())
                 .itemUID(item.getUID())
+                .itemStatus(item.getItemStatus())
                 .build();
     }
 }

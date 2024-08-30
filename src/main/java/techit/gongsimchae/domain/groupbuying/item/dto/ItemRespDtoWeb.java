@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.item.entity.ItemStatus;
 
 @Data
 @NoArgsConstructor
@@ -27,6 +28,7 @@ public class ItemRespDtoWeb {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private List<String> imageUrls = new ArrayList<>();
+    private ItemStatus itemStatus;
 
     public ItemRespDtoWeb(Item item) {
         this.id = item.getId();
@@ -45,6 +47,7 @@ public class ItemRespDtoWeb {
         this.updateDate = item.getUpdateDate();
         // todo 추후 이미지파일 넣어야됨
         this.imageUrls = null;
+        this.itemStatus = item.getItemStatus();
     }
 
     public ItemRespDtoWeb(Item item, List<String> imageUrls) {
@@ -63,5 +66,6 @@ public class ItemRespDtoWeb {
         this.createDate = item.getCreateDate();
         this.updateDate = item.getUpdateDate();
         this.imageUrls = imageUrls;
+        this.itemStatus = item.getItemStatus();
     }
 }
