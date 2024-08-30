@@ -34,6 +34,7 @@ import techit.gongsimchae.domain.groupbuying.item.dto.ReviewAbleItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ReviewItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ReviewedItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.item.entity.ItemStatus;
 import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionCreateDto;
@@ -44,7 +45,6 @@ import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionCreateDto;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionUpdateDto;
 import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
 import techit.gongsimchae.domain.groupbuying.itemoption.repository.ItemOptionRepository;
-import techit.gongsimchae.domain.groupbuying.itemoption.service.ItemOptionService;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderStatus;
 import techit.gongsimchae.domain.groupbuying.orderitem.repository.OrderItemRepository;
@@ -328,6 +328,17 @@ public class ItemService {
             }
         }
         return new ReviewItemResDtoWeb(reviewAbleItemResDtoWebs, reviewedItemResDtoWebs);
+    }
+
+    /**
+     * 해당 아이템의 ItemStatus를 바꾸는 메서드 입니다.
+     *
+     * @param itemId
+     */
+    @Transactional
+    public void changeItemStatus(Long itemId, ItemStatus itemStatus) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND));
+        item.updateItemStatus(itemStatus);
     }
 
 }

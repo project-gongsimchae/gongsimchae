@@ -16,6 +16,7 @@ import techit.gongsimchae.domain.portion.notifications.entity.NotificationType;
 import techit.gongsimchae.domain.portion.notifications.entity.Notifications;
 import techit.gongsimchae.domain.portion.notifications.event.ChatNotiEvent;
 import techit.gongsimchae.domain.portion.notifications.event.FeedbackNotiEvent;
+import techit.gongsimchae.domain.portion.notifications.event.GroupBuyingNotiEvent;
 import techit.gongsimchae.domain.portion.notifications.event.KeywordNotiEvent;
 import techit.gongsimchae.domain.portion.notifications.repository.EmitterRepository;
 import techit.gongsimchae.domain.portion.notifications.repository.NotificationRepository;
@@ -169,5 +170,22 @@ public class NotificationService {
      */
     private User getCurrentUser(PrincipalDetails principalDetails) {
         return userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    /**
+     * 공동구매 성공/실패 여부 알림 메서드
+     * @param event
+     */
+    @Transactional
+    public void alertAboutGroupBuying(GroupBuyingNotiEvent event) {
+        Notifications notifications = Notifications.builder()
+                .user(event.getUser())
+                .isRead(0)
+                .url("/mypage/orders")
+                .content(event.getContent())
+                .notificationType(NotificationType.GROUP_BUYING)
+                .build();
+
+        notificationRepository.save(notifications);
     }
 }

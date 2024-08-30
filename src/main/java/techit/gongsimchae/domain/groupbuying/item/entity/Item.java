@@ -45,6 +45,9 @@ public class Item extends BaseEntity {
     @OneToMany(mappedBy = "item")
     private List<ImageFile> imageFiles = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private ItemStatus itemStatus;
+
     @OneToMany(mappedBy = "item")
     private List<ItemOption> itemOptions = new ArrayList<>();
 
@@ -60,6 +63,7 @@ public class Item extends BaseEntity {
         this.UID = UUID.randomUUID().toString().substring(0,8);
         this.cumulativeSalesVolume = 0L;
         this.reviewCount = 0L;
+        this.itemStatus = ItemStatus.공동구매_진행중;
     }
 
     public void UpdateDto (ItemUpdateDto itemUpdateDto, Category category) {
@@ -87,5 +91,9 @@ public class Item extends BaseEntity {
 
     public void minusDiscountRate(Integer discountRate) {
         this.discountRate -= discountRate;
+    }
+
+    public void updateItemStatus(ItemStatus itemStatus) {
+        this.itemStatus = itemStatus;
     }
 }
