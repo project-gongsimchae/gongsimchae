@@ -1,4 +1,4 @@
-package techit.gongsimchae.web;
+package techit.gongsimchae.domain.web.common;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

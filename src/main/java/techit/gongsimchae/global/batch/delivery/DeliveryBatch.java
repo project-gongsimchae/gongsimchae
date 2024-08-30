@@ -79,7 +79,7 @@ public class DeliveryBatch {
     public RepositoryItemWriter<Delivery> deliveryWriter() {
         return new RepositoryItemWriterBuilder<Delivery>()
                 .repository(deliveryRepository)
-                .methodName("save")
+                .methodName("saveAll")
                 .build();
     }
 

@@ -8,7 +8,7 @@ import techit.gongsimchae.domain.common.user.entity.UserStatus;
 public class UserAdminUpdateReqDtoWeb {
     private Long id;
     private String name;
-    private int mannerPoint;
+    private Double mannerPoint;
     private String email;
     private String loginId;
     private String nickname;
