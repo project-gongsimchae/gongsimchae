@@ -64,8 +64,8 @@ public class CategoryService {
         categoryRepository.save(new Category(categoryReqDtoWeb.getCategoryName()));
     }
 
-    public void deleteCategory(CategoryReqDtoWeb categoryDtoWeb) {
-        Category category = categoryRepository.findById(categoryDtoWeb.getCategoryId()).orElseThrow(
+    public void deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND)
         );
         category.delete();
