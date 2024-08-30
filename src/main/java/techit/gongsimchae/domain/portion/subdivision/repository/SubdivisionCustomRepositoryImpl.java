@@ -161,12 +161,13 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
         if (Objects.nonNull(searchDto.getOnSale())) {
             builder.and(subdivision.subdivisionType.eq(SubdivisionType.RECRUITING));
         }
-        if(searchDto.getAddress() != null) {
+        if(searchDto.getAddress() != null && !searchDto.getAddress().isBlank()) {
             String[] split = searchDto.getAddress().split(",");
             builder.and(subdivision.dong.in(split));
         }
         if (searchDto.getContent() != null) {
-            builder.and(subdivision.title.contains(searchDto.getContent()));
+            builder.and(subdivision.title.contains(searchDto.getContent())
+                    .and(subdivision.content.contains(searchDto.getContent())));
         }
         return builder;
     }

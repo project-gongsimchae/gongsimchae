@@ -78,15 +78,6 @@ public class PortionMainController {
         return "portion/myeondongeups :: myeondongeupList";
     }
 
-    @GetMapping("/portioning/search")
-    public String searchSubdivisions(@RequestParam(required = false) String address,
-                                     @RequestParam(required = false) String content,
-                                     Model model) {
-        List<SubdivisionRespDto> searchResults = subdivisionService.searchSubdivisions(address, content);
-        model.addAttribute("subdivisions", searchResults);
-        return "portion/portioningMain :: #subdivisionList";
-    }
-
     /**
      * 키워드 등록
      */

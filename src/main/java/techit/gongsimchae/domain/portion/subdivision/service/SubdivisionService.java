@@ -153,29 +153,6 @@ public class SubdivisionService {
 
         subdivision.deleteSubdivision();
     }
-
-    /**
-     * 소분글 메인페이지에서 주소와 내용을 가지고 검색을 하는 메서드
-     */
-    public List<SubdivisionRespDto> searchSubdivisions(String address, String content) {
-        // 콤마(,)로 구분된 주소를 여러 개로 나누기
-        String[] addresses = address != null ? address.split(",") : new String[]{};
-
-        List<Subdivision> results = new ArrayList<>();
-
-        for (String addr : addresses) {
-            // 각 주소에 대해 쿼리 실행
-            List<Subdivision> partialResults = subdivisionRepository.searchSubdivisions(addr.trim(), content);
-            results.addAll(partialResults);
-        }
-
-        // 중복된 결과를 제거 (필요시)
-        results = results.stream().distinct().collect(Collectors.toList());
-
-        return results.stream()
-                .map(SubdivisionRespDto::new)
-                .collect(Collectors.toList());
-    }
   
     /**
      * 마이페이지에서 참여중인 소분글 찾는 메서드
