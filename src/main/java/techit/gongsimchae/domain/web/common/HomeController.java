@@ -1,4 +1,4 @@
-package techit.gongsimchae.web;
+package techit.gongsimchae.domain.web.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

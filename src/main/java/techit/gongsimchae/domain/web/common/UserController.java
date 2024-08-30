@@ -1,4 +1,4 @@
-package techit.gongsimchae.web;
+package techit.gongsimchae.domain.web.common;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package techit.gongsimchae.web;
+package techit.gongsimchae.domain.web.groupbuying;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,7 @@ import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionDto;
 import techit.gongsimchae.domain.groupbuying.itemoption.service.ItemOptionService;
+import techit.gongsimchae.domain.groupbuying.orderitem.service.OrderItemService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class ItemController {
     private final ItemOptionService itemOptionService;
     private final EventCategoryService eventCategoryService;
     private final EventService eventService;
+    private final OrderItemService orderItemService;
 
     /**
      * 검색
@@ -75,6 +77,7 @@ public class ItemController {
         model.addAttribute("item", item);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("isNew", false);
+        model.addAttribute("images", item.getImageFiles());
         return "admin/item/updateForm";
     }
 
@@ -97,7 +100,10 @@ public class ItemController {
     @GetMapping("/product/{id}")
     public String itemDetails(@PathVariable("id") Long id, Model model) {
         List<ItemOptionDto> item = itemOptionService.getItemOptionById(id);
+
         model.addAttribute("item",item);
+        model.addAttribute("completionAmountItemCntDto", orderItemService.getCountCompletedOrderItemsWithItemId(id));
+
         return "groupbuying/itemDetails";
     }
 

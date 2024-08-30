@@ -1,5 +1,5 @@
 function updateURLAndFetch(page) {
-    let url = new URL(window.location.origin + '/portioning');
+    let url = new URL(window.location.href);
 
     // 페이지 번호 추가
     if (page !== undefined) {
@@ -12,14 +12,6 @@ function updateURLAndFetch(page) {
         } else {
             url.searchParams.delete('page'); // 기본값은 첫 페이지이므로 삭제
         }
-    }
-
-    // 검색어 추가
-    let query = document.querySelector('.content-wrapper input').value;
-    if (query) {
-        url.searchParams.set('query', query);
-    } else {
-        url.searchParams.delete('query');
     }
 
     // 판매중 체크박스 상태 반영
@@ -99,22 +91,9 @@ document.getElementById('sortPopular').addEventListener('click', function(e) {
     }
 });
 
-// 검색어 입력 필드에 입력할 때마다 URL 업데이트 및 데이터 가져오기
-let debounceTimer;
-document.querySelector('.content-wrapper input').addEventListener('input', function() {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(updateURLAndFetch, 300); // 300ms 디바운스
-});
-
 // 페이지 로드 시 URL 파라미터에 따라 UI 상태 설정
 window.addEventListener('load', function() {
     let params = new URLSearchParams(window.location.search);
-
-    // 검색어 설정
-    let query = params.get('query');
-    if (query) {
-        document.querySelector('.content-wrapper input').value = query;
-    }
 
     // 판매중 체크박스 설정
     let onSale = params.get('onSale');

@@ -22,4 +22,5 @@ public class SubdivisionUpdateReqDto {
     private Integer price;
     private List<MultipartFile> images;
     private List<Long> deleteImages;
+    private String dong;
 }

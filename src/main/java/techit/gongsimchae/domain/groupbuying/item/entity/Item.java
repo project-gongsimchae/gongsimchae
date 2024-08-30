@@ -12,6 +12,8 @@ import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
+import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,7 +31,9 @@ public class Item extends BaseEntity {
     private Integer pointAccumulationRate;
     private Integer groupBuyingQuantity;
     private LocalDateTime groupBuyingLimitTime;
-    private Boolean deleteStatus;
+
+    @Column(name = "delete_status")
+    private Integer deleteStatus = 0;
     private String UID;
     private Long cumulativeSalesVolume;
     private Long reviewCount;
@@ -40,6 +44,12 @@ public class Item extends BaseEntity {
 
     @OneToMany(mappedBy = "item")
     private List<ImageFile> imageFiles = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private ItemStatus itemStatus;
+
+    @OneToMany(mappedBy = "item")
+    private List<ItemOption> itemOptions = new ArrayList<>();
 
     public Item (ItemCreateDto itemCreateDto, Category category) {
         this.name = itemCreateDto.getName();
@@ -53,6 +63,7 @@ public class Item extends BaseEntity {
         this.UID = UUID.randomUUID().toString().substring(0,8);
         this.cumulativeSalesVolume = 0L;
         this.reviewCount = 0L;
+        this.itemStatus = ItemStatus.공동구매_진행중;
     }
 
     public void UpdateDto (ItemUpdateDto itemUpdateDto, Category category) {
@@ -66,11 +77,23 @@ public class Item extends BaseEntity {
         this.category = category;
     }
 
+    public void markAsDeleted(){
+        this.deleteStatus = 1;
+    }
+
+    public boolean isDeleted() {
+        return this.deleteStatus == 1;
+    }
+
     public void plusDiscountRate(Integer discountRate) {
         this.discountRate += discountRate;
     }
 
     public void minusDiscountRate(Integer discountRate) {
         this.discountRate -= discountRate;
+    }
+
+    public void updateItemStatus(ItemStatus itemStatus) {
+        this.itemStatus = itemStatus;
     }
 }
