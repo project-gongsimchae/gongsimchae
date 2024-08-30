@@ -1,5 +1,5 @@
 function updateURLAndFetch(page) {
-    let url = new URL(window.location.origin + '/portioning');
+    let url = new URL(window.location.href);
 
     // 페이지 번호 추가
     if (page !== undefined) {

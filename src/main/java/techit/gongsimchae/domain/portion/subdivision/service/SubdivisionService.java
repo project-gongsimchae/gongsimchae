@@ -81,6 +81,8 @@ public class SubdivisionService {
     public String saveSubdivision(SubdivisionReqDto subdivisionReqDto,
                                   Long userId) {
 
+
+
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException("not found user"));
 
         Subdivision subdivision = Subdivision.builder()
@@ -96,6 +98,7 @@ public class SubdivisionService {
                 .subdivisionType(SubdivisionType.RECRUITING)
                 .sigungu(subdivisionReqDto.getSigungu())
                 .user(user)
+                .dong(getDong(subdivisionReqDto.getAddress()))
                 .build();
 
         Subdivision savedSubdivision = subdivisionRepository.save(subdivision);
@@ -117,6 +120,7 @@ public class SubdivisionService {
     public String updateSubdivision(SubdivisionUpdateReqDto subdivisionUpdateReqDto) {
 
         log.debug("subdivisionUpdateReqDto {}", subdivisionUpdateReqDto);
+        subdivisionUpdateReqDto.setDong(getDong(subdivisionUpdateReqDto.getAddress()));
 
         Subdivision subdivision = subdivisionRepository.findById(subdivisionUpdateReqDto.getId()).orElseThrow(() -> new CustomWebException("Subdivision not found"));
         subdivision.updateSubdivision(subdivisionUpdateReqDto);
@@ -223,6 +227,14 @@ public class SubdivisionService {
                     }
             );
         }
+    }
+
+    /**
+     * 주소에서 마지막 상세주소만 빼고 동까지만 되도록 설정
+     */
+    private String getDong(String address) {
+        int index = address.lastIndexOf(" ");
+        return address.substring(0,index);
     }
 
 
