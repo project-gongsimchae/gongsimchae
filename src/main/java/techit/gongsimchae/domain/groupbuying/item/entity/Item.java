@@ -85,6 +85,10 @@ public class Item extends BaseEntity {
         return this.deleteStatus == 1;
     }
 
+    public void restore() {
+        this.deleteStatus = 0;
+    }
+
     public void plusDiscountRate(Integer discountRate) {
         this.discountRate += discountRate;
     }
