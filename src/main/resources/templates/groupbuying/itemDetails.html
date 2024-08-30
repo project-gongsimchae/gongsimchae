@@ -38,7 +38,14 @@
                     <button class="custom-btn-outline-secondary" id="wishlist-btn" th:data-item-id="${item[0].itemUID}">
                         <i id="wishlist-icon" class="bi"></i> 찜하기
                     </button>
-                    <button class="custom-btn-success" id="purchase-btn" type="submit">장바구니에 담기</button>
+
+                    <button class="custom-btn-success"
+                            id="purchase-btn"
+                            type="submit"
+                            th:classappend="${item[0].itemStatus.toString() == '공동구매_마감'} ? 'closed' : ''"
+                            th:disabled="${item[0].itemStatus.toString() == '공동구매_마감'}"
+                            th:text="${item[0].itemStatus.toString() == '공동구매_마감'} ? '마감된 상품입니다' : '장바구니에 담기'">
+                    </button>
                 </div>
             </div>
         </div>
@@ -47,11 +54,14 @@
 <div class="separator-detail"></div>
 <section class="status-detail-container">
     <div class="progress">
-        <div class="progress-bar bg-success" role="progressbar"
-             th:style="'width:' + (${completionAmountItemCntDto.completionAmountCnt} / ${item[0].quantity} * 100) + '%;'"
-             aria-valuenow="[[${completionAmountItemCntDto.completionAmountCnt}]]"
+
+        <!-- 프로그레스바 -->
+        <div class="progress-bar bg-success"
+             role="progressbar"
+             th:style="${item[0].itemStatus.toString() == '공동구매_마감'} ? 'width: 100%' : 'width:' + (${completionAmountItemCntDto.completionAmountCnt} / ${item[0].quantity} * 100) + '%;'"
+             th:aria-valuenow="${item[0].itemStatus.toString() == '공동구매_마감'} ? ${item[0].quantity} : ${completionAmountItemCntDto.completionAmountCnt}"
              aria-valuemin="0"
-             aria-valuemax="[[${item[0].quantity}]]">
+             th:aria-valuemax="${item[0].quantity}">
         </div>
     </div>
     <span>목표 수량: <span th:text="${item[0].quantity}"></span> / 달성량: <span th:text="${completionAmountItemCntDto.completionAmountCnt}"></span></span>
