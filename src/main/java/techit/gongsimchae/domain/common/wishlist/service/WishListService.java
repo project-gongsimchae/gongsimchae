@@ -46,7 +46,7 @@ public class WishListService {
      */
     @Transactional
     public void pickItem(String itemId, PrincipalDetails principalDetails) {
-        Item item = itemRepository.findByUID(itemId).orElseThrow(() -> new CustomWebException("not found item"));
+        Item item = itemRepository.findByUIDAndDeleteStatus(itemId, 0).orElseThrow(() -> new CustomWebException("not found item"));
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
         Optional<WishList> _wishlist = wishListRepository.findByUserIdAndItemId(user.getId(), item.getId());
         if (_wishlist.isEmpty()) {
@@ -69,7 +69,7 @@ public class WishListService {
     }
 
     public boolean checkPickItem(String itemId, PrincipalDetails principalDetails) {
-        Item item = itemRepository.findByUID(itemId).orElseThrow(() -> new CustomWebException("not found item"));
+        Item item = itemRepository.findByUIDAndDeleteStatus(itemId, 0).orElseThrow(() -> new CustomWebException("not found item"));
         Optional<WishList> _wishList = wishListRepository.findByUserIdAndItemId(principalDetails.getAccountDto().getId(), item.getId());
         if(_wishList.isEmpty()){
             return false;

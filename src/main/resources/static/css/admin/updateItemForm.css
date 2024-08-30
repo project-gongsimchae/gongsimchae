@@ -1,0 +1,170 @@
+/* 폼 컨테이너 스타일링 */
+.form-container {
+    margin-top: 20px;
+}
+
+/* 폼 요소 스타일링 */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 라벨을 왼쪽 정렬 */
+}
+
+/* 라벨을 상단에 위치시키기 위한 스타일링 */
+.form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-control,
+.form-control-file {
+    border-radius: 5px;
+    box-shadow: none;
+    border: 1px solid #ced4da;
+    width: 100%; /* 인풋 필드의 크기를 맞추기 위해 */
+}
+
+/* 이미지 파일 업로드 영역 스타일링 */
+.custom-file-upload {
+    width: 100%;
+    padding: 50px;
+    text-align: center;
+    background-color: #ffffff;
+    border: 2px dashed #cccccc;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+.custom-file-upload label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #cccccc;
+    cursor: pointer;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+/* 이미지 미리보기 영역 스타일링 */
+.image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.image-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+
+.image-delete-button {
+    position: absolute;
+    right: 15px;  /* 이미지 오른쪽 경계에서 약간의 간격 */
+    font-size: 16px;  /* 크기를 약간 줄임 */
+    color: red;  /* 빨간색 X */
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 2px;  /* 추가 간격 없이 바로 X 버튼만 보이도록 */
+}
+
+/* 이미지 미리보기 영역 스타일링 (필요 시 조정) */
+.image-preview-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+
+/* 수정 버튼을 포인트 컬러로 변경 */
+.btn-point-color {
+    background-color: #4CAF50; /* 예시 포인트 컬러 */
+    border-color: #4CAF50;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1.1em;
+}
+
+.btn-point-color:hover {
+    background-color: #e14e2a; /* 포인트 컬러의 다크 버전 */
+    border-color: #c74320;
+}
+
+/* 수정 버튼을 오른쪽으로 배치 */
+.float-right {
+    float: right;
+}
+
+.input-form-container {
+    margin: 0 200px;
+}
+
+.input-option-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.input-option {
+    display: flex;
+    width: 600px; /* 전체 너비를 600px로 설정 */
+}
+
+.input-option input[type="text"] {
+    width: 50%;
+    margin-right: 8px;
+}
+
+.input-option input[type="number"] {
+    width: 50%;
+}
+
+.add-option {
+    margin-left: 5px;
+}
+
+.custom-btn-add-option, .custom-btn-remove-option {
+    height: 36px;
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.custom-btn-add-option i,.custom-btn-remove-option i {
+    color: #999999;
+}
+
+.input-option-set {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.input-option-content {
+    display: flex;
+    gap: 10px;
+}
+
+.custom-btn-remove-option {
+    background-color: transparent;
+    border: none;
+    font-size: 10px;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 15px;
+}

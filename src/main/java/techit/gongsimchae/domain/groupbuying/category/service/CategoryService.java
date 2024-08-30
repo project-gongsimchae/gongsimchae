@@ -48,7 +48,7 @@ public class CategoryService {
         List<EventCategory> eventCategories = eventCategoryRepository.findAllByEvent(event);
         for (EventCategory eventCategory : eventCategories) {
             Category category = eventCategory.getCategory();
-            List<Item> items = itemRepository.findAllByCategory(category);
+            List<Item> items = itemRepository.findAllByCategoryAndDeleteStatus(category, 0);
             items.forEach((element) -> element.minusDiscountRate(event.getDiscountRate()));
         }
     }
