@@ -18,9 +18,9 @@ public class AddressCreateReqDtoWeb {
     private String receiver;
     private String phoneNumber;
 
-    public void applySetting(User user) {
-        this.receiver = user.getName();
-        this.phoneNumber = user.getPhoneNumber();
+    public void applySetting(String name, String phoneNumber) {
+        this.receiver = name;
+        this.phoneNumber = phoneNumber;
     }
 
     public AddressCreateReqDtoWeb(UserAdminUpdateReqDtoWeb user) {

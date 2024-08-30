@@ -122,14 +122,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 document.getElementById('searchBtn').addEventListener('click', function() {
-    const address = tags.filter(tag => tag.trim() !== '').join(',');
-    const content = document.querySelector('.content-wrapper input').value;
+    const address = tags.filter(tag => tag.trim() !== '').join(','); // 선택된 태그를 주소로 사용
+    const content = document.querySelector('.content-wrapper input').value; // 입력된 내용(제목)
 
-    $.get(`${contextPath}portioning/search?address=${encodeURIComponent(address)}&content=${encodeURIComponent(content)}`, function(data) {
-        $('#subdivisionList').html(data);
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-        console.error("Search request failed:", textStatus, errorThrown);
-    });
+    // URL을 생성하여 파라미터로 전달
+    const url = `${contextPath}portioning?address=${encodeURIComponent(address)}&content=${encodeURIComponent(content)}`;
+
+    // 페이지 리다이렉트
+    window.location.href = url;
 });
 
 document.getElementById('sortNew').addEventListener('click', function(event) {

@@ -11,4 +11,6 @@ public class SubSearchDto {
 
     private Boolean onSale;
     private String sort;
+    private String address;
+    private String content;
 }
