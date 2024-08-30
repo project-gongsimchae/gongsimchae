@@ -34,7 +34,7 @@ public class ReviewService {
         User user = userRepository.findByLoginId(accountDto.getLoginId()).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.USER_NOT_FOUND)
         );
-        Item item = itemRepository.findByUID(uid).orElseThrow(
+        Item item = itemRepository.findByUIDAndDeleteStatus(uid, 0).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
         );
         Review review = reviewRepository.save(new Review(reviewReqDtoWeb, user, item));
@@ -42,7 +42,7 @@ public class ReviewService {
     }
 
     public ReviewResDtoWeb getReviews(AccountDto accountDto, String uid) {
-        Item item = itemRepository.findByUID(uid).orElseThrow(
+        Item item = itemRepository.findByUIDAndDeleteStatus(uid, 0).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
         );
         Review review = reviewRepository.findByUserIdAndItem(accountDto.getId(), item);
@@ -51,7 +51,7 @@ public class ReviewService {
     }
 
     public void updateReview(AccountDto accountDto, ReviewsReqDtoWeb reviewsReqDtoWeb, String uid) {
-        Item item = itemRepository.findByUID(uid).orElseThrow(
+        Item item = itemRepository.findByUIDAndDeleteStatus(uid, 0).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
         );
         Review review = reviewRepository.findByUserIdAndItem(accountDto.getId(), item);
