@@ -105,7 +105,7 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateItem(Long id, ItemUpdateDto itemUpdateDto) {
+    public Item updateItem(Long id, ItemUpdateDto itemUpdateDto) {
         Item item = itemRepository.findById(id).filter(i -> i.getDeleteStatus() == 0)
                 .orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND));
 
@@ -153,7 +153,7 @@ public class ItemService {
                 .filter(option -> !updatedOptionIds.contains(option.getId()))
                 .forEach(itemOptionRepository::delete);
 
-        itemRepository.save(item);
+        return itemRepository.save(item);
     }
 
     @Transactional

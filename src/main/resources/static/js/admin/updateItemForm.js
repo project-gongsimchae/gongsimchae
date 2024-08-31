@@ -47,8 +47,15 @@ function updateDeleteImagesInput() {
 }
 
 // 폼 제출 전 deleteImages 입력 필드 업데이트
-document.querySelector('form').addEventListener('submit', function(e) {
-    updateDeleteImagesInput();
+document.getElementById('mainForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // 기존 폼 제출을 막음
+    updateDeleteImagesInput(); // 이미지 삭제 업데이트
+
+    // 수정 완료 알림 표시
+    alert("상품 내용이 수정되었습니다. 공동구매 재진행하기 위해서는 옆의 '공동구매 재진행' 버튼을 누르셔야 합니다.");
+
+    // 알림 후 폼 제출
+    e.target.submit();
 });
 
 function addOptionField() {
@@ -101,3 +108,77 @@ function updateOptionIndexes() {
 document.addEventListener('DOMContentLoaded', function() {
     updateOptionIndexes();
 });
+
+function validateGroupBuyingTime() {
+    let limitTimeField = document.getElementById('groupBuyingLimitTime');
+    let limitTime = new Date(limitTimeField.value);
+    let currentTime = new Date();
+
+    // 제한 시간이 현재 시간과 같거나 과거라면 알림창 표시
+    if (limitTime <= currentTime) {
+        alert('공동구매 제한 시간을 다시 한 번 확인해주세요. 미래 시간으로 설정해야 합니다.');
+    } else {
+        // 공동구매 제한 시간이 유효하면 모달창 띄움
+        showModal();
+    }
+}
+
+// 공동구매 제한 시간을 시, 분, 초 중 시만 수정 가능하게 설정
+document.addEventListener('DOMContentLoaded', function() {
+    let limitTimeField = document.getElementById('groupBuyingLimitTime');
+
+    if (limitTimeField.value) {
+        let originalTime = new Date(limitTimeField.value);
+        // 초 단위에서 '분'과 '초'를 59분 58초로 고정
+        originalTime.setMinutes(59);
+        originalTime.setSeconds(59);
+        limitTimeField.value = originalTime.toISOString().slice(0, 16); // '시'까지만 표시
+    }
+
+    limitTimeField.addEventListener('input', function() {
+        let date = new Date(this.value);
+        date.setMinutes(59);
+        date.setSeconds(59);
+        this.value = date.toISOString().slice(0, 16); // 시까지만 표시
+    });
+});
+
+document.getElementById('group-buying-restart-form').addEventListener('submit', function (e) {
+    e.preventDefault(); // 폼 제출을 막음
+
+    let limitTimeField = document.getElementById('groupBuyingLimitTime');
+    let limitTime = new Date(limitTimeField.value);
+    let currentTime = new Date();
+
+    // 제한 시간이 유효하면 모달 창 표시
+    if (limitTime > currentTime) {
+        showModal();
+    } else {
+        alert('공동구매 제한 시간을 다시 한 번 확인해주세요. 미래 시간으로 설정해야 합니다.');
+    }
+});
+
+function showModal() {
+    const modal = document.getElementById('confirmationModal');
+    const confirmYes = document.getElementById('confirmYes');
+    const confirmNo = document.getElementById('confirmNo');
+
+    modal.style.display = "block"; // 모달 표시
+
+    confirmYes.onclick = function () {
+        modal.style.display = "none"; // 모달 숨기기
+        document.getElementById('group-buying-restart-form').submit(); // 폼 제출
+    };
+
+    confirmNo.onclick = function () {
+        modal.style.display = "none"; // 모달 숨기기
+    };
+}
+
+// 모달 외부 클릭 시 닫기
+window.onclick = function (event) {
+    const modal = document.getElementById('confirmationModal');
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+};

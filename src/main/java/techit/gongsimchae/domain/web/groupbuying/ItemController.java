@@ -15,6 +15,7 @@ import techit.gongsimchae.domain.groupbuying.event.service.EventService;
 import techit.gongsimchae.domain.groupbuying.eventcategory.service.EventCategoryService;
 import techit.gongsimchae.domain.groupbuying.item.dto.*;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.item.entity.ItemStatus;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionDto;
 import techit.gongsimchae.domain.groupbuying.itemoption.service.ItemOptionService;
@@ -69,7 +70,7 @@ public class ItemController {
     }
 
     @GetMapping("/admin/item/update/{id}")
-    public String showUpdateForm(@PathVariable Long id, Model model){
+    public String showUpdateForm(@PathVariable("id") Long id, Model model){
         Item item = itemService.getItemById(id);
         if(item == null) {
             return "redirect:/admin/item";
@@ -82,8 +83,22 @@ public class ItemController {
     }
 
     @PostMapping("/admin/item/update/{id}")
-    public String updateItem(@PathVariable Long id, @ModelAttribute ItemUpdateDto itemUpdateDto){
-        itemService.updateItem(id, itemUpdateDto);
+    public String updateItem(@PathVariable("id") Long id, @ModelAttribute ItemUpdateDto itemUpdateDto, Model model){
+        Item item = itemService.updateItem(id, itemUpdateDto);
+
+        model.addAttribute("item", item);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("isNew", false);
+        model.addAttribute("images", item.getImageFiles());
+
+        return "admin/item/updateForm";
+    }
+
+    @PostMapping("/admin/item-status/update/{id}")
+    public String updateItemStatus(@PathVariable("id") Long id){
+
+        itemService.changeItemStatus(id, ItemStatus.공동구매_진행중);
+
         return "redirect:/admin/item";
     }
 

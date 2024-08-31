@@ -14,7 +14,7 @@
 
     <div class="form-container">
         <h1 class="mb-4 section-title">상품 수정</h1>
-        <form th:action="@{/admin/item/update/{id}(id=${item.id})}" th:object="${item}" method="post" enctype="multipart/form-data" class="needs-validation input-form-container" novalidate>
+        <form id="mainForm" th:action="@{/admin/item/update/{id}(id=${item.id})}" th:object="${item}" method="post" enctype="multipart/form-data" class="needs-validation input-form-container" novalidate>
 
             <div class="form-group" style="width: 600px">
                 <label for="images" class="form-label">이미지 파일들</label>
@@ -133,6 +133,21 @@
                 <button type="submit" class="btn btn-point-color float-right" style="color: #ffffff">수정</button>
             </div>
         </form>
+
+        <form th:action="@{/admin/item-status/update/{id}(id=${item.id})}" method="post" id="group-buying-restart-form" style="display: inline;">
+            <button type="button" class="btn btn-secondary float-right mr-2" style="color: #ffffff" onclick="validateGroupBuyingTime()">공동구매 재시작</button>
+        </form>
+
+        <!-- 모달 창 추가 -->
+        <div id="confirmationModal" class="modal">
+            <div class="modal-content">
+                <p>누르면 상품이 메인 화면에 노출됩니다. 공동구매를 다시 진행하시겠습니까?</p>
+                <div class="modal-buttons">
+                    <button id="confirmYes" class="btn btn-primary">예</button>
+                    <button id="confirmNo" class="btn btn-secondary">아니오</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="/js/admin/updateItemForm.js"></script>
