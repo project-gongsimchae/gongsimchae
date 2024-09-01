@@ -9,9 +9,8 @@ body {
 }
 .container-nav{
     background-color: #ffffff;
-}
-nav {
-    margin: 0 180px;
+    width: 1050px;
+    margin: 0 auto;
 }
 
 .navbar {
@@ -107,8 +106,8 @@ nav {
 }
 
 .nav-list-a {
-    margin-right: 3rem !important;
-    margin-left: 6rem !important;
+    margin-right: 4rem !important;
+    margin-left: 4rem !important;
 }
 
 .form-style {
