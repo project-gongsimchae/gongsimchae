@@ -1,0 +1,38 @@
+{
+  "properties": {
+
+    "subdivisionId": {
+      "type": "long"
+    },
+
+    "title": {
+      "type": "text",
+      "analyzer": "nori"
+    },
+
+    "content": {
+      "type": "text",
+      "analyzer": "nori"
+    },
+
+    "address": {
+      "type": "text",
+      "analyzer": "nori"
+    },
+
+    "subdivisionType": {
+      "type": "keyword"
+    },
+
+    "price": {
+      "type": "integer"
+    },
+    "views": {
+      "type": "integer"
+    },
+    "url": {
+      "type": "keyword"
+    }
+  }
+
+}

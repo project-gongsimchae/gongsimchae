@@ -7,11 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techit.gongsimchae.domain.common.es.dto.SubdivisionEsRespDto;
+import techit.gongsimchae.domain.common.es.service.SubElasticService;
 import techit.gongsimchae.domain.portion.areas.entity.MyeondongeupArea;
 import techit.gongsimchae.domain.portion.areas.entity.SidoArea;
 import techit.gongsimchae.domain.portion.areas.entity.SigunguArea;
@@ -40,6 +43,16 @@ public class PortionMainController {
     private final SubdivisionService subdivisionService;
     private final NotiKeywordService notiKeywordService;
     private final ViewCountService viewCountService;
+    private final SubElasticService subElasticService;
+
+    @GetMapping("/portioning/related-search")
+    @ResponseBody
+    public ResponseEntity<?> search(@RequestParam("type") String type) {
+        List<SubdivisionEsRespDto> subdivisionEsRespDtos = subElasticService.getRelatedSearchTerms(type);
+
+        List<String> list = subdivisionEsRespDtos.stream().map(SubdivisionEsRespDto::getTitle).toList();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 
 
     /**

@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import techit.gongsimchae.domain.common.es.entity.SubdivisionDocument;
+import techit.gongsimchae.domain.common.es.repository.SubCommonElasticRepository;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
@@ -45,6 +47,7 @@ public class SubdivisionService {
     private final ImageFileRepository imageFileRepository;
     private final ChatRoomService chatRoomService;
     private final ApplicationEventPublisher publisher;
+    private final SubCommonElasticRepository subCommonElasticRepository;
 
     /**
      * 소분글 메인페이지에 모든 소분글들을 보여주는 메서드
@@ -107,8 +110,14 @@ public class SubdivisionService {
 
         // chatroom 생성
         chatRoomService.create(savedSubdivision);
-
-        imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", subdivision);
+        String storeFilename = null;
+        List<ImageFile> imageFiles = imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", subdivision);
+        if (!imageFiles.isEmpty()) {
+            for (ImageFile imageFile : imageFiles) {
+                storeFilename = imageFile.getStoreFilename();
+            }
+        }
+        subCommonElasticRepository.save(new SubdivisionDocument(savedSubdivision, storeFilename));
 
         return subdivision.getUID();
     }
