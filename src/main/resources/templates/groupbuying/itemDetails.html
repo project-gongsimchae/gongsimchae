@@ -85,10 +85,29 @@
 </section>
 <section class="reviews-detail">
     <h4>후기</h4>
-    <p>여기에 상품 후기가 들어갑니다. 고객들이 작성한 후기를 포함시킬 수 있습니다.</p>
+    <div th:each="review : ${reviewResDtoWebList}" class="card mb-3">
+        <div class="card-body">
+            <div class="review-layout">
+                <!-- 이미지 섹션 -->
+                <div class="review-image">
+                    <img th:src="@{${review.images}}" alt="리뷰 이미지" class="review-img">
+                </div>
+                <!-- 리뷰 내용 섹션 -->
+                <div class="review-content">
+                    <h5 th:text="${review.title}" class="review-title">리뷰 제목</h5>
+                    <p th:text="${review.nickname}" class="review-writer"></p>
+                    <div class="review-rating">
+                        <span th:each="star : ${#numbers.sequence(1, review.starPoint)}">
+                            <i class="fas fa-star star-icon"></i>
+                        </span>
+                    </div>
+                    <p th:text="${review.content}" class="review-content-class">리뷰 내용</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- CSRF 토큰을 메타 태그로 삽입 -->
-
     <script th:fragment="pick">
         document.addEventListener('DOMContentLoaded', function () {
             const wishlistBtn = document.getElementById('wishlist-btn');

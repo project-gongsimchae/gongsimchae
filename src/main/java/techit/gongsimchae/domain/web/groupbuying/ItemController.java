@@ -20,6 +20,7 @@ import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionDto;
 import techit.gongsimchae.domain.groupbuying.itemoption.service.ItemOptionService;
 import techit.gongsimchae.domain.groupbuying.orderitem.service.OrderItemService;
+import techit.gongsimchae.domain.groupbuying.reviews.service.ReviewService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class ItemController {
     private final EventCategoryService eventCategoryService;
     private final EventService eventService;
     private final OrderItemService orderItemService;
+    private final ReviewService reviewService;
 
     /**
      * 검색
@@ -124,6 +126,7 @@ public class ItemController {
 
         model.addAttribute("item",item);
         model.addAttribute("completionAmountItemCntDto", orderItemService.getCountCompletedOrderItemsWithItemId(id));
+        model.addAttribute("reviewResDtoWebList", reviewService.findReviewListByItemId(id));
 
         return "groupbuying/itemDetails";
     }

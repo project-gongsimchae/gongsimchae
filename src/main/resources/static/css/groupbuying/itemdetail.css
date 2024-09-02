@@ -402,5 +402,142 @@ button#purchase-btn.closed {
     object-fit: cover;
 }
 
+/* 리뷰 섹션 스타일 추가 */
+.reviews-detail {
+    padding: 30px; /* 기존 다른 섹션들과 통일된 padding */
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left; /* 리뷰 텍스트 정렬 변경 */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
+}
 
+.reviews-detail h4 {
+    margin-top: 0;
+    margin-bottom: 20px; /* 제목 아래 여백 */
+}
 
+/* 리뷰 카드 스타일 */
+.review-layout {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px; /* 각 리뷰 카드 간격 */
+    padding-bottom: 20px; /* 각 카드 내부 패딩 */
+}
+
+/* 리뷰 이미지 설정 */
+.review-image {
+    flex-shrink: 0;
+    margin-right: 20px; /* 이미지와 텍스트 간격 */
+}
+
+.review-img {
+    width: 100px; /* 이미지 크기 조절 */
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* 리뷰 제목 스타일 */
+.review-title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* 리뷰 별점 아이콘 */
+.review-rating {
+    margin-bottom: 15px;
+}
+
+.star-icon {
+    color: #fdd835; /* 노란색 별 아이콘 */
+    font-size: 20px;
+    margin-right: 2px;
+}
+
+/* 리뷰 내용 스타일 */
+.review-content .review-content-class {
+    margin: 0;
+}
+
+/* 비밀 리뷰 텍스트 */
+.text-muted {
+    margin-top: 10px;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* nick 스타일 수정 */
+.review-content p.nickname {
+    font-size: 0.875rem; /* 글자 크기 줄임 */
+    color: #6c757d; /* 회색 */
+}
+
+/* h4 태그 왼쪽 정렬 */
+.reviews-detail h4 {
+    margin-top: 0;
+    margin-bottom: 20px; /* 제목 아래 여백 */
+    text-align: center; /* 가운데 정렬 */
+}
+
+/* 프로그래스바 크기 조정 */
+.status-detail-container .progress {
+    background-color: #f0f0f0;
+    height: 20px; /* 높이 증가 */
+    width: 500px; /* 너비 증가 */
+    margin-bottom: 15px; /* 아래쪽 여백 추가 */
+}
+
+.progress-bar {
+    height: 100%; /* 프로그레스바 높이를 부모에 맞춤 */
+}
+
+/* 리뷰 섹션 스타일 추가 */
+.review-layout {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px; /* 각 리뷰 카드 간격 */
+    padding-bottom: 20px; /* 각 카드 내부 패딩 */
+    position: relative; /* 모달을 위한 설정 */
+}
+
+/* 모달 창 스타일 */
+.modal {
+    display: none; /* 초기에는 숨김 */
+    position: fixed;
+    z-index: 1000; /* 가장 위에 오도록 설정 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* 배경 어둡게 */
+}
+
+.modal-content {
+    margin: 10% auto;
+    display: block;
+    max-width: 80%;
+}
+
+.modal-content img {
+    width: 500px;
+    height: auto;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: #fff;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.review-writer {
+    color: #BDBDBD;
+}

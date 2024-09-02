@@ -151,4 +151,35 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', changeQuantity);
     document.addEventListener('click', removeOption);
     addToCartForm.addEventListener('submit', addToCart);
+
+    // 모달 관련 코드 추가
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <span class="modal-close">&times;</span>
+        <div class="modal-content">
+            <img src="" alt="리뷰 이미지">
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalImg = modal.querySelector('img');
+    const modalClose = modal.querySelector('.modal-close');
+
+    document.querySelectorAll('.review-img').forEach(img => {
+        img.addEventListener('click', function() {
+            modal.style.display = 'block';
+            modalImg.src = this.src;
+        });
+    });
+
+    modalClose.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 });

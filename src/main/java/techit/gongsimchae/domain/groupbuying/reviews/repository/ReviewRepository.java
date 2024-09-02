@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.reviews.entity.Review;
+import techit.gongsimchae.domain.groupbuying.reviews.entity.SecretStatus;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByUserId(Long userId);
@@ -14,4 +15,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Review findByUserIdAndUID(Long userId, String uid);
 
     Review findByUserIdAndItem(Long userId, Item item);
+
+    List<Review> findReviewsByItemAndSecretStatus(Item item, SecretStatus secretStatus);
 }
