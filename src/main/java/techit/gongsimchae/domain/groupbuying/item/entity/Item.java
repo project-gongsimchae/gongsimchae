@@ -51,6 +51,9 @@ public class Item extends BaseEntity {
     @OneToMany(mappedBy = "item")
     private List<ItemOption> itemOptions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "item")
+    private List<ImageFile> detailImageFiles = new ArrayList<>();
+
     public Item (ItemCreateDto itemCreateDto, Category category) {
         this.name = itemCreateDto.getName();
         this.intro = itemCreateDto.getIntro();

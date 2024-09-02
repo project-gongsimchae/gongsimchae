@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.entity.ItemImageFileStatus;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
@@ -93,7 +94,9 @@ public class ItemService {
         Item item = new Item(itemCreateDto, category);
         itemRepository.save(item);
 
-        imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item);
+        imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item, ItemImageFileStatus.THUMBNAIL);
+        imageS3Service.storeFiles(itemCreateDto.getDetailImages(), "images", item, ItemImageFileStatus.DETAIL);
+
 
         if (itemCreateDto.getOptions() != null) {
             for(ItemOptionCreateDto optionCreateDto : itemCreateDto.getOptions()) {
@@ -115,7 +118,8 @@ public class ItemService {
         item.UpdateDto(itemUpdateDto, category);
 
         // 새로운 이미지 파일 저장
-        imageS3Service.storeFiles(itemUpdateDto.getImages(), "images", item);
+        imageS3Service.storeFiles(itemUpdateDto.getImages(), "images", item, ItemImageFileStatus.THUMBNAIL);
+        imageS3Service.storeFiles(itemUpdateDto.getDetailImages(), "images", item, ItemImageFileStatus.DETAIL);
 
         // 삭제할 이미지 파일 처리
         if (itemUpdateDto.getDeleteImages() != null && !itemUpdateDto.getDeleteImages().isEmpty()) {
