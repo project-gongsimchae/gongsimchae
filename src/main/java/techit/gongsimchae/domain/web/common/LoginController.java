@@ -12,10 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import techit.gongsimchae.domain.common.refreshtoken.service.RefreshTokenService;
 import techit.gongsimchae.domain.common.user.dto.*;
 import techit.gongsimchae.domain.common.user.service.UserService;
-import techit.gongsimchae.global.security.jwt.JwtProcess;
 import techit.gongsimchae.global.util.CookieUtil;
 
 import java.util.HashMap;
@@ -27,8 +25,6 @@ import java.util.Map;
 public class LoginController {
 
     private final UserService userService;
-    private final RefreshTokenService refreshTokenService;
-    private final JwtProcess jwtProcess;
 
     @GetMapping("/signup")
     public String signupForm(@ModelAttribute("user") UserJoinReqDtoWeb user) {

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.groupbuying.item.dto.ItemCardResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
 
@@ -19,51 +21,33 @@ import static techit.gongsimchae.domain.groupbuying.item.entity.QItem.item;
 @RequiredArgsConstructor
 public class ItemCustomRepositoryImpl implements ItemCustomRepository {
     private final JPAQueryFactory queryFactory;
-    @Override
-    public Page<ItemRespDtoWeb> findItemsByKeyword(ItemSearchForm itemSearchForm, Pageable pageable) {
-        List<ItemRespDtoWeb> result = queryFactory.select(Projections.fields(ItemRespDtoWeb.class,
+
+    public Page<ItemCardResDtoWeb> findRecentItems(Pageable pageable) {
+        List<ItemCardResDtoWeb> results = queryFactory.select(Projections.fields(ItemCardResDtoWeb.class,
                         item.id, item.name, item.intro, item.originalPrice, item.discountRate,
-                        item.pointAccumulationRate, item.groupBuyingQuantity, item.groupBuyingLimitTime,
-                        item.deleteStatus, item.UID, item.cumulativeSalesVolume, item.reviewCount, item.createDate,
-                        item.updateDate, imageFile))
+                        item.pointAccumulationRate, item.groupBuyingLimitTime, item.groupBuyingQuantity,
+                        item.UID, item.cumulativeSalesVolume, item.reviewCount))
                 .from(item)
-                .leftJoin(item.imageFiles, imageFile)
-                .where(searchCondition(itemSearchForm))
-                .orderBy(sortTypes(itemSearchForm))
+                .orderBy(item.createDate.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
                 .fetch();
 
-        int size = queryFactory.select(item)
-                .from(item)
-                .leftJoin(item.imageFiles, imageFile)
-                .where(searchCondition(itemSearchForm))
-                .fetch().size();
+        for (ItemCardResDtoWeb result : results) {
+            List<ImageFile> imageFiles = queryFactory.select(imageFile)
+                    .from(imageFile)
+                    .join(imageFile.item, item)
+                    .where(item.id.eq(result.getId()))
+                    .fetch();
 
-
-        return new PageImpl<>(result, pageable, size);
-    }
-
-
-    private BooleanExpression searchCondition(ItemSearchForm itemSearchForm) {
-        if (itemSearchForm != null && itemSearchForm.getKeyword() != null) {
-            String keyword = itemSearchForm.getKeyword();
-            return item.name.contains(keyword).or(item.intro.contains(keyword));
-        }
-        return null;
-    }
-
-    private OrderSpecifier<?> sortTypes(ItemSearchForm itemSearchForm) {
-        Integer sortType = itemSearchForm.getSortType();
-        if (sortType != null) {
-            switch (sortType) {
-                case 4:
-                    return item.originalPrice.asc();
-                case 5:
-                    return item.originalPrice.desc();
-                case 1:
-                default:
-                    return item.createDate.desc();
+            if (imageFiles != null) {
+                result.setItemBannerImage(imageFiles.get(0).getStoreFilename());
             }
         }
-        return item.createDate.desc(); // 기본값: 생성일 내림차순
+
+        Long size = queryFactory.select(item.count())
+                .from(item)
+                .fetchOne();
+        return new PageImpl<>(results, pageable, size.intValue());
     }
 }
