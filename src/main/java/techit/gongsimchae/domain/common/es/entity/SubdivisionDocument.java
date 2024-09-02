@@ -15,10 +15,8 @@ import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 @Getter
 public class SubdivisionDocument {
     @Id
-    private String id;
-
     @Field(name = "subdivision_id", type = FieldType.Long)
-    private Long subdivisionId;
+    private Long id;
 
     @Field(type = FieldType.Text, analyzer = "nori")
     private String title;
@@ -38,9 +36,14 @@ public class SubdivisionDocument {
     private Integer views;
     @Field(type = FieldType.Keyword, index = false, docValues = false)
     private String url;
+    @Field(type = FieldType.Keyword)
+    private String uid;
+
+    @Field(name = "delete_status", type = FieldType.Boolean, index = false)
+    private Boolean deleteStatus;
 
     public SubdivisionDocument(Subdivision subdivision, String url) {
-        this.subdivisionId = subdivision.getId();
+        this.id = subdivision.getId();
         this.title = subdivision.getTitle();
         this.content = subdivision.getContent();
         this.address = subdivision.getAddress();
@@ -48,6 +51,8 @@ public class SubdivisionDocument {
         this.price = subdivision.getPrice();
         this.views = subdivision.getViews();
         this.url = url;
+        this.uid = subdivision.getUID();
+        this.deleteStatus = subdivision.getDeleteStatus();
     }
 
     public void changeInfo(Subdivision subdivision, String url) {
@@ -58,5 +63,17 @@ public class SubdivisionDocument {
         this.views = subdivision.getViews();
         this.url = url;
         this.subdivisionType = subdivision.getSubdivisionType().name();
+        this.deleteStatus = subdivision.getDeleteStatus();
+    }
+
+    public void changeInfo(Subdivision subdivision) {
+        this.title = subdivision.getTitle();
+        this.content = subdivision.getContent();
+        this.address = subdivision.getAddress();
+        this.price = subdivision.getPrice();
+        this.views = subdivision.getViews();
+        this.url = url;
+        this.subdivisionType = subdivision.getSubdivisionType().name();
+        this.deleteStatus = subdivision.getDeleteStatus();
     }
 }

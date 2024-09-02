@@ -12,12 +12,12 @@
     <h1 class="category-alert" th:text="|'${keyword}' 에 대한 검색결과|">></h1>
     <div class="item-grid-view-main">
         <div class="header">
-            <div class="category-alert-cnt" th:text="'총 ' + ${#lists.size(items)-1} + '건'"></div>
+            <div class="category-alert-cnt" th:text="'총 ' + ${#lists.size(items)} + '건'"></div>
             <ul class="category-sort-standard-ul" >
                 <li class="category-sort-standard-li" th:each="type : ${T(techit.gongsimchae.domain.groupbuying.item.entity.SortType).values()}">
                     <!-- URL을 페이지 번호와 정렬 타입으로 동적으로 생성 -->
                     <a href="#"
-                       th:href="@{/search(keyword=${keyword},page=1, sortType=${type.getTypeNumber()})}"
+                       th:href="@{/search(keyword=${keyword}, sortType=${type.getTypeNumber()})}"
                        class="category-sort-standard-alink"
                        th:text="${type.name}">
                     </a>

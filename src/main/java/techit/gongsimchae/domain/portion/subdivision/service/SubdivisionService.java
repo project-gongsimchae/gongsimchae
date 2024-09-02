@@ -10,8 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import techit.gongsimchae.domain.common.es.entity.SubdivisionDocument;
-import techit.gongsimchae.domain.common.es.repository.SubCommonElasticRepository;
+import techit.gongsimchae.domain.common.es.repository.SubElasticRepository;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
@@ -29,11 +28,9 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -47,18 +44,17 @@ public class SubdivisionService {
     private final ImageFileRepository imageFileRepository;
     private final ChatRoomService chatRoomService;
     private final ApplicationEventPublisher publisher;
-    private final SubCommonElasticRepository subCommonElasticRepository;
+    private final SubElasticRepository subElasticRepository;
 
     /**
      * 소분글 메인페이지에 모든 소분글들을 보여주는 메서드
      */
-    public Page<SubdivisionRespDto> getAllSubdivisions(SubSearchDto searchDto, Pageable pageable){
+    public Page<SubdivisionRespDto> getAllSubdivisions(SubSearchDto searchDto, Pageable pageable) {
         return subdivisionRepository.searchAndSortSubdivisions(searchDto, pageable);
     }
 
     /**
      * URL의 Path 값으로 넘어온 UID로 DB에서 해당 소분 글을 찾아주는 메서드
-     *
      */
     public SubdivisionRespDto findSubdivisionByUID(String UID) {
 
@@ -70,7 +66,6 @@ public class SubdivisionService {
 
     /**
      * UserId를 기반으로 자신이 작성한 소분 글 찾아주는 메서드
-     *
      */
     public List<SubdivisionRespDto> findSubdivisionByUserId(Long userId) {
 
@@ -83,7 +78,6 @@ public class SubdivisionService {
     @Transactional
     public String saveSubdivision(SubdivisionReqDto subdivisionReqDto,
                                   Long userId) {
-
 
 
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException("not found user"));
@@ -106,20 +100,30 @@ public class SubdivisionService {
 
         Subdivision savedSubdivision = subdivisionRepository.save(subdivision);
 
-        notifyKeyword(savedSubdivision.getSigungu(), savedSubdivision.getTitle(),savedSubdivision.getUID());
+        notifyKeyword(savedSubdivision.getSigungu(), savedSubdivision.getTitle(), savedSubdivision.getUID());
 
         // chatroom 생성
         chatRoomService.create(savedSubdivision);
-        String storeFilename = null;
         List<ImageFile> imageFiles = imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", subdivision);
-        if (!imageFiles.isEmpty()) {
-            for (ImageFile imageFile : imageFiles) {
-                storeFilename = imageFile.getStoreFilename();
-            }
-        }
-        subCommonElasticRepository.save(new SubdivisionDocument(savedSubdivision, storeFilename));
+        saveSubDocument(savedSubdivision, imageFiles);
 
         return subdivision.getUID();
+    }
+
+    private void saveSubDocument(Subdivision subdivision, List<ImageFile> imageFiles) {
+        String url = null;
+        if (!imageFiles.isEmpty()) {
+            url = imageFiles.get(0).getStoreFilename();
+        }
+        subElasticRepository.createSubDocument(subdivision, url);
+    }
+
+    private void updateSubDocument(Subdivision subdivision, List<ImageFile> imageFiles) {
+        String url = null;
+        if (!imageFiles.isEmpty()) {
+            url = imageFiles.get(0).getStoreFilename();
+        }
+        subElasticRepository.updateSubdivision(subdivision, url);
     }
 
     /**
@@ -134,9 +138,9 @@ public class SubdivisionService {
         Subdivision subdivision = subdivisionRepository.findById(subdivisionUpdateReqDto.getId()).orElseThrow(() -> new CustomWebException("Subdivision not found"));
         subdivision.updateSubdivision(subdivisionUpdateReqDto);
 
-        notifyKeyword(subdivision.getSigungu(), subdivision.getTitle(),subdivision.getUID());
+        notifyKeyword(subdivision.getSigungu(), subdivision.getTitle(), subdivision.getUID());
 
-        imageS3Service.storeFiles(subdivisionUpdateReqDto.getImages(), "images", subdivision);
+        List<ImageFile> imageFiles = imageS3Service.storeFiles(subdivisionUpdateReqDto.getImages(), "images", subdivision);
 
         if (!Objects.isNull(subdivisionUpdateReqDto.getDeleteImages())) {
             for (Long deleteImageId : subdivisionUpdateReqDto.getDeleteImages()) {
@@ -147,6 +151,7 @@ public class SubdivisionService {
                 imageS3Service.deleteFileFromDb(imageFile);
             }
         }
+        updateSubDocument(subdivision, imageFiles);
 
         return subdivision.getUID();
     }
@@ -161,8 +166,10 @@ public class SubdivisionService {
         Subdivision subdivision = subdivisionRepository.findByUID(UID).orElseThrow(() -> new CustomWebException("Subdivision not found"));
 
         subdivision.deleteSubdivision();
+
+        updateSubDocument(subdivision, null);
     }
-  
+
     /**
      * 마이페이지에서 참여중인 소분글 찾는 메서드
      */
@@ -177,6 +184,7 @@ public class SubdivisionService {
     public void changeStatus(String uid, String status) {
         Subdivision subdivision = subdivisionRepository.findByUID(uid).orElseThrow(() -> new CustomWebException(ErrorMessage.SUBDIVISION_NOT_FOUND));
         subdivision.changeType(status);
+        subElasticRepository.updateSubdivision(subdivision);
         if (SubdivisionType.valueOf(status).equals(SubdivisionType.END)) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override
@@ -208,7 +216,7 @@ public class SubdivisionService {
                     new TransactionSynchronizationAdapter() {
                         @Override
                         public void afterCommit() {
-                            publisher.publishEvent(new KeywordNotiEvent(taget.getUser(),taget.getKeyword(),url,sigungu,title));
+                            publisher.publishEvent(new KeywordNotiEvent(taget.getUser(), taget.getKeyword(), url, sigungu, title));
                         }
                     }
             );
@@ -220,7 +228,7 @@ public class SubdivisionService {
      */
     private String getDong(String address) {
         int index = address.lastIndexOf(" ");
-        return address.substring(0,index);
+        return address.substring(0, index);
     }
 
 

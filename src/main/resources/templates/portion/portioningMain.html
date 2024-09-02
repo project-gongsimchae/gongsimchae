@@ -86,7 +86,8 @@
                 <div th:each="subdivision : ${subdivisions}" class="write-subdivision">
                     <a th:href="@{/portioning/{UID}(UID=${subdivision.UID})}">
                         <div class="thumbnail-image-placeholder">
-                            <img th:src="${subdivision.imageFileList.size() > 0 ? subdivision.imageFileList.get(0).storeFilename : 'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}"
+                            <img th:src="${subdivision.imageFileList != null && subdivision.imageFileList.size() > 0 ?
+                            subdivision.imageFileList.get(0).storeFilename : 'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}"
                                  alt="썸네일 이미지"/>
                         </div>
                         <div class="write-simple-info">
@@ -160,45 +161,6 @@
 </script>
 
 <script th:replace="~{layout/portionHeader :: keyword}"></script>
-<script>
-    $(document).ready(function() {
-        // search-box에 입력이 발생할 때마다 fetchRelatedSearchTerms 함수 호출
-        $('#search-box').on('input', function() {
-            fetchRelatedSearchTerms();
-        });
-    });
-
-    function fetchRelatedSearchTerms() {
-        var query = $('#search-box').val();  // 검색창 입력값 가져오기
-        if (query.length > 0) {  // 1글자 이상 입력되었을 때 실행
-            $.ajax({
-                url: '/portioning/related-search',  // 연관 검색어 API 엔드포인트
-                method: 'GET',
-                data: { type: query },
-                success: function(response) {
-                    var relatedTermsDiv = $('#related-search-terms');
-                    relatedTermsDiv.empty();  // 기존 연관 검색어 초기화
-
-                    if (response.length > 0) {  // 연관 검색어가 있을 경우에만 표시
-                        response.forEach(function(term) {
-                            relatedTermsDiv.append('<p style="margin: 0; padding: 5px; cursor: pointer;" onclick="setSearchTerm(\'' + term + '\')">' + term + '</p>');
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Ajax 호출 실패:", status, error);  // 에러 로그 출력
-                }
-            });
-        } else {
-            $('#related-search-terms').empty();  // 아무것도 입력되지 않으면 연관 검색어 초기화
-        }
-    }
-
-    function setSearchTerm(term) {
-        $('#search-box').val(term);  // 선택한 연관 검색어를 검색창에 입력
-        $('#related-search-terms').empty();  // 연관 검색어 목록 숨기기
-    }
-</script>
 
 </body>
 

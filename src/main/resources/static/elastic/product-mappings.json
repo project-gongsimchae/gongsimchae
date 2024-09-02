@@ -1,7 +1,7 @@
 {
   "properties": {
 
-    "subdivisionId": {
+    "id": {
       "type": "long"
     },
 
@@ -32,6 +32,14 @@
     },
     "url": {
       "type": "keyword"
+    },
+
+    "uid": {
+      "type": "keyword"
+    },
+
+    "deleteStatus": {
+      "type": "boolean"
     }
   }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techit.gongsimchae.domain.common.es.dto.SubdivisionEsRespDto;
 import techit.gongsimchae.domain.common.es.service.SubElasticService;
 import techit.gongsimchae.domain.portion.areas.entity.MyeondongeupArea;
 import techit.gongsimchae.domain.portion.areas.entity.SidoArea;
@@ -45,14 +45,7 @@ public class PortionMainController {
     private final ViewCountService viewCountService;
     private final SubElasticService subElasticService;
 
-    @GetMapping("/portioning/related-search")
-    @ResponseBody
-    public ResponseEntity<?> search(@RequestParam("type") String type) {
-        List<SubdivisionEsRespDto> subdivisionEsRespDtos = subElasticService.getRelatedSearchTerms(type);
 
-        List<String> list = subdivisionEsRespDtos.stream().map(SubdivisionEsRespDto::getTitle).toList();
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
 
 
     /**
@@ -66,12 +59,15 @@ public class PortionMainController {
         List<SidoArea> sidoAreas = sidoAreaService.getAllSidoAreas();
         model.addAttribute("sidoAreas", sidoAreas);
 
-        Page<SubdivisionRespDto> subdivisions = subdivisionService.getAllSubdivisions(searchDto, pageable);
+        Page<SubdivisionRespDto> subdivisions = null;
+
+        if (searchDto.getType() != null) {
+            subdivisions = subElasticService.getRelatedSearchTerms(searchDto.getType());
+        } else{
+            subdivisions = subdivisionService.getAllSubdivisions(searchDto, pageable);
+        }
         viewCountService.setSubdivisionViews(subdivisions.getContent());
-
         model.addAttribute("subdivisions", subdivisions);
-        model.addAttribute("query", searchDto);
-
 
         return "portion/portioningMain";
     }
