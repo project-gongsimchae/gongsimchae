@@ -72,7 +72,6 @@ public class SubdivisionDocument {
         this.address = subdivision.getAddress();
         this.price = subdivision.getPrice();
         this.views = subdivision.getViews();
-        this.url = url;
         this.subdivisionType = subdivision.getSubdivisionType().name();
         this.deleteStatus = subdivision.getDeleteStatus();
     }
