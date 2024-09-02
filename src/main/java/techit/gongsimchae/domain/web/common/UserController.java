@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -121,13 +122,18 @@ public class UserController {
     }
 
     @PostMapping("/address")
-    public String addAddress(@ModelAttribute("address") AddressCreateReqDtoWeb addressCreateReqDtoWeb, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        log.debug("address {}", addressCreateReqDtoWeb);
+    public String addAddress(@Valid @ModelAttribute("address") AddressCreateReqDtoWeb addressCreateReqDtoWeb,
+                             BindingResult bindingResult,
+                             @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        if(bindingResult.hasErrors()) {
+            return "user/address";
+        }
         addressService.addAddress(addressCreateReqDtoWeb, principalDetails);
         return "redirect:/mypage/address";
     }
 
     @GetMapping("/address/update/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @addressService.IsOwner(#id) == principal.username")
     public String addressUpdateForm(@PathVariable("id") String id, Model model) {
         AddressRespDtoWeb address = addressService.getAddress(id);
         model.addAttribute("address", address);
@@ -135,6 +141,7 @@ public class UserController {
     }
 
     @PostMapping("/address/update/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @addressService.IsOwner(#id) == principal.username")
     public String addressUpdate(@PathVariable("id") String id, @Valid @ModelAttribute("address") AddressUpdateReqDtoWeb addressUpdateReqDtoWeb, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             log.debug("address update form validation error {} ", bindingResult.getAllErrors());
@@ -145,12 +152,14 @@ public class UserController {
     }
 
     @PostMapping("/address/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @addressService.IsOwner(#id) == principal.username")
     public String addressDelete(@PathVariable("id") String id) {
         addressService.deleteAddress(id);
         return "redirect:/mypage/address";
     }
 
     @PostMapping("/change/default/address/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @addressService.IsOwner(#id) == principal.username")
     public ResponseEntity<?> changeDefaultAddress(@PathVariable("id") String id) {
         addressService.changeDefaultAddress(id);
         return ResponseEntity.ok().build();

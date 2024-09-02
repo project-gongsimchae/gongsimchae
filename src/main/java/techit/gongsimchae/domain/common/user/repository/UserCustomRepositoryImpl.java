@@ -12,8 +12,6 @@ import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItemStatus;
 import techit.gongsimchae.domain.portion.notifications.dto.NotificationKeywordUserDto;
-import techit.gongsimchae.domain.portion.report.entity.QReport;
-import techit.gongsimchae.domain.portion.subdivision.entity.QSubdivision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +21,10 @@ import static techit.gongsimchae.domain.common.user.entity.QUser.user;
 import static techit.gongsimchae.domain.groupbuying.item.entity.QItem.item;
 import static techit.gongsimchae.domain.groupbuying.itemoption.entity.QItemOption.itemOption;
 import static techit.gongsimchae.domain.groupbuying.orderitem.entity.QOrderItem.orderItem;
-import static techit.gongsimchae.domain.portion.notificationkeyword.entity.QNotificationKeyword.notificationKeyword;
 import static techit.gongsimchae.domain.groupbuying.orders.entity.QOrders.orders;
-import static techit.gongsimchae.domain.portion.report.entity.QReport.*;
-import static techit.gongsimchae.domain.portion.subdivision.entity.QSubdivision.*;
+import static techit.gongsimchae.domain.portion.notificationkeyword.entity.QNotificationKeyword.notificationKeyword;
+import static techit.gongsimchae.domain.portion.report.entity.QReport.report;
+import static techit.gongsimchae.domain.portion.subdivision.entity.QSubdivision.subdivision;
 
 @RequiredArgsConstructor
 public class UserCustomRepositoryImpl implements UserCustomRepository{

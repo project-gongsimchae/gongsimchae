@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.inquiry.entity.Inquiry;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.reviews.entity.Review;
@@ -21,4 +22,6 @@ public interface ImageFileRepository extends JpaRepository<ImageFile, Long> {
     List<ImageFile> findAllByItem(Item item);
 
     ImageFile findByReview(Review review);
+
+    List<ImageFile> findByInquiry(Inquiry inquiry);
 }

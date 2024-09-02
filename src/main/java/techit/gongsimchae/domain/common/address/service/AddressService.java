@@ -87,4 +87,11 @@ public class AddressService {
             address.unsetDefaultAddress();
         }
     }
+
+    public String IsOwner(String id) {
+        Address address = addressRepository.findByUID(id).orElseThrow(() -> new CustomWebException(ErrorMessage.ADDRESS_NOT_FOUND));
+        return address.getUser().getLoginId();
+    }
+
+
 }

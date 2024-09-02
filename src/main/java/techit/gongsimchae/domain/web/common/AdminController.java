@@ -141,24 +141,6 @@ public class AdminController {
         return "redirect:/admin/category";
     }
 
-    /**
-     * 관리자 배너
-     */
-    @GetMapping("/banners")
-    public String banners(){
-        return "admin/banners/bannerList";
-    }
-
-    @GetMapping("/banners/write")
-    public String bannerForm(){
-        return "admin/banners/write";
-    }
-
-    @PostMapping("/banners/write")
-    public String banner(){
-        return "redirect:/admin/banners";
-    }
-
 
     /**
      * 유저가 쓴 1:1 문의를 관리자가 보고 작성

@@ -6,6 +6,7 @@ public interface ErrorMessage {
     /**
      * common 에러
      */
+    String INQUIRY_NOT_FOUND = "존재하지 않는 문의입니다.";
 
     // 유저
     String USER_NOT_FOUND = "존재하지 않는 회원입니다.";
