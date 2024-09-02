@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const mainImage = document.getElementById('main-image');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+            // 현재 선택된 썸네일을 강조 표시하고, 이전 선택된 썸네일은 강조 해제
+            thumbnails.forEach(thumb => thumb.classList.remove('active'));
+            this.classList.add('active');
+
+            // 큰 이미지 변경
+            const newSrc = this.querySelector('.thumbnail-image').src;
+            mainImage.src = newSrc;
+        });
+    });
+
+
     const optionSelect = document.getElementById('product-options');
     const totalPriceEl = document.getElementById('total-price');
     const selectedOptionsEl = document.getElementById('selected-options');

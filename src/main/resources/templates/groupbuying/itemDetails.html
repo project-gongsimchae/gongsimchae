@@ -11,11 +11,20 @@
 </head>
 <body>
 <section class="product-detail-section">
-<!--    <div class="product-detail-image" th:each="itemImage : ${item.getImageUrls()}">-->
-<!--        <img th:src="${itemImage}" alt="no image"/>-->
+    <div class="product-detail-image-slider">
+        <div class="main-image-container">
+            <img th:src="${item[0].getImageFiles()[0].storeFilename}" alt="메인 이미지" class="main-image" id="main-image">
+        </div>
+        <div class="thumbnail-container">
+            <div class="thumbnail" th:each="itemImage, iterStat : ${item[0].getImageFiles()}"
+                 th:classappend="${iterStat.index == 0} ? 'active' : ''">
+                <img th:src="${itemImage.storeFilename}" alt="상품 이미지" class="thumbnail-image"/>
+            </div>
+        </div>
+    </div>
     <form id="addToCartForm" th:action="@{/product/cart/add}" method="post">
         <div class="product-detail-info">
-            <h3 class="product-detail-title" th:text="${item[0].itemName}">에어프라이어 용 미니 돈까스</h3>
+            <h3 class="product-detail-title" th:text="${item[0].itemName}"></h3>
 
             <div class="btn-detail-container">
                 <select class="form-select" id="product-options" aria-label="상품 선택">
@@ -52,7 +61,7 @@
     </form>
 </section>
 <div class="separator-detail"></div>
-<section class="status-detail-container">
+<section class="status-detail-container product-detail-section">
     <div class="progress">
 
         <!-- 프로그레스바 -->

@@ -51,6 +51,7 @@ public class ItemOptionService {
                 .quantity(item.getGroupBuyingQuantity())
                 .itemUID(item.getUID())
                 .itemStatus(item.getItemStatus())
+                .imageFiles(item.getImageFiles())
                 .build();
     }
 }
