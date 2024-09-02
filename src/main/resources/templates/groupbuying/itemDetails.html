@@ -77,7 +77,11 @@
 </section>
 <section class="product-description-detail">
     <h4>상품 설명</h4>
-    <p>여기에 상세 설명이 들어갑니다. 제품의 특징, 사용 방법, 주의 사항 등을 포함시킬 수 있습니다.</p>
+    <div class="detail-item-images">
+        <div th:each="imageFile : ${item[0].detailImageFile}">
+            <img th:src="@{${imageFile.storeFilename}}" alt="상세 이미지" style="width: 800px; height: auto; max-width: 100%" />
+        </div>
+    </div>
 </section>
 <section class="reviews-detail">
     <h4>후기</h4>

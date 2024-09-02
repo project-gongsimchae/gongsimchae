@@ -117,8 +117,11 @@ body {
     padding: 30px; /* 패딩 증가로 내부 여백 확대 */
     max-width: 1200px;
     margin: 0 auto;
-    background-color: #f9f9f9;
     text-align: center;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
 }
 
 .product-description-detail h4, .reviews-detail h4, .inquiries-detail h4 {

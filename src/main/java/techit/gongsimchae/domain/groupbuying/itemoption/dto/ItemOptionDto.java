@@ -23,10 +23,11 @@ public class ItemOptionDto {
     private Integer discountPrice;
     private ItemStatus itemStatus;
     private List<ImageFile> imageFiles;
+    private List<ImageFile> detailImageFile;
 
 
     @Builder
-    public ItemOptionDto(Long itemId, Long itemOptionId, String content, String optionsInfo, String itemName, Integer optionPrice, Integer quantity, Integer totalPrice, Integer originalPrice, Integer discountRate, Integer discountPrice, String itemUID, ItemStatus itemStatus, List<ImageFile> imageFiles) {
+    public ItemOptionDto(Long itemId, Long itemOptionId, String content, String optionsInfo, String itemName, Integer optionPrice, Integer quantity, Integer totalPrice, Integer originalPrice, Integer discountRate, Integer discountPrice, String itemUID, ItemStatus itemStatus, List<ImageFile> imageFiles, List<ImageFile> detailImageFile) {
         this.itemId = itemId;
         this.itemOptionId = itemOptionId;
         this.content = content;
@@ -41,5 +42,6 @@ public class ItemOptionDto {
         this.itemUID = itemUID;
         this.itemStatus = itemStatus;
         this.imageFiles = imageFiles;
+        this.detailImageFile = detailImageFile;
     }
 }
