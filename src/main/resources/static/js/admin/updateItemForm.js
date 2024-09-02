@@ -58,6 +58,51 @@ document.getElementById('mainForm').addEventListener('submit', function(e) {
     e.target.submit();
 });
 
+function triggerDetailFileInput() {
+    document.getElementById('detailImages').click();  // 이미지 선택 창 열기
+}
+
+let selectedDetailFiles = []; // 모든 선택된 파일을 저장할 배열
+
+// 이미지 미리보기 함수
+function previewDetailImages(event) {
+    const container = document.getElementById('image-preview-container2');
+    const files = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'image-preview-wrapper';
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'image-preview';
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerHTML = 'X';
+            deleteButton.className = 'image-delete-button';
+            deleteButton.onclick = function() {
+                container.removeChild(wrapper);
+            };
+
+            wrapper.appendChild(img);
+            wrapper.appendChild(deleteButton);
+            container.appendChild(wrapper);
+        }
+
+        reader.readAsDataURL(file);
+    }
+}
+
+// 이미지 제거 함수
+function removeDetailImage(index) {
+    selectedDetailFiles.splice(index, 1);  // 해당 인덱스의 파일을 배열에서 제거
+    updateDetailImagePreview();  // 미리보기 업데이트
+}
+
 function addOptionField() {
     const container = document.getElementById('added-options');
     const currentOptionContent = document.getElementById('optionContent').value.trim();

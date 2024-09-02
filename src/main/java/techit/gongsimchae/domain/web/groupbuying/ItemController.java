@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techit.gongsimchae.domain.common.imagefile.entity.ItemImageFileStatus;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
@@ -80,7 +81,9 @@ public class ItemController {
         model.addAttribute("item", item);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("isNew", false);
-        model.addAttribute("images", item.getImageFiles());
+        model.addAttribute("images", item.getImageFiles().stream().filter(image -> image.getItemImageFileStatus().equals(ItemImageFileStatus.THUMBNAIL)).toList());
+        model.addAttribute("detailImages", item.getImageFiles().stream().filter(image -> image.getItemImageFileStatus().equals(ItemImageFileStatus.DETAIL)).toList());
+
         return "admin/item/updateForm";
     }
 
@@ -91,7 +94,8 @@ public class ItemController {
         model.addAttribute("item", item);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("isNew", false);
-        model.addAttribute("images", item.getImageFiles());
+        model.addAttribute("images", item.getImageFiles().stream().filter(image -> image.getItemImageFileStatus().equals(ItemImageFileStatus.THUMBNAIL)).toList());
+        model.addAttribute("detailImages", item.getImageFiles().stream().filter(image -> image.getItemImageFileStatus().equals(ItemImageFileStatus.DETAIL)).toList());
 
         return "admin/item/updateForm";
     }

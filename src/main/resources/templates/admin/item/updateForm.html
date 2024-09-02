@@ -26,7 +26,7 @@
                 </div>
                 <div id="image-preview-container" class="image-preview-container">
                     <!-- 서버에서 제공한 이미지 URL을 통해 이미지를 렌더링 -->
-                    <div th:each="imageFile, iterStat : ${item.imageFiles}" class="image-preview-wrapper">
+                    <div th:each="imageFile, iterStat : ${images}" class="image-preview-wrapper">
                         <img th:src="@{${imageFile.storeFilename}}" class="image-preview"/>
                         <button type="button" class="image-delete-button"  th:onclick="'removeExistingImage(' + ${imageFile.id} + ', this)'">X</button>
                     </div>
@@ -126,6 +126,21 @@
                 </select>
                 <div class="invalid-feedback">
                     카테고리를 선택해주세요.
+                </div>
+            </div>
+
+            <div class="form-group" style="width: 600px">
+                <label for="detailImages" class="form-label">상품 상세 설명</label>
+                <div class="custom-file-upload" onclick="triggerDetailFileInput()"> <!-- 이미지 업로드 박스 전체 클릭 이벤트 추가 -->
+                    <input type="file" class="form-control-file" id="detailImages" name="detailImages" multiple onchange="previewDetailImages(event)" style="display: none;" />
+                    <i class="fas fa-plus"></i> <!-- + 아이콘만 남겨둠 -->
+                </div>
+                <div id="image-preview-container2" class="image-preview-container">
+                    <!-- 서버에서 제공한 이미지 URL을 통해 이미지를 렌더링 -->
+                    <div th:each="imageFile, iterStat : ${detailImages}" class="image-preview-wrapper">
+                        <img th:src="@{${imageFile.storeFilename}}" class="image-preview"/>
+                        <button type="button" class="image-delete-button"  th:onclick="'removeExistingImage(' + ${imageFile.id} + ', this)'">X</button>
+                    </div>
                 </div>
             </div>
 

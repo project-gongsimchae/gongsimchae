@@ -43,7 +43,7 @@
                 <td th:text="${item.createDate}"></td>
                 <td th:text="${item.category?.name}"></td>
                 <td>
-                    <a th:if="${item.deleteStatus == 0}" th:href="@{/admin/item/edit/{id}(id=${item.id})}" class="btn-custom btn-edit">수정</a>
+                    <a th:if="${item.deleteStatus == 0}" th:href="@{/admin/item/update/{id}(id=${item.id})}" class="btn-custom btn-edit">수정</a>
                 </td>
                 <td>
                     <form th:if="${item.deleteStatus.equals(0)}" th:action="@{/admin/item/delete}" method="post">
