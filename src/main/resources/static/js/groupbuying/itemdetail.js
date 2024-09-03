@@ -90,8 +90,14 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     optionSelect.addEventListener('change', updateDetails);
-    document.addEventListener('click', changeQuantity);
-    document.addEventListener('click', removeOption);
+    document.addEventListener('click', function(event) {
+        if (event.target.closest('.quantity-increase') || event.target.closest('.quantity-decrease')) {
+            changeQuantity(event);
+        } else if (event.target.closest('.remove-option-btn')) {
+            removeOption(event);
+        }
+    });
+
 
     const addToCart = (event) => {
         event.preventDefault();
@@ -120,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     alert('장바구니에 상품이 추가되었습니다.');
-                    // 필요하다면 여기에 장바구니 페이지로 리다이렉트 로직 추가
                 } else {
                     alert('장바구니 추가에 실패했습니다.');
                 }
