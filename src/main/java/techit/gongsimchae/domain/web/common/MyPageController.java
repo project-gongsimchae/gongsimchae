@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,8 +28,8 @@ import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
-import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewResDtoWeb;
+import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.service.ReviewService;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
@@ -120,7 +121,8 @@ public class MyPageController {
      * 문의 타입이랑, 내용만 볼 수 있음
      */
     @GetMapping("/inquiry/{id}")
-    public String inquiryDetail(@PathVariable("id") String id, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    @PreAuthorize("hasRole('ADMIN') or @inquiryService.isOwner(#id) == principal.username")
+    public String inquiryDetail(@PathVariable("id") String id, Model model) {
         InquiryRespDtoWeb inquiry = inquiryService.getInquiry(id);
         model.addAttribute("inquiry", inquiry);
         return "mypage/inquiryDetail";
@@ -130,13 +132,15 @@ public class MyPageController {
      * 1:1 문의 수정 폼
      */
     @GetMapping("/inquiry/update/{id}")
-    public String updateInquiryForm(@PathVariable("id") String id, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    @PreAuthorize("hasRole('ADMIN') or @inquiryService.isOwner(#id) == principal.username")
+    public String updateInquiryForm(@PathVariable("id") String id, Model model) {
         InquiryRespDtoWeb inquiry = inquiryService.getInquiry(id);
         model.addAttribute("inquiry", inquiry);
         return "mypage/inquiryUpdate";
     }
 
     @PostMapping("/inquiry/update/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @inquiryService.isOwner(#id) == principal.username")
     public String updateInquiry(@PathVariable("id") String id, @Valid @ModelAttribute("inquiry") InquiryUpdateReqDtoWeb inquiryUpdateReqDtoWeb,
                                 BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -151,6 +155,7 @@ public class MyPageController {
      * 1:1 문의 삭제
      */
     @PostMapping("/inquiry/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @inquiryService.isOwner(#id) == principal.username")
     public String deleteInquiry(@PathVariable("id") String id) {
         inquiryService.deleteInquiry(id);
         log.debug("deleteInquiry {}", id);

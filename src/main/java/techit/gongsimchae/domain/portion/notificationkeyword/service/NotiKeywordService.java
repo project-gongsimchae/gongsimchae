@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
-import techit.gongsimchae.domain.portion.notificationkeyword.dto.NotiKeywordCreateDtoWeb;
 import techit.gongsimchae.domain.portion.notificationkeyword.entity.NotificationKeyword;
 import techit.gongsimchae.domain.portion.notificationkeyword.repository.NotiKeywordRepository;
 import techit.gongsimchae.global.dto.PrincipalDetails;

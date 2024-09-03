@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.item.entity.ItemStatus;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +24,7 @@ public class ItemCardResDtoWeb {
     private Long cumulativeSalesVolume;
     private Long reviewCount;
     private String itemBannerImage;
+    private ItemStatus itemStatus;
 
     public ItemCardResDtoWeb(Item item, ImageFile imageFile){
         this.id = item.getId();
@@ -38,6 +40,7 @@ public class ItemCardResDtoWeb {
         this.reviewCount = item.getReviewCount();
         if(imageFile != null)
             this.itemBannerImage = imageFile.getStoreFilename();
+        this.itemStatus = item.getItemStatus();
     }
 
 }

@@ -231,5 +231,10 @@ public class SubdivisionService {
         return address.substring(0, index);
     }
 
+    public String isOwner(String uid) {
+        Subdivision subdivision = subdivisionRepository.findByUID(uid).orElseThrow(() -> new CustomWebException(ErrorMessage.SUBDIVISION_NOT_FOUND));
+        return subdivision.getUser().getLoginId();
+    }
+
 
 }

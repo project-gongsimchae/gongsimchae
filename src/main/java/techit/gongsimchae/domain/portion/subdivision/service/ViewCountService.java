@@ -1,17 +1,17 @@
 package techit.gongsimchae.domain.portion.subdivision.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
 import techit.gongsimchae.domain.portion.subdivision.repository.SubdivisionRepository;
 import techit.gongsimchae.global.util.CalculateTime;
 
 import java.time.Duration;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static techit.gongsimchae.global.util.ViewVO.*;
@@ -70,27 +70,6 @@ public class ViewCountService {
                 .collect(Collectors.toMap(ZSetOperations.TypedTuple::getValue, ZSetOperations.TypedTuple::getScore));
     }
 
-
-    /**
-     * 일주일 조회수를 조회
-     */
-
-    public Integer getWeeklyViewCount(String subdivisionId) {
-        String pattern = subdivisionId + ":*";
-        Set<String> keys = new HashSet<>();
-        Cursor<String> scan = redisTemplate.scan(ScanOptions.scanOptions().match(pattern).build());
-        scan.forEachRemaining(keys::add);
-
-        Integer totalViews = 0;
-        for (String key : keys) {
-            Integer viewCount = (Integer) redisTemplate.opsForValue().get(key);
-            if (viewCount != null) {
-                totalViews += viewCount;
-            }
-        }
-        return totalViews;
-    }
-
     /**
      * 특정글 전체 조회수 조회하기
      */
@@ -98,33 +77,6 @@ public class ViewCountService {
 
         Double score = redisTemplate.opsForZSet().score(TOTAL_VIEWS, subdivisionId);
         return score != null ? score.intValue() : 0;
-    }
-
-    /**
-     * 조회수 기준으로 Ranking된 subdivision 찾기
-     */
-
-    /**
-     * 하루 기준으로 조회수가 높은 상위 50 subdivision 찾기
-     */
-    public Set<Object> getViewRankForDay(String subdivisionId) {
-        Integer dailyViewCount = getDailySubViewCount(subdivisionId);
-        redisTemplate.opsForZSet().incrementScore(SUBDIVISION_NAME + DAY, subdivisionId, dailyViewCount);
-        Set<Object> result = redisTemplate.opsForZSet().reverseRange(SUBDIVISION_NAME + DAY, 0, 49);
-        redisTemplate.opsForZSet().remove(SUBDIVISION_NAME + DAY);
-        return result;
-    }
-
-    /**
-     * 일주일 기준으로 조회수가 높은 상위 50 subdivision 찾기
-     */
-
-    public Set<Object> getViewRankForWeek(String subdivisionId) {
-        Integer WeekViewCount = getWeeklyViewCount(subdivisionId);
-        redisTemplate.opsForZSet().incrementScore(SUBDIVISION_NAME + WEEK, subdivisionId, WeekViewCount);
-        Set<Object> result = redisTemplate.opsForZSet().reverseRange(SUBDIVISION_NAME + WEEK, 0, 49);
-        redisTemplate.opsForZSet().remove(SUBDIVISION_NAME + WEEK);
-        return result;
     }
 
 

@@ -2,20 +2,15 @@ package techit.gongsimchae.domain.web.common;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import techit.gongsimchae.domain.portion.notifications.dto.NotificationResponse;
 import techit.gongsimchae.domain.portion.notifications.service.NotificationService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
@@ -28,15 +23,6 @@ import java.util.Map;
 @Slf4j
 public class NotificationController {
     private final NotificationService notificationService;
-
-    @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    @ResponseBody
-    public SseEmitter subscribe(@RequestParam(value = "lastEventId", required = false, defaultValue = "") String lastEventId, @CurrentSecurityContext SecurityContext securityContext) {
-        if (securityContext.getAuthentication() instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
-        return notificationService.subscribe((PrincipalDetails) securityContext.getAuthentication().getPrincipal(), lastEventId);
-    }
 
     @GetMapping("/api/check-auth")
     @ResponseBody
@@ -64,15 +50,5 @@ public class NotificationController {
         log.debug("read notifications {}" ,principalDetails);
         notificationService.readNotification(principalDetails);
         return ResponseEntity.ok().build();
-    }
-
-
-    /**
-     * 재미삼아 만든 방
-     */
-    @GetMapping("/mypage/waiting-room")
-    public String waitingRoom(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        log.debug("waiting room {}" ,principalDetails);
-        return "user/waiting-room";
     }
 }

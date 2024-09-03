@@ -27,7 +27,7 @@
                     <div th:text="'작성일: ' + ${#temporals.format(inquiry.createDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
                 </div>
                 <div class="inquiry-actions">
-                    <a class="btn btn-outline-primary"
+                    <a class="inquiry-btn btn-outline-primary"
                        th:href="@{/admin/inquires/reply/{id}(id=${inquiry.UID})}">상세보기</a>
                 </div>
             </div>

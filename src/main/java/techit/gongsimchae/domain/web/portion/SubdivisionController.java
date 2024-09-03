@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,8 +52,12 @@ public class SubdivisionController {
     }
 
     @PostMapping("/write")
-    public String subdivisionRegister(@ModelAttribute("subdivisionReqDto") SubdivisionReqDto subdivisionReqDto,
+    public String subdivisionRegister(@Valid @ModelAttribute("subdivisionReqDto") SubdivisionReqDto subdivisionReqDto, BindingResult bindingResult,
                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
+        if(bindingResult.hasErrors()) {
+            return "portion/subdivisionRegister";
+        }
 
         log.info("subdivisionRequestDto: {}", subdivisionReqDto);
         String UID = subdivisionService.saveSubdivision(subdivisionReqDto, principalDetails.getAccountDto().getId());
@@ -111,7 +116,12 @@ public class SubdivisionController {
     }
 
     @PostMapping("/update")
-    public String subdivisionUpdate(@ModelAttribute("subdivisionUpdateReqDto") SubdivisionUpdateReqDto subdivisionUpdateReqDto) {
+    public String subdivisionUpdate(@Valid @ModelAttribute("subdivisionUpdateReqDto") SubdivisionUpdateReqDto subdivisionUpdateReqDto,
+                                    BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) {
+            return "portion/subdivisionUpdate";
+        }
 
         String UID = subdivisionService.updateSubdivision(subdivisionUpdateReqDto);
 
@@ -119,6 +129,7 @@ public class SubdivisionController {
     }
 
     @PostMapping("/{UID}/delete")
+    @PreAuthorize("hasRole('ADMIN') or @subdivisionService.isOwner(#UID) == principal.username")
     public String subdivisionDelete(@PathVariable("UID") String UID) {
 
         subdivisionService.deleteSubdivision(UID);
@@ -130,6 +141,7 @@ public class SubdivisionController {
      * 모집중, 모집완료, 거래완료로 바꿔준다
      */
     @PostMapping("/{UID}/status")
+    @PreAuthorize("hasRole('ADMIN') or @subdivisionService.isOwner(#UID) == principal.username")
     public String changeSubdivisionStatus(@PathVariable("UID") String UID, @RequestParam("type") String status) {
         subdivisionService.changeStatus(UID, status);
         return "redirect:/portioning/{UID}";
