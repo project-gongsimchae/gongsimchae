@@ -21,5 +21,6 @@ public class ItemCreateDto {
     private List<MultipartFile> images;
 
     private List<ItemOptionCreateDto> options = new ArrayList<>();
+    private List<MultipartFile> detailImages;
 
 }

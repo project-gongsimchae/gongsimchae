@@ -1,17 +1,20 @@
 package techit.gongsimchae.domain.common.address.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
-import techit.gongsimchae.domain.common.user.entity.User;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddressCreateReqDtoWeb {
+    @NotEmpty
     private String zipcode;
+    @NotEmpty
     private String address;
+    @NotEmpty
     private String detailAddress;
     private String additionalAddress;
     private String sigungu;

@@ -100,7 +100,7 @@ public class MessageSenderService {
                 .content();
 
         return new ChatMessageDto(MessageType.TALK, message.getRoomId(),
-                "AI", content, null,LocalDateTime.now(), null,null, true);
+                "AI",null , content,LocalDateTime.now(), null,null, true);
 
     }
 }

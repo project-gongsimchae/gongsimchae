@@ -34,10 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // 장바구니 아이템 업데이트
     function updateCartItem(container) {
         const cartItem = container.closest('.cart-item');
-        if (!cartItem) {
-            console.error('Cart item not found');
+        if (!cartItem || cartItem.classList.contains('disabled')) {
+            console.error('Cannot update a closed cart item');
             return;
         }
+
         const itemOptionId = cartItem.dataset.itemOptionId;
         const quantity = container.querySelector('input').value;
 

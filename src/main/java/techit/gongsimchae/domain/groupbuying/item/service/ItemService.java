@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.es.repository.ItemElasticRepository;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.entity.ItemImageFileStatus;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
@@ -59,8 +60,8 @@ public class ItemService {
         itemRepository.save(item);
     }
 
-    public List<Item> getAllItems() {
-        return itemRepository.findAll();
+    public Page<ItemRespDtoWeb> getItemsWithCriteria(ItemAdminSearchForm form, Pageable pageable) {
+        return itemRepository.findItemsWithCriteria(form, pageable);
     }
 
 
@@ -78,7 +79,8 @@ public class ItemService {
         Item item = new Item(itemCreateDto, category);
         Item savedItem = itemRepository.save(item);
 
-        List<ImageFile> imageFiles = imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item);
+        List<ImageFile> imageFiles = imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item, ItemImageFileStatus.THUMBNAIL);
+        List<ImageFile> detailImageFiles = imageS3Service.storeFiles(itemCreateDto.getDetailImages(), "images", item, ItemImageFileStatus.DETAIL);
 
         createItemDocument(savedItem, imageFiles);
 
@@ -100,7 +102,7 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateItem(Long id, ItemUpdateDto itemUpdateDto) {
+    public Item updateItem(Long id, ItemUpdateDto itemUpdateDto) {
         Item item = itemRepository.findById(id).filter(i -> i.getDeleteStatus() == 0)
                 .orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND));
 
@@ -110,7 +112,8 @@ public class ItemService {
         item.UpdateDto(itemUpdateDto, category);
 
         // 새로운 이미지 파일 저장
-        imageS3Service.storeFiles(itemUpdateDto.getImages(), "images", item);
+        imageS3Service.storeFiles(itemUpdateDto.getImages(), "images", item, ItemImageFileStatus.THUMBNAIL);
+        imageS3Service.storeFiles(itemUpdateDto.getDetailImages(), "images", item, ItemImageFileStatus.DETAIL);
 
         // 삭제할 이미지 파일 처리
         if (itemUpdateDto.getDeleteImages() != null && !itemUpdateDto.getDeleteImages().isEmpty()) {
@@ -148,7 +151,7 @@ public class ItemService {
                 .filter(option -> !updatedOptionIds.contains(option.getId()))
                 .forEach(itemOptionRepository::delete);
 
-        itemRepository.save(item);
+        return itemRepository.save(item);
     }
 
     @Transactional
@@ -170,14 +173,8 @@ public class ItemService {
     /**
      * 최신등록 8개 아이템
      * 참여가 많은 8개 아이템을 리스트형태로 반환하는 메서드입니다. **/
-    public List<ItemCardResDtoWeb> getRecentItems(){
-        List<Item> items = itemRepository.findTop8ByDeleteStatusOrderByCreateDateDesc(0);
-        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
-        for (Item item : items) {
-            ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
-            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
-        }
-        return itemCardResDtoWebs;
+    public Page<ItemCardResDtoWeb> getRecentItems(Pageable pageable){
+        return itemRepository.findRecentItems(pageable);
     }
 
     public List<ItemCardResDtoWeb> getPopularItems(){
@@ -298,10 +295,6 @@ public class ItemService {
             ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             return new ItemCardResDtoWeb(item, imageFile);
         });
-    }
-
-    public Page<ItemRespDtoWeb> searchItems(ItemSearchForm itemSearchForm, Pageable pageable) {
-        return itemRepository.findItemsByKeyword(itemSearchForm, pageable);
     }
 
     public ReviewItemResDtoWeb getReviewItems(AccountDto accountDto) {

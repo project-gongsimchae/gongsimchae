@@ -4,10 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.portion.chatroom.entity.ChatRoom;
-import techit.gongsimchae.domain.portion.chatroomuser.entity.ChatRoomUser;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

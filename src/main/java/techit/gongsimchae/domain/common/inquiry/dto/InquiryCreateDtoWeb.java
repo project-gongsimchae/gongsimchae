@@ -1,5 +1,7 @@
 package techit.gongsimchae.domain.common.inquiry.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,8 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 public class InquiryCreateDtoWeb {
 
+    @NotEmpty
     private String title;
+    @NotEmpty
     private String content;
+    @NotNull
     private InquiryType inquiryType;
     private String UID;
     private String email;

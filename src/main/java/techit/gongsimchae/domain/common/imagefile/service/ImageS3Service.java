@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.entity.ItemImageFileStatus;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.inquiry.entity.Inquiry;
 import techit.gongsimchae.domain.common.user.entity.User;
@@ -48,7 +49,17 @@ public class ImageS3Service {
 
         }
 
-        imageFileRepository.saveAll(uploadFiles);
+        return uploadFiles;
+    }
+
+    public List<ImageFile> storeFiles(List<MultipartFile> files, String directory, Item item, ItemImageFileStatus itemImageFileStatus) {
+        List<ImageFile> uploadFiles = new ArrayList<>();
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                uploadFiles.add(storeFile(file, directory, item, itemImageFileStatus));
+            }
+
+        }
 
         return uploadFiles;
     }
@@ -71,8 +82,6 @@ public class ImageS3Service {
 
             if (object instanceof Post) {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Post) object);
-            } else if (object instanceof Item) {
-                imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Item) object);
             } else if (object instanceof Subdivision) {
                 imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), (Subdivision) object);
             } else if (object instanceof User) {
@@ -89,6 +98,30 @@ public class ImageS3Service {
             } else {
                 throw new CustomWebException("이미지를 저장할 수 없는 객체입니다.");
             }
+            return imageFileRepository.save(imageFile);
+        } catch (Exception e) {
+            throw new CustomWebException(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public ImageFile storeFile(MultipartFile file, String directory, Item item, ItemImageFileStatus itemImageFileStatus) {
+        if (file.isEmpty()) {
+            return null;
+        }
+        String storeFileName = storeFileName(file);
+        String originalFilename = file.getOriginalFilename();
+        String uploadUrl = getUrl(directory);
+        ImageFile imageFile;
+
+        try {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentDisposition(file.getContentType());
+            metadata.setContentLength(file.getSize());
+            amazonS3.putObject(uploadUrl, storeFileName, file.getInputStream(), metadata);
+
+            imageFile = new ImageFile(originalFilename, getFullPath(directory, storeFileName), item, itemImageFileStatus);
+
             return imageFileRepository.save(imageFile);
         } catch (Exception e) {
             throw new CustomWebException(e.getMessage());

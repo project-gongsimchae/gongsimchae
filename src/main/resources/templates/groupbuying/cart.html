@@ -21,30 +21,34 @@
                     </div>
                     <ul class="item-list">
                         <li class="cart-item" th:each="item : ${cartItems}" th:data-item-option-id="${item.itemOptionId}">
-                            <input type="checkbox" name="selectedItemOptionId" th:value="${item.itemOptionId}" class="item-checkbox" />
+                            <!-- 공동구매 마감이 아닌 경우에만 체크박스 표시 -->
+                            <th:block th:if="${item.itemStatus.toString() != '공동구매_마감'}">
+                                <input type="checkbox" name="selectedItemOptionId" th:value="${item.itemOptionId}" class="item-checkbox" />
+                            </th:block>
                             <div class="item-info">
                                 <h3 class="item-info-name" th:text="${item.itemName}">[브랜드] 상품명</h3>
                                 <p class="item-option-info" th:text="${item.itemName + ' (' + item.content + ')'}">상품명 (옵션 내용)</p>
-                                <div class="quantity">
+
+                                <!-- 수량 조절 버튼은 공동구매 마감 시 숨김 처리 -->
+                                <div class="quantity" th:if="${item.itemStatus.toString() != '공동구매_마감'}">
                                     <button type="button" class="minus-btn">-</button>
                                     <input type="number" th:value="${item.quantity}" min="1">
                                     <button type="button" class="plus-btn">+</button>
                                 </div>
+
                                 <div class="price-container">
                                     <div class="price-progress-container">
-                                        <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
-                                        <div class="progress-container">
-                                            <div class="custom-progress">
-                                                <div class="custom-progress-bar" role="progressbar"
-                                                     th:style="'width: ' + ${(item.groupBuyingQuantity / 100.0) * 100} + '%'"
-                                                     th:aria-valuenow="${item.groupBuyingQuantity}"
-                                                     aria-valuemin="0" aria-valuemax="100">
-                                                    <span th:text="${item.groupBuyingQuantity + '%'}"></span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <!-- 가격 부분에 마감된 상품 표시 -->
+                                        <span class="original-price"
+                                              th:if="${item.itemStatus.toString() == '공동구매_마감'}"
+                                              th:text="'마감된 상품'"></span>
+                                        <span class="original-price"
+                                              th:if="${item.itemStatus.toString() != '공동구매_마감'}"
+                                              th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
                                     </div>
-                                    <div class="discount-info">
+
+                                    <!-- 할인 정보 숨기기 -->
+                                    <div class="discount-info" th:if="${item.itemStatus.toString() != '공동구매_마감'}">
                                         <span class="discount-rate" th:text="${item.discountRate} + '%'">할인율</span>
                                         <span class="discount-price"
                                               th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
@@ -53,6 +57,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <button type="button" class="delete-item">×</button>
                         </li>
                     </ul>

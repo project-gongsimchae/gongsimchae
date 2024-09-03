@@ -162,3 +162,26 @@
     padding: 5px;
     margin-left: 15px;
 }
+
+.custom-btn-add-option {
+    background-color: #cccccc; /* 기본 배경색 */
+    color: #ffffff; /* 흰색 텍스트 */
+    border: none;
+    border-radius: 5px;
+    height: 36px;
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: not-allowed; /* 기본 상태에서 클릭 불가능 */
+}
+
+.custom-btn-add-option.enabled {
+    background-color: #4CAF50; /* 연두색 배경 */
+    color: #ffffff; /* 흰색 텍스트 */
+    cursor: pointer; /* 활성화 시 클릭 가능 */
+}
+
+.custom-btn-add-option i {
+    color: inherit; /* 버튼 텍스트와 동일한 색상 */
+}
