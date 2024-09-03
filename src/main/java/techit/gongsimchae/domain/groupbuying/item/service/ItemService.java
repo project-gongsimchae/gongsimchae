@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.es.repository.ItemElasticRepository;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.entity.ItemImageFileStatus;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
@@ -78,7 +79,8 @@ public class ItemService {
         Item item = new Item(itemCreateDto, category);
         Item savedItem = itemRepository.save(item);
 
-        List<ImageFile> imageFiles = imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item);
+        List<ImageFile> imageFiles = imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item, ItemImageFileStatus.THUMBNAIL);
+        List<ImageFile> detailImageFiles = imageS3Service.storeFiles(itemCreateDto.getDetailImages(), "images", item, ItemImageFileStatus.DETAIL);
 
         createItemDocument(savedItem, imageFiles);
 
@@ -100,7 +102,7 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateItem(Long id, ItemUpdateDto itemUpdateDto) {
+    public Item updateItem(Long id, ItemUpdateDto itemUpdateDto) {
         Item item = itemRepository.findById(id).filter(i -> i.getDeleteStatus() == 0)
                 .orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND));
 
@@ -110,7 +112,8 @@ public class ItemService {
         item.UpdateDto(itemUpdateDto, category);
 
         // 새로운 이미지 파일 저장
-        imageS3Service.storeFiles(itemUpdateDto.getImages(), "images", item);
+        imageS3Service.storeFiles(itemUpdateDto.getImages(), "images", item, ItemImageFileStatus.THUMBNAIL);
+        imageS3Service.storeFiles(itemUpdateDto.getDetailImages(), "images", item, ItemImageFileStatus.DETAIL);
 
         // 삭제할 이미지 파일 처리
         if (itemUpdateDto.getDeleteImages() != null && !itemUpdateDto.getDeleteImages().isEmpty()) {
@@ -148,7 +151,7 @@ public class ItemService {
                 .filter(option -> !updatedOptionIds.contains(option.getId()))
                 .forEach(itemOptionRepository::delete);
 
-        itemRepository.save(item);
+        return itemRepository.save(item);
     }
 
     @Transactional

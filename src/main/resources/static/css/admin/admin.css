@@ -208,6 +208,10 @@
     margin-top: 20px;
 }
 
+body {
+    background-color: #f8f8f8;
+}
+
 /* 반응형 처리: 작은 화면에서는 사이드바와 섹션이 세로로 배치 */
 @media (max-width: 768px) {
     .layout-container {

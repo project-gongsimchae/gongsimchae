@@ -33,7 +33,7 @@ public class CartController {
 
     @PostMapping("/update/{itemOptionId}")
     public ResponseEntity<Map<String, Object>> updateCartItem(@AuthenticationPrincipal PrincipalDetails userDetails,
-                                                              @PathVariable Long itemOptionId,
+                                                              @PathVariable("itemOptionId") Long itemOptionId,
                                                               @RequestBody Map<String, Integer> payload) {
         Long userId = userDetails.getAccountDto().getId();
         int quantity = payload.get("quantity");

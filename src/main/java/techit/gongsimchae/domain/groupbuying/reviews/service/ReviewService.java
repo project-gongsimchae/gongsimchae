@@ -14,10 +14,14 @@ import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.entity.Review;
+import techit.gongsimchae.domain.groupbuying.reviews.entity.SecretStatus;
 import techit.gongsimchae.domain.groupbuying.reviews.repository.ReviewRepository;
 import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -56,5 +60,20 @@ public class ReviewService {
         );
         Review review = reviewRepository.findByUserIdAndItem(accountDto.getId(), item);
         review.update(reviewsReqDtoWeb);
+    }
+
+    public List<ReviewResDtoWeb> findReviewListByItemId(Long itemId) {
+
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND));
+
+        List<Review> reviewList = reviewRepository.findReviewsByItemAndSecretStatus(item, SecretStatus.NORMAL);
+        List<ReviewResDtoWeb> reviewResDtoWebList = new ArrayList<>();
+
+        for (Review review : reviewList) {
+            ImageFile imageFile = imageFileRepository.findByReview(review);
+            reviewResDtoWebList.add(new ReviewResDtoWeb(review, imageFile.getStoreFilename()));
+        }
+
+        return reviewResDtoWebList;
     }
 }

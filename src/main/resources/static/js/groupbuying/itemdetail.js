@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const mainImage = document.getElementById('main-image');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+            // 현재 선택된 썸네일을 강조 표시하고, 이전 선택된 썸네일은 강조 해제
+            thumbnails.forEach(thumb => thumb.classList.remove('active'));
+            this.classList.add('active');
+
+            // 큰 이미지 변경
+            const newSrc = this.querySelector('.thumbnail-image').src;
+            mainImage.src = newSrc;
+        });
+    });
+
+
     const optionSelect = document.getElementById('product-options');
     const totalPriceEl = document.getElementById('total-price');
     const selectedOptionsEl = document.getElementById('selected-options');
@@ -135,4 +151,35 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', changeQuantity);
     document.addEventListener('click', removeOption);
     addToCartForm.addEventListener('submit', addToCart);
+
+    // 모달 관련 코드 추가
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <span class="modal-close">&times;</span>
+        <div class="modal-content">
+            <img src="" alt="리뷰 이미지">
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalImg = modal.querySelector('img');
+    const modalClose = modal.querySelector('.modal-close');
+
+    document.querySelectorAll('.review-img').forEach(img => {
+        img.addEventListener('click', function() {
+            modal.style.display = 'block';
+            modalImg.src = this.src;
+        });
+    });
+
+    modalClose.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 });
