@@ -32,6 +32,7 @@ import techit.gongsimchae.domain.portion.report.dto.ReportRespDtoWeb;
 import techit.gongsimchae.domain.portion.report.service.ReportService;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReportRespDto;
 import techit.gongsimchae.domain.portion.subdivision.service.SubdivisionService;
+import techit.gongsimchae.global.exception.CustomWebException;
 
 @Controller
 @RequiredArgsConstructor
@@ -126,8 +127,12 @@ public class AdminController {
      * 데이터 삭제 x, status를 1로 변경
      */
     @PostMapping("/category/delete")
-    public String deleteCategory(Long categoryId){
-        categoryService.deleteCategory(categoryId);
+    public String deleteCategory(Long categoryId, RedirectAttributes redirectAttributes){
+        try {
+            categoryService.deleteCategory(categoryId);
+        } catch (CustomWebException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
         return "redirect:/admin/category";
     }
 
