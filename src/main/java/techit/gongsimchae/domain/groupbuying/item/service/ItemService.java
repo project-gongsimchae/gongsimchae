@@ -79,7 +79,7 @@ public class ItemService {
         Item item = new Item(itemCreateDto, category);
         Item savedItem = itemRepository.save(item);
 
-        List<ImageFile> imageFiles = imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item);
+        List<ImageFile> imageFiles = imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item, ItemImageFileStatus.THUMBNAIL);
         List<ImageFile> detailImageFiles = imageS3Service.storeFiles(itemCreateDto.getDetailImages(), "images", item, ItemImageFileStatus.DETAIL);
 
         createItemDocument(savedItem, imageFiles);
