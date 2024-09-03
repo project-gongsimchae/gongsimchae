@@ -2,6 +2,7 @@ package techit.gongsimchae.domain.groupbuying.cart.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import techit.gongsimchae.domain.groupbuying.item.entity.ItemStatus;
 
 import java.time.LocalDateTime;
 
@@ -20,9 +21,10 @@ public class CartItemDto {
     private String options;
     private String content;
     private LocalDateTime groupBuyingLimitTime;
+    private ItemStatus itemStatus;
 
     @Builder
-    public CartItemDto(Long cartId, Long itemId, Long itemOptionId, String itemName, Integer originalPrice, Integer discountRate, Integer discountPrice, Integer groupBuyingQuantity, Integer quantity, Integer totalPrice, LocalDateTime groupBuyingLimitTime,String options,String content) {
+    public CartItemDto(Long cartId, Long itemId, Long itemOptionId, String itemName, Integer originalPrice, Integer discountRate, Integer discountPrice, Integer groupBuyingQuantity, Integer quantity, Integer totalPrice, LocalDateTime groupBuyingLimitTime,String options,String content, ItemStatus itemStatus) {
         this.cartId = cartId;
         this.itemId = itemId;
         this.itemOptionId = itemOptionId;
@@ -36,5 +38,6 @@ public class CartItemDto {
         this.options = options;
         this.content = content;
         this.groupBuyingLimitTime = groupBuyingLimitTime;
+        this.itemStatus = itemStatus;
     }
 }

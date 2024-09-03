@@ -1,12 +1,6 @@
 package techit.gongsimchae.domain.common.imagefile.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +28,9 @@ public class ImageFile extends BaseEntity {
     private String originalFilename;
     private String storeFilename;
     private Integer imageFileStatus;
+
+    @Enumerated(EnumType.STRING)
+    private ItemImageFileStatus itemImageFileStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -82,11 +79,12 @@ public class ImageFile extends BaseEntity {
         this.imageFileStatus = 0;
     }
 
-    public ImageFile(String originalFilename, String storeFilename, Item item) {
+    public ImageFile(String originalFilename, String storeFilename, Item item, ItemImageFileStatus itemImageFileStatus) {
         this.originalFilename = originalFilename;
         this.storeFilename = storeFilename;
         this.item = item;
         this.imageFileStatus = 0;
+        this.itemImageFileStatus = itemImageFileStatus;
     }
 
     public ImageFile(String originalFilename, String storeFilename, Subdivision subdivision) {

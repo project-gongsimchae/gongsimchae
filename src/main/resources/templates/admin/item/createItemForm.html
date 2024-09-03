@@ -67,18 +67,20 @@
 
             <div class="form-group">
                 <label for="discountRate" class="form-label">할인율</label>
-                <input type="number" class="form-control" id="discountRate" th:field="*{discountRate}" step="0.01" required/>
+                <input type="number" class="form-control" id="discountRate" th:field="*{discountRate}" step="0.01" min="0" max="99" required />
                 <div class="invalid-feedback">
                     할인율을 입력해주세요.
                 </div>
+                <div id="discountedPrice" class="form-text">할인가 : 0원</div> <!-- 할인가를 표시할 영역 추가 -->
             </div>
 
             <div class="form-group">
                 <label for="pointAccumulationRate" class="form-label">포인트 적립률</label>
-                <input type="number" class="form-control" id="pointAccumulationRate" th:field="*{pointAccumulationRate}" step="0.01" required/>
+                <input type="number" class="form-control" id="pointAccumulationRate" th:field="*{pointAccumulationRate}" step="0.01" min="0" max="99" required />
                 <div class="invalid-feedback">
                     포인트 적립률을 입력해주세요.
                 </div>
+                <div id="accumulatedPoints" class="form-text">포인트 적립 금액 : 0원</div> <!-- 포인트 적립 금액을 표시할 영역 추가 -->
             </div>
 
             <div class="form-group">
@@ -91,7 +93,7 @@
 
             <div class="form-group">
                 <label for="groupBuyingLimitTime" class="form-label">공동구매 제한 시간</label>
-                <input type="datetime-local" class="form-control" id="groupBuyingLimitTime" th:field="*{groupBuyingLimitTime}"/>
+                <input type="datetime-local" class="form-control" id="groupBuyingLimitTime" th:field="*{groupBuyingLimitTime}" />
             </div>
 
             <div class="form-group">
@@ -106,6 +108,15 @@
                 <div class="invalid-feedback">
                     카테고리를 선택해주세요.
                 </div>
+            </div>
+
+            <div class="form-group" style="width: 600px">
+                <label for="detailImages" class="form-label">상품 상세 설명</label>
+                <div class="custom-file-upload" onclick="triggerDetailFileInput()"> <!-- 이미지 업로드 박스 전체 클릭 이벤트 추가 -->
+                    <input type="file" class="form-control-file" id="detailImages" name="detailImages" multiple onchange="previewDetailImages(event)" style="display: none;" />
+                    <i class="fas fa-plus"></i> <!-- + 아이콘만 남겨둠 -->
+                </div>
+                <div id="image-preview-container2" class="image-preview-container"></div>
             </div>
 
             <div class="form-group">

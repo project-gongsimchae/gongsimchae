@@ -14,6 +14,7 @@ public class ReviewResDtoWeb {
     private String content;
     private Boolean secretStatus;
     private String images;
+    private String nickname;
 
     public ReviewResDtoWeb(Review review, String images){
         this.title = review.getTitle();
@@ -21,5 +22,6 @@ public class ReviewResDtoWeb {
         this.content = review.getContent();
         this.secretStatus = review.getSecretStatus().equals(SecretStatus.SECRET);
         this.images = images;
+        this.nickname = review.getUser().getNickname();
     }
 }

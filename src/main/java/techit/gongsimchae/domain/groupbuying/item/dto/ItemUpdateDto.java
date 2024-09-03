@@ -21,5 +21,5 @@ public class ItemUpdateDto {
     private List<MultipartFile> images;
     private List<Long> deleteImages;
     private List<ItemOptionUpdateDto> options = new ArrayList<>();
-
+    private List<MultipartFile> detailImages;
 }
