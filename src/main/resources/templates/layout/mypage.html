@@ -42,12 +42,14 @@
                 </div>
                 <div class="item-divider"></div>
                 <div class="item-wrap">
-                    <button class="menu-item">
-                        <div class="name-text">쿠폰</div>
-                        <div class="amount-text">
-                            <div class="number-text" th:text="${userCoupons != null ? userCoupons : '0'}">0</div>
-                        </div>
-                    </button>
+                    <a href="coupons">
+                        <button class="menu-item">
+                            <div class="name-text">쿠폰</div>
+                            <div class="amount-text">
+                                <div class="number-text" th:text="${userCoupons != null ? userCoupons : '0'}">0</div>
+                            </div>
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
