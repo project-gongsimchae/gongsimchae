@@ -6,6 +6,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import techit.gongsimchae.domain.common.es.entity.ItemDocument;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 
 @Data
@@ -63,5 +65,21 @@ public class ItemRespDtoWeb {
         this.createDate = item.getCreateDate();
         this.updateDate = item.getUpdateDate();
         this.imageUrls = imageUrls;
+    }
+
+    public ItemRespDtoWeb(ItemDocument itemDocument) {
+        this.id = itemDocument.getId();
+        this.name = itemDocument.getName();
+        this.intro = itemDocument.getIntro();
+        this.originalPrice = itemDocument.getOriginalPrice();
+        this.discountRate = itemDocument.getDiscountRate();
+        this.groupBuyingQuantity = itemDocument.getGroupBuyingQuantity();
+        this.deleteStatus = itemDocument.getDeleteStatus();
+        this.UID = itemDocument.getUid();
+        this.createDate = itemDocument.getCreateDate().atStartOfDay();
+        if (itemDocument.getUrl() != null) {
+            this.imageUrls.add(itemDocument.getUrl());
+        }
+
     }
 }

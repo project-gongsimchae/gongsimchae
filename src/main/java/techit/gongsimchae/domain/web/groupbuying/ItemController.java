@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techit.gongsimchae.domain.common.es.service.ItemElasticService;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
@@ -34,13 +35,14 @@ public class ItemController {
     private final EventCategoryService eventCategoryService;
     private final EventService eventService;
     private final OrderItemService orderItemService;
+    private final ItemElasticService itemElasticService;
 
     /**
      * 검색
      */
     @GetMapping("/search")
-    public String search(ItemSearchForm itemSearchForm,Pageable pageable, Model model) {
-        Page<ItemRespDtoWeb> items = itemService.searchItems(itemSearchForm, pageable);
+    public String search(ItemSearchForm itemSearchForm,  Model model) {
+        List<ItemRespDtoWeb> items = itemElasticService.getRelatedSearchTerms(itemSearchForm);
         model.addAttribute("keyword", itemSearchForm.getKeyword());
         model.addAttribute("items", items);
         return "groupbuying/search";

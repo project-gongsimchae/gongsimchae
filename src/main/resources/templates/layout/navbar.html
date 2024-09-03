@@ -72,25 +72,25 @@
 
         <div class="navbar-links nav-container mt-3 text-center">
 
-        <div class="d-flex justify-content-center mt-2">
-            <div class="navbar-menu">카테고리
-                <ul class="dropdown-menu">
-                    <li th:each="category : ${categories}">
-                        <a class="dropdown-item" th:text="${category.name}"
-                           th:href="@{/category/{category_id}(category_id=${category.id}, page=1, per_page=48, sorted_type=1)}"></a>
-                    </li>
-                </ul>
+            <div class="d-flex justify-content-center mt-2">
+                <div class="navbar-menu">카테고리
+                    <ul class="dropdown-menu">
+                        <li th:each="category : ${categories}">
+                            <a class="dropdown-item" th:text="${category.name}"
+                               th:href="@{/category/{category_id}(category_id=${category.id}, page=1, per_page=48, sorted_type=1)}"></a>
+                        </li>
+                    </ul>
+                </div>
+                <a th:href="@{/collection-groups/new-item}" class="btn btn-link nav-list-a">신상품</a>
+                <a th:href="@{/collection-groups/best-item}" class="btn btn-link nav-list-a">베스트</a>
+                <a th:href="@{/event}" class="btn btn-link nav-list-a">이벤트</a>
+                <div sec:authorize="hasRole('USER')">
+                    <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
+                </div>
             </div>
-            <a th:href="@{/collection-groups/new-item}" class="btn btn-link nav-list-a">신상품</a>
-            <a th:href="@{/collection-groups/best-item}" class="btn btn-link nav-list-a">베스트</a>
-            <a th:href="@{/event}" class="btn btn-link nav-list-a">이벤트</a>
-            <div sec:authorize="hasRole('USER')">
-                <a th:href="@{/mypage/inquiry/list}" class="btn btn-link nav-list-a">1:1 문의</a>
+            <div sec:authorize="isAnonymous()">
+                <a> </a>
             </div>
-        </div>
-        <div sec:authorize="isAnonymous()">
-            <a> </a>
-        </div>
 
             <div sec:authorize="hasRole('ADMIN')" class="text-end-admin">
                 <a th:href="@{/admin/users}" class="btn btn-link nav-list-a">관리자 페이지</a>
@@ -116,9 +116,10 @@
                 </ul>
                 <form class="d-flex mx-auto form-style" th:action="@{/portioning}">
                     <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search"
-                           style="max-width: 700px; flex-grow: 1;" name="content">
+                           style="max-width: 700px; flex-grow: 1;" name="type" id="search-box" >
                     <button class="btn btn-outline-success search-btn" type="submit">검색</button>
                 </form>
+
                 <div sec:authorize="isAnonymous()">
                     <button class="btn btn-success ms-3" th:onclick="|location.href='@{/signup}'|">회원가입</button>
                     <button class="btn btn-success ms-3" th:onclick="|location.href='@{/login}'|">로그인</button>
@@ -201,7 +202,8 @@
                 <button class="menu-item">
                     <div class="name-text">적립금</div>
                     <div class="amount-text">
-                        <div class="number-text" th:text="${userPoints != null ? userPoints : '0'}">0</div>원
+                        <div class="number-text" th:text="${userPoints != null ? userPoints : '0'}">0</div>
+                        원
                     </div>
                 </button>
             </div>
@@ -210,7 +212,8 @@
                 <button class="menu-item">
                     <div class="name-text">쿠폰</div>
                     <div class="amount-text">
-                        <div class="number-text" th:text="${userCoupons != null ? userCoupons : '0'}">0</div>개
+                        <div class="number-text" th:text="${userCoupons != null ? userCoupons : '0'}">0</div>
+                        개
                     </div>
                 </button>
             </div>
@@ -237,7 +240,9 @@
 </aside>
 
 <aside th:fragment="admin_side_navbar" class="sidebar">
-    <div class="sidebar menu" style="position: fixed; top: 200px; left: 50px; width: 200px; z-index: 1000;">
+
+    <div class="sidebar menu" id="floatingSidebar"
+         style="position: fixed; top: 200px; margin-right: 30px; width: 200px; z-index: 0;">
         <ul>
             <li class="menu-text">관리 메뉴</li>
             <li><a th:href="@{/admin/users}">유저 관리</a></li>
@@ -250,3 +255,5 @@
         </ul>
     </div>
 </aside>
+
+
