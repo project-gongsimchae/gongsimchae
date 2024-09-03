@@ -29,6 +29,7 @@ public class ItemRespDtoWeb {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private List<String> imageUrls = new ArrayList<>();
+    private String categoryName;
 
     public ItemRespDtoWeb(Item item) {
         this.id = item.getId();

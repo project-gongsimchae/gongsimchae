@@ -59,8 +59,8 @@ public class ItemService {
         itemRepository.save(item);
     }
 
-    public List<Item> getAllItems() {
-        return itemRepository.findAll();
+    public Page<ItemRespDtoWeb> getItemsWithCriteria(ItemAdminSearchForm form, Pageable pageable) {
+        return itemRepository.findItemsWithCriteria(form, pageable);
     }
 
 
