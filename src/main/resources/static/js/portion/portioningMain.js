@@ -132,6 +132,7 @@ document.getElementById('searchBtn').addEventListener('click', function() {
     window.location.href = url;
 });
 
+/*
 document.getElementById('sortNew').addEventListener('click', function(event) {
     event.preventDefault();
     // 최신순 정렬을 위한 코드 작성
@@ -141,3 +142,4 @@ document.getElementById('sortDeadline').addEventListener('click', function(event
     event.preventDefault();
     // 마감순 정렬을 위한 코드 작성
 });
+*/

@@ -1,0 +1,39 @@
+{
+  "properties": {
+    "id": {
+      "type": "long"
+    },
+    "name": {
+      "type": "text",
+      "analyzer": "nori"
+    },
+    "intro": {
+      "type": "text",
+      "analyzer": "nori"
+    },
+    "originalPrice": {
+      "type": "integer"
+    },
+    "discountRate": {
+      "type": "integer"
+    },
+    "groupBuyingQuantity": {
+      "type": "integer"
+    },
+    "createDate": {
+      "type": "date",
+      "format": "basic_date"
+    },
+    "deleteStatus": {
+      "type": "integer"
+    },
+    "uid": {
+      "type": "keyword"
+    },
+    "url": {
+      "type": "keyword",
+      "index": false,
+      "doc_values": false
+    }
+  }
+}

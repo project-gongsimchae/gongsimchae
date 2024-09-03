@@ -1,16 +1,5 @@
 package techit.gongsimchae.domain.groupbuying.item.service;
 
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.getInstanceByTypeNumber;
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.낮은가격순;
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.높은가격순;
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.리뷰많은순;
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.신상품순;
-import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.판매량순;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,28 +8,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.common.es.repository.ItemElasticRepository;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
 import techit.gongsimchae.domain.groupbuying.event.repository.EventRepository;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemCardResDtoWeb;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemCreateDto;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemSearchForm;
-import techit.gongsimchae.domain.groupbuying.item.dto.ItemUpdateDto;
-import techit.gongsimchae.domain.groupbuying.item.dto.ReviewAbleItemResDtoWeb;
-import techit.gongsimchae.domain.groupbuying.item.dto.ReviewItemResDtoWeb;
-import techit.gongsimchae.domain.groupbuying.item.dto.ReviewedItemResDtoWeb;
+import techit.gongsimchae.domain.groupbuying.item.dto.*;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.entity.ItemStatus;
 import techit.gongsimchae.domain.groupbuying.item.entity.SortType;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
-import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionCreateDto;
-import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
-import techit.gongsimchae.domain.groupbuying.itemoption.repository.ItemOptionRepository;
-import techit.gongsimchae.domain.groupbuying.itemoption.service.ItemOptionService;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionCreateDto;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionUpdateDto;
 import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
@@ -56,6 +35,11 @@ import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static techit.gongsimchae.domain.groupbuying.item.entity.SortType.*;
+
 @Service
 @RequiredArgsConstructor
 public class ItemService {
@@ -69,6 +53,7 @@ public class ItemService {
     private final ReviewRepository reviewRepository;
     private final EventRepository eventRepository;
     private final ItemOptionRepository itemOptionRepository;
+    private final ItemElasticRepository itemElasticRepository;
 
     public void save(Item item) {
         itemRepository.save(item);
@@ -91,9 +76,11 @@ public class ItemService {
         Category category = categoryRepository.findByName(itemCreateDto.getCategoryName())
                 .orElseThrow(() -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND));
         Item item = new Item(itemCreateDto, category);
-        itemRepository.save(item);
+        Item savedItem = itemRepository.save(item);
 
-        imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item);
+        List<ImageFile> imageFiles = imageS3Service.storeFiles(itemCreateDto.getImages(), "images", item);
+
+        createItemDocument(savedItem, imageFiles);
 
         if (itemCreateDto.getOptions() != null) {
             for(ItemOptionCreateDto optionCreateDto : itemCreateDto.getOptions()) {
@@ -102,6 +89,14 @@ public class ItemService {
             }
         }
         return item;
+    }
+
+    private void createItemDocument(Item item, List<ImageFile> imageFiles) {
+        String url = null;
+        if(!imageFiles.isEmpty()) {
+            url = imageFiles.get(0).getStoreFilename();
+        }
+        itemElasticRepository.createItemDocument(item, url);
     }
 
     @Transactional
