@@ -60,8 +60,8 @@ public class ItemService {
         itemRepository.save(item);
     }
 
-    public List<Item> getAllItems() {
-        return itemRepository.findAll();
+    public Page<ItemRespDtoWeb> getItemsWithCriteria(ItemAdminSearchForm form, Pageable pageable) {
+        return itemRepository.findItemsWithCriteria(form, pageable);
     }
 
 
@@ -173,14 +173,8 @@ public class ItemService {
     /**
      * 최신등록 8개 아이템
      * 참여가 많은 8개 아이템을 리스트형태로 반환하는 메서드입니다. **/
-    public List<ItemCardResDtoWeb> getRecentItems(){
-        List<Item> items = itemRepository.findTop8ByDeleteStatusOrderByCreateDateDesc(0);
-        List<ItemCardResDtoWeb> itemCardResDtoWebs = new ArrayList<>();
-        for (Item item : items) {
-            ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
-            itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
-        }
-        return itemCardResDtoWebs;
+    public Page<ItemCardResDtoWeb> getRecentItems(Pageable pageable){
+        return itemRepository.findRecentItems(pageable);
     }
 
     public List<ItemCardResDtoWeb> getPopularItems(){
@@ -301,10 +295,6 @@ public class ItemService {
             ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             return new ItemCardResDtoWeb(item, imageFile);
         });
-    }
-
-    public Page<ItemRespDtoWeb> searchItems(ItemSearchForm itemSearchForm, Pageable pageable) {
-        return itemRepository.findItemsByKeyword(itemSearchForm, pageable);
     }
 
     public ReviewItemResDtoWeb getReviewItems(AccountDto accountDto) {

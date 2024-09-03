@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,8 +54,12 @@ public class ItemController {
     }
 
     @GetMapping("/admin/item")
-    public String listItems(Model model) {
-        model.addAttribute("items", itemService.getAllItems());
+    public String listItems(@ModelAttribute ItemAdminSearchForm form, @PageableDefault(size = 2) Pageable pageable,
+                            Model model) {
+        Page<ItemRespDtoWeb> items = itemService.getItemsWithCriteria(form, pageable);
+        List<Category> categories = categoryService.getAllRemainingCategories();
+        model.addAttribute("items", items);
+        model.addAttribute("categories", categories);
         return "admin/item/item";
     }
 

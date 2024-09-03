@@ -29,7 +29,8 @@
                             <button class="custom-picklist-button custom-picklist-delete-button" th:data-item-id="${item.UID}">
                                 <i class="fas fa-trash-alt"></i> 삭제
                             </button>
-                            <button class="custom-picklist-button custom-picklist-cart-button">
+                            <button class="custom-picklist-button custom-picklist-cart-button"
+                            th:onclick="|location.href='@{|/product/${item.id}|}'|">
                                 <i class="fas fa-shopping-cart"></i> 담기
                             </button>
                         </div>

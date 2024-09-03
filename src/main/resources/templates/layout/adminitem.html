@@ -1,0 +1,41 @@
+<div th:fragment="adminitem" id="filter-popup" class="filter-popup">
+    <div class="filter-popup-content">
+        <h2>Filter Options</h2>
+
+        <div class="filter-option">
+            <label>카테고리</label>
+            <div id="categoriesOptions">
+                <!-- Thymeleaf에서 동적으로 카테고리 버튼을 삽입 -->
+                <button th:each="category : ${categories}" class="filter-button" th:data-value="${category.id}" th:text="${category.name}"></button>
+            </div>
+        </div>
+
+
+            <div class="filter-option" id="itemIsDeletedOptions">
+                <label>삭제 여부</label>
+                <div class="filter-button" data-value="1">삭제됨</div>
+                <div class="filter-button" data-value="0">삭제되지 않음</div>
+            </div>
+
+            <div class="filter-option" id="itemIsClosedOptions">
+                <label>마감 여부</label>
+                <div class="filter-button" data-value="1">마감됨</div>
+                <div class="filter-button" data-value="0">마감되지 않음</div>
+            </div>
+
+            <div class="filter-option" id="remainingTimeOptions">
+                <label>제한 시간</label>
+                <div class="filter-button" data-value="true">정렬</div>
+            </div>
+
+
+
+        <!-- 필터 적용 및 초기화 버튼 -->
+        <div class="filter-popup-buttons">
+            <button id="apply-filters">적용</button>
+            <button id="reset-filters">초기화</button>
+            <button id="close-filters">닫기</button>
+        </div>
+
+    </div>
+</div>
