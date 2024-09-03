@@ -22,6 +22,8 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemCustomRep
     Optional<Item> findByUIDAndDeleteStatus(String id,Integer deleteStatus);
     Page<Item> findTop200ByDeleteStatusOrderByCreateDateDesc(Integer deleteStatus, Pageable pageable);
     Page<Item> findTop200ByDeleteStatusOrderByCumulativeSalesVolumeDesc(Integer deleteStatus, Pageable pageable);
+    boolean existsByCategoryAndItemStatus(Category category, ItemStatus itemStatus);
+
 
     /**
      * 신상품 - 신상품순

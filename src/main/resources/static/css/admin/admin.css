@@ -7,8 +7,10 @@
 
 /* 사이드바 스타일 */
 .sidebar {
-    width: 220px;
-    margin: 20px 0 0 120px;
+    flex: 0 0 200px; /* 초기 너비 설정 */
+    position: relative; /* 부모 요소 기준으로 배치 */
+    margin-right: 20px; /* 섹션과 사이드바 간의 간격 */
+    margin-left: 20px;
 }
 
 .user-info {
@@ -208,4 +210,27 @@
 
 body {
     background-color: #f8f8f8;
+}
+
+/* 반응형 처리: 작은 화면에서는 사이드바와 섹션이 세로로 배치 */
+@media (max-width: 768px) {
+    .layout-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        flex: 1;
+        width: 100%; /* 사이드바가 전체 너비를 차지 */
+        margin-right: 0;
+    }
+
+    .container {
+        flex: 1;
+        width: 100%; /* 섹션도 전체 너비를 차지 */
+    }
+}
+
+/* 추가적인 레이아웃 조정 */
+.inquiry-card {
+    margin-bottom: 20px; /* 카드 간의 간격 */
 }

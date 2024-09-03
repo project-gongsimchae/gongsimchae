@@ -1,6 +1,7 @@
 package techit.gongsimchae.domain.portion.subdivision.dto;
 
 import lombok.*;
+import techit.gongsimchae.domain.common.es.entity.SubdivisionDocument;
 import techit.gongsimchae.domain.common.imagefile.dto.ImageFileRespDto;
 import techit.gongsimchae.domain.common.user.dto.UserRespDtoWeb;
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
@@ -50,5 +51,20 @@ public class SubdivisionRespDto {
         this.createDate = subdivision.getCreateDate();
         this.updateDate = subdivision.getUpdateDate();
         this.sigungu = subdivision.getSigungu();
+    }
+
+    public SubdivisionRespDto(SubdivisionDocument subdivisionDocument) {
+        this.id = subdivisionDocument.getId();
+        this.title = subdivisionDocument.getTitle();
+        this.content = subdivisionDocument.getContent();
+        this.address = subdivisionDocument.getAddress();
+        this.price = subdivisionDocument.getPrice();
+        this.views = subdivisionDocument.getViews();
+        this.UID = subdivisionDocument.getUid();
+        this.subdivisionType = SubdivisionType.valueOf(subdivisionDocument.getSubdivisionType());
+        if (subdivisionDocument.getUrl() != null) {
+            this.imageFileList.add(ImageFileRespDto.builder().storeFilename(subdivisionDocument.getUrl()).build());
+        }
+
     }
 }

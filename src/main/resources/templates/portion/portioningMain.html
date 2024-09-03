@@ -86,7 +86,8 @@
                 <div th:each="subdivision : ${subdivisions}" class="write-subdivision">
                     <a th:href="@{/portioning/{UID}(UID=${subdivision.UID})}">
                         <div class="thumbnail-image-placeholder">
-                            <img th:src="${subdivision.imageFileList.size() > 0 ? subdivision.imageFileList.get(0).storeFilename : 'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}"
+                            <img th:src="${subdivision.imageFileList != null && subdivision.imageFileList.size() > 0 ?
+                            subdivision.imageFileList.get(0).storeFilename : 'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}"
                                  alt="썸네일 이미지"/>
                         </div>
                         <div class="write-simple-info">
@@ -149,7 +150,7 @@
     var contextPath = /*[[@{/}]]*/ '';
     /*]]>*/
 </script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script th:src="@{/js/portion/portioningMain.js}" defer></script>
 <script th:src="@{/js/portion/mainsort.js}" defer></script>
 <script th:src="@{/js/modalnoti.js}"></script>
@@ -160,7 +161,6 @@
 </script>
 
 <script th:replace="~{layout/portionHeader :: keyword}"></script>
-
 
 </body>
 
