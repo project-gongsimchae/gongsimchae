@@ -15,8 +15,12 @@ public class WebRestController {
 
     @GetMapping("/profile")
     public String getProfile () {
-        return Arrays.stream(env.getActiveProfiles())
-                .findFirst()
-                .orElse("");
+        String[] profiles = env.getActiveProfiles();
+
+        if (profiles.length > 1) {
+            return profiles[1];  // 두 번째 프로파일 반환
+        } else {
+            return profiles.length > 0 ? profiles[0] : "";
+        }
     }
 }
