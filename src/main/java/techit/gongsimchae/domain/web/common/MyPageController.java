@@ -213,8 +213,8 @@ public class MyPageController {
      */
     @PostMapping("reviews/update/{uid}")
     public String updateReviews (@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                           @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
-                                           @PathVariable String uid) {
+                                 @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
+                                 @PathVariable String uid) {
         reviewService.updateReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
         return "redirect:/mypage/reviews";
     }
