@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const updateTotalPrice = () => {
         const optionDetails = document.querySelectorAll('.option-detail');
-        let totalOriginal = 0;
         let totalDiscount = 0;
         optionDetails.forEach(detail => {
             const quantity = parseInt(detail.querySelector('.quantity-value').textContent);
@@ -90,9 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             quantityValueEl.textContent = quantity;
-            const optionPriceEl = optionDetail.querySelector('.option-price');
-            const pricePerUnit = parseInt(optionPriceEl.getAttribute('data-price'));
-            optionPriceEl.textContent = `${(pricePerUnit * quantity).toLocaleString()}원`;
             updateTotalPrice();
         }
     };
@@ -153,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     optionSelect.addEventListener('change', updateDetails);
-    document.addEventListener('click', changeQuantity);
     document.addEventListener('click', removeOption);
     addToCartForm.addEventListener('submit', addToCart);
 
