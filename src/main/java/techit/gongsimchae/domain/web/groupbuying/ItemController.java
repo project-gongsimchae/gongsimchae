@@ -54,7 +54,7 @@ public class ItemController {
     }
 
     @GetMapping("/admin/item")
-    public String listItems(@ModelAttribute ItemAdminSearchForm form, @PageableDefault(size = 2) Pageable pageable,
+    public String listItems(@ModelAttribute ItemAdminSearchForm form, @PageableDefault(size = 10) Pageable pageable,
                             Model model) {
         Page<ItemRespDtoWeb> items = itemService.getItemsWithCriteria(form, pageable);
         List<Category> categories = categoryService.getAllRemainingCategories();
