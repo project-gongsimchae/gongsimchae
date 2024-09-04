@@ -1,10 +1,9 @@
-# 🌿공심채
-사진
-</br>
+# 🌿공심채 
+<img src="https://github.com/user-attachments/assets/cc48d799-6041-492f-ba40-7bb5b76d05b9" width=600; width=500 />
+<br>
 
 ## ❇️ [프로젝트 개요](https://github.com/project-gongsimchae/gongsimchae/wiki)
 #### 공구와 소분 등 지역 커뮤니티를 통해 1인 가구의 합리적 소비를 권장하는 쇼핑몰
-- 기간: 8.19 ~ 9.5
 - [개발과정](https://github.com/project-gongsimchae/gongsimchae/wiki/%EA%B0%9C%EB%B0%9C%EA%B3%BC%EC%A0%95)
 - [ERD](https://github.com/project-gongsimchae/gongsimchae/wiki/ERD#-erd)
 - [Convention](https://github.com/project-gongsimchae/gongsimchae/wiki/Convention)
@@ -40,27 +39,69 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 ## 📁 인프라 구성
 사진
 
-</br>
+<br>
 
-#  🛠 주요기능
+## 🖥️ 화면 구성
 <details>
-  <summary><strong>1️⃣ 공구</strong></summary>
-    <div markdown="1"> 
-      1.여기에 작성
-</details>
-<details>
-  <summary><strong>2️⃣ 소분</strong></summary>
-    <div markdown="1"> 
-      1.여기에 작성
-</details>
-<details>
-  <summary><strong>3️⃣ 부가기능</strong></summary>
+  <summary><strong>사진</strong></summary>
     <div markdown="1"> 
       1.여기에 작성
 </details>
 
-</br>
+<br>
+      
+##  🛠 주요기능
+```
+👨‍👨‍👧 유저 : 로그인 | 회원가입 | 이메일 인증 | 소셜 로그인(네이버/구글) | 아이디 찾기 | 비밀번호 찾기 | 임시 비밀번호 발송
+💰 상품 : 검색 | 리뷰 | 찜하기 | 장바구니 | 결제 | 옵션 선택
+🪢 소분: 글 작성 | 글 상태변환 | 채팅 | 검색 | 매너포인트 | 신고하기 | 조회수 | 유저 상태에 따른 상태변환 | 카카오 맵을 통한 위치찾기
+🎊 이벤트:
+🏡 마이페이지 : 주문내역 | 쿠폰 | 찜한 상품 | 상품 후기 | 1:1 문의 | 관심 목록 | 내가 쓴글 | 참여중인 소분 | 배송지 관리 | 개인정보 수정 
+📈 관리자페이지 : 유저관리 | 상품관리 | 카테고리 관리 | 이벤트 관리 | 문의 관리 | 신고글 관리 
 
+```
+<details>
+  <summary><strong>1️⃣ 채팅</strong></summary>
+  
+</details>
+      
+<details>
+  <summary><strong>2️⃣ 검색</strong></summary>
+      1.여기에 작성
+</details>
+
+<details>
+  <summary><strong>3️⃣ 알림</strong></summary>
+</details>
+
+<details>
+  <summary><strong>4️⃣ 결제</strong></summary>
+</details>
+
+<details>
+  <summary><strong>5️⃣ 이메일 발송</strong></summary>
+</details>
+
+<details>
+  <summary><strong>6️⃣ 배치</strong></summary>
+</details>
+
+<details>
+  <summary><strong>7️⃣ AI 채팅</strong></summary>
+</details>
+
+<details>
+  <summary><strong>8️⃣ 알림 키워드</strong></summary>
+</details>
+
+<details>
+  <summary><strong>9️⃣ 매너포인트</strong></summary>
+</details>
+
+<details>
+  <summary><strong>🔟 추천받음</strong></summary>
+</details>
+<br>
 
 ## ⭐ CI-CD
 <details>
