@@ -44,7 +44,7 @@
                     총 가격: 0원
                 </div>
                 <div class="btn-detail-row">
-                    <button class="custom-btn-outline-secondary" id="wishlist-btn" th:data-item-id="${item[0].itemUID}">
+                    <button class="custom-btn-outline-secondary" id="wishlist-btn" type="button" th:data-item-id="${item[0].itemUID}">
                         <i id="wishlist-icon" class="bi"></i> 찜하기
                     </button>
 
@@ -145,24 +145,31 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        [csrfHeader]: csrfToken // CSRF 토큰을 헤더에 추가
+                        [csrfHeader]: csrfToken
                     },
-                    credentials: 'same-origin' // 쿠키를 포함하여 요청
+                    credentials: 'same-origin'
                 })
                     .then(response => {
                         if (response.ok) {
-                            // 토글 하트 아이콘
+                            // Toggle wishlist icon
                             if (wishlistIcon.classList.contains('bi-heart')) {
                                 wishlistIcon.classList.remove('bi-heart');
                                 wishlistIcon.classList.add('bi-heart-fill');
+                                alert('상품이 찜에 추가되었습니다.');
                             } else {
                                 wishlistIcon.classList.remove('bi-heart-fill');
                                 wishlistIcon.classList.add('bi-heart');
+                                alert('상품이 찜에서 삭제되었습니다.')
                             }
+
                         } else {
+                            alert('찜하기에 실패했습니다.');
                         }
                     })
-                    .catch(error => console.error('Error:', error));
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('찜하기 중 오류가 발생했습니다.');
+                    });
             });
         });
     </script>
