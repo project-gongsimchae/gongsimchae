@@ -12,10 +12,11 @@
 </br>
 
 ## 👨‍👩‍👧‍👦 팀원 소개
-| <center>[홍예석](https://github.com/yshong1998)</center>                         | <center>[노수연](https://github.com/suynnn)</center>            | <center>[안희주](https://github.com/HeeJu0807)</center>                      | <center>[정인규](https://github.com/JungInGyu)</center>                         | <center>[정주연](https://github.com/juicyye)</center>                         |
+| <div align="center">[홍예석](https://github.com/yshong1998)</div>                         | <div align="center">[노수연](https://github.com/suynnn)</div>            | <div align="center">[안희주](https://github.com/HeeJu0807)</div>                      | <div align="center">[정인규](https://github.com/JungInGyu)</div>                         | <div align="center">[정주연](https://github.com/juicyye)</div>                         |
 | :---------------------------------------------------------------------------- | :--------------------------------------------------------------------------- | :---------------------------------------------------------------------------- | :--------------------------------------------------------------------------- | :--------------------------------------------------------------------------- |
-| <img src="https://github.com/user-attachments/assets/e4bb1ea5-ac3a-464d-aacc-c28159a61b31" width=150 /> | <img src="https://github.com/user-attachments/assets/2550cf81-f2db-4f4d-9243-9a91c66ca8f7" width=150 /> | <img src="https://github.com/user-attachments/assets/c7f702fe-95ff-4a4e-8f6a-2b751f63a12d" width=150 /> | <img src="https://github.com/user-attachments/assets/6decd4d0-42f9-4fdf-bbff-051a631c2f86" width=150 /> | <img src="https://github.com/user-attachments/assets/18c3c683-a81e-4b7f-8b12-534d7a6d90fd" width=150 /> |
-| 추가          | 추가             | 추가                       | 추가              | 시큐리티<br />주소 관리<br />채팅<br />알림<br />검색 및 정렬        |
+| <div align="center"><img src="https://github.com/user-attachments/assets/e4bb1ea5-ac3a-464d-aacc-c28159a61b31" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/2550cf81-f2db-4f4d-9243-9a91c66ca8f7" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/c7f702fe-95ff-4a4e-8f6a-2b751f63a12d" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/6decd4d0-42f9-4fdf-bbff-051a631c2f86" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/18c3c683-a81e-4b7f-8b12-534d7a6d90fd" width=150 /></div> |
+| <div align="center">추가 </div>          | <div align="center">추가 </div>              | <div align="center">추가 </div>                     | <div align="center">추가 </div>              | <div align="center">`유저 및 인증-인가 전반` <br>로그인, 회원가입, Oauth2 <br /> `공통 기능` <br>주소 관리, 문의<br/>알림, 알림키워드<br/>검색 및 정렬 <br>`소분`<br />단체채팅, AI 채팅<br>신고, 소분글후기 <br/>`공구`<br>조회수, 찜 </div>     |
+
 
 <br/>
 
@@ -57,7 +58,7 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 🪢 소분: 글 작성 | 글 상태변환 | 채팅 | 검색 | 매너포인트 | 신고하기 | 조회수 | 유저 상태에 따른 상태변환 | 카카오 맵을 통한 위치찾기 | 알림키워드 등록
 🎊 이벤트:
 🏡 마이페이지 : 주문내역 | 쿠폰 | 찜한 상품 | 상품 후기 | 1:1 문의 | 관심 목록 | 내가 쓴글 | 참여중인 소분 | 배송지 관리 | 개인정보 수정 
-📈 관리자페이지 : 유저관리 | 상품관리 | 카테고리 관리 | 이벤트 관리 | 문의 관리 | 신고글 관리 
+📈 관리자페이지 : 유저관리 | 상품관리 | 카테고리 관리 | 이벤트 관리 | 문의 관리 | 신고글 관리 | 결제 관리
 ```
 <details>
   <summary><strong>1️⃣ 채팅</strong></summary>
@@ -72,12 +73,12 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 
 <details>
   <summary><strong>2️⃣ 검색 및 정렬</strong></summary>
-
   <img src="https://github.com/user-attachments/assets/f43cbf21-cb15-4927-8310-f22807c9be57" width=500px; height=300px; />
+  <img src="https://github.com/user-attachments/assets/f9556903-e4d1-46fb-bdc8-04b276ceef4c" width=500px; height=300px; />
   <br>
 
-  - [x] 엘라스틱 서치를 활용해 검색기능을 만들었습니다
-  - [x] QueryDSL을 이용해 검색 및 정렬기능을 만들었습니다
+  - [x] 엘라스틱 서치를 활용해 검색 및 정렬기능을 만들었습니다
+  - [x] 복잡한 쿼리는 QueryDSL을 이용해 검색 및 정렬기능을 합니다.
 </details>
 
 <details>
@@ -105,7 +106,7 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 
   - [x] Java Mail을 활용해 이메일을 보낼 수 있습니다
   - [x] 레디스에 유효기간이 5분인 인증코드를 저장하고 5분이내로 인증이 안되면 인증이 실패되고 회원가입이 안됩니다
-  - [x] 아이디찾기, 비밀번호 찾기를 클릭하면 이메일로 해당 정보를 보내고, 비밀번호를 임시 비밀번호를 보내게 됩니다
+  - [x] 아이디찾기, 비밀번호 찾기를 클릭하면 이메일로 해당 정보를 보내고, 임시 비밀번호를 보내게 됩니다
 </details>
 
 <details>
@@ -133,21 +134,30 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
   <img src="https://github.com/user-attachments/assets/1be3cab9-60e7-4a8e-99ec-b097a7d70dee" width=500px; height=300px; />
   <br>
 
-  - [x] 알림 키워드를 등록하면 주소와 작성하는 글의 제목을 보고 판단하여 알림을 보내도록 로직을 구현했습니다
+  - [x] 알림키워드를 등록할 수 있습니다.
+  - [x] 유저가 글을 올리면 글의 제목과 주소를 분석하여 관련있는 유저들에게 알림이 갑니다
 </details>
 
 <details>
   <summary><strong>9️⃣ 매너포인트</strong></summary>
-  <img src="https://github.com/user-attachments/assets/5a54340d-c40c-498b-bd39-48dc171ea221" width=500px; height=300px; />
+  <img src="https://github.com/user-attachments/assets/a9d08331-2420-4051-a04a-4bee0d494ba3" width=500px; height=300px; />
   <br>
-
+  
    - [x] 신고를 많이 받은 글의 작성자는 매너포인트가 하락됩니다
-   - [x] 매너포인트로 해당 인원의 매너를 다른 유저가 확인할 수 있습니다.
-   - [x] 소분이 끝나면 후기를 쓸 수 있고 일정 개수 이상의 최고에요를 받으면 매너포인트가 올라갑니다
+   - [x] 매너포인트는 다른 유저가 확인할 수 있습니다.
+   - [x] 소분 거래가 완료되면 후기를 작성할 수 있으며, 후기에 일정 개수 이상의 '최고에요' 평가를 받으면 매너포인트가 올라가는 기능을 구현했습니다
 </details>
 
 <details>
-  <summary><strong>🔟 추천받음</strong></summary>
+  <summary><strong>🔟 카카오 맵 API</strong></summary>
+  img src="https://github.com/user-attachments/assets/975d48a4-f703-4235-abd1-7efed1e818dd" width=500px; height=300px; />
+  img src="https://github.com/user-attachments/assets/e5c38c86-4248-461f-b3e4-0a848d2b81ed" width=500px; height=300px; />
+  img src="https://github.com/user-attachments/assets/8dd72788-333c-4210-b82f-2a5fd8198b6d width=500px; height=300px; />
+  <br>
+
+   - [x] 카카오 맵을 활용해 위치 검색 기능을 구현했습니다.
+   - [x] 카카오 맵에서 마우스 클릭한 위치에 마커를 표시하고, 해당 위치의 주소를 표시하는 기능을 구현했습니다
+   - [x] 사용자가 주소를 검색하여 원하는 주소를 입력할 수 있으며, 해당 주소를 기본 배송지로 지정할 수 있는 기능을 구현했습니다
 </details>
 <br>
 
