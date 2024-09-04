@@ -1,5 +1,7 @@
 package techit.gongsimchae.domain.groupbuying.coupon.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,7 @@ import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.event.repository.EventRepository;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
-
-import java.util.ArrayList;
-import java.util.List;
+import techit.gongsimchae.global.message.ErrorMessage;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +40,16 @@ public class CouponService {
 
     public List<CouponRespDtoWeb> getUserCoupons(PrincipalDetails principalDetails) {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
-        return couponRepository.findCouponsByUserId(user.getId());
-
+        List<CouponRespDtoWeb> couponRespDtoWebs = couponRepository.findCouponsByUserId(user.getId());
+        for (CouponRespDtoWeb couponRespDtoWeb : couponRespDtoWebs) {
+            List<CouponCategory> couponCategories = couponCategoryRepository.findAllByCouponId(couponRespDtoWeb.getId());
+            couponCategories.forEach((couponCategory) ->
+                couponRespDtoWeb.addCategories(categoryRepository.findById(couponCategory.getCategory().getId()).orElseThrow(
+                        () -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND)
+                ).getName())
+            );
+        }
+        return couponRespDtoWebs;
     }
 
     public void createEventCoupon(EventCreateReqDtoWeb eventDto) {

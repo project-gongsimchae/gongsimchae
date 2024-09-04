@@ -1,5 +1,6 @@
 package techit.gongsimchae.domain.groupbuying.item.service;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,8 @@ import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
 import techit.gongsimchae.domain.groupbuying.event.repository.EventRepository;
+import techit.gongsimchae.domain.groupbuying.eventcategory.entity.EventCategory;
+import techit.gongsimchae.domain.groupbuying.eventcategory.repository.EventCategoryRepository;
 import techit.gongsimchae.domain.groupbuying.item.dto.*;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.entity.ItemStatus;
@@ -55,6 +58,7 @@ public class ItemService {
     private final EventRepository eventRepository;
     private final ItemOptionRepository itemOptionRepository;
     private final ItemElasticRepository itemElasticRepository;
+    private final EventCategoryRepository eventCategoryRepository;
 
     public void save(Item item) {
         itemRepository.save(item);
@@ -83,6 +87,10 @@ public class ItemService {
         List<ImageFile> detailImageFiles = imageS3Service.storeFiles(itemCreateDto.getDetailImages(), "images", item, ItemImageFileStatus.DETAIL);
 
         createItemDocument(savedItem, imageFiles);
+        Optional<EventCategory> eventCategory = eventCategoryRepository.findByCategoryId(category.getId());
+        if (eventCategory.isPresent()){
+            item.plusDiscountRate(eventCategory.get().getEvent().getDiscountRate());
+        }
 
         if (itemCreateDto.getOptions() != null) {
             for(ItemOptionCreateDto optionCreateDto : itemCreateDto.getOptions()) {
@@ -110,6 +118,10 @@ public class ItemService {
                 .orElseThrow(() -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         item.UpdateDto(itemUpdateDto, category);
+        Optional<EventCategory> eventCategory = eventCategoryRepository.findByCategoryId(category.getId());
+        if (eventCategory.isPresent()){
+            item.plusDiscountRate(eventCategory.get().getEvent().getDiscountRate());
+        }
 
         // 새로운 이미지 파일 저장
         imageS3Service.storeFiles(itemUpdateDto.getImages(), "images", item, ItemImageFileStatus.THUMBNAIL);
