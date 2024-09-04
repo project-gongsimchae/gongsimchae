@@ -1,6 +1,7 @@
 package techit.gongsimchae.domain.portion.subdivision.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,14 +19,14 @@ public class SubdivisionReqDto {
     private String content;
     @NotEmpty
     private String address;
-    @NotEmpty
+    @NotNull
     private Double latitude;
-    @NotEmpty
+    @NotNull
     private Double longitude;
     private String sigungu;
-    @NotEmpty
+    @NotNull
     private Integer numOfParticipants;
-    @NotEmpty
+    @NotNull
     private Integer price;
     private List<MultipartFile> images;
 }
