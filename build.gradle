@@ -73,6 +73,10 @@ dependencies {
 	implementation platform("org.springframework.ai:spring-ai-bom:1.0.0-SNAPSHOT")
 	// Replace the following with the starter dependencies of specific modules you wish to use
 	implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+	// 엘라스틱 서치
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+	// https://mvnrepository.com/artifact/org.elasticsearch.client/elasticsearch-rest-high-level-client
+	implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: '7.17.23'
 	// iamport
 	implementation 'com.github.iamport:iamport-rest-client-java:0.2.23'
 

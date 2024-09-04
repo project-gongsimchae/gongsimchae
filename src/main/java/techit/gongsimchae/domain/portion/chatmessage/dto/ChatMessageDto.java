@@ -14,6 +14,7 @@ public class ChatMessageDto {
     private MessageType type;
     private String roomId;
     private String sender;
+    private String loginId;
     private String message;
     private LocalDateTime createDate;
     private String s3DataUrl;
@@ -29,5 +30,6 @@ public class ChatMessageDto {
         this.s3DataUrl = chatMessage.getS3DataUrl();
         this.fileName = chatMessage.getFileName();
         this.isRead = chatMessage.getIsRead();
+        this.loginId = chatMessage.getLoginId();
     }
 }

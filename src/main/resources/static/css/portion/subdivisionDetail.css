@@ -85,6 +85,10 @@
 
 .content {
     margin-bottom: 20px;
+    border: 1px solid #e2e2e2;
+    background-color: #fefefe;
+    border-radius: 10px;
+    padding: 20px;
 }
 
 .content .content-text {
@@ -110,6 +114,20 @@
 }
 .content-container{
     background-color: #FFFFFF;
+}
+
+.title {
+    flex-grow: 1;
+    font-size: 35px;
+    margin-bottom: 5px;
+}
+
+.content-header-title {
+    white-space: nowrap;      /* 텍스트가 한 줄로 유지되도록 설정 */
+    overflow: hidden;         /* 넘치는 텍스트 숨기기 */
+    text-overflow: ellipsis;  /* 넘치는 텍스트를 ...으로 표시 */
+    max-width: 600px;         /* 최대 너비 설정 */
+    margin-left: 10px;
 }
 
 .content-header-title {
@@ -143,11 +161,11 @@
 
 
 .price-box {
-    border: 1px solid #ddd;
+    border: 1px solid #e2e2e2;
+    background-color: #fcfcfc;
     border-radius: 5px;
     padding: 10px;
     margin-top: 20px;
-    background-color: #fcfcfc;
 }
 
 .price-box label {

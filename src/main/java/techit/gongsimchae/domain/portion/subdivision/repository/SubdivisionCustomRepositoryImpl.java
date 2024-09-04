@@ -1,8 +1,8 @@
 package techit.gongsimchae.domain.portion.subdivision.repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -117,7 +117,7 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
                         subdivision.content, subdivision.address, subdivision.price, subdivision.views,
                         subdivision.UID, subdivision.subdivisionType, subdivision.createDate, subdivision.updateDate))
                 .from(subdivision)
-                .where(subdivision.deleteStatus.eq(false).and(IsSale(searchDto)))
+                .where(subdivision.deleteStatus.eq(false).and(AllConditions(searchDto)))
                 .orderBy(sortType(searchDto))
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
@@ -135,7 +135,7 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
 
         Long size = queryFactory.select(subdivision.count())
                 .from(subdivision)
-                .where(subdivision.deleteStatus.eq(false).and(IsSale(searchDto)))
+                .where(subdivision.deleteStatus.eq(false).and(AllConditions(searchDto)))
                 .fetchOne();
 
 
@@ -155,10 +155,19 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
         return subdivision.createDate.desc();
     }
 
-    private BooleanExpression IsSale(SubSearchDto searchDto) {
-        if(Objects.isNull(searchDto.getOnSale()))
-            return null;
-        return searchDto.getOnSale().equals(true) ? subdivision.subdivisionType.eq(SubdivisionType.RECRUITING) : null;
-
+    private BooleanBuilder AllConditions(SubSearchDto searchDto) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (Objects.nonNull(searchDto.getOnSale())) {
+            builder.and(subdivision.subdivisionType.eq(SubdivisionType.RECRUITING));
+        }
+        if(searchDto.getAddress() != null && !searchDto.getAddress().isBlank()) {
+            String[] split = searchDto.getAddress().split(",");
+            builder.and(subdivision.dong.in(split));
+        }
+        if (searchDto.getContent() != null) {
+            builder.and(subdivision.title.contains(searchDto.getContent())
+                    .and(subdivision.content.contains(searchDto.getContent())));
+        }
+        return builder;
     }
 }

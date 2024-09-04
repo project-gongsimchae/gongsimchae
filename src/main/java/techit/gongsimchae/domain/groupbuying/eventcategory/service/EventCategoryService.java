@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
+import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.eventcategory.entity.EventCategory;
 import techit.gongsimchae.domain.groupbuying.eventcategory.repository.EventCategoryRepository;
 import techit.gongsimchae.global.exception.CustomWebException;
@@ -23,8 +24,8 @@ public class EventCategoryService {
         eventCategories.forEach(EventCategory::setStatusDeleted);
     }
 
-    public List<Category> getCategoriesByEvent(Long eventId) {
-        List<EventCategory> eventCategories = eventCategoryRepository.findAllByEventId(eventId);
+    public List<Category> getCategoriesByEvent(Event event) {
+        List<EventCategory> eventCategories = eventCategoryRepository.findAllByEvent(event);
         return eventCategories.stream()
                 .map((eventCategory -> categoryRepository.findById(eventCategory.getCategory().getId()).orElseThrow(
                         () -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND)

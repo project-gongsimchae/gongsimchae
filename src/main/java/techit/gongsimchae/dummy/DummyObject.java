@@ -35,7 +35,7 @@ public class DummyObject {
                 .UID(UUID.randomUUID().toString())
                 .userStatus(UserStatus.NORMAL)
                 .phoneNumber("010-1234-5678")
-                .mannerPoint(0)
+                .mannerPoint(36.5)
                 .joinType(JoinType.NORMAL)
                 .build();
 
@@ -54,7 +54,7 @@ public class DummyObject {
                 .UID(UUID.randomUUID().toString())
                 .userStatus(UserStatus.NORMAL)
                 .phoneNumber("010-5678-1234")
-                .mannerPoint(0)
+                .mannerPoint(36.5)
                 .joinType(JoinType.NORMAL)
                 .build();
     }

@@ -26,6 +26,7 @@ public class ChatMessage {
     private String s3DataUrl;
     private String fileName;
     private Boolean isRead;
+    private String loginId;
 
     public ChatMessage(ChatMessageDto messagedDto) {
         this.type = messagedDto.getType();
@@ -35,5 +36,6 @@ public class ChatMessage {
         this.createDate = messagedDto.getCreateDate();
         this.s3DataUrl = messagedDto.getS3DataUrl();
         this.fileName = messagedDto.getFileName();
+        this.loginId = messagedDto.getLoginId();
     }
 }

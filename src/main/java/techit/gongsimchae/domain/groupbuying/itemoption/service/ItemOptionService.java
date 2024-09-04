@@ -3,6 +3,7 @@ package techit.gongsimchae.domain.groupbuying.itemoption.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.common.imagefile.entity.ItemImageFileStatus;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionDto;
@@ -50,8 +51,11 @@ public class ItemOptionService {
                 .originalPrice(originalPrice)
                 .discountRate(item.getDiscountRate())
                 .discountPrice(discountPrice)
-                .quantity(1)
+                .quantity(item.getGroupBuyingQuantity())
                 .itemUID(item.getUID())
+                .itemStatus(item.getItemStatus())
+                .imageFiles(item.getImageFiles().stream().filter(image -> image.getItemImageFileStatus().equals(ItemImageFileStatus.THUMBNAIL)).toList())
+                .detailImageFile(item.getImageFiles().stream().filter(image -> image.getItemImageFileStatus().equals(ItemImageFileStatus.DETAIL)).toList())
                 .build();
     }
 

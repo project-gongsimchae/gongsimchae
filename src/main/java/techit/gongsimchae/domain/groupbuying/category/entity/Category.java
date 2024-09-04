@@ -27,4 +27,8 @@ public class Category {
     public void delete() {
         this.categoryStatus = 1;
     }
+
+    public void restore() {
+        this.categoryStatus = 0;
+    }
 }

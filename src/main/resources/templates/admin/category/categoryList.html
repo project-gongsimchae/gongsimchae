@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html th:replace="~{admin/admin :: admin(~{::section})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/admin :: admin(~{::section})}">
 <head>
   <meta charset="UTF-8">
   <title>카테고리 관리</title>
@@ -12,7 +12,7 @@
     <div class="col-12">
       <div class="d-flex justify-content-between align-items-center">
         <h1 class="section-title">카테고리 관리</h1>
-        <button class="btn btn-point-color" id="openModalBtn">카테고리 생성</button>
+        <button class="category-btn btn-point-color" id="openModalBtn">카테고리 생성</button>
       </div>
       <table class="table table-striped">
         <thead>
@@ -20,6 +20,7 @@
           <th>#</th>
           <th>UID</th>
           <th>카테고리명</th>
+          <th>아이템</th>
           <th>삭제</th>
         </tr>
         </thead>
@@ -29,9 +30,13 @@
           <th th:text="${category.getCategoryUID}"></th>
           <td th:text="${category.name}"></td>
           <td>
-            <form th:action="@{/admin/category/delete}" method="post">
+            <form th:if="${category.categoryStatus.equals(0)}" th:action="@{/admin/category/delete}" method="post">
               <input type="hidden" th:value="${category.getId()}" th:name="categoryId"/>
               <button type="submit" class="btn btn-danger">삭제</button>
+            </form>
+            <form th:if="${category.categoryStatus.equals(1)}" th:action="@{/admin/category/restore}" method="post">
+              <input type="hidden" th:value="${category.getId()}" th:name="categoryId"/>
+              <button type="submit" class="btn btn-secondary">복구</button>
             </form>
           </td>
         </tr>
@@ -80,6 +85,19 @@
       </div>
     </div>
   </div>
+
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+
+    // 페이지 로드 시 에러 메시지가 있으면 alert로 표시
+    window.onload = function() {
+      var errorMessage = /*[[${errorMessage}]]*/ null;
+      if (errorMessage) {
+        alert(errorMessage);
+      }
+    };
+    /*]]>*/
+  </script>
   <script th:src="@{/js/groupbuying/category.js}"></script>
 </section>
 </body>

@@ -11,11 +11,20 @@
 </head>
 <body>
 <section class="product-detail-section">
-<!--    <div class="product-detail-image" th:each="itemImage : ${item.getImageUrls()}">-->
-<!--        <img th:src="${itemImage}" alt="no image"/>-->
+    <div class="product-detail-image-slider">
+        <div class="main-image-container">
+            <img th:src="${item[0].getImageFiles()[0].storeFilename}" alt="메인 이미지" class="main-image" id="main-image">
+        </div>
+        <div class="thumbnail-container">
+            <div class="thumbnail" th:each="itemImage, iterStat : ${item[0].getImageFiles()}"
+                 th:classappend="${iterStat.index == 0} ? 'active' : ''">
+                <img th:src="${itemImage.storeFilename}" alt="상품 이미지" class="thumbnail-image"/>
+            </div>
+        </div>
+    </div>
     <form id="addToCartForm" th:action="@{/product/cart/add}" method="post">
         <div class="product-detail-info">
-            <h3 class="product-detail-title" th:text="${item[0].itemName}">에어프라이어 용 미니 돈까스</h3>
+            <h3 class="product-detail-title" th:text="${item[0].itemName}"></h3>
 
             <div class="btn-detail-container">
                 <select class="form-select" id="product-options" aria-label="상품 선택">
@@ -35,32 +44,70 @@
                     총 가격: 0원
                 </div>
                 <div class="btn-detail-row">
-                    <button class="custom-btn-outline-secondary" id="wishlist-btn" th:data-item-id="${item[0].itemUID}">
+                    <button class="custom-btn-outline-secondary" id="wishlist-btn" type="button" th:data-item-id="${item[0].itemUID}">
                         <i id="wishlist-icon" class="bi"></i> 찜하기
                     </button>
-                    <button class="custom-btn-success" id="purchase-btn" type="submit">장바구니에 담기</button>
+
+                    <button class="custom-btn-success"
+                            id="purchase-btn"
+                            type="submit"
+                            th:classappend="${item[0].itemStatus.toString() == '공동구매_마감'} ? 'closed' : ''"
+                            th:disabled="${item[0].itemStatus.toString() == '공동구매_마감'}"
+                            th:text="${item[0].itemStatus.toString() == '공동구매_마감'} ? '마감된 상품입니다' : '장바구니에 담기'">
+                    </button>
                 </div>
             </div>
         </div>
     </form>
 </section>
 <div class="separator-detail"></div>
-<section class="status-detail-container">
+<section class="status-detail-container product-detail-section">
     <div class="progress">
-        <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+
+        <!-- 프로그레스바 -->
+        <div class="progress-bar bg-success"
+             role="progressbar"
+             th:style="${item[0].itemStatus.toString() == '공동구매_마감'} ? 'width: 100%' : 'width:' + (${completionAmountItemCntDto.completionAmountCnt} / ${item[0].quantity} * 100) + '%;'"
+             th:aria-valuenow="${item[0].itemStatus.toString() == '공동구매_마감'} ? ${item[0].quantity} : ${completionAmountItemCntDto.completionAmountCnt}"
+             aria-valuemin="0"
+             th:aria-valuemax="${item[0].quantity}">
+        </div>
     </div>
-    <span>목표 수량: 100 / 달성량: 50</span>
+    <span>목표 수량: <span th:text="${item[0].quantity}"></span> / 달성량: <span th:text="${completionAmountItemCntDto.completionAmountCnt}"></span></span>
 </section>
 <section class="product-description-detail">
     <h4>상품 설명</h4>
-    <p>여기에 상세 설명이 들어갑니다. 제품의 특징, 사용 방법, 주의 사항 등을 포함시킬 수 있습니다.</p>
+    <div class="detail-item-images">
+        <div th:each="imageFile : ${item[0].detailImageFile}">
+            <img th:src="@{${imageFile.storeFilename}}" alt="상세 이미지" style="width: 800px; height: auto; max-width: 100%" />
+        </div>
+    </div>
 </section>
 <section class="reviews-detail">
     <h4>후기</h4>
-    <p>여기에 상품 후기가 들어갑니다. 고객들이 작성한 후기를 포함시킬 수 있습니다.</p>
+    <div th:each="review : ${reviewResDtoWebList}" class="card mb-3">
+        <div class="card-body">
+            <div class="review-layout">
+                <!-- 이미지 섹션 -->
+                <div class="review-image">
+                    <img th:src="@{${review.images}}" alt="리뷰 이미지" class="review-img">
+                </div>
+                <!-- 리뷰 내용 섹션 -->
+                <div class="review-content">
+                    <h5 th:text="${review.title}" class="review-title">리뷰 제목</h5>
+                    <p th:text="${review.nickname}" class="review-writer"></p>
+                    <div class="review-rating">
+                        <span th:each="star : ${#numbers.sequence(1, review.starPoint)}">
+                            <i class="fas fa-star star-icon"></i>
+                        </span>
+                    </div>
+                    <p th:text="${review.content}" class="review-content-class">리뷰 내용</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- CSRF 토큰을 메타 태그로 삽입 -->
-
     <script th:fragment="pick">
         document.addEventListener('DOMContentLoaded', function () {
             const wishlistBtn = document.getElementById('wishlist-btn');
@@ -98,24 +145,31 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        [csrfHeader]: csrfToken // CSRF 토큰을 헤더에 추가
+                        [csrfHeader]: csrfToken
                     },
-                    credentials: 'same-origin' // 쿠키를 포함하여 요청
+                    credentials: 'same-origin'
                 })
                     .then(response => {
                         if (response.ok) {
-                            // 토글 하트 아이콘
+                            // Toggle wishlist icon
                             if (wishlistIcon.classList.contains('bi-heart')) {
                                 wishlistIcon.classList.remove('bi-heart');
                                 wishlistIcon.classList.add('bi-heart-fill');
+                                alert('상품이 찜에 추가되었습니다.');
                             } else {
                                 wishlistIcon.classList.remove('bi-heart-fill');
                                 wishlistIcon.classList.add('bi-heart');
+                                alert('상품이 찜에서 삭제되었습니다.')
                             }
+
                         } else {
+                            alert('찜하기에 실패했습니다.');
                         }
                     })
-                    .catch(error => console.error('Error:', error));
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('찜하기 중 오류가 발생했습니다.');
+                    });
             });
         });
     </script>

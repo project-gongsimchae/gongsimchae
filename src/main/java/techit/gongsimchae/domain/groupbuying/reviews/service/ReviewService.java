@@ -14,10 +14,14 @@ import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.entity.Review;
+import techit.gongsimchae.domain.groupbuying.reviews.entity.SecretStatus;
 import techit.gongsimchae.domain.groupbuying.reviews.repository.ReviewRepository;
 import techit.gongsimchae.global.dto.AccountDto;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -34,7 +38,7 @@ public class ReviewService {
         User user = userRepository.findByLoginId(accountDto.getLoginId()).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.USER_NOT_FOUND)
         );
-        Item item = itemRepository.findByUID(uid).orElseThrow(
+        Item item = itemRepository.findByUIDAndDeleteStatus(uid, 0).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
         );
         Review review = reviewRepository.save(new Review(reviewReqDtoWeb, user, item));
@@ -42,7 +46,7 @@ public class ReviewService {
     }
 
     public ReviewResDtoWeb getReviews(AccountDto accountDto, String uid) {
-        Item item = itemRepository.findByUID(uid).orElseThrow(
+        Item item = itemRepository.findByUIDAndDeleteStatus(uid, 0).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
         );
         Review review = reviewRepository.findByUserIdAndItem(accountDto.getId(), item);
@@ -51,10 +55,25 @@ public class ReviewService {
     }
 
     public void updateReview(AccountDto accountDto, ReviewsReqDtoWeb reviewsReqDtoWeb, String uid) {
-        Item item = itemRepository.findByUID(uid).orElseThrow(
+        Item item = itemRepository.findByUIDAndDeleteStatus(uid, 0).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
         );
         Review review = reviewRepository.findByUserIdAndItem(accountDto.getId(), item);
         review.update(reviewsReqDtoWeb);
+    }
+
+    public List<ReviewResDtoWeb> findReviewListByItemId(Long itemId) {
+
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND));
+
+        List<Review> reviewList = reviewRepository.findReviewsByItemAndSecretStatus(item, SecretStatus.NORMAL);
+        List<ReviewResDtoWeb> reviewResDtoWebList = new ArrayList<>();
+
+        for (Review review : reviewList) {
+            ImageFile imageFile = imageFileRepository.findByReview(review);
+            reviewResDtoWebList.add(new ReviewResDtoWeb(review, imageFile.getStoreFilename()));
+        }
+
+        return reviewResDtoWebList;
     }
 }

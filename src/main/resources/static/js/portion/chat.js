@@ -38,6 +38,7 @@ function onConnected() {
         JSON.stringify({
             "roomId": roomId,
             sender: username,
+            loginId: loginId,
             type: 'ENTER'
         })
     );
@@ -65,6 +66,7 @@ function sendMessage(event) {
             "roomId": roomId,
             sender: username,
             message: messageInput.value,
+            loginId: loginId,
             time: time,
             type: 'TALK'
         };
@@ -87,6 +89,7 @@ function sendLeaveMessage() {
             "roomId": roomId,
             sender: username,
             message: '', // 빈 메시지로 설정
+            loginId: loginId,
             time: time,
             type: 'LEAVE'
         };

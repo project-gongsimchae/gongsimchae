@@ -34,7 +34,7 @@ public class AddressService {
     @Transactional
     public void addAddress(AddressCreateReqDtoWeb addressCreateReqDtoWeb, PrincipalDetails principalDetails) {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
-        addressCreateReqDtoWeb.applySetting(user);
+        addressCreateReqDtoWeb.applySetting(user.getName(), user.getPhoneNumber());
         unsetAsDefault();
         Address address = new Address(addressCreateReqDtoWeb, user, DefaultAddressStatus.PRIMARY);
 
@@ -44,7 +44,7 @@ public class AddressService {
     @Transactional
     public void addAddress(AddressCreateReqDtoWeb addressCreateReqDtoWeb, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
-        addressCreateReqDtoWeb.applySetting(user);
+        addressCreateReqDtoWeb.applySetting(user.getName(), user.getPhoneNumber());
         unsetAsDefault();
         Address address = new Address(addressCreateReqDtoWeb, user, DefaultAddressStatus.PRIMARY);
 
@@ -87,4 +87,11 @@ public class AddressService {
             address.unsetDefaultAddress();
         }
     }
+
+    public String IsOwner(String id) {
+        Address address = addressRepository.findByUID(id).orElseThrow(() -> new CustomWebException(ErrorMessage.ADDRESS_NOT_FOUND));
+        return address.getUser().getLoginId();
+    }
+
+
 }

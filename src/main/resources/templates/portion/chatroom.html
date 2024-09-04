@@ -9,7 +9,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>공심채 - 채팅방</title>
     <link rel="stylesheet" href="/css/portion/chatMain.css"/>
     <link rel="stylesheet" href="/css/portion/chat.css">
@@ -22,7 +22,7 @@
 </noscript>
 
 
-<div id="chat-page" >
+<div id="chat-page" class="w-10/12 h-screen">
     <div class="btn-group dropend">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="showUserListButton" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
@@ -32,7 +32,7 @@
 
         </div>
     </div>
-    <div class="chat-container">
+    <div class="chat-container w-10/12 h-4/6">
         <div class="chat-header">
             <a href="" th:href="@{|/portioning/${room.subDivisionUID}|}">이전</a>
             <h2>[[${room.roomName}]]</h2>
@@ -76,6 +76,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var username = [[${user.name}]];
+    var loginId = [[${user.loginId}]];
     /*]]>*/
 </script>
 <script src="/js/portion/chat.js"></script>
