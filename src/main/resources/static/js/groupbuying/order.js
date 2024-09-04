@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (rsp.success) {
                         verifyPayment(rsp.imp_uid, rsp.merchant_uid, rsp.paid_amount);
                     } else {
-                        cancelOrder(merchantUid)
+                        cancelOrder(rsp.imp_uid,merchantUid)
                         alert("결제에 실패하였습니다. " + rsp.error_msg);
                     }
                 });
@@ -149,23 +149,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert("결제가 완료되었습니다.");
                     window.location.href = "/main";
                 } else {
-                    cancelOrder(merchantUid)
+                    cancelOrder(impUid,merchantUid)
                     alert("결제 검증에 실패했습니다. 관리자에게 문의해주세요.");
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                cancelOrder(merchantUid)
+                cancelOrder(impUid,merchantUid)
                 alert("결제 검증 중 오류가 발생했습니다. 관리자에게 문의해주세요. 오류: " + errorThrown);
             }
         });
     }
 
-    function cancelOrder(merchantUid) {
+    function cancelOrder(impUid,merchantUid) {
         return $.ajax({
             url: "/order/cancel",
             type: "POST",
             contentType: "application/json",
-            data: JSON.stringify(merchantUid),
+            data: JSON.stringify({
+                impUid: impUid,
+                merchantUid: merchantUid
+            }),
             beforeSend: function(xhr) {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
             }

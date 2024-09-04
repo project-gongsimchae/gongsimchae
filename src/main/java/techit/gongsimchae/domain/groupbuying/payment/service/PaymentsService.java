@@ -1,6 +1,5 @@
 package techit.gongsimchae.domain.groupbuying.payment.service;
 
-import com.siot.IamportRestClient.Iamport;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class PaymentService {
+public class PaymentsService {
     private final IamportClient iamportClient;
     private final OrdersRepository ordersRepository;
     private final UserRepository userRepository;
@@ -97,6 +96,7 @@ public class PaymentService {
         Orders order = ordersRepository.findByMerchantUid(payment.getMerchantUid())
                 .orElseThrow(() -> new IllegalStateException("주문 정보를 찾을 수 없습니다."));
 
+
         if (!validateAmount(order, payment)) {
             cancelPayment(impUid,"결제 금액이 일치하지 않습니다.");
             throw new IllegalStateException("결제 금액이 일치하지 않습니다.");
@@ -127,10 +127,11 @@ public class PaymentService {
     }
 
 
-    public void cancelOrder(String merchantUid) {
+    public void cancelOrder(String impUid, String merchantUid) throws IamportResponseException, IOException {
         Orders orders = ordersRepository.findByMerchantUid(merchantUid)
                 .orElseThrow(()-> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
 
+        orders.updateImpUid(impUid);
         orders.updateStatus(OrderStatus.취소);
         ordersRepository.save(orders);
     }

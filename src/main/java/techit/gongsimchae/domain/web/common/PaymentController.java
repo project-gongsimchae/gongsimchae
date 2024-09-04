@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import techit.gongsimchae.domain.groupbuying.orders.dto.TempOrderItemDto;
 import techit.gongsimchae.domain.groupbuying.payment.dto.PaymentVerificationRequest;
 import techit.gongsimchae.domain.groupbuying.payment.dto.PaymentVerificationResponse;
-import techit.gongsimchae.domain.groupbuying.payment.service.PaymentService;
+import techit.gongsimchae.domain.groupbuying.payment.service.PaymentsService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class PaymentController {
-    private final PaymentService paymentService;
+    private final PaymentsService paymentsService;
 
 
     @PostMapping("/verifyIamport/{imp_uid}")
@@ -35,7 +35,7 @@ public class PaymentController {
             HttpSession session) {
         try {
             List<TempOrderItemDto> tempOrderItems = (List<TempOrderItemDto>) session.getAttribute("tempOrderItems");
-            IamportResponse<Payment> verificationResult = paymentService.verifyAndProcessPayment(impUid, request.getMerchantUid(), request.getAmount(), tempOrderItems,userDetails.getAccountDto().getId());
+            IamportResponse<Payment> verificationResult = paymentsService.verifyAndProcessPayment(impUid, request.getMerchantUid(), request.getAmount(), tempOrderItems,userDetails.getAccountDto().getId());
             if (verificationResult.getResponse().getStatus().equals("paid")) {
                 return ResponseEntity.ok(new PaymentVerificationResponse("success", "결제가 성공적으로 완료되었습니다."));
             } else {

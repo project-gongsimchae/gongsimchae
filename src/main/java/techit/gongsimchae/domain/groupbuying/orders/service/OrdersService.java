@@ -1,5 +1,8 @@
 package techit.gongsimchae.domain.groupbuying.orders.service;
 
+import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.response.IamportResponse;
+import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import techit.gongsimchae.domain.common.address.entity.Address;
@@ -14,23 +17,21 @@ import techit.gongsimchae.domain.groupbuying.orders.dto.TempOrderItemDto;
 import techit.gongsimchae.domain.groupbuying.orders.dto.TempUserDeliveryDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.repository.OrdersRepository;
-import techit.gongsimchae.domain.groupbuying.payment.entity.Payment;
-import techit.gongsimchae.domain.groupbuying.payment.repository.PaymentRepository;
+import techit.gongsimchae.domain.groupbuying.payment.entity.Payments;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OrdersService {
     private final OrdersRepository ordersRepository;
     private final OrderItemRepository orderItemRepository;
-    private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
     private final CartService cartService;
+    private final IamportClient iamportClient;
     public List<Orders> getUserOrders(Long userId){
         return ordersRepository.findByUserIdOrderByCreateDateDesc(userId);
     }
@@ -39,32 +40,41 @@ public class OrdersService {
         return ordersRepository.findByIdAndUserId(ordersId,id).orElse(null);
     }
 
-    public OrdersPaymentDto getOrdersPayment(Long ordersId){
-        OrdersPaymentDto dto = new OrdersPaymentDto();
-        List<OrderItem> orderItem = orderItemRepository.findByOrdersId(ordersId);
-        Payment payment = paymentRepository.findByOrdersId(ordersId)
-                .orElseThrow(() -> new CustomWebException("결제 정보를 찾지 못했습니다."));
+    public OrdersPaymentDto getOrdersPayment(Long ordersId) {
+        List<OrderItem> orderItems = orderItemRepository.findByOrdersId(ordersId);
 
+        int totalOriginalPrice = 0;
+        int totalDiscountedPrice = 0;
 
-        int totalPrice = 0;
-        int totalDiscountPrice = 0;
-        for (OrderItem item : orderItem){
-            int originalPrice = item.getItemOption().getItem().getOriginalPrice();
-            int discountRate = item.getItemOption().getItem().getDiscountRate();
+        for (OrderItem item : orderItems) {
+            int itemPrice = calculateOrderItemPrice(item);
+            int discountedPrice = calculateOrderItemDiscountPrice(item);
             int quantity = item.getCount();
 
-            totalPrice += originalPrice * quantity;
-            totalDiscountPrice += (originalPrice * (100 - discountRate) / 100) * quantity;
+            totalOriginalPrice += itemPrice * quantity;
+            totalDiscountedPrice += discountedPrice * quantity;
         }
 
-        dto.setOrderId(ordersId);
-        dto.setTotalPrice(totalDiscountPrice);
-        dto.setDiscountAmount(totalPrice - totalDiscountPrice);
-        dto.setCouponDiscount(0);
-        dto.setFinalPaymentAmount(payment.getAmount());
-        dto.setPaymentType(payment.getPayType());
+        int totalDiscountAmount = totalOriginalPrice - totalDiscountedPrice;
 
-        return dto;
+        try {
+            IamportResponse<Payment> paymentResponse = iamportClient.paymentByImpUid(orderItems.get(0).getOrders().getImpUid());
+            Payment payment = paymentResponse.getResponse();
+
+
+            return OrdersPaymentDto.builder()
+                    .orderId(ordersId)
+                    .finalPaymentAmount(payment.getAmount().intValue())
+                    .totalPrice(totalOriginalPrice)
+                    .discountAmount(totalDiscountAmount)
+                    .couponDiscount(0)
+                    .paymentType(payment.getPgProvider())
+                    .deliveryAddress(payment.getBuyerAddr())
+                    .cancelReason(payment.getCancelReason())
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("결제 정보 조회 중 오류 발생", e);
+        }
     }
 
     public List<TempOrderItemDto> createTempOrder(Long userId, List<Long> selectedItemOptionId){
@@ -94,5 +104,16 @@ public class OrdersService {
                 .recipientName(address.getReceiver())
                 .recipientPhoneNumber(address.getPhoneNumber())
                 .zipcode(address.getZipcode()).build();
+    }
+
+    public int calculateOrderItemPrice(OrderItem orderItem){
+        return orderItem.getItemOption().getPrice() + orderItem.getItemOption().getItem().getOriginalPrice();
+    }
+
+    public int calculateOrderItemDiscountPrice(OrderItem orderItem){
+        int originalPrice = calculateOrderItemPrice(orderItem);
+        double discountRate = orderItem.getItemOption().getItem().getDiscountRate() / 100.0;
+        int discountAmount = (int) (originalPrice * discountRate);
+        return originalPrice - discountAmount;
     }
 }

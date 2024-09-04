@@ -25,13 +25,17 @@
                 <th>주문상태</th>
                 <td th:text="${ordersDetail.orderStatus}"></td>
             </tr>
+            <tr th:if="${ordersDetail.orderStatus.toString().equals('취소')}">
+                <th>취소 사유</th>
+                <td th:text="${ordersPayment.cancelReason}"></td>
+            </tr>
         </table>
     </div>
 
     <div class="order-detail-section">
         <h3 class="order-detail-subtitle">주문 상품</h3>
         <ul class="order-detail-items">
-            <li th:each="orderItem : ${ordersDetail.orderItems}" class="order-detail-item">
+            <li th:each="orderItem : ${orderItems}" class="order-detail-item">
                 <div class="order-detail-item-info">
                     <h4 th:text="${orderItem.itemOption.item.name}" class="order-detail-item-name"></h4>
                     <p class="order-detail-item-price" th:text="${#numbers.formatDecimal(orderItem.price, 0, 'COMMA', 0, 'POINT')} + '원'"></p>
@@ -81,7 +85,7 @@
             </tr>
             <tr>
                 <th>주소</th>
-                <td th:text="${ordersDetail.user.address}"></td>
+                <td th:text="${ordersPayment.deliveryAddress}"></td>
             </tr>
         </table>
     </div>

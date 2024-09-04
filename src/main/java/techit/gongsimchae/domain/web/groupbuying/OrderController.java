@@ -2,22 +2,26 @@ package techit.gongsimchae.domain.web.groupbuying;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.siot.IamportRestClient.exception.IamportResponseException;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.groovy.json.internal.IO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techit.gongsimchae.domain.groupbuying.orders.dto.CancelOrderRequest;
 import techit.gongsimchae.domain.groupbuying.orders.dto.OrderCreateRequestDto;
 import techit.gongsimchae.domain.groupbuying.orders.dto.TempOrderItemDto;
 import techit.gongsimchae.domain.groupbuying.orders.dto.TempUserDeliveryDto;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 import techit.gongsimchae.domain.groupbuying.payment.dto.PaymentDto;
-import techit.gongsimchae.domain.groupbuying.payment.service.PaymentService;
+import techit.gongsimchae.domain.groupbuying.payment.service.PaymentsService;
 import techit.gongsimchae.global.dto.PrincipalDetails;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -26,7 +30,7 @@ import java.util.List;
 @Slf4j
 public class OrderController {
     private final OrdersService ordersService;
-    private final PaymentService paymentService;
+    private final PaymentsService paymentsService;
 
     @PostMapping("/temp")
     public String createTempOrder(@AuthenticationPrincipal PrincipalDetails userDetail,
@@ -56,7 +60,7 @@ public class OrderController {
         Integer totalDiscountPrice = (Integer) session.getAttribute("totalDiscountPrice");
 
         TempUserDeliveryDto userDeliveryInfo = ordersService.createTempUserDeliveryInfo(userDetail.getAccountDto().getId());
-        List<PaymentDto> paymentMethod = paymentService.pgProvider();
+        List<PaymentDto> paymentMethod = paymentsService.pgProvider();
 
         model.addAttribute("paymentMethod",paymentMethod);
         model.addAttribute("userDeliveryInfo",userDeliveryInfo);
@@ -78,20 +82,20 @@ public class OrderController {
             return ResponseEntity.badRequest().body("주문 정보가 없습니다.");
         }
 
-        String merchantUid = paymentService.createOrder(userId, tempOrderItems);
+        String merchantUid = paymentsService.createOrder(userId, tempOrderItems);
         session.setAttribute("merchantUid",merchantUid);
         return ResponseEntity.ok(merchantUid);
     }
 
     @PostMapping("/cancel")
-    public ResponseEntity<String> cancelOrder(@RequestBody String merchantuid){
+    public ResponseEntity<String> cancelOrder(@RequestBody CancelOrderRequest cancelOrderRequest){
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String merchantUid = objectMapper.readValue(merchantuid, String.class);
-            paymentService.cancelOrder(merchantUid);
-            return ResponseEntity.ok("취소완료");
-        } catch (JsonProcessingException e) {;
-            return ResponseEntity.badRequest().body("취소 실패: " + e.getMessage());
+            paymentsService.cancelOrder(cancelOrderRequest.getImpUid(),cancelOrderRequest.getMerchantUid());
+        } catch (IamportResponseException | IOException e) {
+            throw new RuntimeException(e);
         }
+
+        return ResponseEntity.ok("취소완료");
     }
 }

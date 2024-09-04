@@ -53,4 +53,12 @@ public class OrderItemService {
     public List<OrderItem> getOrderItemsByItemId(Long itemId) {
         return orderItemRepository.findOrderItemsByItemId(itemId);
     }
+
+    public List<OrderItem> getOrderItemsByOrdersIdAll(List<Long> ordersId){
+        return orderItemRepository.findByOrdersIdIn(ordersId);
+    }
+
+    public List<OrderItem> getOrderItemsByOrdersId(Long ordersId){
+        return orderItemRepository.findByOrdersId(ordersId);
+    }
 }

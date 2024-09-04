@@ -20,6 +20,8 @@ public class Orders extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    @Column(nullable = true)
+    private String impUid;
 
     private String merchantUid;
 
@@ -39,5 +41,9 @@ public class Orders extends BaseEntity {
 
     public void updateStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public void updateImpUid(String impUid){
+        this.impUid = impUid;
     }
 }
