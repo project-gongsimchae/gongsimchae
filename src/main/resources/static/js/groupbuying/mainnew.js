@@ -20,29 +20,35 @@ function appendRecentItems(items) {
         const progressBarWidth = (item.groupBuyingQuantity / 100.0) * 100;
 
         itemElement.innerHTML = `
-                    <img class="product-image-placeholder" src="${item.itemBannerImage}" alt="썸네일 이미지" />
-                    <h3 class="item-name">
-                        <a href="/product/${item.id}">${item.name}</a>
-                    </h3>
+            <a href="/product/${item.id}">
+                <img class="product-image-placeholder" src="${item.itemBannerImage}" alt="썸네일 이미지" />
+                <div class="item-simple-content">
+                    <h3 class="item-name">${item.name}</h3>
                     <div class="price-container">
                         <div class="price-progress-container">
                             <span class="original-price">${originalPrice}원</span>
                             <div class="progress-container">
-                                <div class="custom-progress-bar" role="progressbar"
-                                    style="width: ${progressBarWidth}%; max-width: 100%;"
-                                    aria-valuenow="${item.groupBuyingQuantity}"
-                                    aria-valuemin="0" aria-valuemax="100">
-                                    <span>${item.groupBuyingQuantity}%</span>
+                                <div class="custom-progress">
+                                    <div class="custom-progress-bar" role="progressbar"
+                                         style="width: ${progressBarWidth}%; max-width: 100%;"
+                                         aria-valuenow="${item.groupBuyingQuantity}"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                        <span>${item.groupBuyingQuantity}%</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="discount-info">
-                            <span class="discount-rate">${item.discountRate}%</span>
-                            <span class="discount-price">${discountPrice}원</span>
+                            <span class="price-info">
+                                <span class="discount-rate">${item.discountRate}%</span>
+                                <span class="discount-price">${discountPrice}원</span>
+                            </span>
                             <span class="buying-people">${item.groupBuyingQuantity}명 구매중</span>
                         </div>
                     </div>
-                `;
+                </div>
+            </a>
+        `;
 
         recentProductList.appendChild(itemElement);
     });
@@ -87,4 +93,4 @@ function handleScroll() {
 loadRecentItems(currentPage, pageSize);
 
 // 스크롤 이벤트 추가
-window.addEventListener('scroll', handleScroll);
+window.addEventListener('scroll', handleScroll)

@@ -149,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     optionSelect.addEventListener('change', updateDetails);
-    document.addEventListener('click', removeOption);
     addToCartForm.addEventListener('submit', addToCart);
 
     // 모달 관련 코드 추가

@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -139,6 +141,10 @@ public class ItemController {
         model.addAttribute("completionAmountItemCntDto", orderItemService.getCountCompletedOrderItemsWithItemId(id));
         model.addAttribute("reviewResDtoWebList", reviewService.findReviewListByItemId(id));
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser");
+        model.addAttribute("isAuthenticated", isAuthenticated);
+
         return "groupbuying/itemDetails";
     }
 
@@ -185,8 +191,8 @@ public class ItemController {
 
     @GetMapping("/collection-groups/best-item")
     public String getBestItems(@RequestParam(defaultValue = "1") Integer page,
-                              @RequestParam(defaultValue = "48") Integer per_page,
-                              @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
+                               @RequestParam(defaultValue = "48") Integer per_page,
+                               @RequestParam(defaultValue = "1") Integer sorted_type, Model model){
         Page<ItemCardResDtoWeb> bestItemsPage = itemService.getTop200BestItemsPage(page - 1, per_page, sorted_type);
         model.addAttribute("bestItemsPage", bestItemsPage);
         return "category/bestItem";
