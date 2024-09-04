@@ -64,6 +64,7 @@ public class Item extends BaseEntity {
         this.cumulativeSalesVolume = 0L;
         this.reviewCount = 0L;
         this.itemStatus = ItemStatus.공동구매_진행중;
+        this.deleteStatus = 0;
     }
 
     public void UpdateDto (ItemUpdateDto itemUpdateDto, Category category) {
