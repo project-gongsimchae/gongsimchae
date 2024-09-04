@@ -2,13 +2,13 @@
 사진
 </br>
 
-## ❇️프로젝트 개요
+## ❇️ [프로젝트 개요](https://github.com/project-gongsimchae/gongsimchae/wiki)
 #### 공구와 소분 등 지역 커뮤니티를 통해 1인 가구의 합리적 소비를 권장하는 쇼핑몰
 - 기간: 8.19 ~ 9.5
-- 진행과정 
-- ERD
-- Convention
-- 그라운드 룰
+- [개발과정](https://github.com/project-gongsimchae/gongsimchae/wiki/%EA%B0%9C%EB%B0%9C%EA%B3%BC%EC%A0%95)
+- [ERD](https://github.com/project-gongsimchae/gongsimchae/wiki/ERD#-erd)
+- [Convention](https://github.com/project-gongsimchae/gongsimchae/wiki/Convention)
+- [그라운드 룰](https://github.com/project-gongsimchae/gongsimchae/wiki/%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0)
 
 </br>
 
