@@ -150,9 +150,9 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 
 <details>
   <summary><strong>🔟 카카오 맵 API</strong></summary>
-  img src="https://github.com/user-attachments/assets/975d48a4-f703-4235-abd1-7efed1e818dd" width=500px; height=300px; />
-  img src="https://github.com/user-attachments/assets/e5c38c86-4248-461f-b3e4-0a848d2b81ed" width=500px; height=300px; />
-  img src="https://github.com/user-attachments/assets/8dd72788-333c-4210-b82f-2a5fd8198b6d width=500px; height=300px; />
+  <img src="https://github.com/user-attachments/assets/975d48a4-f703-4235-abd1-7efed1e818dd" width=500px; height=300px; />
+  <img src="https://github.com/user-attachments/assets/e5c38c86-4248-461f-b3e4-0a848d2b81ed" width=500px; height=300px; />
+  <img src="https://github.com/user-attachments/assets/8dd72788-333c-4210-b82f-2a5fd8198b6d" width=500px; height=300px; />
   <br>
 
    - [x] 카카오 맵을 활용해 위치 검색 기능을 구현했습니다.
