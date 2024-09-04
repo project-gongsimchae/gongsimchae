@@ -108,6 +108,7 @@
     </div>
 
     <!-- CSRF 토큰을 메타 태그로 삽입 -->
+
     <script th:fragment="pick">
         document.addEventListener('DOMContentLoaded', function () {
             const wishlistBtn = document.getElementById('wishlist-btn');
@@ -119,7 +120,7 @@
             const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
 
-            const isAuthenticated = /*[[${#authorization.expression('isAuthenticated()')}]]*/ false; // Thymeleaf 변수 사용
+            const isAuthenticated = [[${isAuthenticated}]];
 
 
             if(isAuthenticated) {
