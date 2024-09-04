@@ -67,8 +67,8 @@ public class OrdersService {
         return dto;
     }
 
-    public List<TempOrderItemDto> createTempOrder(Long userId, List<Long> selectedCartId){
-        List<TempOrderItemDto> tempOrderItemDto = cartService.getCartItemFromOrderItem(userId, selectedCartId);
+    public List<TempOrderItemDto> createTempOrder(Long userId, List<Long> selectedItemOptionId){
+        List<TempOrderItemDto> tempOrderItemDto = cartService.getCartItemFromOrderItem(userId, selectedItemOptionId);
 
         return tempOrderItemDto;
     }
@@ -92,6 +92,7 @@ public class OrdersService {
                 .userEmail(user.getEmail())
                 .recipientAddress(addressDetail)
                 .recipientName(address.getReceiver())
-                .recipientPhoneNumber(address.getPhoneNumber()).build();
+                .recipientPhoneNumber(address.getPhoneNumber())
+                .zipcode(address.getZipcode()).build();
     }
 }

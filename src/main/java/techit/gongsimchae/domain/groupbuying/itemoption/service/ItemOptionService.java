@@ -8,6 +8,8 @@ import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionDto;
 import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
 import techit.gongsimchae.domain.groupbuying.itemoption.repository.ItemOptionRepository;
+import techit.gongsimchae.global.exception.CustomWebException;
+import techit.gongsimchae.global.message.ErrorMessage;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,5 +53,11 @@ public class ItemOptionService {
                 .quantity(1)
                 .itemUID(item.getUID())
                 .build();
+    }
+
+    @Transactional
+    public ItemOption getItemOption(Long itemOptionId) {
+       return itemOptionRepository.findById(itemOptionId)
+                .orElseThrow(() -> new CustomWebException(ErrorMessage.ITEM_OPTION_NOT_FOUND));
     }
 }
