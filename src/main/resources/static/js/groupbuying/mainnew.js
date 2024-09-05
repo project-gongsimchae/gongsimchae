@@ -17,7 +17,7 @@ function appendRecentItems(items) {
 
         const originalPrice = formatNumber(item.originalPrice);
         const discountPrice = formatNumber(item.originalPrice * (100 - item.discountRate) / 100);
-        const progressBarWidth = Math.floor((item.participateCount / item.groupBuyingQuantity) * 100);
+        const progressBarWidth = Math.floor(item.participateCount * 100 / item.groupBuyingQuantity);
 
         itemElement.innerHTML = `
             <a href="/product/${item.id}">
