@@ -322,13 +322,6 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 
 </br>
 
-## 🛢️ ERD-Diagram
-<details>
-  <summary><strong> ERD </strong></summary>
-<img src="https://github.com/user-attachments/assets/1136cafa-db66-4083-b08e-b3dc0f7868c0" width=500px; height=300px; />
-
-</details>
- 
 ## 🐞 Trouble Shooting
 <details>
   <summary><strong> 문제해결</strong></summary>
