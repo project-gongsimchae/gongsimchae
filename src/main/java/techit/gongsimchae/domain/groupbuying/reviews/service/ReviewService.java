@@ -77,7 +77,11 @@ public class ReviewService {
 
         for (Review review : reviewList) {
             ImageFile imageFile = imageFileRepository.findByReview(review);
-            reviewResDtoWebList.add(new ReviewResDtoWeb(review, imageFile.getStoreFilename()));
+            if (imageFile != null) {
+                reviewResDtoWebList.add(new ReviewResDtoWeb(review, imageFile.getStoreFilename()));
+            } else {
+                reviewResDtoWebList.add(new ReviewResDtoWeb(review, null));
+            }
         }
 
         return reviewResDtoWebList;
