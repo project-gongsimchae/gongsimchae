@@ -213,8 +213,6 @@ public class MyPageController {
     public ReviewResDtoWeb getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                       @PathVariable("uid") String uid,
                                       @PathVariable("orderItemId") Long orderItemId) {
-        log.info(">>!!!!!!!!! 실행되었음");
-
         return reviewService.getReviews(principalDetails.getAccountDto(), uid, orderItemId);
     }
 
