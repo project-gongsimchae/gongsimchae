@@ -18,12 +18,6 @@ public class Participate extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer limitPerson;
-    private LocalDateTime limitTime;
-    @Enumerated(EnumType.STRING)
-    private TransactionStatus transactionStatus;
-    @Enumerated(EnumType.STRING)
-    private PurchaseType purchaseType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -32,4 +26,9 @@ public class Participate extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+    public Participate(User user, Item item) {
+        this.user = user;
+        this.item = item;
+    }
 }

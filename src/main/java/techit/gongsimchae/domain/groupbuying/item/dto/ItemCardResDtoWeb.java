@@ -25,6 +25,7 @@ public class ItemCardResDtoWeb {
     private Long reviewCount;
     private String itemBannerImage;
     private ItemStatus itemStatus;
+    private Long participateCount;
 
     public ItemCardResDtoWeb(Item item, ImageFile imageFile){
         this.id = item.getId();

@@ -45,6 +45,9 @@ public interface ErrorMessage {
     // 이미지
     String IMAGE_NOT_FOUND = "존재하지 않는 이미지입니다.";
 
+    // 주문
+    String ORDER_NOT_FOUND = "존재하지 않는 주문정보입니다.";
+
     /**
      * portion 에러
      */
