@@ -1,6 +1,7 @@
 package techit.gongsimchae.domain.web.common;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,12 @@ import techit.gongsimchae.domain.groupbuying.category.dto.CategoryReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
+import techit.gongsimchae.domain.groupbuying.orderitem.service.OrderItemService;
+import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersListResponseDto;
+import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
+import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
+import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 import techit.gongsimchae.domain.portion.report.dto.ReportRespDtoWeb;
 import techit.gongsimchae.domain.portion.report.service.ReportService;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReportRespDto;
@@ -46,6 +53,8 @@ public class AdminController {
     private final ReportService reportService;
     private final CategoryService categoryService;
     private final ItemService itemService;
+    private final OrdersService ordersService;
+    private final OrderItemService orderItemService;
 
 
     @GetMapping
@@ -229,9 +238,27 @@ public class AdminController {
         return "redirect:/admin/reports";
     }
 
+    @GetMapping("/orders")
+    public String ordersDashboard(Model model, @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        Page<OrdersListResponseDto> orders = ordersService.getOrders(pageable);
+        model.addAttribute("ordersList", orders);
+        return "/admin/orders/orderList";
+    }
 
+    @GetMapping("/orders/detail")
+    public String orderDetail(@RequestParam Long ordersId, Model model){
+        Orders order = ordersService.getOrder(ordersId);
+        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrdersId(ordersId);
+        Orders ordersDetail = ordersService.getOrderDetail(ordersId, order.getUser().getId());
+        OrdersPaymentDto ordersPayment = ordersService.getOrdersPayment(ordersId);
+        if (ordersDetail == null) {
+            return "redirect:error/4xx";
+        }
 
-
-
+        model.addAttribute("ordersDetail",ordersDetail);
+        model.addAttribute("orderItems",orderItems);
+        model.addAttribute("ordersPayment",ordersPayment);
+        return "admin/orders/orderDetailModal";
+    }
 
 }
