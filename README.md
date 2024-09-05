@@ -303,7 +303,12 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 <details>
   <summary><strong> 젠킨스</strong></summary>
     <div markdown="1"> 
-      1.여기에 작성
+      <h3>메인에서 Push 하면 자동으로 젠킨스에서 빌드되고 성공 후, Jar 파일을 배포 서버로 보내서 바로 실행시킵니다.</h3>
+      <img width="1470" alt="image" src="https://github.com/user-attachments/assets/be4e397d-93e3-4ab6-bd92-9231f0ad261a" />
+      <p></p>
+      <img width="1470" alt="image" src="https://github.com/user-attachments/assets/4d2c32df-5905-4a0c-a066-d7202c0b2ae1" />
+      <p></p>
+
 </details>
 <details>
   <summary><strong> NGINX</strong></summary>
