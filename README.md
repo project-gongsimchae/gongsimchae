@@ -172,10 +172,137 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 <br>
 
 ## 🖥️ 화면 구성
+
 <details>
-  <summary><strong>사진</strong></summary>
-    <div markdown="1"> 
-      1.여기에 작성
+  <summary><strong>공통</strong></summary>
+    <div markdown="1">
+
+---
+
+1. 자주 찾는 메뉴
+
+<img src="https://github.com/user-attachments/assets/f3d72941-f8a9-40e4-9c71-8c9c41218ebd" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/a67e2640-5cf8-4b2b-95f2-f94d5662a19a" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/a1266576-5f71-415e-9e91-7adc8721944c" width="500px" height="300px"></img>
+
+---
+
+2. 쇼핑
+
+<img src="https://github.com/user-attachments/assets/ae0bdde4-bfba-4046-8e6f-d302f2e26584" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/31f283a0-d44d-412f-ad48-321c92f27c7b" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/3653acc8-0db3-493a-9693-16f46f17f756" width="500px" height="300px"></img>
+
+---
+
+3. 소분
+
+<img src="https://github.com/user-attachments/assets/272276ae-7d42-4115-8eb8-fe57ab1608ad" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/71abb8bb-a180-4f2b-a9c2-d053d14df83c" width="500px" height="300px"></img>
+
+---
+
+4. 내 정보
+
+<img src="https://github.com/user-attachments/assets/578a77bc-06e2-429f-a110-f489f8fa590f" width="500px" height="300px"></img>
+<img src="https://github.com/user-attachments/assets/969a2425-c49d-4a88-ae0a-ae6b97932091" width="500px" height="300px"></img>
+
+</details>
+
+<br>
+
+<details>
+  <summary><strong>공구</strong></summary>
+    <div markdown="1">
+
+---
+
+1. 아이템 페이지
+
+<img src="https://github.com/user-attachments/assets/e2d7fa06-da99-42ec-9959-ffc2af90c064" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/6c6c15f2-5581-44f9-a42d-3838f830053d" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/c70415de-2186-40c2-bac7-1f89ee71b7fc" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/3b9a0828-3f33-4874-9a33-0431b6965bd8" width="500px" height="300px"></img>
+
+---
+
+2. 이벤트 페이지
+
+<img src="https://github.com/user-attachments/assets/0c1f6849-11ad-4b6a-9228-137969774ce3" width="500px" height="300px"></img>
+
+---
+
+3. 찜, 장바구니, 결제
+
+<img src="https://github.com/user-attachments/assets/00d0eeee-11d4-49e5-bc5e-4f5c25dcac47" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/7f178f73-d296-436c-8c22-f44fe3b9d934" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/ab433baa-b525-4b43-bded-fd9327ae7e37" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/ea3b20b7-314c-4363-9bc2-a9df533caa93" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/291bef0a-4807-4b59-bab8-da65bb568248" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/ac0d77e4-8ea1-4465-bfe8-dd34706e90d2" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/8babbdba-b57f-493f-8625-132a020b901c" width="500px" height="300px"></img>
+
+</details>
+
+<br>
+
+<details>
+  <summary><strong>소분</strong></summary>
+    <div markdown="1">
+
+---
+
+1. 소분
+
+<img src="https://github.com/user-attachments/assets/9bd72bca-b154-4e59-b153-75f4100b7760" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/e7644c41-0484-405a-bc2c-70304b83e143" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/feabcd80-75ce-4956-b679-bc04aa298a08" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/eebd2a55-4957-4f9b-9a2c-6b6589b31716" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/5e2f2092-8f9e-454a-9f3c-2a0aa5c500c5" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/8cdcef8b-7b0a-40a3-b8c7-fa6c1cba114a" width="500px" height="300px"></img>
+
+</details>
+
+<br>
+
+<details>
+  <summary><strong>관리자</strong></summary>
+    <div markdown="1">
+
+1. 관리자 메뉴
+
+<img src="https://github.com/user-attachments/assets/35b6ad9e-993b-4615-ab9c-c5760ef00c56" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/d3547d0e-4796-4b2c-baed-17f356d0952d" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/27e32ec3-e985-48e7-a48c-7e05cd37f2bd" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/58d711af-c688-4d30-8161-35bb5ebc7610" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/8286c579-490e-4654-a6c4-5f0d7a7fee74" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/c4d50346-fce8-4f74-87bc-266656ae5ab4" width="500px" height="300px"></img>
+
+<img src="https://github.com/user-attachments/assets/c4a8d7a4-ad05-4a08-8e67-716774b68e39" width="500px" height="300px"></img>
 </details>
 
 <br>
