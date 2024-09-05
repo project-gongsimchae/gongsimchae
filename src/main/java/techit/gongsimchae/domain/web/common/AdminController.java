@@ -119,7 +119,7 @@ public class AdminController {
     public String categoryDashBoard(Model model, @PageableDefault(size = 10, sort = "id") Pageable pageable) {
         Page<Category> categories = categoryService.getCategories(pageable);
         model.addAttribute("categoryList", categories);
-        return "/admin/category/categoryList";
+        return "admin/category/categoryList";
     }
 
     /**
@@ -242,7 +242,7 @@ public class AdminController {
     public String ordersDashboard(Model model, @PageableDefault(size = 10, sort = "id") Pageable pageable) {
         Page<OrdersListResponseDto> orders = ordersService.getOrders(pageable);
         model.addAttribute("ordersList", orders);
-        return "/admin/orders/orderList";
+        return "admin/orders/orderList";
     }
 
     @GetMapping("/orders/detail")

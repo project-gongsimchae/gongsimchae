@@ -168,7 +168,7 @@ public class ItemController {
         model.addAttribute("categoryId", category_id);
         model.addAttribute("categoryName", category.getName());
         model.addAttribute("itemsPage", itemsPage);
-        return "/category/category";
+        return "category/category";
     }
 
     /**

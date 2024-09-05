@@ -59,7 +59,7 @@ public class EventController {
     public String getEventPage(Model model){
         List<EventResUserDtoWeb> eventResUserDtoWebs = eventService.getActivatedEvents();
         model.addAttribute("events", eventResUserDtoWebs);
-        return "/category/event";
+        return "category/event";
     }
 
     @PostMapping("/event/coupon")
