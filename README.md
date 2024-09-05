@@ -32,8 +32,136 @@ Database | ![MySQL](https://img.shields.io/badge/mysql-4479A1?style=for-the-badg
 Library | ![Spring Security](https://img.shields.io/badge/spring%20security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white) ![Thymeleaf](https://img.shields.io/badge/thymeleaf-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white) ![OAuth 2.0 Client](https://img.shields.io/badge/OAuth%202.0%20Client-4b4b4b?style=for-the-badge) ![JUnit5](https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white) ![JPA](https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge&logo=jpa&logoColor=white) ![Java Mail](https://img.shields.io/badge/Java%20Mail-3a75b0?style=for-the-badge) ![apache kafka](https://img.shields.io/badge/apache%20kafka-231F20?style=for-the-badge&logo=apachekafka&logoColor=white) ![elastic search](https://img.shields.io/badge/elastic%20search-005571?style=for-the-badge&logo=elasticsearch&logoColor=white) ![Query dsl](https://img.shields.io/badge/query%20dsl-007396?style=for-the-badge&logo=querydsl&logoColor=white) ![Spring Batch](https://img.shields.io/badge/spring%20batch-6DB33F?style=for-the-badge&logo=springbatch&logoColor=white) ![Web Socket](https://img.shields.io/badge/web%20socket-F7DF1E?style=for-the-badge&logo=websocket&logoColor=white) ![Spring AI](https://img.shields.io/badge/spring%20ai-6DB33F?style=for-the-badge&logo=springai&logoColor=white)
 API | ![Iamport Payment](https://img.shields.io/badge/Iamport%20Payment-c1272d?style=for-the-badge) ![Font Awesome](https://img.shields.io/badge/Font%20Awesome-528DD7?style=for-the-badge&logo=fontawesome&logoColor=white) ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white) ![google](https://img.shields.io/badge/google-4285F4?style=for-the-badge&logo=google&logoColor=white) ![naver](https://img.shields.io/badge/naver-03C75A?style=for-the-badge&logo=naver&logoColor=white) ![kakao](https://img.shields.io/badge/kakao-FFCD00?style=for-the-badge&logo=kakao&logoColor=white) ![jQuery](https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white)
 DevOps | ![Amazon Web Services](https://img.shields.io/badge/amazon%20aws-232F3E?style=for-the-badge&logo=Amazon%20Web%20Services&logoColor=white) ![amazon s3](https://img.shields.io/badge/amazon%20s3-569A31?style=for-the-badge&logo=amazon%20s3&logoColor=white) ![amazon rds](https://img.shields.io/badge/amazon%20rds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white) ![jenkins](https://img.shields.io/badge/jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white) ![nginx](https://img.shields.io/badge/nginx-009639?style=for-the-badge&logo=nginx&logoColor=white) ![letsencrypt](https://img.shields.io/badge/letsencrypt-003A70?style=for-the-badge&logo=letsencrypt&logoColor=white) ![gabia](https://img.shields.io/badge/gabia-4285F4?style=for-the-badge&logo=gabia&logoColor=white) ![Elastic Cache](https://img.shields.io/badge/amazon%20elasticache-C925D1?style=for-the-badge&logo=amazonelasticache&logoColor=white) ![amazon ec2](https://img.shields.io/badge/amazon%20ec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white)
-Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white) ![git](https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white) ![slack](https://img.shields.io/badge/slack-4A154B?style=for-the-badge&logo=slack&logoColor=white) ![notion](https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white) ![jira](https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white) ![confluence](https://img.shields.io/badge/confluence-172B4D?style=for-the-badge&logo=confluence&logoColor=white) ![discord](https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white) ![kibana](https://img.shields.io/badge/kibana-005571?style=for-the-badge&logo=kibana&logoColor=white) ![dbeaver](https://img.shields.io/badge/dbeaver-382923?style=for-the-badge&logo=dbeaver&logoColor=white) ![kibana](https://img.shields.io/badge/kibana-005571?style=for-the-badge&logo=kibana&logoColor=white) ![figma](https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white) 
+Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white) ![git](https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white) ![slack](https://img.shields.io/badge/slack-4A154B?style=for-the-badge&logo=slack&logoColor=white) ![notion](https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white) ![jira](https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white) ![confluence](https://img.shields.io/badge/confluence-172B4D?style=for-the-badge&logo=confluence&logoColor=white) ![discord](https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white) ![kibana](https://img.shields.io/badge/kibana-005571?style=for-the-badge&logo=kibana&logoColor=white) ![dbeaver](https://img.shields.io/badge/dbeaver-382923?style=for-the-badge&logo=dbeaver&logoColor=white) ![figma](https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white) 
 
+
+<details>
+<summary><strong>📣기술 & 라이브러리 사용 이유</strong></summary>
+<div markdown="1">   
+  <br/>
+  <details>
+  <summary><strong> 1️⃣ Query DSL</strong></summary>
+    <div markdown="1"> 
+      
+    1. 동적인 쿼리 작성이 필요했습니다.
+    2. 자동 완성 등 IDE의 도움을 받을 수 있어 편리합니다.
+    3. 문자가 아닌 코드로 쿼리를 작성함으로써, 컴파일 시점에 문법 오류를 쉽게 확인할 수 있어 더욱 안전합니다.
+    4. 쿼리 작성 시 제약 조건 등을 메서드 추출을 통해 재사용할 수 있었고 가독성이 좋아졌습니다.
+
+  </details> 
+  
+  <details>
+  <summary><strong> 2️⃣ Elastic Search</strong></summary>
+    <div markdown="1">     
+
+    1. 대용량 데이터에서 빠른 키워드 조회를 위해 사용했습니다.
+    2. 형태소 분석을 통한 지연어처리와 역색인 지원으로 빠른 검색을 위해 사용했습니다.
+
+  </details> 
+  
+  <details>
+  <summary><strong> 3️⃣ RDS- MySQL</strong></summary>
+    <div markdown="1">     
+
+    1. 프로젝트 전 MySQL을 미리 학습한 경험이 있어 다른 DB보다 빠르게 프로젝트에 적용이 가능하기 때문에 선택했습니다
+    2. 현업에서 MySQL의 점유율 높기 때문에 레퍼런스를 찾기 쉬웠습니다.
+   
+    
+  </details> 
+  
+    
+  <details>
+  <summary><strong> 4️⃣ AWS ElastiCache for Redis</strong></summary>
+    <div markdown="1">
+      
+    1. AWS 아키텍처로 구성된 프로젝트에서 최적화된 서비스와 팀 프로젝트 환경에서 효과적인 모니터링을 위해서 AWS 클라우드 제품을 사용했습니다.
+    2. 다양한 데이터 타입과 영속화가 필요했습니다.
+    3. 자동으로 만료되는 데이터를 다룰 수 있어 캐시 시스템으로 이상적입니다. 이를 통해 데이터의 유효성을 관리하고 불필요한 메모리 사용을 줄일 수 있었습니다.
+    
+  </details> 
+  
+    
+  <details>
+  <summary><strong> 5️⃣ Spring Batch</strong></summary>
+    <div markdown="1">     
+      
+    1. Spring Batch는 대량의 데이터를 효율적으로 처리할 수 있도록 설계된 프레임워크로, 안전하고 신뢰성 있는 데이터 이전 및 처리를 지원합니다.
+    2. 대용량 데이터를 읽고 쓰는 작업에 최적화되어 있어, 데이터 처리 속도가 빠르고 자원 관리가 용이합니다. 특히, 트랜잭션 관리와 병렬 처리 기능을 제공해 성능을 극대화할 수 있습니다.
+    3. 정기적으로 실행해야 하는 배치 작업을 손쉽게 스케줄링하고, 자동화할 수 있어 반복 작업을 효율적으로 관리할 수 있습니다.
+    
+  </details> 
+  
+    
+    
+  <details>
+  <summary><strong> 6️⃣ APACHE KAFKA</strong></summary>
+    <div markdown="1">     
+    
+    1. 초당 수백막 건의 데이터를 처리할 수 있어 실시간 데이터 처리에 적합합니다.
+    2. Pub/Sub기반으로 느슨한 처리가 가능해 확장성과 유연성이 뛰어납니다
+    3. 메시지를 저장해 데이터 손실 방지 기능을 제공합니다
+      
+  </details> 
+  
+    
+    
+  <details>
+  <summary><strong> 7️⃣ MongoDB</strong></summary>
+    <div markdown="1">
+    
+    1. 대용량 비정형 데이터를 처리할 수 있습니다.
+    2. 읽기 및 쓰기 속도가 빨라 빈번한 데이터 업데이트가 필요한 애플리케이션에 적합합니다.
+    3. 샤딩을 통해 데이터를 분산 저장할 수 있어 카프카와 호환성이 좋습니다.
+  
+  </details> 
+  
+    
+    
+  <details>
+  <summary><strong> 8️⃣ Spring AI</strong></summary>  
+  <div markdown="1">     
+
+    1. 다양한 AI 서비스와 모델을 손쉽게 통합할 수 있습니다.
+    2. 스프링 프레임워크와 통합되어있어 빠르게 개발 및 배포할 수 있습니다.
+ 
+  </details> 
+  
+    
+    
+  <details>
+  <summary><strong> 9️⃣ Jenkins</strong></summary>
+    <div markdown="1">     
+
+    1. 다양한 플러그인을 제공하여 빌드, 테스트, 배포, 모니터링 등 다양한 작업을 지원합니다
+    2. 높은 유연성과 확장성을 제공하여 특정 요구에 맞게 파이프라인을 구성하고 자동화할 수 있습니다.
+    3. 빌드 상태에 대한 알림 기능을 제공하며, 이벤트에 대한 알림을 설정하여 정보를 실시간으로 전달합니다.
+    
+  </details> 
+  
+      
+    
+  <details>
+  <summary><strong> 🔟 NGINX</strong></summary>
+    <div markdown="1">     
+    
+    1. 로드 밸런싱 기능을 제공하여 여러서버에 트래픽을 분산시키고 애플리케이션의 확장성과 가용성을 높일 수 있습니다.
+    2. 리버스 프록시 서버로 사용할 수 있어 캐싱, 보안, SSL등 다양한 기능을 제공합니다.
+    3. 간격하고 직관적인 설정 파일을 제공하여 서버 설정 및 관리에 용이합니다 
+
+
+  </details> 
+
+ <details>
+  <summary><strong> 11. PortONE</strong></summary>
+    <div markdown="1">     
+    
+    1. 이유설명
+
+  </details> 
+  
+  
+</div>
+</details>
 </br>
 
 ## 📁 인프라 구성
@@ -54,7 +182,7 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 ```
 👨‍👨‍👧 유저 : 로그인 | 회원가입 | 이메일 인증 | 소셜 로그인(네이버/구글) | 아이디 찾기 | 비밀번호 찾기 | 임시 비밀번호 발송
 💰 상품 : 검색 | 리뷰 | 옵션 선택 | 찜하기 | 장바구니 | 결제
-🪢 소분: 글 작성 | 글 상태변환 | 채팅 | 검색 | 매너포인트 | 신고하기 | 조회수 | 유저 상태에 따른 상태변환 | 카카오 맵을 통한 위치찾기 | 알림키워드 등록
+🪢 소분: 글 작성 | 글 상태변환 | 채팅 | 검색 | 매너포인트 | 신고하기 | 조회수 | 유저 상태에 따른 상태변환 | 카카오 맵을 통한 위치찾기 | 알림키워드 등록 | 지역검색을 통한 원하는 글 찾기
 🎊 이벤트:
 🏡 마이페이지 : 주문내역 | 쿠폰 | 찜한 상품 | 상품 후기 | 1:1 문의 | 관심 목록 | 내가 쓴글 | 참여중인 소분 | 배송지 관리 | 개인정보 수정 
 📈 관리자페이지 : 유저관리 | 상품관리 | 카테고리 관리 | 이벤트 관리 | 문의 관리 | 신고글 관리 | 결제 관리
@@ -94,6 +222,17 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 
 <details>
   <summary><strong>4️⃣ 결제</strong></summary>
+   <img src="https://github.com/user-attachments/assets/feb69896-f7c0-469e-9f78-b8a4fed87e9c" width=500px; height=300px; />
+   <img src="https://github.com/user-attachments/assets/0e277f2b-6ac1-4c74-9ee6-cd75934ab24d" width=500px; height=300px; />
+   <img src="https://github.com/user-attachments/assets/77873906-390f-4923-99c5-c46277952d81" width=500px; height=300px; />
+   <img src="https://github.com/user-attachments/assets/554abbb0-72a8-48fe-a6ca-77eb5965d779" width=500px; height=300px; />
+   <img src="https://github.com/user-attachments/assets/bea8862e-bfd4-4efa-b019-7cd1aac35abc" width=500px; height=300px; />
+  <br>
+
+  - [x] 포트원을 활용해 테스트 결제를 할 수 있도록 했습니다.
+  - [x] 토스, 카카오페이를 이용할 수 있습니다.
+  - [x] 결제가 완료되면 주문내역에서 확인할 수 있고 아이템들을 확인할 수 있습니다.
+  - [x] 결제가 완료되면 공구진행도도 올라갑니다
 </details>
 
 <details>
