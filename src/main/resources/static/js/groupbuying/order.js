@@ -152,14 +152,25 @@ document.addEventListener('DOMContentLoaded', function() {
             success: function(data) {
                 if (data.status === "success") {
                     alert("결제가 완료되었습니다.");
-                    // $.ajax({
-                    //     url: `order/complete`,
-                    //     type: 'GET',
-                    //     contentType: 'application/json',
-                    //     data: JSON.stringify({
-                    //
-                    //     })
-                    // })
+                    $.ajax({
+                        url: `/order/complete`,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            name: name,
+                            phone: phone,
+                            address: address
+                        }),
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function() {
+                            window.location.href = "/order/complete/info";
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            alert("주문 완료 처리 중 오류가 발생했습니다: " + errorThrown);
+                        }
+                    })
 
                 } else {
                     cancelOrder(impUid,merchantUid)

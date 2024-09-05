@@ -12,6 +12,8 @@ public class OrdersPaymentDto {
     private Integer couponDiscount;
     private Integer finalPaymentAmount;
     private String paymentType;
+    private String buyerName;
+    private String buyerNumber;
     private String deliveryAddress;
     private String cancelReason;
 }

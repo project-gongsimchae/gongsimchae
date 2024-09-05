@@ -105,8 +105,18 @@ public class OrderController {
         return ResponseEntity.ok("취소완료");
     }
 
-    @GetMapping("/complete")
-    public String showOrderComplete(HttpSession session, Model model) {
+    @PostMapping("/complete")
+    public ResponseEntity<String> completeOrder(@RequestBody OrderCompleteReqDto orderCompleteReqDto,
+                                              HttpSession session) {
+        session.setAttribute("deliveryInfo",orderCompleteReqDto);
+
+        return ResponseEntity.ok("/order/complete/info");
+    }
+
+    @GetMapping("/complete/info")
+    public String showOrderComplete(HttpSession session,
+                                    Model model) {
+
         String merchantUid = (String) session.getAttribute("merchantUid");
 
         // 주문 정보 조회
@@ -118,10 +128,12 @@ public class OrderController {
         // 주문 상품 목록 조회
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrdersId(order.getId());
 
+        OrderCompleteReqDto deliveryInfo = (OrderCompleteReqDto) session.getAttribute("deliveryInfo");
+
         model.addAttribute("order", order);
         model.addAttribute("paymentInfo", paymentInfo);
         model.addAttribute("orderItems", orderItems);
-
+        model.addAttribute("deliveryInfo", deliveryInfo);
         // 세션에서 임시 주문 정보 제거
         session.removeAttribute("merchantUid");
         session.removeAttribute("tempOrderItems");
