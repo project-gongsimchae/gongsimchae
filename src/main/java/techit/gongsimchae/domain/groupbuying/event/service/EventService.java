@@ -82,7 +82,7 @@ public class EventService {
         for (Event activatedEvent : activatedEvents) {
             List<EventCategory> eventCategories = eventCategoryRepository.findAllByEventId(activatedEvent.getId());
             List<Category> categories = eventCategories.stream()
-                    .map((eventCategory) -> categoryRepository.findById(eventCategory.getId()).orElseThrow(
+                    .map((eventCategory) -> categoryRepository.findById(eventCategory.getCategory().getId()).orElseThrow(
                             () -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND)
                     )).toList();
             eventResUserDtoWebs.add(new EventResUserDtoWeb(activatedEvent, imageFileRepository.findByEvent(activatedEvent).getStoreFilename(), categories));

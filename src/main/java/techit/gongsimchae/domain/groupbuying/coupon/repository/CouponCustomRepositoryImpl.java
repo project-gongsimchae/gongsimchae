@@ -28,6 +28,7 @@ public class CouponCustomRepositoryImpl implements CouponCustomRepository{
                 .leftJoin(couponUser.coupon, coupon)
                 .join(couponUser.user, user)
                 .where(user.id.eq(userId))
+                .where(couponUser.couponStatus.eq(0))
                 .fetch();
     }
 
