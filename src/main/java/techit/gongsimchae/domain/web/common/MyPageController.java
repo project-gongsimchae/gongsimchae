@@ -71,7 +71,7 @@ public class MyPageController {
     }
 
     @GetMapping("/orders/{ordersId}")
-    public String orderDetail(@PathVariable Long ordersId,
+    public String orderDetail(@PathVariable("ordersId") Long ordersId,
                               @AuthenticationPrincipal PrincipalDetails userDetails, Model model){
         Long userId = userDetails.getAccountDto().getId();
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrdersId(ordersId);
@@ -213,8 +213,6 @@ public class MyPageController {
     public ReviewResDtoWeb getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                       @PathVariable("uid") String uid,
                                       @PathVariable("orderItemId") Long orderItemId) {
-        log.info(">>!!!!!!!!! 실행되었음");
-
         return reviewService.getReviews(principalDetails.getAccountDto(), uid, orderItemId);
     }
 
