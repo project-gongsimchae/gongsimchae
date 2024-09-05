@@ -159,7 +159,6 @@ public class UserController {
     }
 
     @PostMapping("/change/default/address/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @addressService.IsOwner(#id) == principal.username")
     public ResponseEntity<?> changeDefaultAddress(@PathVariable("id") String id) {
         addressService.changeDefaultAddress(id);
         return ResponseEntity.ok().build();
