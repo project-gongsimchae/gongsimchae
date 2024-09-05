@@ -123,6 +123,7 @@ public class PaymentsService {
                 .orElseThrow(() -> new IllegalStateException("주문 정보를 찾을 수 없습니다."));
 
         order.updateStatus(OrderStatus.완료);
+        order.updateImpUid(payment.getImpUid());
         ordersRepository.save(order);
     }
 
