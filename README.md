@@ -12,13 +12,28 @@
 </br>
 
 ## 👨‍👩‍👧‍👦 팀원 소개
-| <div align="center">[홍예석](https://github.com/yshong1998)</div>                         | <div align="center">[노수연](https://github.com/suynnn)</div>            | <div align="center">[안희주](https://github.com/HeeJu0807)</div>                      | <div align="center">[정인규](https://github.com/JungInGyu)</div>                         | <div align="center">[정주연](https://github.com/juicyye)</div>                         |
-| :---------------------------------------------------------------------------- | :--------------------------------------------------------------------------- | :---------------------------------------------------------------------------- | :--------------------------------------------------------------------------- | :--------------------------------------------------------------------------- |
-| <div align="center"><img src="https://github.com/user-attachments/assets/e4bb1ea5-ac3a-464d-aacc-c28159a61b31" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/2550cf81-f2db-4f4d-9243-9a91c66ca8f7" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/c7f702fe-95ff-4a4e-8f6a-2b751f63a12d" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/6decd4d0-42f9-4fdf-bbff-051a631c2f86" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/18c3c683-a81e-4b7f-8b12-534d7a6d90fd" width=150 /></div> |
-| <div align="center"> `공통 기능` <br>이미지 CRUD<br/>`공구`<br>아이템 데이터 활용 전반, <br> 관리자 페이지 <br> 이벤트, 쿠폰, 주문, <br> 상품, 관리 기능, <br> 카테고리별 조회, 정렬 기능 </div>          | <div align="center">추가 </div>              | <div align="center">추가 </div>                     | <div align="center">추가 </div>              | <div align="center">`유저 및 인증-인가 전반` <br>로그인, 회원가입, Oauth2 <br /> `공통 기능` <br>주소 관리, 문의<br/>알림, 알림키워드<br/>검색 및 정렬 <br>`소분`<br />단체채팅, AI 채팅<br>신고, 소분글후기 <br/>`공구`<br>조회수, 찜 </div>     |
+| <div align="center">[홍예석](https://github.com/yshong1998)</div>                         | <div align="center">[노수연](https://github.com/suynnn)</div>                                                                                                           | <div align="center">[안희주](https://github.com/HeeJu0807)</div>                      | <div align="center">[정인규](https://github.com/JungInGyu)</div>                         | <div align="center">[정주연](https://github.com/juicyye)</div>                         |
+| :---------------------------------------------------------------------------- |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------| :---------------------------------------------------------------------------- | :--------------------------------------------------------------------------- | :--------------------------------------------------------------------------- |
+| <div align="center"><img src="https://github.com/user-attachments/assets/e4bb1ea5-ac3a-464d-aacc-c28159a61b31" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/2550cf81-f2db-4f4d-9243-9a91c66ca8f7" width=150 /></div>                                    | <div align="center"><img src="https://github.com/user-attachments/assets/c7f702fe-95ff-4a4e-8f6a-2b751f63a12d" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/6decd4d0-42f9-4fdf-bbff-051a631c2f86" width=150 /></div> | <div align="center"><img src="https://github.com/user-attachments/assets/18c3c683-a81e-4b7f-8b12-534d7a6d90fd" width=150 /></div> |
+| <div align="center"> `공통 기능` <br>이미지 CRUD<br/>`공구`<br>아이템 데이터 활용 전반, <br> 카테고리별 조회, 정렬 기능 <br> `관리자 페이지` <br> 이벤트, 쿠폰, 주문, <br> 상품, 관리 기능,  </div>          | <div align="center"> `공통`<br> 서버 배포 및 관리<br> 젠킨스 빌드 연동<br> NGINX 무중단 배포<br> HTTPS 인증 <br> `소분` <br> 소분글 CRUD <br> 소분 상세 페이지 <br> `공구` <br> 공동구매 성공 <br> 실패 로직 </div> | <div align="center"> `공구` <br> 아이템 & 이벤트 CRUD <br> 아이템 옵션 <br> `소분-메인페이지` <br> 지역 태그 및 내용 검색 <br> `공통` <br> 찜 </div>                     | <div align="center"> `공구`<br> 아이템 옵션 기능 구현 <br> 주문 내역, 주문 내역 상세<br/> 장바구니<br/>  `결제` <br> 주문서 페이지 <br> 포트원 API 연동 <br> 결제, 검증, 환불 <br>  </div>              | <div align="center">`유저 및 인증-인가 전반` <br>로그인, 회원가입, Oauth2 <br /> `공통 기능` <br>주소 관리, 문의<br/>알림, 알림키워드<br/>검색 및 정렬 <br>`소분`<br />단체채팅, AI 채팅<br>신고, 소분글후기 <br/>`공구`<br>조회수, 찜 </div>     |
 
+<details>
+  <summary><strong> 1️⃣1️⃣ PortOne</strong></summary>
+    <div markdown="1">     
 
+    1. 다양한 결제 수단을 하나의 API로 통합하여 관리할 수 있어, 개발 및 유지보수 비용을 절감할 수 있습니다/
+    2. 개발 단계에서 실제 결제 없이 테스트할 수 있는 샌드박스 환경을 제공하여, 안전하고 효율적인 개발 및 테스트가 가능합니다.
+    3. 테스트 모드와 실제 운영 모드 간의 전환이 간단하여, 개발에서 운영으로의 이전이 원활합니다.
+    4. 다양한 결제 시나리오(성공, 실패, 취소 등)를 시뮬레이션할 수 있어, 프로덕션 환경 이전에 충분한 테스트가 가능합니다.
+  </details>  
 <br/>
+
+## 🛢️ ERD-Diagram
+<details>
+  <summary><strong> ERD </strong></summary>
+<img src="https://github.com/user-attachments/assets/1136cafa-db66-4083-b08e-b3dc0f7868c0" width=500px; height=300px; />
+
+</details>
 
 ## 🚀 기술 스택
 
@@ -164,8 +179,8 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 </details>
 </br>
 
-## 📁 아키텍처처
-사진
+## 📁 아키텍처
+![아키텍처2.png](..%2F%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%982.png)
 
 <br>
 
@@ -303,7 +318,7 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 <details>
   <summary><strong> 젠킨스</strong></summary>
     <div markdown="1"> 
-      <h3>메인에서 Push 하면 자동으로 젠킨스에서 빌드되고 성공 후, Jar 파일을 배포 서버로 보내서 바로 실행시킵니다.</h3>
+      <h3>메인에서 Push 하면 자동으로 젠킨스에서 빌드되고 성공 후, Jar 파일을 배포 서버로 보내고 서버 설정하는 스크립트 파일을 실행시켜서 블루그린 무중단 배포를 시작합니다..</h3>
       <img width="1470" alt="image" src="https://github.com/user-attachments/assets/be4e397d-93e3-4ab6-bd92-9231f0ad261a" />
       <p></p>
       <img width="1470" alt="image" src="https://github.com/user-attachments/assets/4d2c32df-5905-4a0c-a066-d7202c0b2ae1" />
@@ -313,7 +328,9 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 <details>
   <summary><strong> NGINX</strong></summary>
     <div markdown="1"> 
-      1.여기에 작성
+        <h3>8080 포트와 8081 포트를 번갈아가며 블루그린 무중단 배포를 시도합니다.</h3>
+        <p>nginx가 8080포트 연결되어 있다면 빌드 및 배포 성공 시 새로 8081 포트로 연결하고, 반대로 8081 포트일 때도 마찬가지 입니다.</p>
+
 </details>
 
 </br>
