@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QReviews is a Querydsl query type for Reviews
+ * QReview is a Querydsl query type for Review
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QReviews extends EntityPathBase<Reviews> {
+public class QReview extends EntityPathBase<Review> {
 
-    private static final long serialVersionUID = -672475452L;
+    private static final long serialVersionUID = -852976753L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QReviews reviews = new QReviews("reviews");
+    public static final QReview review = new QReview("review");
 
     public final techit.gongsimchae.domain.QBaseEntity _super = new techit.gongsimchae.domain.QBaseEntity(this);
 
@@ -32,6 +32,8 @@ public class QReviews extends EntityPathBase<Reviews> {
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final techit.gongsimchae.domain.groupbuying.item.entity.QItem item;
+
+    public final techit.gongsimchae.domain.groupbuying.orderitem.entity.QOrderItem orderItem;
 
     public final EnumPath<SecretStatus> secretStatus = createEnum("secretStatus", SecretStatus.class);
 
@@ -46,25 +48,26 @@ public class QReviews extends EntityPathBase<Reviews> {
 
     public final techit.gongsimchae.domain.common.user.entity.QUser user;
 
-    public QReviews(String variable) {
-        this(Reviews.class, forVariable(variable), INITS);
+    public QReview(String variable) {
+        this(Review.class, forVariable(variable), INITS);
     }
 
-    public QReviews(Path<? extends Reviews> path) {
+    public QReview(Path<? extends Review> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QReviews(PathMetadata metadata) {
+    public QReview(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QReviews(PathMetadata metadata, PathInits inits) {
-        this(Reviews.class, metadata, inits);
+    public QReview(PathMetadata metadata, PathInits inits) {
+        this(Review.class, metadata, inits);
     }
 
-    public QReviews(Class<? extends Reviews> type, PathMetadata metadata, PathInits inits) {
+    public QReview(Class<? extends Review> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.item = inits.isInitialized("item") ? new techit.gongsimchae.domain.groupbuying.item.entity.QItem(forProperty("item"), inits.get("item")) : null;
+        this.orderItem = inits.isInitialized("orderItem") ? new techit.gongsimchae.domain.groupbuying.orderitem.entity.QOrderItem(forProperty("orderItem"), inits.get("orderItem")) : null;
         this.user = inits.isInitialized("user") ? new techit.gongsimchae.domain.common.user.entity.QUser(forProperty("user")) : null;
     }
 

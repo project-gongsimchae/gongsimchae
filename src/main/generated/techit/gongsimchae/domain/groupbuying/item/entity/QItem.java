@@ -31,7 +31,7 @@ public class QItem extends EntityPathBase<Item> {
 
     public final NumberPath<Long> cumulativeSalesVolume = createNumber("cumulativeSalesVolume", Long.class);
 
-    public final BooleanPath deleteStatus = createBoolean("deleteStatus");
+    public final NumberPath<Integer> deleteStatus = createNumber("deleteStatus", Integer.class);
 
     public final NumberPath<Integer> discountRate = createNumber("discountRate", Integer.class);
 
@@ -44,6 +44,10 @@ public class QItem extends EntityPathBase<Item> {
     public final ListPath<techit.gongsimchae.domain.common.imagefile.entity.ImageFile, techit.gongsimchae.domain.common.imagefile.entity.QImageFile> imageFiles = this.<techit.gongsimchae.domain.common.imagefile.entity.ImageFile, techit.gongsimchae.domain.common.imagefile.entity.QImageFile>createList("imageFiles", techit.gongsimchae.domain.common.imagefile.entity.ImageFile.class, techit.gongsimchae.domain.common.imagefile.entity.QImageFile.class, PathInits.DIRECT2);
 
     public final StringPath intro = createString("intro");
+
+    public final ListPath<techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption, techit.gongsimchae.domain.groupbuying.itemoption.entity.QItemOption> itemOptions = this.<techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption, techit.gongsimchae.domain.groupbuying.itemoption.entity.QItemOption>createList("itemOptions", techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption.class, techit.gongsimchae.domain.groupbuying.itemoption.entity.QItemOption.class, PathInits.DIRECT2);
+
+    public final EnumPath<ItemStatus> itemStatus = createEnum("itemStatus", ItemStatus.class);
 
     public final StringPath name = createString("name");
 

@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QPayment is a Querydsl query type for Payment
+ * QPayments is a Querydsl query type for Payments
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QPayment extends EntityPathBase<Payment> {
+public class QPayments extends EntityPathBase<Payments> {
 
-    private static final long serialVersionUID = 556786532L;
+    private static final long serialVersionUID = 80513423L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QPayment payment = new QPayment("payment");
+    public static final QPayments payments = new QPayments("payments");
 
     public final NumberPath<Integer> amount = createNumber("amount", Integer.class);
 
@@ -44,23 +44,23 @@ public class QPayment extends EntityPathBase<Payment> {
 
     public final StringPath successUrl = createString("successUrl");
 
-    public QPayment(String variable) {
-        this(Payment.class, forVariable(variable), INITS);
+    public QPayments(String variable) {
+        this(Payments.class, forVariable(variable), INITS);
     }
 
-    public QPayment(Path<? extends Payment> path) {
+    public QPayments(Path<? extends Payments> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QPayment(PathMetadata metadata) {
+    public QPayments(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QPayment(PathMetadata metadata, PathInits inits) {
-        this(Payment.class, metadata, inits);
+    public QPayments(PathMetadata metadata, PathInits inits) {
+        this(Payments.class, metadata, inits);
     }
 
-    public QPayment(Class<? extends Payment> type, PathMetadata metadata, PathInits inits) {
+    public QPayments(Class<? extends Payments> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.orders = inits.isInitialized("orders") ? new techit.gongsimchae.domain.groupbuying.orders.entity.QOrders(forProperty("orders"), inits.get("orders")) : null;
     }

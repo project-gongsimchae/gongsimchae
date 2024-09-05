@@ -31,7 +31,9 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final techit.gongsimchae.domain.groupbuying.item.entity.QItem item;
+    public final techit.gongsimchae.domain.groupbuying.itemoption.entity.QItemOption itemOption;
+
+    public final EnumPath<OrderItemStatus> orderItemStatus = createEnum("orderItemStatus", OrderItemStatus.class);
 
     public final techit.gongsimchae.domain.groupbuying.orders.entity.QOrders orders;
 
@@ -58,7 +60,7 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public QOrderItem(Class<? extends OrderItem> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.item = inits.isInitialized("item") ? new techit.gongsimchae.domain.groupbuying.item.entity.QItem(forProperty("item"), inits.get("item")) : null;
+        this.itemOption = inits.isInitialized("itemOption") ? new techit.gongsimchae.domain.groupbuying.itemoption.entity.QItemOption(forProperty("itemOption"), inits.get("itemOption")) : null;
         this.orders = inits.isInitialized("orders") ? new techit.gongsimchae.domain.groupbuying.orders.entity.QOrders(forProperty("orders"), inits.get("orders")) : null;
     }
 

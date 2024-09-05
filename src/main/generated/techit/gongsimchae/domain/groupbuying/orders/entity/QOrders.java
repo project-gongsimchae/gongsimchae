@@ -29,9 +29,13 @@ public class QOrders extends EntityPathBase<Orders> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final ListPath<techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem, techit.gongsimchae.domain.groupbuying.orderitem.entity.QOrderItem> orderItems = this.<techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem, techit.gongsimchae.domain.groupbuying.orderitem.entity.QOrderItem>createList("orderItems", techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem.class, techit.gongsimchae.domain.groupbuying.orderitem.entity.QOrderItem.class, PathInits.DIRECT2);
+    public final StringPath impUid = createString("impUid");
+
+    public final StringPath merchantUid = createString("merchantUid");
 
     public final EnumPath<techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderStatus> orderStatus = createEnum("orderStatus", techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderStatus.class);
+
+    public final NumberPath<Integer> totalPrice = createNumber("totalPrice", Integer.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateDate = _super.updateDate;

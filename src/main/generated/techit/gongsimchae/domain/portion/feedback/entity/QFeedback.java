@@ -24,19 +24,17 @@ public class QFeedback extends EntityPathBase<Feedback> {
 
     public final techit.gongsimchae.domain.QBaseEntity _super = new techit.gongsimchae.domain.QBaseEntity(this);
 
-    public final StringPath content = createString("content");
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
+    public final EnumPath<FeedbackRating> feedbackRating = createEnum("feedbackRating", FeedbackRating.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final NumberPath<Integer> startPoint = createNumber("startPoint", Integer.class);
-
-    public final StringPath UID = createString("UID");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateDate = _super.updateDate;
+
+    public final StringPath url = createString("url");
 
     public final techit.gongsimchae.domain.common.user.entity.QUser user;
 

@@ -39,11 +39,13 @@ public class QImageFile extends EntityPathBase<ImageFile> {
 
     public final techit.gongsimchae.domain.groupbuying.item.entity.QItem item;
 
+    public final EnumPath<ItemImageFileStatus> itemImageFileStatus = createEnum("itemImageFileStatus", ItemImageFileStatus.class);
+
     public final StringPath originalFilename = createString("originalFilename");
 
     public final techit.gongsimchae.domain.groupbuying.post.entity.QPost post;
 
-    public final techit.gongsimchae.domain.groupbuying.reviews.entity.QReviews reviews;
+    public final techit.gongsimchae.domain.groupbuying.reviews.entity.QReview review;
 
     public final StringPath storeFilename = createString("storeFilename");
 
@@ -77,7 +79,7 @@ public class QImageFile extends EntityPathBase<ImageFile> {
         this.inquiry = inits.isInitialized("inquiry") ? new techit.gongsimchae.domain.common.inquiry.entity.QInquiry(forProperty("inquiry"), inits.get("inquiry")) : null;
         this.item = inits.isInitialized("item") ? new techit.gongsimchae.domain.groupbuying.item.entity.QItem(forProperty("item"), inits.get("item")) : null;
         this.post = inits.isInitialized("post") ? new techit.gongsimchae.domain.groupbuying.post.entity.QPost(forProperty("post"), inits.get("post")) : null;
-        this.reviews = inits.isInitialized("reviews") ? new techit.gongsimchae.domain.groupbuying.reviews.entity.QReviews(forProperty("reviews"), inits.get("reviews")) : null;
+        this.review = inits.isInitialized("review") ? new techit.gongsimchae.domain.groupbuying.reviews.entity.QReview(forProperty("review"), inits.get("review")) : null;
         this.subdivision = inits.isInitialized("subdivision") ? new techit.gongsimchae.domain.portion.subdivision.entity.QSubdivision(forProperty("subdivision"), inits.get("subdivision")) : null;
         this.user = inits.isInitialized("user") ? new techit.gongsimchae.domain.common.user.entity.QUser(forProperty("user")) : null;
     }

@@ -31,14 +31,6 @@ public class QParticipate extends EntityPathBase<Participate> {
 
     public final techit.gongsimchae.domain.groupbuying.item.entity.QItem item;
 
-    public final NumberPath<Integer> limitPerson = createNumber("limitPerson", Integer.class);
-
-    public final DateTimePath<java.time.LocalDateTime> limitTime = createDateTime("limitTime", java.time.LocalDateTime.class);
-
-    public final EnumPath<PurchaseType> purchaseType = createEnum("purchaseType", PurchaseType.class);
-
-    public final EnumPath<TransactionStatus> transactionStatus = createEnum("transactionStatus", TransactionStatus.class);
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updateDate = _super.updateDate;
 

@@ -33,6 +33,8 @@ public class QSubdivision extends EntityPathBase<Subdivision> {
 
     public final BooleanPath deleteStatus = createBoolean("deleteStatus");
 
+    public final StringPath dong = createString("dong");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final ListPath<techit.gongsimchae.domain.common.imagefile.entity.ImageFile, techit.gongsimchae.domain.common.imagefile.entity.QImageFile> imageFileList = this.<techit.gongsimchae.domain.common.imagefile.entity.ImageFile, techit.gongsimchae.domain.common.imagefile.entity.QImageFile>createList("imageFileList", techit.gongsimchae.domain.common.imagefile.entity.ImageFile.class, techit.gongsimchae.domain.common.imagefile.entity.QImageFile.class, PathInits.DIRECT2);
