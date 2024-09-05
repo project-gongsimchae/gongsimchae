@@ -35,7 +35,8 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
         List<ItemRespDtoWeb> results = queryFactory.select(Projections.fields(ItemRespDtoWeb.class,
                         item.id, item.name, item.intro, item.originalPrice, item.discountRate,
                         item.pointAccumulationRate, item.groupBuyingQuantity, item.groupBuyingLimitTime,
-                        item.createDate, category.name.as("categoryName"), item.deleteStatus))
+                        item.createDate, category.name.as("categoryName"), item.deleteStatus,
+                        category.categoryStatus))
                 .from(item)
                 .join(item.category, category)
                 .where(adminSearch(form))
