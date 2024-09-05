@@ -34,6 +34,9 @@ public interface ErrorMessage {
     String CATEGORY_NOT_FOUND = "존재하지 않는 카테고리입니다.";
     String CANNOT_DELETE_CATEGORY_WITH_ACTIVE_ITEM = "공동구매 진행중인 상품이 존재해 삭제할 수 없습니다.";
 
+    // 주문 아이템
+    String ORDER_ITEM_NOT_FOUND = "해당 주문아이템이 존재하지 않습니다.";
+
     // 쿠폰
     String COUPON_NOT_FOUND = "존재하지 않는 쿠폰입니다.";
     String COUPON_USER_ALREADY_EXIST = "이미 쿠폰을 발급받은 유저입니다.";
