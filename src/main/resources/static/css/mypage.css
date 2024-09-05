@@ -3,7 +3,7 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8f8f8;
+    /*background-color: #f8f8f8;*/
 }
 
 .mypage-container {
@@ -110,6 +110,8 @@ body {
     padding: 24px 20px;
     background-color: #fff;
     margin-bottom: 20px;
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
 }
 .sidebar .menu-text {
     font-size: 12px;
@@ -132,6 +134,7 @@ body {
     flex: 1;
     background-color: #fff;
     padding: 30px;
+    border: 1px solid #e2e2e2;
     border-radius: 16px;
 }
 

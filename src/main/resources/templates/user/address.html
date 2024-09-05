@@ -67,6 +67,9 @@
     </style>
 
     <script th:inline="javascript">
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
         document.addEventListener('DOMContentLoaded', function() {
             const toggles = document.querySelectorAll('.default-address-toggle');
 
@@ -76,10 +79,11 @@
                     const star = this.querySelector('i');
 
                     if (!star.classList.contains('text-warning')) {
-                        fetch(`/change/default/address/${addressId}`, {
+                        fetch(`/mypage/change/default/address/${addressId}`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
+                                [csrfHeader]: csrfToken
                             },
                         })
                             .then(response => {
@@ -104,6 +108,5 @@
         });
     </script>
 </section>
-
 </body>
 </html>

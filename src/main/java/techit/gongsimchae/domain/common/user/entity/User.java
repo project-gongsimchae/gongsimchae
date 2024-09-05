@@ -11,6 +11,7 @@ import techit.gongsimchae.domain.common.user.dto.UserJoinReqDtoWeb;
 import techit.gongsimchae.domain.common.user.dto.UserUpdateReqDtoWeb;
 import techit.gongsimchae.global.dto.OAuth2Response;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -36,13 +37,15 @@ public class User extends BaseEntity {
     private String nickname;
     @Column(unique = true)
     private String phoneNumber;
-    private Integer mannerPoint;
+    private Double mannerPoint;
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
     @Column(unique = true)
     private String UID;
     @Enumerated(EnumType.STRING)
     private JoinType joinType;
+
+    private LocalDateTime deletedAt;
 
     /**
      * 생성자
@@ -59,7 +62,7 @@ public class User extends BaseEntity {
         this.phoneNumber = joinReqDto.getPhoneNumber();
         this.userStatus = UserStatus.NORMAL;
         this.UID = UUID.randomUUID().toString();
-        this.mannerPoint = 0;
+        this.mannerPoint = 36.5;
         this.joinType = JoinType.NORMAL;
     }
 
@@ -75,7 +78,7 @@ public class User extends BaseEntity {
         this.nickname = UUID.randomUUID().toString().substring(0, 8);
         this.userStatus = UserStatus.NORMAL;
         this.UID = UUID.randomUUID().toString();
-        this.mannerPoint = 0;
+        this.mannerPoint = 36.5;
         this.joinType = JoinType.OAUTH;
 
     }
@@ -135,7 +138,6 @@ public class User extends BaseEntity {
      */
     public void changeInfoByAdmin(UserAdminUpdateReqDtoWeb updateDto) {
         this.name = updateDto.getName();
-        this.loginId = updateDto.getLoginId();
         this.role = updateDto.getRole();
         this.email = updateDto.getEmail();
         this.nickname = updateDto.getNickname();
@@ -150,7 +152,31 @@ public class User extends BaseEntity {
         this.userStatus = UserStatus.PENALTY;
     }
 
+    /**
+     *  매너포인트 조절
+     */
     public void decrementMannerPoints() {
-        this.mannerPoint--;
+        if (this.mannerPoint > 0.0) {
+            this.mannerPoint -= 0.1;
+        }
+    }
+
+    public void increaseMannerPointsForBestFeedback() {
+        if (this.mannerPoint < 99.9) {
+            this.mannerPoint += 0.2;
+        }
+    }
+
+    public void increaseMannerPointsForGoodFeedback() {
+        if (this.mannerPoint < 100.0) {
+            this.mannerPoint += 0.1;
+        }
+    }
+
+    /**
+     * 삭제 처리
+     */
+    public void deleteUser(){
+        this.deletedAt = LocalDateTime.now();
     }
 }

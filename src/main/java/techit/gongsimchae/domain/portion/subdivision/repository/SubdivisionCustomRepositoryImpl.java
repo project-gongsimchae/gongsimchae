@@ -1,16 +1,23 @@
 package techit.gongsimchae.domain.portion.subdivision.repository;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import techit.gongsimchae.domain.common.imagefile.dto.ImageFileRespDto;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubSearchDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionChatRoomRespDto;
 import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionReportRespDto;
+import techit.gongsimchae.domain.portion.subdivision.dto.SubdivisionRespDto;
+import techit.gongsimchae.domain.portion.subdivision.entity.SubdivisionType;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static techit.gongsimchae.domain.common.imagefile.entity.QImageFile.imageFile;
@@ -59,7 +66,6 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
             dto.setChatRoomUsers(chatRoomUserCount);
             return dto;
         }).collect(Collectors.toList());
-
     }
 
     @Override
@@ -73,8 +79,6 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
                 .join(report.subdivision, subdivision)
                 .where(subdivision.deleteStatus.eq(false))
                 .groupBy(subdivision.id)
-                .orderBy(report.count().desc())
-                .limit(pageable.getPageSize())
                 .fetch();
 
         // 2. 서브쿼리 결과에서 subdivisionId 목록을 추출
@@ -90,13 +94,80 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
                 .from(report)
                 .join(report.subdivision, subdivision)
                 .join(subdivision.user, user)
-                .where(subdivision.id.in(subdivisionIds).and(subdivision.deleteStatus.eq(false)))
-                .groupBy(subdivision.id, subdivision.title, user.email, user.name, user.nickname)
+                .where(subdivision.id.in(subdivisionIds))
+                .groupBy(subdivision.id, user.email, user.nickname)
+                .orderBy(report.count().desc())
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();
 
+        Long size = queryFactory.select(subdivision.countDistinct())
+                .from(report)
+                .join(report.subdivision, subdivision)
+                .where(subdivision.deleteStatus.eq(false))
+                .fetchOne();
+
         // 4. 결과를 Page로 래핑하여 반환
-        return new PageImpl<>(results, pageable, subQueryResults.size());
+        return new PageImpl<>(results, pageable,size);
+    }
+
+    @Override
+    public Page<SubdivisionRespDto> searchAndSortSubdivisions(SubSearchDto searchDto, Pageable pageable) {
+        List<SubdivisionRespDto> results = queryFactory.select(Projections.fields(SubdivisionRespDto.class, subdivision.id, subdivision.title,
+                        subdivision.content, subdivision.address, subdivision.price, subdivision.views,
+                        subdivision.UID, subdivision.subdivisionType, subdivision.createDate, subdivision.updateDate))
+                .from(subdivision)
+                .where(subdivision.deleteStatus.eq(false).and(AllConditions(searchDto)))
+                .orderBy(sortType(searchDto))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        for (SubdivisionRespDto result : results) {
+            List<ImageFileRespDto> images = queryFactory.select(Projections.fields(ImageFileRespDto.class,
+                            imageFile.id, imageFile.originalFilename, imageFile.storeFilename))
+                    .from(imageFile)
+                    .join(imageFile.subdivision, subdivision)
+                    .where(subdivision.id.eq(result.getId()))
+                    .fetch();
+            result.setImageFileList(images);
+        }
+
+        Long size = queryFactory.select(subdivision.count())
+                .from(subdivision)
+                .where(subdivision.deleteStatus.eq(false).and(AllConditions(searchDto)))
+                .fetchOne();
+
+
+        return new PageImpl<>(results, pageable,size.intValue());
+
+    }
+
+    private OrderSpecifier<?> sortType(SubSearchDto searchDto) {
+        if (searchDto.getSort() != null) {
+            if (searchDto.getSort().equals("new")) {
+                return subdivision.createDate.desc();
+            } else if (searchDto.getSort().equals("popular")) {
+                return subdivision.views.desc();
+            }
+
+        }
+        return subdivision.createDate.desc();
+    }
+
+    private BooleanBuilder AllConditions(SubSearchDto searchDto) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (Objects.nonNull(searchDto.getOnSale())) {
+            builder.and(subdivision.subdivisionType.eq(SubdivisionType.RECRUITING));
+        }
+        if(searchDto.getAddress() != null && !searchDto.getAddress().isBlank()) {
+            String[] split = searchDto.getAddress().split(",");
+            builder.and(subdivision.dong.in(split));
+        }
+        if (searchDto.getContent() != null) {
+            builder.and(subdivision.title.contains(searchDto.getContent())
+                    .and(subdivision.content.contains(searchDto.getContent())));
+        }
+        return builder;
     }
 }

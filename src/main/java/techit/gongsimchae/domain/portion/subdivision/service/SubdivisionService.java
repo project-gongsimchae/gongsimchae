@@ -4,17 +4,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import techit.gongsimchae.domain.common.es.repository.SubElasticRepository;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.portion.chatroom.service.ChatRoomService;
+import techit.gongsimchae.domain.portion.chatroomuser.event.RoomUserEndEvent;
 import techit.gongsimchae.domain.portion.notifications.dto.NotificationKeywordUserDto;
 import techit.gongsimchae.domain.portion.notifications.event.KeywordNotiEvent;
 import techit.gongsimchae.domain.portion.subdivision.dto.*;
@@ -25,14 +28,12 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class SubdivisionService {
@@ -43,20 +44,18 @@ public class SubdivisionService {
     private final ImageFileRepository imageFileRepository;
     private final ChatRoomService chatRoomService;
     private final ApplicationEventPublisher publisher;
+    private final SubElasticRepository subElasticRepository;
 
-    @Transactional(readOnly = true)
-    public List<SubdivisionRespDto> getAllSubdivisions(){
-        List<Subdivision> subdivisions = subdivisionRepository.findByDeleteStatusIsFalseOrderByCreateDateDesc();
-        return subdivisions.stream()
-                .map(SubdivisionRespDto::new)
-                .collect(Collectors.toList());
+    /**
+     * 소분글 메인페이지에 모든 소분글들을 보여주는 메서드
+     */
+    public Page<SubdivisionRespDto> getAllSubdivisions(SubSearchDto searchDto, Pageable pageable) {
+        return subdivisionRepository.searchAndSortSubdivisions(searchDto, pageable);
     }
 
     /**
      * URL의 Path 값으로 넘어온 UID로 DB에서 해당 소분 글을 찾아주는 메서드
-     *
      */
-    @Transactional(readOnly = true)
     public SubdivisionRespDto findSubdivisionByUID(String UID) {
 
         Subdivision subdivision = subdivisionRepository.findByUID(UID).orElseThrow(() -> new CustomWebException("해당 소분 글을 찾을 수 없습니다."));
@@ -67,16 +66,19 @@ public class SubdivisionService {
 
     /**
      * UserId를 기반으로 자신이 작성한 소분 글 찾아주는 메서드
-     *
      */
-    @Transactional(readOnly = true)
     public List<SubdivisionRespDto> findSubdivisionByUserId(Long userId) {
 
         return subdivisionRepository.findAllByUserIdAndDeleteStatusIsFalse(userId).stream().map(SubdivisionRespDto::new).toList();
     }
 
+    /**
+     * 소분글을 저장하는 메서드
+     */
+    @Transactional
     public String saveSubdivision(SubdivisionReqDto subdivisionReqDto,
                                   Long userId) {
+
 
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException("not found user"));
 
@@ -93,30 +95,52 @@ public class SubdivisionService {
                 .subdivisionType(SubdivisionType.RECRUITING)
                 .sigungu(subdivisionReqDto.getSigungu())
                 .user(user)
+                .dong(getDong(subdivisionReqDto.getAddress()))
                 .build();
 
         Subdivision savedSubdivision = subdivisionRepository.save(subdivision);
 
-        notifyKeyword(savedSubdivision.getSigungu(), savedSubdivision.getTitle(),savedSubdivision.getUID());
+        notifyKeyword(savedSubdivision.getSigungu(), savedSubdivision.getTitle(), savedSubdivision.getUID());
 
         // chatroom 생성
         chatRoomService.create(savedSubdivision);
-
-        imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", subdivision);
+        List<ImageFile> imageFiles = imageS3Service.storeFiles(subdivisionReqDto.getImages(), "images", subdivision);
+        saveSubDocument(savedSubdivision, imageFiles);
 
         return subdivision.getUID();
     }
 
+    private void saveSubDocument(Subdivision subdivision, List<ImageFile> imageFiles) {
+        String url = null;
+        if (!imageFiles.isEmpty()) {
+            url = imageFiles.get(0).getStoreFilename();
+        }
+        subElasticRepository.createSubDocument(subdivision, url);
+    }
+
+    private void updateSubDocument(Subdivision subdivision, List<ImageFile> imageFiles) {
+        String url = null;
+        if (!imageFiles.isEmpty()) {
+            url = imageFiles.get(0).getStoreFilename();
+        }
+        subElasticRepository.updateSubdivision(subdivision, url);
+    }
+
+    /**
+     * 소분글을 수정하는 메서드
+     */
+    @Transactional
     public String updateSubdivision(SubdivisionUpdateReqDto subdivisionUpdateReqDto) {
 
         log.debug("subdivisionUpdateReqDto {}", subdivisionUpdateReqDto);
+        subdivisionUpdateReqDto.setDong(getDong(subdivisionUpdateReqDto.getAddress()));
 
         Subdivision subdivision = subdivisionRepository.findById(subdivisionUpdateReqDto.getId()).orElseThrow(() -> new CustomWebException("Subdivision not found"));
         subdivision.updateSubdivision(subdivisionUpdateReqDto);
 
-        notifyKeyword(subdivision.getSigungu(), subdivision.getTitle(),subdivision.getUID());
+        notifyKeyword(subdivision.getSigungu(), subdivision.getTitle(), subdivision.getUID());
 
-        imageS3Service.storeFiles(subdivisionUpdateReqDto.getImages(), "images", subdivision);
+        List<ImageFile> imageFiles = imageS3Service.storeFiles(subdivisionUpdateReqDto.getImages(), "images", subdivision);
 
         if (!Objects.isNull(subdivisionUpdateReqDto.getDeleteImages())) {
             for (Long deleteImageId : subdivisionUpdateReqDto.getDeleteImages()) {
@@ -127,42 +151,28 @@ public class SubdivisionService {
                 imageS3Service.deleteFileFromDb(imageFile);
             }
         }
+        updateSubDocument(subdivision, imageFiles);
 
         return subdivision.getUID();
     }
+
+    /**
+     * 소분글을 삭제처리하는 메서드
+     * 실제로 삭제하는 건 아니고 상태를 변환하는 것이다
+     */
     @Transactional
     public void deleteSubdivision(String UID) {
 
         Subdivision subdivision = subdivisionRepository.findByUID(UID).orElseThrow(() -> new CustomWebException("Subdivision not found"));
 
         subdivision.deleteSubdivision();
+
+        updateSubDocument(subdivision, null);
     }
 
-    @Transactional(readOnly = true)
-    public List<SubdivisionRespDto> searchSubdivisions(String address, String content) {
-        // 콤마(,)로 구분된 주소를 여러 개로 나누기
-        String[] addresses = address != null ? address.split(",") : new String[]{};
-
-        List<Subdivision> results = new ArrayList<>();
-
-        for (String addr : addresses) {
-            // 각 주소에 대해 쿼리 실행
-            List<Subdivision> partialResults = subdivisionRepository.searchSubdivisions(addr.trim(), content);
-            results.addAll(partialResults);
-        }
-
-        // 중복된 결과를 제거 (필요시)
-        results = results.stream().distinct().collect(Collectors.toList());
-
-        return results.stream()
-                .map(SubdivisionRespDto::new)
-                .collect(Collectors.toList());
-    }
-  
     /**
      * 마이페이지에서 참여중인 소분글 찾는 메서드
      */
-    @Transactional(readOnly = true)
     public List<SubdivisionChatRoomRespDto> getUserSubdivisions(PrincipalDetails principalDetails) {
         return subdivisionRepository.findUserSubdivisions(principalDetails.getAccountDto().getId());
     }
@@ -170,18 +180,29 @@ public class SubdivisionService {
     /**
      * 소분글 상태를 바꾸는 메서드
      */
+    @Transactional
     public void changeStatus(String uid, String status) {
         Subdivision subdivision = subdivisionRepository.findByUID(uid).orElseThrow(() -> new CustomWebException(ErrorMessage.SUBDIVISION_NOT_FOUND));
         subdivision.changeType(status);
+        subElasticRepository.updateSubdivision(subdivision);
+        if (SubdivisionType.valueOf(status).equals(SubdivisionType.END)) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    publisher.publishEvent(new RoomUserEndEvent(subdivision.getId(), subdivision.getTitle()));
+                }
+            });
+
+
+        }
 
     }
 
     /**
      * 신고를 많이받은 소분글 불러오는 메서드
      */
-    @Transactional(readOnly = true)
-    public Page<SubdivisionReportRespDto> getMostReported() {
-        return subdivisionRepository.findMostFrequentReports(PageRequest.of(0, 10));
+    public Page<SubdivisionReportRespDto> getMostReported(Pageable pageable) {
+        return subdivisionRepository.findMostFrequentReports(pageable);
     }
 
     /**
@@ -195,11 +216,24 @@ public class SubdivisionService {
                     new TransactionSynchronizationAdapter() {
                         @Override
                         public void afterCommit() {
-                            publisher.publishEvent(new KeywordNotiEvent(taget.getUser(),taget.getKeyword(),url,sigungu,title));
+                            publisher.publishEvent(new KeywordNotiEvent(taget.getUser(), taget.getKeyword(), url, sigungu, title));
                         }
                     }
             );
         }
+    }
+
+    /**
+     * 주소에서 마지막 상세주소만 빼고 동까지만 되도록 설정
+     */
+    private String getDong(String address) {
+        int index = address.lastIndexOf(" ");
+        return address.substring(0, index);
+    }
+
+    public String isOwner(String uid) {
+        Subdivision subdivision = subdivisionRepository.findByUID(uid).orElseThrow(() -> new CustomWebException(ErrorMessage.SUBDIVISION_NOT_FOUND));
+        return subdivision.getUser().getLoginId();
     }
 
 

@@ -89,6 +89,7 @@
 <div>
     <h2>신고하기</h2>
     <form th:action method="post" th:object="${report}">
+        <div th:replace="~{layout/fielderror :: fielderror}"></div>
         <input type="hidden" th:field="${uid}">
         <div class="form-group">
             <label for="reportType">문의유형</label>

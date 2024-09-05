@@ -8,6 +8,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
@@ -28,6 +29,7 @@ import javax.sql.DataSource;
 import java.util.Collections;
 
 @EnableWebSecurity
+@EnableMethodSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -63,7 +65,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll())
 
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/emails/**","/find/**","/mypage/**","/subscribe/**","/chat/**"))
+                        .ignoringRequestMatchers("/emails/**","/find/**","/mypage/**"))
 
                 .formLogin(form -> form
                         .loginPage("/login")

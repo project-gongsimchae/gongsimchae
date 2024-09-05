@@ -22,6 +22,7 @@
     </div>
     <div class="custom-inquiry-actions">
         <form th:action method="post" th:object="${inquiry}">
+            <div th:replace="~{layout/fielderror :: fielderror}"></div>
             <div class="custom-form-group">
                 <input type="hidden" th:field="*{title}">
                 <label for="answer" class="custom-form-label">답변 작성</label>

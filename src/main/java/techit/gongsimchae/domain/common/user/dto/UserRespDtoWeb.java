@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class UserRespDtoWeb {
     private Long id;
     private String name;
-    private int mannerPoint;
+    private Double mannerPoint;
     private String email;
     private String loginId;
     private String nickname;
@@ -38,6 +38,9 @@ public class UserRespDtoWeb {
     private String detailAddress;
     private String additionalAddress;
     private String sigungu;
+
+    // 신고 횟수
+    private Long reportCount;
 
 
     /**

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/admin :: admin(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 관리</title>
+</head>
+<body>
+<section class="container picklist-section admin-section-container">
+    <link th:href="@{/css/admin/event.css}" rel="stylesheet">
+    <link th:href="@{/css/admin/category.css}" rel="stylesheet">
+    <div class="row user-container form-container">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="section-title">주문 관리</h1>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>주문 UID</th>
+                    <th>주문 고객 ID</th>
+                    <th>주문 고객</th>
+                    <th>주문 상태</th>
+                    <th>주문 일자</th>
+                    <th>가격</th>
+                    <th>주문 상세</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order, orderStat : ${ordersList}">
+                    <td th:text="${order.getId()}"></td>
+                    <td th:text="${order.getMerchantUid()}"></td>
+                    <td th:text="${order.getUserId()}"></td>
+                    <td th:text="${order.getUserName()}"></td>
+                    <td th:text="${order.getOrderStatus()}"></td>
+                    <td th:text="${#temporals.format(order.getCreateDate(),'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${#numbers.formatDecimal(order.getTotalPrice(), 0, 'COMMA', 0, 'POINT')} + '원'"></td>
+                    <td>
+                        <button type="button" class="btn btn-primary" th:onclick="'openOrderDetailModal(' + ${order.getId()} + ')'">상세 보기</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- 주문 상세 모달 -->
+    <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailModalLabel">주문 상세 정보</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="orderDetailModalContent">
+                    <!-- 주문 상세 정보가 여기로 로드됨 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 페이징 처리 -->
+    <div th:if="${!ordersList.isEmpty()}" class="d-flex justify-content-center bg-white py-3">
+        <ul class="pagination mb-0">
+            <li class="page-item" th:classappend="${ordersList.number == 0} ? 'disabled' : ''">
+                <a class="page-link" th:href="@{|?page=${ordersList.number-1}|}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li th:each="page : ${#numbers.sequence(0, ordersList.totalPages-1)}"
+                th:if="${page >= ordersList.number-5 and page <= ordersList.number+5}"
+                th:classappend="${page == ordersList.number} ? 'active' : ''" class="page-item">
+                <a th:text="${page+1}" class="page-link" th:href="@{|?page=${page}|}"></a>
+            </li>
+            <li class="page-item" th:classappend="${ordersList.number == ordersList.totalPages-1} ? 'disabled' : ''">
+                <a class="page-link" th:href="@{|?page=${ordersList.number+1}|}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        function openOrderDetailModal(ordersId) {
+            console.log(ordersId);
+            // AJAX 요청을 통해 주문 상세 정보 가져오기
+            fetch(`/admin/orders/detail?ordersId=${ordersId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.text())
+                .then(html => {
+                    // 모달 내부에 응답 HTML을 삽입
+                    document.getElementById('orderDetailModalContent').innerHTML = html;
+                    // 모달 표시
+                    $('#orderDetailModal').modal('show');
+                })
+                .catch(error => {
+                    console.error('Error fetching order details:', error);
+                });
+        }
+    </script>
+</section>
+</body>
+</html>

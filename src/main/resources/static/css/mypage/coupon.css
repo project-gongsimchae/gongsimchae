@@ -17,6 +17,31 @@
     color: #d9534f;
     font-weight: bold;
 }
+.coupon-category-container{
+    display: flex;
+}
+.coupon-category-title{
+    padding: 5px;
+    margin: 5px 5px 5px 0;
+    font-size: 16px;
+    display: inline-block
+}
+.coupon-category-box {
+    font-size: 14px;
+    display: inline-block;
+    padding: 5px;
+    margin: 5px 5px 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.coupon-category-box:hover {
+    background-color: #4CAF50;
+    color: white;
+}
 .text-link {
     color: #007bff;
     text-decoration: none;

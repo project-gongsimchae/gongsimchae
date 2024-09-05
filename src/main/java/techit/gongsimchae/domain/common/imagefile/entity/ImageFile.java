@@ -1,12 +1,6 @@
 package techit.gongsimchae.domain.common.imagefile.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,8 +10,10 @@ import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.post.entity.Post;
+
+import techit.gongsimchae.domain.groupbuying.reviews.entity.Review;
 import techit.gongsimchae.domain.portion.chatroom.entity.ChatRoom;
-import techit.gongsimchae.domain.groupbuying.reviews.entity.Reviews;
+
 import techit.gongsimchae.domain.portion.subdivision.entity.Subdivision;
 
 @Entity
@@ -32,6 +28,9 @@ public class ImageFile extends BaseEntity {
     private String originalFilename;
     private String storeFilename;
     private Integer imageFileStatus;
+
+    @Enumerated(EnumType.STRING)
+    private ItemImageFileStatus itemImageFileStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -61,10 +60,9 @@ public class ImageFile extends BaseEntity {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviews_id")
-    private Reviews reviews;
+    @JoinColumn(name = "review_id")
+    private Review review;
 
 
     public ImageFile(String originalFilename, String storeFilename, User user) {
@@ -81,11 +79,12 @@ public class ImageFile extends BaseEntity {
         this.imageFileStatus = 0;
     }
 
-    public ImageFile(String originalFilename, String storeFilename, Item item) {
+    public ImageFile(String originalFilename, String storeFilename, Item item, ItemImageFileStatus itemImageFileStatus) {
         this.originalFilename = originalFilename;
         this.storeFilename = storeFilename;
         this.item = item;
         this.imageFileStatus = 0;
+        this.itemImageFileStatus = itemImageFileStatus;
     }
 
     public ImageFile(String originalFilename, String storeFilename, Subdivision subdivision) {
@@ -115,10 +114,10 @@ public class ImageFile extends BaseEntity {
         this.imageFileStatus = 0;
     }
 
-    public ImageFile(String originalFilename, String storeFilename, Reviews reviews) {
+    public ImageFile(String originalFilename, String storeFilename, Review review) {
         this.originalFilename = originalFilename;
         this.storeFilename = storeFilename;
-        this.reviews = reviews;
+        this.review = review;
         this.imageFileStatus = 0;
     }
 

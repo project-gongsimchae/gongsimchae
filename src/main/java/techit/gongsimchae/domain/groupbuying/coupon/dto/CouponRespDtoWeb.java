@@ -1,6 +1,8 @@
 package techit.gongsimchae.domain.groupbuying.coupon.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,15 +17,20 @@ public class CouponRespDtoWeb {
     private Integer discount;
     private Integer maxDiscount;
     private LocalDateTime expirationDate;
-    private String eventName;
+    private String couponName;
     private String couponCode; // 쿠폰등록 번호
+    private List<String> applicableCategories = new ArrayList<>();
 
     public CouponRespDtoWeb(Coupon coupon) {
         this.id = coupon.getId();
         this.discount = coupon.getDiscountRate();
         this.maxDiscount = coupon.getMaxDiscount();
         this.expirationDate = coupon.getExpirationDate();
-        this.eventName = coupon.getCouponName();
+        this.couponName = coupon.getCouponName();
         this.couponCode = coupon.getCouponCode();
+    }
+
+    public void addCategories(String categoryName){
+        applicableCategories.add(categoryName);
     }
 }

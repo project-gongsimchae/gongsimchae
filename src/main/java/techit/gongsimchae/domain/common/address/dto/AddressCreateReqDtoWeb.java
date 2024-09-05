@@ -1,26 +1,29 @@
 package techit.gongsimchae.domain.common.address.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.common.user.dto.UserAdminUpdateReqDtoWeb;
-import techit.gongsimchae.domain.common.user.entity.User;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddressCreateReqDtoWeb {
+    @NotEmpty
     private String zipcode;
+    @NotEmpty
     private String address;
+    @NotEmpty
     private String detailAddress;
     private String additionalAddress;
     private String sigungu;
     private String receiver;
     private String phoneNumber;
 
-    public void applySetting(User user) {
-        this.receiver = user.getName();
-        this.phoneNumber = user.getPhoneNumber();
+    public void applySetting(String name, String phoneNumber) {
+        this.receiver = name;
+        this.phoneNumber = phoneNumber;
     }
 
     public AddressCreateReqDtoWeb(UserAdminUpdateReqDtoWeb user) {
@@ -30,4 +33,5 @@ public class AddressCreateReqDtoWeb {
         this.additionalAddress = user.getAdditionalAddress();
         this.sigungu = user.getSigungu();
     }
+
 }

@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 수량 조절 기능
     const quantityContainers = document.querySelectorAll('.quantity');
     quantityContainers.forEach(container => {
-        const minusBtn = container.querySelector('button:first-child');
-        const plusBtn = container.querySelector('button:last-child');
+        const minusBtn = container.querySelector('.minus-btn');
+        const plusBtn = container.querySelector('.plus-btn');
         const input = container.querySelector('input');
 
         if (minusBtn && plusBtn && input) {
@@ -34,14 +34,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // 장바구니 아이템 업데이트
     function updateCartItem(container) {
         const cartItem = container.closest('.cart-item');
-        if (!cartItem) {
-            console.error('Cart item not found');
+        if (!cartItem || cartItem.classList.contains('disabled')) {
+            console.error('Cannot update a closed cart item');
             return;
         }
-        const itemOptionId = cartItem.dataset.itemOptionId; // 변경된 부분
+
+        const itemOptionId = cartItem.dataset.itemOptionId;
         const quantity = container.querySelector('input').value;
 
-        fetch(`/product/cart/update/${itemOptionId}`, { // 변경된 부분
+        fetch(`/product/cart/update/${itemOptionId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (priceElement) {
                         priceElement.textContent = `${data.totalPrice.toLocaleString()}원`;
                     }
-                    updateCartSummary(data.cartSummary);
+                    updateCartSummary();
                 } else {
                     alert('수량 업데이트에 실패했습니다.');
                 }
@@ -68,8 +69,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 전체 선택 기능
-    const selectAllCheckbox = document.querySelector('.select-all input[type="checkbox"]');
-    const itemCheckboxes = document.querySelectorAll('.cart-item input[type="checkbox"]');
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    const itemCheckboxes = document.querySelectorAll('.item-checkbox');
 
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', function() {
@@ -89,9 +90,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function updateSelectAllText() {
-        const checkedCount = document.querySelectorAll('.cart-item input[type="checkbox"]:checked').length;
+        const checkedCount = document.querySelectorAll('.item-checkbox:checked').length;
         const totalCount = itemCheckboxes.length;
-        const selectAllSpan = document.querySelector('.select-all span');
+        const selectAllSpan = document.getElementById('select-all-text');
         if (selectAllSpan) {
             selectAllSpan.textContent = `전체선택 (${checkedCount}/${totalCount})`;
         }
@@ -102,8 +103,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 장바구니 요약 정보 업데이트
     function updateCartSummary() {
-        const checkedItems = document.querySelectorAll('.cart-item input[type="checkbox"]:checked');
-        const itemOptionIds = Array.from(checkedItems).map(checkbox => checkbox.closest('.cart-item').dataset.itemOptionId); // 변경된 부분
+        const checkedItems = document.querySelectorAll('.item-checkbox:checked');
+        const itemOptionIds = Array.from(checkedItems).map(checkbox => checkbox.closest('.cart-item').dataset.itemOptionId);
 
         fetch('/product/cart/summary', {
             method: 'POST',
@@ -111,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json',
                 [csrfHeader]: csrfToken
             },
-            body: JSON.stringify({ itemOptionIds: itemOptionIds }) // 변경된 부분
+            body: JSON.stringify({ itemOptionIds: itemOptionIds })
         })
             .then(response => {
                 if (!response.ok) {
@@ -130,14 +131,43 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // 체크박스 변경 이벤트에 대한 리스너 추가
-    document.querySelectorAll('.cart-item input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', updateCartSummary);
+    // 삭제 버튼 이벤트 리스너
+    document.querySelectorAll('.delete-item').forEach(button => {
+        button.addEventListener('click', function() {
+            const cartItem = this.closest('.cart-item');
+            const itemOptionId = cartItem.dataset.itemOptionId;
+
+            fetch(`/product/cart/remove/${itemOptionId}`, {
+                method: 'POST',
+                headers: {
+                    [csrfHeader]: csrfToken
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        cartItem.remove();
+                        updateSelectAllText();
+                        updateCartSummary();
+                    } else {
+                        alert('상품 삭제에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('상품 삭제 중 오류가 발생했습니다.');
+                });
+        });
     });
 
-    // 수량 변경 이벤트에 대한 리스너 추가
-    document.querySelectorAll('.quantity input').forEach(input => {
-        input.addEventListener('change', updateCartSummary);
+    // 주문 버튼 클릭 이벤트 핸들러
+    document.getElementById('order-button').addEventListener('click', function(e) {
+        e.preventDefault();
+        const checkedBoxes = document.querySelectorAll('input[name="selectedItemOptionId"]:checked');
+        if (checkedBoxes.length === 0) {
+            alert('주문할 상품을 선택해주세요.');
+            return;
+        }
+        document.getElementById('orderForm').submit();
     });
 
     // 초기 장바구니 요약 정보 업데이트

@@ -11,6 +11,7 @@ table th, table td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+    vertical-align: middle;
 }
 
 table th {
@@ -24,7 +25,7 @@ table td {
 
 /* 상품 생성 버튼 스타일 */
 .create-item-btn {
-    background-color: #007bff;
+    background-color: #5cb25e;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -34,8 +35,12 @@ table td {
 }
 
 .create-item-btn:hover {
-    background-color: #0056b3;
+    background-color: #218838;
+    color: white;
+    text-decoration: none;
 }
+
+
 
 /* 수정 및 삭제 버튼 스타일 */
 .btn-custom {
@@ -45,14 +50,21 @@ table td {
     color: white;
     text-decoration: none;
     width: 60px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 5px;
 }
 
+
 .btn-edit {
-    background-color: #28a745; /* 수정 버튼은 초록색 */
+    background-color: #5cb25e;
 }
 
 .btn-edit:hover {
     background-color: #218838;
+    text-decoration: none;
+    color: white;
 }
 
 .btn-delete {
@@ -61,6 +73,10 @@ table td {
 
 .btn-delete:hover {
     background-color: #c82333;
+}
+
+.btn-restore {
+    background-color: #6c757d;
 }
 
 /* 페이지 컨테이너 스타일 */
@@ -72,4 +88,123 @@ table td {
 .section-title {
     display: inline-block;
     margin: 0;
+}
+
+/* Add your CSS styles here */
+/* 기본 스타일 */
+.search-filter {
+    background-color: white;
+    color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    float: right; /* h1 태그와 같은 줄에 위치하도록 설정 */
+}
+
+.filter-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.filter-popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 350px;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.filter-popup.active {
+    display: flex;
+}
+
+.filter-option {
+    margin-bottom: 15px;
+}
+
+.filter-option label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+.filter-button {
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f8f9fa;
+    color: #495057;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.filter-button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.filter-button:hover {
+    background-color: #e2e6ea;
+}
+
+#categoriesOptions {
+    margin-bottom: 20px;
+}
+
+/* 버튼 그룹 (적용, 닫기, 초기화) 양옆 배치 */
+.filter-popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#apply-filters, #close-filters, #reset-filters {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    margin: 5px 10px 0 0;
+    flex: 1;
+    transition: background-color 0.3s;
+}
+
+#apply-filters:hover, #close-filters:hover, #reset-filters:hover {
+    background-color: #0056b3;
+}
+#close-filters{
+    background-color: #1e7e34;
+}
+
+#reset-filters {
+    background-color: #6c757d;
+}
+
+#reset-filters:hover {
+    background-color: #5a6268;
+}
+
+/* 마지막 버튼의 오른쪽 마진 제거 */
+.filter-popup-buttons button:last-child {
+    margin-right: 0;
 }

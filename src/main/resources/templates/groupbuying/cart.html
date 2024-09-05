@@ -8,84 +8,88 @@
 <section class="container">
     <div>
         <h1 class="page-title">장바구니</h1>
-        <div class="cart-content">
-            <div class="cart-items">
-                <div class="select-all">
-                    <label>
-                        <input type="checkbox" checked>
-                        <span id="select-all-text"
-                              th:text="'전체선택 (' + ${#lists.size(cartItems)} + '/' + ${#lists.size(cartItems)} + ')'">전체선택 (3/3)</span>
-                    </label>
-                </div>
-                <ul class="item-list">
-                    <li class="cart-item" th:each="item : ${cartItems}" th:data-item-option-id="${item.itemOptionId}">
-                        <input type="checkbox" checked>
-                        <div class="item-info">
-                            <h3 class="item-info-name" th:text="${item.itemName}">[브랜드] 상품명</h3>
-                            <p class="item-option-info" th:text="${item.itemName + ' (' + item.content + ')'}">상품명 (옵션 내용)</p>
-                            <div class="quantity">
-                                <button>-</button>
-                                <input type="number" th:value="${item.quantity}" min="1">
-                                <button>+</button>
-                            </div>
-                            <div class="price-container">
-                                <div class="price-progress-container">
-                                    <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
-                                    <div class="progress-container">
-                                        <div class="custom-progress">
-                                            <div class="custom-progress-bar" role="progressbar"
-                                                 th:style="'width: ' + ${(item.groupBuyingQuantity / 100.0) * 100} + '%'"
-                                                 th:aria-valuenow="${item.groupBuyingQuantity}"
-                                                 aria-valuemin="0" aria-valuemax="100">
-                                                <span th:text="${item.groupBuyingQuantity + '%'}"></span>
-                                            </div>
-                                        </div>
+        <form th:action="@{/order/temp}" method="post" id="orderForm">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <div class="cart-content">
+                <div class="cart-items">
+                    <div class="select-all">
+                        <label>
+                            <input type="checkbox" id="select-all-checkbox">
+                            <span id="select-all-text"
+                                  th:text="'전체선택 (' + ${#lists.size(cartItems)} + '/' + ${#lists.size(cartItems)} + ')'">전체선택 (3/3)</span>
+                        </label>
+                    </div>
+                    <ul class="item-list">
+                        <li class="cart-item" th:each="item : ${cartItems}" th:data-item-option-id="${item.itemOptionId}">
+                            <!-- 공동구매 마감이 아닌 경우에만 체크박스 표시 -->
+                            <th:block th:if="${item.itemStatus.toString() != '공동구매_마감'}">
+                                <input type="checkbox" name="selectedItemOptionId" th:value="${item.itemOptionId}" class="item-checkbox" />
+                            </th:block>
+                            <div class="item-info">
+                                <h3 class="item-info-name" th:text="${item.itemName}">[브랜드] 상품명</h3>
+                                <p class="item-option-info" th:text="${item.itemName + ' (' + item.content + ')'}">상품명 (옵션 내용)</p>
+
+                                <!-- 수량 조절 버튼은 공동구매 마감 시 숨김 처리 -->
+                                <div class="quantity" th:if="${item.itemStatus.toString() != '공동구매_마감'}">
+                                    <button type="button" class="minus-btn">-</button>
+                                    <input type="number" th:value="${item.quantity}" min="1">
+                                    <button type="button" class="plus-btn">+</button>
+                                </div>
+
+                                <div class="price-container">
+                                    <div class="price-progress-container">
+                                        <!-- 가격 부분에 마감된 상품 표시 -->
+                                        <span class="original-price"
+                                              th:if="${item.itemStatus.toString() == '공동구매_마감'}"
+                                              th:text="'마감된 상품'"></span>
+                                        <span class="original-price"
+                                              th:if="${item.itemStatus.toString() != '공동구매_마감'}"
+                                              th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
+                                    </div>
+
+                                    <!-- 할인 정보 숨기기 -->
+                                    <div class="discount-info" th:if="${item.itemStatus.toString() != '공동구매_마감'}">
+                                        <span class="discount-rate" th:text="${item.discountRate} + '%'">할인율</span>
+                                        <span class="discount-price"
+                                              th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
+                                              th:text="${#numbers.formatDecimal(discountPrice, 0, 'COMMA', 0, 'POINT')} + '원'">할인 가격</span>
+                                        <span class="buying-people" th:text="${item.groupBuyingQuantity} + '명 구매중'">구매 인원</span>
                                     </div>
                                 </div>
-                                <div class="discount-info">
-                                    <span class="discount-rate" th:text="${item.discountRate} + '%'">할인율</span>
-                                    <span class="discount-price"
-                                          th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
-                                          th:text="${#numbers.formatDecimal(discountPrice, 0, 'COMMA', 0, 'POINT')} + '원'">할인 가격</span>
-                                    <span class="buying-people" th:text="${item.groupBuyingQuantity} + '명 구매중'">구매 인원</span>
-                                </div>
                             </div>
-                            <!-- 배송지 관련 내용은 2차 프로젝트 기간때 추가 예정 -->
-                        </div>
-                        <form th:action="@{/product/cart/remove/{itemId}(itemId=${item.itemId})}" method="post">
-                            <button type="submit" class="delete-item">×</button>
-                        </form>
-                    </li>
-                </ul>
+
+                            <button type="button" class="delete-item">×</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="cart-summary">
+                    <h2>결제 정보</h2>
+                    <div class="summary-row">
+                        <span>상품금액</span>
+                        <span id="total-price"
+                              th:text="${#numbers.formatDecimal(cartSummary.totalPrice ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>상품할인금액</span>
+                        <span id="total-discount"
+                              th:text="'-' + ${#numbers.formatDecimal(cartSummary.totalDiscount ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>배송비</span>
+                        <span id="shipping-fee"
+                              th:text="${#numbers.formatDecimal(0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>결제예정금액</span>
+                        <span id="total-payment-price"
+                              th:text="${#numbers.formatDecimal(cartSummary.totalPaymentPrice ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</span>
+                    </div>
+                    <button type="submit" id="order-button">주문하기</button>
+                </div>
             </div>
-            <div class="cart-summary">
-                <h2>결제 정보</h2>
-                <div class="summary-row">
-                    <span>상품금액</span>
-                    <span id="total-price"
-                          th:text="${#numbers.formatDecimal(cartSummary.totalPrice ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</span>
-                </div>
-                <div class="summary-row">
-                    <span>상품할인금액</span>
-                    <span id="total-discount"
-                          th:text="'-' + ${#numbers.formatDecimal(cartSummary.totalDiscount ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</span>
-                </div>
-                <div class="summary-row">
-                    <span>배송비</span>
-                    <span id="shipping-fee"
-                          th:text="${#numbers.formatDecimal(0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</span>
-                </div>
-                <div class="summary-row total">
-                    <span>결제예정금액</span>
-                    <span id="total-payment-price"
-                          th:text="${#numbers.formatDecimal(cartSummary.totalPaymentPrice ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</span>
-                </div>
-                <button class="order-button">주문하기</button>
-            </div>
-        </div>
+        </form>
     </div>
     <script th:src="@{/js/groupbuying/cart.js}"></script>
 </section>
-
 </body>
 </html>

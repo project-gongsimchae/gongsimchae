@@ -13,6 +13,7 @@
     <div class="form-container">
         <h1 class="mb-4 section-title">유저 정보 수정</h1>
         <form th:action method="post" th:object="${user}" class="user-update-form-container">
+            <div th:replace="~{layout/fielderror :: fielderror}"></div>
             <input type="hidden" th:field="*{id}">
 
             <div class="form-group">

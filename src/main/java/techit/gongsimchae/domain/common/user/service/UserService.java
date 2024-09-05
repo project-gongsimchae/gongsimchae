@@ -3,6 +3,8 @@ package techit.gongsimchae.domain.common.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,6 @@ import techit.gongsimchae.global.util.AuthCode;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -60,7 +61,7 @@ public class UserService {
      */
     @Transactional
     public void sendPasswordToEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException("not found user"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         String newPassword = UUID.randomUUID().toString();
         user.changePassword(passwordEncoder.encode(newPassword));
         publisher.publishEvent(new PasswordEvent(user.getEmail(), newPassword));
@@ -80,7 +81,7 @@ public class UserService {
     }
 
     public UserRespDtoWeb getUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new CustomWebException("not found user"));
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         return new UserRespDtoWeb(user);
     }
 
@@ -88,7 +89,7 @@ public class UserService {
      * 로그인 아이디로 유저정보 반환하는 메서드
      */
     public UserRespDtoWeb getUser(String loginId) {
-        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomWebException("not found user"));
+        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         return new UserRespDtoWeb(user);
     }
 
@@ -96,7 +97,7 @@ public class UserService {
      * 닉네임으로 유저정보 반환하는 메서드
      */
     public UserRespDtoWeb getUserByNickname(String nickname) {
-        User user = userRepository.findByNickname(nickname).orElseThrow(() -> new CustomWebException("not found user"));
+        User user = userRepository.findByNickname(nickname).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         return new UserRespDtoWeb(user);
     }
 
@@ -106,7 +107,7 @@ public class UserService {
      */
     @Transactional
     public void updateInfo(UserUpdateReqDtoWeb userUpdateReqDtoWeb, PrincipalDetails principalDetails) {
-        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException("not found user"));
+        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         userUpdateReqDtoWeb.setPasswordChange(passwordEncoder.encode(userUpdateReqDtoWeb.getPasswordChange()));
         user.changeInfo(userUpdateReqDtoWeb);
     }
@@ -116,13 +117,15 @@ public class UserService {
      */
     @Transactional
     public void deleteUser(PrincipalDetails principalDetails) {
-        userRepository.deleteByLoginId(principalDetails.getUsername());
+        User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
+        user.deleteUser();
 
     }
 
     @Transactional
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
+        user.deleteUser();
     }
 
 
@@ -131,7 +134,7 @@ public class UserService {
      */
 
     public boolean checkPassword(String loginId, String password) {
-        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomWebException("not found user"));
+        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         return passwordEncoder.matches(password, user.getPassword());
     }
 
@@ -162,7 +165,7 @@ public class UserService {
      * email을 통해 user를 반환하는 메서드
      */
     public UserRespDtoWeb getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException("not found user"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         return new UserRespDtoWeb(user);
     }
 
@@ -170,7 +173,7 @@ public class UserService {
      * 이름과 이메일로 유저를 확인해서 반환하는 메서드
      */
     public UserRespDtoWeb getUser(String name, String email ) {
-        User user = userRepository.findByNameAndEmail(name, email).orElseThrow(() -> new CustomWebException("not found user"));
+        User user = userRepository.findByNameAndEmail(name, email).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         return new UserRespDtoWeb(user);
     }
 
@@ -186,15 +189,16 @@ public class UserService {
      * 전체 아이디를 이메일로 보내주는 이벤트
      */
     public void sendIdToEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException("not found user"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         publisher.publishEvent(new LoginIdEvent(user.getEmail(), user.getLoginId()));
     }
 
     /**
      * DB에 있는 유저 전체정보를 반환하는 메서드
      */
-    public List<UserRespDtoWeb> getUsers() {
-        return userRepository.findAll().stream().map(UserRespDtoWeb::new).collect(Collectors.toList());
+    public Page<UserRespDtoWeb> getUsers(Pageable pageable) {
+        return userRepository.findUsersWithReportCounts(pageable);
+
     }
 
     /**
@@ -212,4 +216,13 @@ public class UserService {
         user.ban();
     }
 
+    /**
+     * 공동구매 성공/실패 후 해당 아이템 아이디를 통해서 아이템을 주문한 유저들의 리스트를 반환합니다.
+     *
+     * @param itemId
+     * @return
+     */
+    public List<User> findUsersByItemId(Long itemId) {
+        return userRepository.findUsersByItemIdWithOrderItem(itemId);
+    }
 }

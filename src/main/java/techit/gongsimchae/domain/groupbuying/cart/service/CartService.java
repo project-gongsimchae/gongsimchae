@@ -13,6 +13,8 @@ import techit.gongsimchae.domain.groupbuying.cart.repository.CartRepository;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.itemoption.entity.ItemOption;
 import techit.gongsimchae.domain.groupbuying.itemoption.repository.ItemOptionRepository;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
+import techit.gongsimchae.domain.groupbuying.orders.dto.TempOrderItemDto;
 import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
@@ -100,12 +102,14 @@ public class CartService {
                 .quantity(cart.getCount())
                 .totalPrice(totalPrice)
                 .groupBuyingLimitTime(item.getGroupBuyingLimitTime())
+                .itemStatus(item.getItemStatus())
                 .build();
     }
 
     @Transactional(readOnly = true)
-    public CartPriceInfoDto getCartSummary(Long userId) {
-        List<Cart> cartItems = cartRepository.findByUserId(userId);
+    public CartPriceInfoDto getCartSummary(Long userId, List<Long> selectedItemOptionIds) {
+
+        List<Cart> cartItems = cartRepository.findByUserIdAndItemOptionIdIn(userId,selectedItemOptionIds);
         int totalOriginalPrice = 0;
         int totalDiscountAmount = 0;
 
@@ -128,4 +132,12 @@ public class CartService {
                 .totalPaymentPrice(totalFinalPrice)
                 .build();
     }
+
+    public List<TempOrderItemDto> getCartItemFromOrderItem(Long userId, List<Long> selectedItemOptionId){
+        List<Cart> cart = cartRepository.findByUserIdAndItemOptionIdIn(userId,selectedItemOptionId);
+        return cart.stream()
+                .map(TempOrderItemDto::fromCart)
+                .collect(Collectors.toList());
+    }
+
 }
