@@ -3,7 +3,6 @@ package techit.gongsimchae.domain.web.common;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -72,7 +71,7 @@ public class MyPageController {
     }
 
     @GetMapping("/orders/{ordersId}")
-    public String orderDetail(@PathVariable Long ordersId,
+    public String orderDetail(@PathVariable("ordersId") Long ordersId,
                               @AuthenticationPrincipal PrincipalDetails userDetails, Model model){
         Long userId = userDetails.getAccountDto().getId();
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrdersId(ordersId);
@@ -199,7 +198,7 @@ public class MyPageController {
     @PostMapping("/reviews/write/{uid}")
     public String createReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                 @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
-                                @PathVariable String uid) {
+                                @PathVariable("uid") String uid) {
         reviewService.createReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
         return "redirect:/mypage/reviews";
     }
@@ -210,10 +209,11 @@ public class MyPageController {
      * @return
      */
     @ResponseBody
-    @GetMapping("reviews/{uid}")
+    @GetMapping("reviews/{uid}/{orderItemId}")
     public ReviewResDtoWeb getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                      @PathVariable String uid) {
-        return reviewService.getReviews(principalDetails.getAccountDto(), uid);
+                                      @PathVariable("uid") String uid,
+                                      @PathVariable("orderItemId") Long orderItemId) {
+        return reviewService.getReviews(principalDetails.getAccountDto(), uid, orderItemId);
     }
 
     /**
@@ -221,11 +221,12 @@ public class MyPageController {
      * @param uid - 수정할 리뷰 아이템의 uid
      * @return 마이페이지 - 상품 후기 탭
      */
-    @PostMapping("reviews/update/{uid}")
+    @PostMapping("reviews/update/{uid}/{orderItemId}")
     public String updateReviews (@AuthenticationPrincipal PrincipalDetails principalDetails,
                                  @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
-                                 @PathVariable String uid) {
-        reviewService.updateReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
+                                 @PathVariable("uid") String uid,
+                                 @PathVariable("orderItemId")Long orderItemId) {
+        reviewService.updateReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid, orderItemId);
         return "redirect:/mypage/reviews";
     }
 

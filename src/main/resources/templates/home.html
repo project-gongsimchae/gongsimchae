@@ -15,7 +15,7 @@
             <h2>인기 공동구매 상품</h2>
             <div class="product-list">
                 <a th:each="item : ${popularItems}" th:href="@{|/product/${item.id}|}" class="product-item">
-                    <img class="product-image-placeholder" th:src="${item.itemBannerImage}" alt="썸네일 이미지" />
+                    <img class=" product-image-placeholder" th:src="${item.itemBannerImage}" alt="썸네일 이미지" />
 <!--                    <button class="add-to-cart" th:data-item-id="${item.id}">-->
 <!--                        <i class="fa fa-shopping-cart"></i> 장바구니에 담기-->
 <!--                    </button>-->
@@ -26,11 +26,12 @@
                                 <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
                                 <div class="progress-container">
                                     <div class="custom-progress">
-                                        <div class="custom-progress-bar" role="progressbar"
-                                             th:style="'width: ' + ${(item.groupBuyingQuantity / 100.0) * 100} + '%'"
-                                             th:aria-valuenow="${item.groupBuyingQuantity}"
-                                             aria-valuemin="0" aria-valuemax="100">
-                                            <span th:text="${item.groupBuyingQuantity + '%'}"></span>
+                                        <div th:fragment="progressbar" class="custom-progress-bar" role="progressbar"
+                                             th:with="progressBarWidth =${#numbers.formatDecimal((item.participateCount / item.groupBuyingQuantity) * 100, 0, 0)}"
+                                             th:style="'width: ' + ${progressBarWidth} + '%'"
+                                             th:aria-valuenow="${item.participateCount}"
+                                             aria-valuemin="0" th:aria-valuemax="${item.groupBuyingQuantity}">
+                                            <span th:text="${progressBarWidth + '%'}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -42,7 +43,7 @@
                                           th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
                                           th:text="${#numbers.formatDecimal(discountPrice, 0, 'COMMA', 0, 'POINT')} + '원'">할인 가격</span>
                                 </span>
-                                <span class="buying-people" th:text="${item.groupBuyingQuantity} + '명 구매중'">구매 인원</span>
+                                <span class="buying-people" th:text="${item.participateCount} + '명 구매중'">구매 인원</span>
                             </div>
                         </div>
                     </div>

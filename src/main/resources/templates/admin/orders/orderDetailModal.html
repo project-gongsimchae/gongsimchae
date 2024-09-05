@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="" th:href="@{/css/mypage/coupon.css}">
+  <link rel="stylesheet" href="" th:href="@{/css/mypage/inquiry.css}">
+  <link rel="stylesheet" href="" th:href="@{/css/mypage/inquiryList.css}">
+  <link th:href="@{/css/portion/subdivisionWishlist.css}" rel="stylesheet">
+  <link th:href="@{/css/mypage/picklist.css}" rel="stylesheet">
+  <link th:href="@{/css/ordersDetail.css}" rel="stylesheet">
+  <link th:href="@{/css/mypage.css}" rel="stylesheet">
+  <link rel="stylesheet" href="" th:href="@{/css/user/update.css}">
+</head>
+<body>
+<section class="order-detail-page">
+  <h2 class="order-detail-title">주문 내역 상세</h2>
+
+  <div class="order-detail-section">
+    <h3 class="order-detail-subtitle">주문 정보</h3>
+    <table class="order-detail-table">
+      <tr>
+        <th>주문번호</th>
+        <td th:text="${ordersDetail.id}"></td>
+      </tr>
+      <tr>
+        <th>주문일자</th>
+        <td th:text="${#temporals.format(ordersDetail.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+      </tr>
+      <tr>
+        <th>주문상태</th>
+        <td th:text="${ordersDetail.orderStatus}"></td>
+      </tr>
+      <tr th:if="${ordersDetail.orderStatus.toString().equals('취소')}">
+        <th>취소 사유</th>
+        <td th:text="${ordersPayment.cancelReason}"></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="order-detail-section">
+    <h3 class="order-detail-subtitle">주문 상품</h3>
+    <ul class="order-detail-items">
+      <li th:each="orderItem : ${orderItems}" class="order-detail-item">
+        <div class="order-detail-item-info">
+          <h4 th:text="${orderItem.itemOption.item.name}" class="order-detail-item-name"></h4>
+          <p class="order-detail-item-price" th:text="${#numbers.formatDecimal(orderItem.price, 0, 'COMMA', 0, 'POINT')} + '원'"></p>
+          <p class="order-detail-item-quantity" th:text="'수량: ' + ${orderItem.count} + '개'"></p>
+        </div>
+        <button class="btn btn-success order-detail-review-button">환불</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="order-detail-section">
+    <h3 class="order-detail-subtitle">결제 정보</h3>
+    <table class="order-detail-table">
+      <tr>
+        <th>상품금액</th>
+        <td th:text="${#numbers.formatDecimal(ordersPayment.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'"></td>
+      </tr>
+      <tr>
+        <th>상품 할인금액</th>
+        <td th:text="${#numbers.formatDecimal(ordersPayment.discountAmount, 0, 'COMMA', 0, 'POINT')} + '원'"></td>
+      </tr>
+      <tr>
+        <th>쿠폰 할인</th>
+        <td th:text="${#numbers.formatDecimal(ordersPayment.couponDiscount, 0, 'COMMA', 0, 'POINT')} + '원'"></td>
+      </tr>
+      <tr class="order-detail-total">
+        <th>결제금액</th>
+        <td th:text="${#numbers.formatDecimal(ordersPayment.finalPaymentAmount, 0, 'COMMA', 0, 'POINT')} + '원'"></td>
+      </tr>
+      <tr>
+        <th>결제방법</th>
+        <td th:text="${ordersPayment.paymentType}"></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="order-detail-section">
+    <h3 class="order-detail-subtitle">배송 정보</h3>
+    <table class="order-detail-table">
+      <tr>
+        <th>받는 분</th>
+        <td th:text="${ordersDetail.user.name}"></td>
+      </tr>
+      <tr>
+        <th>연락처</th>
+        <td th:text="${ordersDetail.user.phoneNumber}"></td>
+      </tr>
+      <tr>
+        <th>주소</th>
+        <td th:text="${ordersPayment.deliveryAddress}"></td>
+      </tr>
+    </table>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</section>
+</body>
+</html>

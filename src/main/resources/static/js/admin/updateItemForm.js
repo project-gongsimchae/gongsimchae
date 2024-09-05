@@ -177,14 +177,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // 초 단위에서 '분'과 '초'를 59분 58초로 고정
         originalTime.setMinutes(59);
         originalTime.setSeconds(59);
-        limitTimeField.value = originalTime.toISOString().slice(0, 16); // '시'까지만 표시
+        limitTimeField.value = new Date(originalTime.getTime() - originalTime.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
     }
 
     limitTimeField.addEventListener('input', function() {
         let date = new Date(this.value);
         date.setMinutes(59);
         date.setSeconds(59);
-        this.value = date.toISOString().slice(0, 16); // 시까지만 표시
+        this.value = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
     });
 });
 

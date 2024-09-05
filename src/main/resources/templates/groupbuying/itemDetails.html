@@ -67,13 +67,13 @@
         <!-- 프로그레스바 -->
         <div class="progress-bar bg-success"
              role="progressbar"
-             th:style="${item[0].itemStatus.toString() == '공동구매_마감'} ? 'width: 100%' : 'width:' + (${completionAmountItemCntDto.completionAmountCnt} / ${item[0].quantity} * 100) + '%;'"
-             th:aria-valuenow="${item[0].itemStatus.toString() == '공동구매_마감'} ? ${item[0].quantity} : ${completionAmountItemCntDto.completionAmountCnt}"
+             th:style="${item[0].itemStatus.toString() == '공동구매_마감'} ? 'width: 100%' : 'width:' + (${participateCount} / ${item[0].quantity} * 100) + '%;'"
+             th:aria-valuenow="${item[0].itemStatus.toString() == '공동구매_마감'} ? ${item[0].quantity} : ${participateCount}"
              aria-valuemin="0"
              th:aria-valuemax="${item[0].quantity}">
         </div>
     </div>
-    <span>목표 수량: <span th:text="${item[0].quantity}"></span> / 달성량: <span th:text="${completionAmountItemCntDto.completionAmountCnt}"></span></span>
+    <span>목표 수량: <span th:text="${item[0].quantity}"></span> / 달성량: <span th:text="${participateCount}"></span></span>
 </section>
 <section class="product-description-detail">
     <h4>상품 설명</h4>
@@ -90,7 +90,7 @@
             <div class="review-layout">
                 <!-- 이미지 섹션 -->
                 <div class="review-image">
-                    <img th:src="@{${review.images}}" alt="리뷰 이미지" class="review-img">
+                    <img th:src="@{${review.images != null ? review.images : 'https://gongsimchae-image-bucket.s3.ap-northeast-2.amazonaws.com/images/no-image.512x512.png'}}" alt="리뷰 이미지" class="review-img">
                 </div>
                 <!-- 리뷰 내용 섹션 -->
                 <div class="review-content">

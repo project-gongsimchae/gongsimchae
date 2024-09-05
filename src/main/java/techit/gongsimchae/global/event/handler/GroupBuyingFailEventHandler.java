@@ -9,6 +9,7 @@ import techit.gongsimchae.domain.groupbuying.item.entity.ItemStatus;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItemStatus;
 import techit.gongsimchae.domain.groupbuying.orderitem.service.OrderItemService;
+import techit.gongsimchae.domain.groupbuying.payment.service.PaymentsService;
 import techit.gongsimchae.global.event.TargetCountAchievedFailEvent;
 
 @Component
@@ -17,6 +18,7 @@ public class GroupBuyingFailEventHandler {
 
     private final ItemService itemService;
     private final OrderItemService orderItemService;
+    private final PaymentsService paymentsService;
 
     @Async
     @Order(1)
@@ -28,14 +30,15 @@ public class GroupBuyingFailEventHandler {
     @Async
     @Order(2)
     @EventListener
-    public void changeOrderItemStatus(TargetCountAchievedFailEvent event) {
-        orderItemService.changeOrderItemStatusWithItemId(event.getItemId(), OrderItemStatus.공동구매실패);
+    public void refundMoney(TargetCountAchievedFailEvent event) {
+        // TODO 환불 로직 작성
+        paymentsService.cancelOrderItem(event.getItemId());
     }
 
     @Async
     @Order(3)
     @EventListener
-    public void refundMoney(TargetCountAchievedFailEvent event) {
-        // TODO 환불 로직 작성
+    public void changeOrderItemStatus(TargetCountAchievedFailEvent event) {
+        orderItemService.changeOrderItemStatusWithItemId(event.getItemId(), OrderItemStatus.공동구매실패);
     }
 }

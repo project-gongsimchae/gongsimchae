@@ -29,35 +29,35 @@
 
 <section class="product-section">
     <div class="product-list">
-        <div th:each="item : ${newItemsPage}" class="product-item">
+        <a th:each="item : ${newItemsPage}" th:href="@{|/product/${item.id}|}" class="product-item">
             <img class="product-image-placeholder" th:src="${item.itemBannerImage}" alt="썸네일 이미지" />
 <!--            <button class="add-to-cart" th:data-item-id="${item.id}">-->
 <!--                <i class="fa fa-shopping-cart"></i> 장바구니에 담기-->
 <!--            </button>-->
-            <h3 class="item-name" ><a href="" th:href="@{|/product/${item.id}|}" th:text="${item.name}"></a></h3>
-            <div class="price-container">
-                <div class="price-progress-container">
-                    <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
-                    <div class="progress-container">
-                        <div class="custom-progress">
-                            <div class="custom-progress-bar" role="progressbar"
-                                 th:style="'width: ' + ${(item.groupBuyingQuantity / 100.0) * 100} + '%'"
-                                 th:aria-valuenow="${item.groupBuyingQuantity}"
-                                 aria-valuemin="0" aria-valuemax="100">
-                                <span th:text="${item.groupBuyingQuantity + '%'}"></span>
+            <div class="item-simple-content">
+                <h3 class="item-name" th:text="${item.name}"></h3>
+                <div class="price-container">
+                    <div class="price-progress-container">
+                        <span class="original-price" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">원래 가격</span>
+                        <div class="progress-container">
+                            <div class="custom-progress">
+                                <div th:replace="~{home :: progressbar}"></div>
+
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="discount-container">
-                    <span class="discount-rate" th:text="${item.discountRate} + '%'">할인율</span>
-                    <span class="discount-price"
-                          th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
-                          th:text="${#numbers.formatDecimal(discountPrice, 0, 'COMMA', 0, 'POINT')} + '원'">할인 가격</span>
-                    <span class="buying-people" th:text="${item.groupBuyingQuantity} + '명 구매중'">구매 인원</span>
+                    <div class="discount-info">
+                        <span class="price-info">
+                            <span class="discount-rate" th:text="${item.discountRate} + '%'">할인율</span>
+                            <span class="discount-price"
+                                  th:with="discountPrice=${item.originalPrice * (100 - item.discountRate) / 100}"
+                                  th:text="${#numbers.formatDecimal(discountPrice, 0, 'COMMA', 0, 'POINT')} + '원'">할인 가격</span>
+                        </span>
+                        <span class="buying-people" th:text="${item.participateCount} + '명 구매중'">구매 인원</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
     <!-- 페이징 처리 -->
     <div th:if="${!newItemsPage.isEmpty()}" class="d-flex justify-content-center bg-white py-3">

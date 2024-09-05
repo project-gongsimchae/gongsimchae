@@ -11,10 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
-import techit.gongsimchae.domain.groupbuying.orders.dto.CancelOrderRequest;
-import techit.gongsimchae.domain.groupbuying.orders.dto.OrderCreateRequestDto;
-import techit.gongsimchae.domain.groupbuying.orders.dto.TempOrderItemDto;
-import techit.gongsimchae.domain.groupbuying.orders.dto.TempUserDeliveryDto;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
+import techit.gongsimchae.domain.groupbuying.orderitem.service.OrderItemService;
+import techit.gongsimchae.domain.groupbuying.orders.dto.*;
+import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
 import techit.gongsimchae.domain.groupbuying.payment.dto.PaymentDto;
 import techit.gongsimchae.domain.groupbuying.payment.service.PaymentsService;
@@ -30,6 +30,7 @@ import java.util.List;
 public class OrderController {
     private final OrdersService ordersService;
     private final PaymentsService paymentsService;
+    private final OrderItemService orderItemService;
     private final CouponService couponService;
 
     @PostMapping("/temp")
@@ -102,5 +103,31 @@ public class OrderController {
         }
 
         return ResponseEntity.ok("취소완료");
+    }
+
+    @GetMapping("/complete")
+    public String showOrderComplete(HttpSession session, Model model) {
+        String merchantUid = (String) session.getAttribute("merchantUid");
+
+        // 주문 정보 조회
+        Orders order = ordersService.getOrderByMerchantUid(merchantUid);
+
+        // 결제 정보 조회
+        OrdersPaymentDto paymentInfo = ordersService.getOrdersPayment(order.getId());
+
+        // 주문 상품 목록 조회
+        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrdersId(order.getId());
+
+        model.addAttribute("order", order);
+        model.addAttribute("paymentInfo", paymentInfo);
+        model.addAttribute("orderItems", orderItems);
+
+        // 세션에서 임시 주문 정보 제거
+        session.removeAttribute("merchantUid");
+        session.removeAttribute("tempOrderItems");
+        session.removeAttribute("totalPrice");
+        session.removeAttribute("totalDiscountPrice");
+
+        return "groupbuying/orderComplete";
     }
 }
