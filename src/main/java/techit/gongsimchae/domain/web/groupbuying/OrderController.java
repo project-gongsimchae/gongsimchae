@@ -110,7 +110,7 @@ public class OrderController {
                                               HttpSession session) {
         session.setAttribute("deliveryInfo",orderCompleteReqDto);
 
-        return ResponseEntity.ok("/order/complete/info");
+        return ResponseEntity.ok("");
     }
 
     @GetMapping("/complete/info")

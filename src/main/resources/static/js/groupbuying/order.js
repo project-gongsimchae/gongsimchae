@@ -17,17 +17,29 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.show();
     };
 
-    let name;
-    let phone;
-    let address;
+    let name, phone, zipcode, address, detailAddress;
+
+    window.searchAddress = function() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                document.getElementById('recipientZipcode').value = data.zonecode;
+                document.getElementById('recipientAddress').value = data.address;
+                document.getElementById('recipientDetailAddress').focus();
+            }
+        }).open();
+    };
+
     window.updateDeliveryInfo = function() {
         name = document.getElementById('recipientName').value;
         phone = document.getElementById('recipientPhone').value;
+        zipcode = document.getElementById('recipientZipcode').value;
         address = document.getElementById('recipientAddress').value;
+        detailAddress = document.getElementById('recipientDetailAddress').value;
+        const fullAddress = `${address} ${detailAddress}`;
 
         document.getElementById('displayRecipientName').textContent = name;
         document.getElementById('displayRecipientPhone').textContent = phone;
-        document.getElementById('displayRecipientAddress').textContent = address;
+        document.getElementById('displayRecipientAddress').textContent = fullAddress;
 
         modal.hide();
     };
@@ -40,6 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('recipientName').value = originalName;
         document.getElementById('recipientPhone').value = originalPhone;
         document.getElementById('recipientAddress').value = originalAddress;
+        document.getElementById('recipientZipcode').value = orderInfo.buyerPostcode;
+        document.getElementById('recipientDetailAddress').value = '';
     });
 
     const couponSelect = document.getElementById('couponSelect');
@@ -47,23 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
         couponSelect.addEventListener('change', function() {
             updateTotalAmount();
         });
-    }
-
-    const pointInput = document.getElementById('pointInput');
-    const availablePoints = parseInt(document.getElementById('availablePoints').textContent) || 0;
-
-    if (pointInput) {
-        pointInput.addEventListener('input', function() {
-            let inputPoints = parseInt(this.value);
-            if (isNaN(inputPoints) || inputPoints < 0) {
-                this.value = 0;
-            } else if (inputPoints > availablePoints) {
-                this.value = availablePoints;
-            }
-            updateTotalAmount();
-        });
-
-        pointInput.value = Math.min(availablePoints, parseInt(pointInput.value) || 0);
     }
 
     function updateTotalAmount() {
@@ -117,8 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     buyer_email: orderInfo.buyerEmail,
                     buyer_name: name,
                     buyer_tel: phone,
-                    buyer_addr: address,
-                    buyer_postcode: orderInfo.buyerPostcode,
+                    buyer_addr: `${address} ${detailAddress}`,
+                    buyer_postcode: zipcode,
                     m_redirect_url: "http://localhost:8081/order/complete",
                 };
 
@@ -126,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (rsp.success) {
                         verifyPayment(rsp.imp_uid, rsp.merchant_uid, rsp.paid_amount);
                     } else {
-                        cancelOrder(rsp.imp_uid,merchantUid)
+                        cancelOrder(rsp.imp_uid, merchantUid);
                         alert("결제에 실패하였습니다. " + rsp.error_msg);
                     }
                 });
@@ -159,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         data: JSON.stringify({
                             name: name,
                             phone: phone,
-                            address: address
+                            address: `${address} ${detailAddress}`,
                         }),
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader(csrfHeader, csrfToken);
@@ -170,21 +167,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         error: function(jqXHR, textStatus, errorThrown) {
                             alert("주문 완료 처리 중 오류가 발생했습니다: " + errorThrown);
                         }
-                    })
-
+                    });
                 } else {
-                    cancelOrder(impUid,merchantUid)
+                    cancelOrder(impUid, merchantUid);
                     alert("결제 검증에 실패했습니다. 관리자에게 문의해주세요.");
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                cancelOrder(impUid,merchantUid)
+                cancelOrder(impUid, merchantUid);
                 alert("결제 검증 중 오류가 발생했습니다. 관리자에게 문의해주세요. 오류: " + errorThrown);
             }
         });
     }
 
-    function cancelOrder(impUid,merchantUid) {
+    function cancelOrder(impUid, merchantUid) {
         return $.ajax({
             url: "/order/cancel",
             type: "POST",
