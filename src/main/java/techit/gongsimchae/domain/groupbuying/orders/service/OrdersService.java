@@ -150,4 +150,10 @@ public class OrdersService {
                 () -> new CustomWebException(ErrorMessage.ORDERS_NOT_FOUND)
         );
     }
+
+    public Orders getOrderByMerchantUid(String merchantUid) {
+        return ordersRepository.findByMerchantUid(merchantUid)
+                .orElseThrow(() -> new CustomWebException(ErrorMessage.ORDER_NOT_FOUND));
+
+    }
 }

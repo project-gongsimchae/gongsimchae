@@ -3,6 +3,7 @@ package techit.gongsimchae.domain.groupbuying.item.dto;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,9 @@ public class ItemRespDtoWeb {
     private List<String> imageUrls = new ArrayList<>();
     private String categoryName;
     private ItemStatus itemStatus;
+    private String itemBannerImage;
+    private Long participateCount;
+    private Integer progressbarWidth;
 
 
     public ItemRespDtoWeb(Item item) {
@@ -83,9 +87,7 @@ public class ItemRespDtoWeb {
         this.deleteStatus = itemDocument.getDeleteStatus();
         this.UID = itemDocument.getUid();
         this.createDate = itemDocument.getCreateDate().atStartOfDay();
-        if (itemDocument.getUrl() != null) {
-            this.imageUrls.add(itemDocument.getUrl());
-        }
+        this.itemBannerImage = itemDocument.getUrl();
 
     }
 }

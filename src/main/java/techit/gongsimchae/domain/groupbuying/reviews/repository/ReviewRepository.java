@@ -14,7 +14,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Review findByUserIdAndUID(Long userId, String uid);
 
-    Review findByUserIdAndItem(Long userId, Item item);
+    Review findByUserIdAndItemAndOrderItemId(Long userId, Item item, Long orderItemId);
 
     List<Review> findReviewsByItemAndSecretStatus(Item item, SecretStatus secretStatus);
 }

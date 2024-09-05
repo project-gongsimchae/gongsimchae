@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.participate.entity.QParticipate;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemAdminSearchForm;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemCardResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static techit.gongsimchae.domain.common.imagefile.entity.QImageFile.imageFile;
+import static techit.gongsimchae.domain.common.participate.entity.QParticipate.*;
 import static techit.gongsimchae.domain.groupbuying.category.entity.QCategory.*;
 import static techit.gongsimchae.domain.groupbuying.item.entity.QItem.item;
 
@@ -41,6 +43,15 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+
+        for (ItemRespDtoWeb result : results) {
+            Long count = queryFactory.select(participate.count())
+                    .from(participate)
+                    .join(participate.item, item)
+                    .where(item.id.eq(result.getId()))
+                    .fetchOne();
+            result.setParticipateCount(count);
+        }
 
         Long size = queryFactory.select(item.count())
                 .from(item)
@@ -103,6 +114,15 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
             if (imageFiles != null) {
                 result.setItemBannerImage(imageFiles.get(0).getStoreFilename());
             }
+        }
+
+        for (ItemCardResDtoWeb result : results) {
+            Long count = queryFactory.select(participate.count())
+                    .from(participate)
+                    .join(participate.item, item)
+                    .where(item.id.eq(result.getId()))
+                    .fetchOne();
+            result.setParticipateCount(count);
         }
 
         Long size = queryFactory.select(item.count())
