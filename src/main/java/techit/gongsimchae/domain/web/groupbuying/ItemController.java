@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techit.gongsimchae.domain.common.es.service.ItemElasticService;
 import techit.gongsimchae.domain.common.imagefile.entity.ItemImageFileStatus;
 import techit.gongsimchae.domain.common.participate.service.ParticipateService;
@@ -120,7 +121,12 @@ public class ItemController {
     }
 
     @PostMapping("/admin/item/delete")
-    public String deleteItem(@RequestParam Long id){
+    public String deleteItem(@RequestParam Long id, RedirectAttributes redirectAttributes){
+        Item item = itemService.getItemById(id);
+        if(item.getItemStatus() == ItemStatus.공동구매_진행중){
+            redirectAttributes.addFlashAttribute("errorMessage", "공동구매가 진행 중인 상태에서 삭제할 수 없습니다.");
+            return "redirect:/admin/item";
+        }
         itemService.deleteItem(id);
         return "redirect:/admin/item";
     }

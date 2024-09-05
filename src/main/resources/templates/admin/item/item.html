@@ -95,6 +95,16 @@
     <script th:inline="javascript">
         var categories = [[${categories}]];
     </script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.onload = function() {
+            var errorMessage = /*[[${errorMessage}]]*/ null;
+            if (errorMessage) {
+                alert(errorMessage);
+            }
+        };
+        /*]]>*/
+    </script>
 
 
 </section>
