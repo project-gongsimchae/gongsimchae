@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
+import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.common.wishlist.dto.SubdivisionWishListRespDto;
@@ -31,6 +33,7 @@ public class WishListService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final SubdivisionRepository subdivisionRepository;
+    private final ImageFileRepository imageFileRepository;
 
 
     @Transactional(readOnly = true)
@@ -62,9 +65,15 @@ public class WishListService {
      * 찜목록에 넣은 아이템 가져오기
      */
     public Page<ItemRespDtoWeb> getPickItems(PrincipalDetails principalDetails, Pageable pageable) {
-        return wishListRepository.findWishListsItemByUserIdAndSubdivisionIsNullOrderByCreateDateDesc(principalDetails.getAccountDto().getId(),
+        Page<ItemRespDtoWeb> results = wishListRepository.findWishListsItemByUserIdAndSubdivisionIsNullOrderByCreateDateDesc(principalDetails.getAccountDto().getId(),
                         pageable)
                 .map(wishList -> new ItemRespDtoWeb(wishList.getItem()));
+
+        for (ItemRespDtoWeb result : results) {
+            Optional<ImageFile> _imageFile = imageFileRepository.findByItemThumbnail(result.getId());
+            _imageFile.ifPresent(file -> result.setImageUrl(file.getStoreFilename()));
+        }
+        return results;
 
     }
 

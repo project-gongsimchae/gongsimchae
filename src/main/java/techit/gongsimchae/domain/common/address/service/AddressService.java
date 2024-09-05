@@ -35,7 +35,7 @@ public class AddressService {
     public void addAddress(AddressCreateReqDtoWeb addressCreateReqDtoWeb, PrincipalDetails principalDetails) {
         User user = userRepository.findByLoginId(principalDetails.getUsername()).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         addressCreateReqDtoWeb.applySetting(user.getName(), user.getPhoneNumber());
-        unsetAsDefault();
+        unsetAsDefault(user.getId());
         Address address = new Address(addressCreateReqDtoWeb, user, DefaultAddressStatus.PRIMARY);
 
         addressRepository.save(address);
@@ -45,7 +45,7 @@ public class AddressService {
     public void addAddress(AddressCreateReqDtoWeb addressCreateReqDtoWeb, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
         addressCreateReqDtoWeb.applySetting(user.getName(), user.getPhoneNumber());
-        unsetAsDefault();
+        unsetAsDefault(userId);
         Address address = new Address(addressCreateReqDtoWeb, user, DefaultAddressStatus.PRIMARY);
 
         addressRepository.save(address);
@@ -74,14 +74,14 @@ public class AddressService {
     }
 
     @Transactional
-    public void changeDefaultAddress(String id) {
-        unsetAsDefault();
+    public void changeDefaultAddress(String id, Long userId) {
+        unsetAsDefault(userId);
         Address address = addressRepository.findByUID(id).orElseThrow(() -> new CustomWebException(ErrorMessage.ADDRESS_NOT_FOUND));
         address.setDefaultAddress();
     }
 
-    private void unsetAsDefault() {
-        Optional<Address> defaultAddress = addressRepository.findDefaultAddress();
+    private void unsetAsDefault(Long userId) {
+        Optional<Address> defaultAddress = addressRepository.findDefaultAddressByUser(userId);
         if (defaultAddress.isPresent()) {
             Address address = defaultAddress.get();
             address.unsetDefaultAddress();

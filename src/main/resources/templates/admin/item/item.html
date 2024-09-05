@@ -57,7 +57,7 @@
                         <button type="submit" class="btn-custom btn-delete">삭제</button>
                     </form>
                     <form th:if="${item.deleteStatus.equals(1)}" th:action="@{/admin/item/restore}" method="post"
-                          th:attr="data-category-status=${item.category.categoryStatus}">
+                          th:attr="data-category-status=${item.categoryStatus}">
                         <input type="hidden" th:value="${item.id}" name="id"/>
                         <button type="button" class="btn-custom btn-restore" onclick="checkCategoryStatus(this)">복구</button>
                     </form>

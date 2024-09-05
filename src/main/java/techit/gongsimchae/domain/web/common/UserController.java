@@ -159,8 +159,8 @@ public class UserController {
     }
 
     @PostMapping("/change/default/address/{id}")
-    public ResponseEntity<?> changeDefaultAddress(@PathVariable("id") String id) {
-        addressService.changeDefaultAddress(id);
+    public ResponseEntity<?> changeDefaultAddress(@PathVariable("id") String id, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        addressService.changeDefaultAddress(id, principalDetails.getAccountDto().getId());
         return ResponseEntity.ok().build();
     }
 
