@@ -180,7 +180,7 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 </br>
 
 ## 📁 아키텍처
-![아키텍처2.png](..%2F%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%982.png)
+<img width="1470" alt="image" src="https://github.com/user-attachments/assets/8f34ed25-b199-4c59-bd9d-d54be05633b6" />
 
 <br>
 
