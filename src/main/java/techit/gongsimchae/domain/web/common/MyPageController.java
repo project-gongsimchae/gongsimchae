@@ -71,7 +71,7 @@ public class MyPageController {
     }
 
     @GetMapping("/orders/{ordersId}")
-    public String orderDetail(@PathVariable Long ordersId,
+    public String orderDetail(@PathVariable("ordersId") Long ordersId,
                               @AuthenticationPrincipal PrincipalDetails userDetails, Model model){
         Long userId = userDetails.getAccountDto().getId();
         List<OrderItem> orderItems = orderItemService.getOrderItemsByOrdersId(ordersId);

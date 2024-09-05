@@ -31,6 +31,7 @@ import techit.gongsimchae.global.exception.CustomWebException;
 import techit.gongsimchae.global.message.ErrorMessage;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -152,12 +153,33 @@ public class PaymentsService {
         ordersRepository.save(orders);
     }
 
+    public void cancelOrderItem(Long itemId) {
+        List<OrderItem> orderItems = orderItemService.getOrderItemsByItemId(itemId);
+
+        for (OrderItem orderItem : orderItems) {
+            partialCancelPayment(orderItem.getOrders().getImpUid(), "공동구매 실패로 인한 부분 환불",
+                    BigDecimal.valueOf((long) orderItem.getCount() * orderItem.getPrice()));
+        }
+    }
+
     private void cancelPayment(String impUid, String reason){
         try {
             CancelData cancelData = new CancelData(impUid, true, null);
             cancelData.setReason(reason);
             iamportClient.cancelPaymentByImpUid(cancelData);
         } catch (IamportResponseException | IOException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    private void partialCancelPayment(String impUid, String reason, BigDecimal amount) {
+        try {
+            log.info("결제 부분환불 성공");
+            CancelData cancelData = new CancelData(impUid, false, amount);
+            cancelData.setReason(reason);
+            iamportClient.cancelPaymentByImpUid(cancelData);
+        } catch (IamportResponseException | IOException e) {
+            log.info("결제 부분환불 실패");
             throw new RuntimeException();
         }
     }
@@ -199,7 +221,6 @@ public class PaymentsService {
      */
     private void groupBuyingSuccess(Item item) {
         List<User> users = userService.findUsersByItemId(item.getId());
-        log.info("usersize : {}", users.size());
 
         publisher.publishEvent(new TargetCountAchievedEvent(item.getId()));
 
