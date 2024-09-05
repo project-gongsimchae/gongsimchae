@@ -174,9 +174,11 @@
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
     overflow: hidden;
     transition: transform 0.2s ease;
     width: 800px;
+    justify-content: space-around;
 }
 
 .custom-picklist-item-card:hover {
@@ -185,8 +187,8 @@
 
 /* Image styling */
 .custom-picklist-image-wrapper {
-    width: 100%;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     overflow: hidden;
 }
 
