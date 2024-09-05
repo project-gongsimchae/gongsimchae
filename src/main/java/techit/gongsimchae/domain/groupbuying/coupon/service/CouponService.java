@@ -3,6 +3,8 @@ package techit.gongsimchae.domain.groupbuying.coupon.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import techit.gongsimchae.domain.common.user.entity.User;

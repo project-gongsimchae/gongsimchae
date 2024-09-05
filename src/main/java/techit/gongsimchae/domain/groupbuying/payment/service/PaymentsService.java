@@ -15,12 +15,15 @@ import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.common.user.service.UserService;
 import techit.gongsimchae.domain.groupbuying.cart.service.CartService;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
+import techit.gongsimchae.domain.groupbuying.couponuser.entity.CouponUser;
+import techit.gongsimchae.domain.groupbuying.couponuser.repository.CouponUserRepository;
 import techit.gongsimchae.domain.groupbuying.itemoption.service.ItemOptionService;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItemStatus;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderStatus;
 import techit.gongsimchae.domain.groupbuying.orderitem.repository.OrderItemRepository;
 import techit.gongsimchae.domain.groupbuying.orderitem.service.OrderItemService;
+import techit.gongsimchae.domain.groupbuying.orders.dto.OrderCreateRequestDto;
 import techit.gongsimchae.domain.groupbuying.orders.dto.TempOrderItemDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.repository.OrdersRepository;
@@ -51,6 +54,7 @@ public class PaymentsService {
     private final UserService userService;
     private final ApplicationEventPublisher publisher;
 
+    private final CouponUserRepository couponUserRepository;
     public List<PaymentDto> pgProvider(){
         return Arrays.asList(
                 new PaymentDto("1", "카카오페이", "kakaopay.TC0ONETIME"),
@@ -60,7 +64,7 @@ public class PaymentsService {
     }
 
     @Transactional
-    public String createOrder(Long userId, List<TempOrderItemDto> tempOrderItems){
+    public String createOrder(Long userId, List<TempOrderItemDto> tempOrderItems, OrderCreateRequestDto requestDto){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomWebException(ErrorMessage.USER_NOT_FOUND));
 
@@ -69,12 +73,19 @@ public class PaymentsService {
                 .mapToInt(item -> item.getPrice() * item.getQuantity())
                 .sum();
 
+        CouponUser appliedCouponUser = null;
+        int discountAmount = 0;
+        if (requestDto.getCouponId() != null) {
+            appliedCouponUser = couponUserRepository.findByUserIdAndCouponIdAndCouponStatus(userId, requestDto.getCouponId(), 0)
+                    .orElseThrow(() -> new CustomWebException(ErrorMessage.COUPON_NOT_FOUND));
+            discountAmount = Math.min(totalPrice * appliedCouponUser.getCoupon().getDiscountRate() / 100, appliedCouponUser.getCoupon().getMaxDiscount());
+        }
 
 
         Orders orders = Orders.builder()
                 .merchantUid("order_no_"+ UUID.randomUUID().toString().substring(0,10))
                 .orderStatus(OrderStatus.주문)
-                .totalPrice(totalPrice)
+                .totalPrice(totalPrice - discountAmount)
                 .user(user)
                 .build();
 
@@ -92,6 +103,12 @@ public class PaymentsService {
 
 
         orderItemRepository.saveAll(orderItems);
+
+        if (appliedCouponUser != null){
+            appliedCouponUser.setStatusDeleted();
+            couponUserRepository.save(appliedCouponUser);
+        }
+
         return orders.getMerchantUid();
     }
 
