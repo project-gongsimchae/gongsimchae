@@ -14,7 +14,7 @@ import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Payment {
+public class Payments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

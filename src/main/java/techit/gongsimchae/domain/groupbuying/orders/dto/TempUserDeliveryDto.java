@@ -12,4 +12,5 @@ public class TempUserDeliveryDto {
     private String recipientAddress;
     private String recipientName;
     private String recipientPhoneNumber;
+    private String zipcode;
 }

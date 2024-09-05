@@ -133,8 +133,8 @@ public class CartService {
                 .build();
     }
 
-    public List<TempOrderItemDto> getCartItemFromOrderItem(Long userId, List<Long> selectedCartId){
-        List<Cart> cart = cartRepository.findByUserIdAndItemOptionIdIn(userId,selectedCartId);
+    public List<TempOrderItemDto> getCartItemFromOrderItem(Long userId, List<Long> selectedItemOptionId){
+        List<Cart> cart = cartRepository.findByUserIdAndItemOptionIdIn(userId,selectedItemOptionId);
         return cart.stream()
                 .map(TempOrderItemDto::fromCart)
                 .collect(Collectors.toList());

@@ -3,6 +3,7 @@ package techit.gongsimchae.domain.web.common;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.query.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -25,6 +26,8 @@ import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
 import techit.gongsimchae.domain.groupbuying.item.dto.ItemRespDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.dto.ReviewItemResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
+import techit.gongsimchae.domain.groupbuying.orderitem.service.OrderItemService;
 import techit.gongsimchae.domain.groupbuying.orders.dto.OrdersPaymentDto;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
 import techit.gongsimchae.domain.groupbuying.orders.service.OrdersService;
@@ -37,6 +40,7 @@ import techit.gongsimchae.global.dto.PrincipalDetails;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/mypage")
@@ -52,13 +56,17 @@ public class MyPageController {
     private final OrdersService ordersService;
     private final ItemService itemService;
     private final ReviewService reviewService;
+    private final OrderItemService orderItemService;
 
 
     @GetMapping("/orders")
     public String orders(@AuthenticationPrincipal PrincipalDetails userDetails, Model model){
         Long userId = userDetails.getAccountDto().getId();
         List<Orders> orders = ordersService.getUserOrders(userId);
+        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrdersIdAll(orders.stream()
+                .map(order -> order.getId()).collect(Collectors.toList()));
         model.addAttribute("orders",orders);
+        model.addAttribute("orderItems",orderItems);
 
         return "mypage/orders";
     }
@@ -67,13 +75,15 @@ public class MyPageController {
     public String orderDetail(@PathVariable Long ordersId,
                               @AuthenticationPrincipal PrincipalDetails userDetails, Model model){
         Long userId = userDetails.getAccountDto().getId();
-        Orders ordersDetail = ordersService.getOrderDetail(ordersId,userId);
+        List<OrderItem> orderItems = orderItemService.getOrderItemsByOrdersId(ordersId);
+        Orders ordersDetail = ordersService.getOrderDetail(ordersId, userId);
         OrdersPaymentDto ordersPayment = ordersService.getOrdersPayment(ordersId);
         if (ordersDetail == null) {
             return "redirect:error/4xx";
         }
 
         model.addAttribute("ordersDetail",ordersDetail);
+        model.addAttribute("orderItems",orderItems);
         model.addAttribute("ordersPayment",ordersPayment);
         return "mypage/ordersDetail";
     }
