@@ -6,6 +6,9 @@ var messageInput = document.querySelector('#message');
 var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 
+const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
 var stompClient = null;
 // username은 HTML에서 Thymeleaf를 통해 설정됩니다.
 
@@ -212,6 +215,9 @@ function uploadFile(){
     // 이를 이용해 chatMessage 를 작성한다.
     $.ajax({
         type : 'POST',
+        headers: {
+            [csrfHeader]: csrfToken
+        },
         url : '/chat/s3/upload',
         data : formData,
         processData: false,

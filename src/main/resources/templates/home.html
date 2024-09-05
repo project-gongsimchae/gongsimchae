@@ -27,7 +27,7 @@
                                 <div class="progress-container">
                                     <div class="custom-progress">
                                         <div th:fragment="progressbar" class="custom-progress-bar" role="progressbar"
-                                             th:with="progressBarWidth =${#numbers.formatDecimal((item.participateCount / item.groupBuyingQuantity) * 100, 0, 0)}"
+                                             th:with="progressBarWidth =${#numbers.formatDecimal(item.participateCount * 100 / item.groupBuyingQuantity, 0, 0)}"
                                              th:style="'width: ' + ${progressBarWidth} + '%'"
                                              th:aria-valuenow="${item.participateCount}"
                                              aria-valuemin="0" th:aria-valuemax="${item.groupBuyingQuantity}">
