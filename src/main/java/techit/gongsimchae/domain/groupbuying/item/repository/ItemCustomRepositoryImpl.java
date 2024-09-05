@@ -100,6 +100,7 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
                         item.pointAccumulationRate, item.groupBuyingLimitTime, item.groupBuyingQuantity,
                         item.UID, item.cumulativeSalesVolume, item.reviewCount))
                 .from(item)
+                .where(item.deleteStatus.eq(0))
                 .orderBy(item.createDate.desc())
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
@@ -128,6 +129,7 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
 
         Long size = queryFactory.select(item.count())
                 .from(item)
+                .where(item.deleteStatus.eq(0))
                 .fetchOne();
         return new PageImpl<>(results, pageable, size.intValue());
     }
