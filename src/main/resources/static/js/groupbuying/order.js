@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
             success: function(data) {
                 if (data.status === "success") {
                     alert("결제가 완료되었습니다.");
-                    window.location.href = "/main";
+                    window.location.href = "/order/complete";
                 } else {
                     cancelOrder(impUid,merchantUid)
                     alert("결제 검증에 실패했습니다. 관리자에게 문의해주세요.");
