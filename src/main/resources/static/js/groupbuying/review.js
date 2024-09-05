@@ -98,10 +98,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('starPoint').value = data.starPoint;
         document.getElementById('content').value = data.content;
         document.getElementById('secretStatus').checked = data.secretStatus === true;
-
-        console.log(data.title)
-        console.log(data.starPoint)
-        console.log(data.content)
     }
 
     // 데이터 비우기 함수
