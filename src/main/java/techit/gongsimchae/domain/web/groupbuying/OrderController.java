@@ -1,6 +1,5 @@
 package techit.gongsimchae.domain.web.groupbuying;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +9,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techit.gongsimchae.domain.groupbuying.coupon.dto.CouponRespDtoWeb;
+import techit.gongsimchae.domain.groupbuying.coupon.service.CouponService;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
 import techit.gongsimchae.domain.groupbuying.orderitem.service.OrderItemService;
 import techit.gongsimchae.domain.groupbuying.orders.dto.*;
@@ -30,6 +31,7 @@ public class OrderController {
     private final OrdersService ordersService;
     private final PaymentsService paymentsService;
     private final OrderItemService orderItemService;
+    private final CouponService couponService;
 
     @PostMapping("/temp")
     public String createTempOrder(@AuthenticationPrincipal PrincipalDetails userDetail,
@@ -42,6 +44,10 @@ public class OrderController {
                         .mapToInt(item -> item.getOriginalPrice()*item.getQuantity() - item.getPrice() * item.getQuantity())
                         .sum();
 
+        List<CouponRespDtoWeb> couponRespDtoWebs = couponService.getUserCoupons(userDetail);
+
+
+        session.setAttribute("couponRespDtoWebs",couponRespDtoWebs);
         session.setAttribute("tempOrderItems", tempOrderItems);
         session.setAttribute("totalPrice", totalPrice);
         session.setAttribute("totalDiscountPrice", totalDiscountPrice);
@@ -57,10 +63,12 @@ public class OrderController {
         List<TempOrderItemDto> tempOrderItems = (List<TempOrderItemDto>) session.getAttribute("tempOrderItems");
         Integer totalPrice = (Integer) session.getAttribute("totalPrice");
         Integer totalDiscountPrice = (Integer) session.getAttribute("totalDiscountPrice");
+        List<CouponRespDtoWeb> couponRespDtoWebs = (List<CouponRespDtoWeb>) session.getAttribute("couponRespDtoWebs");
 
         TempUserDeliveryDto userDeliveryInfo = ordersService.createTempUserDeliveryInfo(userDetail.getAccountDto().getId());
         List<PaymentDto> paymentMethod = paymentsService.pgProvider();
 
+        model.addAttribute("couponRespDtoWebs",couponRespDtoWebs);
         model.addAttribute("paymentMethod",paymentMethod);
         model.addAttribute("userDeliveryInfo",userDeliveryInfo);
         model.addAttribute("tempOrderItems", tempOrderItems);
@@ -81,14 +89,13 @@ public class OrderController {
             return ResponseEntity.badRequest().body("주문 정보가 없습니다.");
         }
 
-        String merchantUid = paymentsService.createOrder(userId, tempOrderItems);
+        String merchantUid = paymentsService.createOrder(userId, tempOrderItems, requestDto);
         session.setAttribute("merchantUid",merchantUid);
         return ResponseEntity.ok(merchantUid);
     }
 
     @PostMapping("/cancel")
     public ResponseEntity<String> cancelOrder(@RequestBody CancelOrderRequest cancelOrderRequest){
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             paymentsService.cancelOrder(cancelOrderRequest.getImpUid(),cancelOrderRequest.getMerchantUid());
         } catch (IamportResponseException | IOException e) {

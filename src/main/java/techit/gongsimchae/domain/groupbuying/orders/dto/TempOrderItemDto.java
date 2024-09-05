@@ -16,7 +16,7 @@ public class TempOrderItemDto {
     private int OriginalPrice;
     private int price;
     private int totalPrice;
-
+    private Long categoryId;
     public static TempOrderItemDto fromCart(Cart cart) {
         ItemOption option = cart.getItemOption();
         Item item = option.getItem();
@@ -31,6 +31,7 @@ public class TempOrderItemDto {
                 .OriginalPrice(price)
                 .price(discountedPrice)
                 .totalPrice(discountedPrice * cart.getCount())
+                .categoryId(item.getCategory().getId())
                 .build();
     }
 }

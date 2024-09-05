@@ -65,23 +65,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateTotalAmount() {
         const originalTotal = parseInt(document.getElementById('originalTotalAmount').textContent.replace(/[^0-9]/g, ''));
+        const productDiscount = parseInt(document.getElementById('totalDiscountAmount').textContent.replace(/[^0-9]/g, ''));
         let couponDiscount = 0;
-        let pointDiscount = 0;
 
         const selectedCoupon = couponSelect.options[couponSelect.selectedIndex];
         if (selectedCoupon && selectedCoupon.value !== "") {
-            couponDiscount = parseInt(selectedCoupon.textContent.match(/\d+/)[0]);
+            const discountRate = parseFloat(selectedCoupon.dataset.discountRate);
+            const maxDiscount = parseInt(selectedCoupon.dataset.maxDiscount);
+
+            couponDiscount = Math.min((originalTotal - productDiscount) * (discountRate / 100), maxDiscount);
         }
 
-        pointDiscount = parseInt(pointInput.value) || 0;
-
-        const totalDiscount = couponDiscount + pointDiscount + totalDiscount;
-
-        const finalAmount = Math.max(0, originalTotal - totalDiscount);
+        const finalAmount = Math.max(0, originalTotal - productDiscount - couponDiscount);
 
         document.getElementById('couponDiscountAmount').textContent = couponDiscount.toLocaleString() + '원';
-        document.getElementById('pointDiscountAmount').textContent = pointDiscount.toLocaleString() + '원';
-        document.getElementById('totalDiscountAmount').textContent = totalDiscount.toLocaleString() + '원';
         document.getElementById('finalTotalAmount').textContent = finalAmount.toLocaleString() + '원';
     }
 
@@ -93,12 +90,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const pgProvider = selectedPaymentMethod.dataset.pgProvider;
+        const finalAmount = parseInt(document.getElementById('finalTotalAmount').textContent.replace(/[^0-9]/g, ''));
+        const selectedCouponId = document.getElementById('couponSelect').value;
 
         $.ajax({
             url: '/order/create',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({}),
+            data: JSON.stringify({
+                couponId: selectedCouponId,
+                finalAmount: finalAmount
+            }),
             beforeSend: function(xhr) {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
             },
@@ -108,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     pay_method: "card",
                     merchant_uid: merchantUid,
                     name: "공심채 주문",
-                    amount: parseInt(orderInfo.totalPrice),
+                    amount: finalAmount,
                     buyer_email: orderInfo.buyerEmail,
                     buyer_name: orderInfo.buyerName,
                     buyer_tel: orderInfo.buyerTel,
