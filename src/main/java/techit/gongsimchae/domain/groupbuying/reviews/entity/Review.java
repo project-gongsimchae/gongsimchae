@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import techit.gongsimchae.domain.BaseEntity;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.common.user.entity.User;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
 
 @NoArgsConstructor
@@ -34,7 +35,11 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    public Review(ReviewsReqDtoWeb reviewsReqDtoWeb, User user, Item item){
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_item_id")
+    private OrderItem orderItem;
+
+    public Review(ReviewsReqDtoWeb reviewsReqDtoWeb, User user, Item item, OrderItem orderItem){
         this.title = reviewsReqDtoWeb.getTitle();
         this.starPoint = reviewsReqDtoWeb.getStarPoint();
         this.content = reviewsReqDtoWeb.getContent();
@@ -42,6 +47,7 @@ public class Review extends BaseEntity {
         this.UID = UUID.randomUUID().toString().substring(0,8);
         this.user = user;
         this.item = item;
+        this.orderItem = orderItem;
     }
 
     public void update(ReviewsReqDtoWeb reviewsReqDtoWeb) {

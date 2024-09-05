@@ -23,6 +23,7 @@
         <div id="reviewable-section" class="review-section active">
             <div id="review-container" class="container mt-2">
                 <div th:each="item : ${reviewAbleItems}" class="review-item row mb-4">
+                    <input type="hidden" name="orderItemId" id="myOrderItemId" th:value="${item.getOrderItemId()}">
                     <div class="col-md-2">
                         <div class="image-container">
                             <div th:if="${!item.getThumbnailUrl().isEmpty()}">
@@ -48,6 +49,7 @@
         <div id="reviewed-section" class="review-section">
             <div id="review-container" class="container mt-2">
                 <div th:each="item : ${reviewedItems}" class="review-item row mb-4">
+                    <input type="hidden" name="orderItemId" id="myOrderItemId" th:value="${item.getOrderItemId()}">
                     <div class="col-md-2">
                         <div class="image-container">
                             <div th:if="${!item.getThumbnailUrl().isEmpty()}">
@@ -76,6 +78,7 @@
         <div class="review-modal-body" id="reviewModal">
             <div class="container">
                 <form id="reviewForm" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="orderItemId" id="orderItemId">
                     <!-- 사진 업로드 -->
                     <div class="form-group">
                         <div class="form-group-image">
