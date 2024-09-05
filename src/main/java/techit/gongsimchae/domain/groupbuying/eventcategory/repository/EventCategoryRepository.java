@@ -12,5 +12,5 @@ public interface EventCategoryRepository extends JpaRepository<EventCategory, Lo
 
     List<EventCategory> findAllByEventId(Long eventId);
 
-    Optional<EventCategory> findByCategoryId(Long categoryId);
+    Optional<EventCategory> findByCategoryIdAndEventCategoryStatus(Long categoryId, Integer status);
 }

@@ -8,13 +8,13 @@ import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfigurat
 @Configuration
 public class ElasticsearchConfig extends ElasticsearchConfiguration {
 
-    @Value("${my-elasticsearch.host}")
+
     private String host;
 
     @Override
     public ClientConfiguration clientConfiguration() {
         return ClientConfiguration.builder()
-                .connectedTo(host + ":9200")
+                .connectedTo("localhost" + ":9200")
                 .build();
     }
 }

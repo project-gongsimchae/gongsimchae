@@ -17,10 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.show();
     };
 
+    let name;
+    let phone;
+    let address;
     window.updateDeliveryInfo = function() {
-        const name = document.getElementById('recipientName').value;
-        const phone = document.getElementById('recipientPhone').value;
-        const address = document.getElementById('recipientAddress').value;
+        name = document.getElementById('recipientName').value;
+        phone = document.getElementById('recipientPhone').value;
+        address = document.getElementById('recipientAddress').value;
 
         document.getElementById('displayRecipientName').textContent = name;
         document.getElementById('displayRecipientPhone').textContent = phone;
@@ -112,9 +115,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     name: "공심채 주문",
                     amount: finalAmount,
                     buyer_email: orderInfo.buyerEmail,
-                    buyer_name: orderInfo.buyerName,
-                    buyer_tel: orderInfo.buyerTel,
-                    buyer_addr: orderInfo.buyerAddr,
+                    buyer_name: name,
+                    buyer_tel: phone,
+                    buyer_addr: address,
                     buyer_postcode: orderInfo.buyerPostcode,
                     m_redirect_url: "http://localhost:8081/order/complete",
                 };
@@ -149,7 +152,15 @@ document.addEventListener('DOMContentLoaded', function() {
             success: function(data) {
                 if (data.status === "success") {
                     alert("결제가 완료되었습니다.");
-                    window.location.href = "/order/complete";
+                    // $.ajax({
+                    //     url: `order/complete`,
+                    //     type: 'GET',
+                    //     contentType: 'application/json',
+                    //     data: JSON.stringify({
+                    //
+                    //     })
+                    // })
+
                 } else {
                     cancelOrder(impUid,merchantUid)
                     alert("결제 검증에 실패했습니다. 관리자에게 문의해주세요.");

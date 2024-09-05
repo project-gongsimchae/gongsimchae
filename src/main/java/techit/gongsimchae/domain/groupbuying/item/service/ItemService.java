@@ -17,6 +17,7 @@ import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
 import techit.gongsimchae.domain.common.participate.repository.ParticipateRepository;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
+import techit.gongsimchae.domain.groupbuying.event.entity.EventType;
 import techit.gongsimchae.domain.groupbuying.event.repository.EventRepository;
 import techit.gongsimchae.domain.groupbuying.eventcategory.entity.EventCategory;
 import techit.gongsimchae.domain.groupbuying.eventcategory.repository.EventCategoryRepository;
@@ -89,8 +90,8 @@ public class ItemService {
         List<ImageFile> detailImageFiles = imageS3Service.storeFiles(itemCreateDto.getDetailImages(), "images", item, ItemImageFileStatus.DETAIL);
 
         createItemDocument(savedItem, imageFiles);
-        Optional<EventCategory> eventCategory = eventCategoryRepository.findByCategoryId(category.getId());
-        if (eventCategory.isPresent()){
+        Optional<EventCategory> eventCategory = eventCategoryRepository.findByCategoryIdAndEventCategoryStatus(category.getId(),0);
+        if (eventCategory.isPresent() && eventCategory.get().getEvent().getEventType().equals(EventType.DISCOUNT)){
             item.plusDiscountRate(eventCategory.get().getEvent().getDiscountRate());
         }
 
@@ -120,8 +121,8 @@ public class ItemService {
                 .orElseThrow(() -> new CustomWebException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         item.UpdateDto(itemUpdateDto, category);
-        Optional<EventCategory> eventCategory = eventCategoryRepository.findByCategoryId(category.getId());
-        if (eventCategory.isPresent()){
+        Optional<EventCategory> eventCategory = eventCategoryRepository.findByCategoryIdAndEventCategoryStatus(category.getId(),0);
+        if (eventCategory.isPresent() && eventCategory.get().getEvent().getEventType().equals(EventType.DISCOUNT)){
             item.plusDiscountRate(eventCategory.get().getEvent().getDiscountRate());
         }
 
