@@ -51,20 +51,20 @@ public class ReviewService {
         imageS3Service.storeFile(reviewReqDtoWeb.getImages(), S3VO.REVIEWS_IMAGE_UPLOAD_DIRECTORY, review);
     }
 
-    public ReviewResDtoWeb getReviews(AccountDto accountDto, String uid) {
+    public ReviewResDtoWeb getReviews(AccountDto accountDto, String uid, Long orderItemId) {
         Item item = itemRepository.findByUIDAndDeleteStatus(uid, 0).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
         );
-        Review review = reviewRepository.findByUserIdAndItem(accountDto.getId(), item);
+        Review review = reviewRepository.findByUserIdAndItemAndOrderItemId(accountDto.getId(), item, orderItemId);
         ImageFile imageFile = imageFileRepository.findByReview(review);
         return new ReviewResDtoWeb(review, imageFile.getStoreFilename());
     }
 
-    public void updateReview(AccountDto accountDto, ReviewsReqDtoWeb reviewsReqDtoWeb, String uid) {
+    public void updateReview(AccountDto accountDto, ReviewsReqDtoWeb reviewsReqDtoWeb, String uid, Long orderItemId) {
         Item item = itemRepository.findByUIDAndDeleteStatus(uid, 0).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
         );
-        Review review = reviewRepository.findByUserIdAndItem(accountDto.getId(), item);
+        Review review = reviewRepository.findByUserIdAndItemAndOrderItemId(accountDto.getId(), item, orderItemId);
         review.update(reviewsReqDtoWeb);
     }
 

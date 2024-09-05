@@ -34,12 +34,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const orderItemId = this.closest('.review-item').querySelector('#myOrderItemId').value;
 
             // 리뷰 수정 모드: 데이터를 서버에서 가져오거나 페이지에서 찾습니다.
-            fetch(`/mypage/reviews/${uid}`)  // 수정할 리뷰 데이터를 가져오는 API 경로, get
+            fetch(`/mypage/reviews/${uid}/${orderItemId}`)  // 수정할 리뷰 데이터를 가져오는 API 경로, get
                 .then(response => response.json())
                 .then(data => {
                     // 데이터를 가져온 후 필드에 바인딩
                     bindDataToForm(data);
-                    openModalForReview(uid, '수정하기', 'POST', `/mypage/reviews/update/${uid}`, orderItemId); // put
+                    openModalForReview(uid, '수정하기', 'POST', `/mypage/reviews/update/${uid}/${orderItemId}`, orderItemId); // put
                 })
                 .catch(error => {
                     console.error('리뷰 데이터를 불러오는 중 오류 발생:', error);
