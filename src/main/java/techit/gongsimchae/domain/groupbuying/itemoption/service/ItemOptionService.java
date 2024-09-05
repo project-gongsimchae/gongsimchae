@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techit.gongsimchae.domain.common.imagefile.entity.ItemImageFileStatus;
+import techit.gongsimchae.domain.common.participate.repository.ParticipateRepository;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.service.ItemService;
 import techit.gongsimchae.domain.groupbuying.itemoption.dto.ItemOptionDto;
@@ -20,19 +21,21 @@ import java.util.stream.Collectors;
 public class ItemOptionService {
     private final ItemOptionRepository itemOptionRepository;
     private final ItemService itemService;
+    private final ParticipateRepository participateRepository;
     @Transactional(readOnly = true)
     public List<ItemOptionDto> getItemOptionById(Long itemId){
         Item item = itemService.getItemById(itemId);
         List<ItemOption> itemOptions = itemOptionRepository.findAllByItemId(itemId);
+        Long count = participateRepository.countByItem(item.getId());
 
 
         return itemOptions.stream()
-                .map(option -> convertToItemOptionDto(item, option))
+                .map(option -> convertToItemOptionDto(item, option,count))
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public ItemOptionDto convertToItemOptionDto(Item item, ItemOption itemOption){
+    public ItemOptionDto convertToItemOptionDto(Item item, ItemOption itemOption, Long count){
         int originalPrice = item.getOriginalPrice();
         int optionPrice = itemOption.getPrice();
         int totalPrice = originalPrice + optionPrice;
@@ -53,6 +56,7 @@ public class ItemOptionService {
                 .discountPrice(discountPrice)
                 .quantity(item.getGroupBuyingQuantity())
                 .itemUID(item.getUID())
+                .participateCount(count)
                 .itemStatus(item.getItemStatus())
                 .imageFiles(item.getImageFiles().stream().filter(image -> image.getItemImageFileStatus().equals(ItemImageFileStatus.THUMBNAIL)).toList())
                 .detailImageFile(item.getImageFiles().stream().filter(image -> image.getItemImageFileStatus().equals(ItemImageFileStatus.DETAIL)).toList())

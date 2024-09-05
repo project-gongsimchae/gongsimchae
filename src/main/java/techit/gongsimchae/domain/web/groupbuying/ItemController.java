@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techit.gongsimchae.domain.common.es.service.ItemElasticService;
 import techit.gongsimchae.domain.common.imagefile.entity.ItemImageFileStatus;
+import techit.gongsimchae.domain.common.participate.service.ParticipateService;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.service.CategoryService;
 import techit.gongsimchae.domain.groupbuying.event.entity.Event;
@@ -43,6 +44,7 @@ public class ItemController {
     private final OrderItemService orderItemService;
     private final ReviewService reviewService;
     private final ItemElasticService itemElasticService;
+    private final ParticipateService participateService;
 
     /**
      * 검색
@@ -138,7 +140,7 @@ public class ItemController {
         List<ItemOptionDto> item = itemOptionService.getItemOptionById(id);
 
         model.addAttribute("item",item);
-        model.addAttribute("completionAmountItemCntDto", orderItemService.getCountCompletedOrderItemsWithItemId(id));
+        model.addAttribute("participateCount", participateService.getParticipateCount(item.get(0).getItemId()));
         model.addAttribute("reviewResDtoWebList", reviewService.findReviewListByItemId(id));
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

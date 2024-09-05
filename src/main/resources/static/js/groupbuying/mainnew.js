@@ -17,7 +17,7 @@ function appendRecentItems(items) {
 
         const originalPrice = formatNumber(item.originalPrice);
         const discountPrice = formatNumber(item.originalPrice * (100 - item.discountRate) / 100);
-        const progressBarWidth = (item.groupBuyingQuantity / 100.0) * 100;
+        const progressBarWidth = Math.floor((item.participateCount / item.groupBuyingQuantity) * 100);
 
         itemElement.innerHTML = `
             <a href="/product/${item.id}">
@@ -31,9 +31,9 @@ function appendRecentItems(items) {
                                 <div class="custom-progress">
                                     <div class="custom-progress-bar" role="progressbar"
                                          style="width: ${progressBarWidth}%; max-width: 100%;"
-                                         aria-valuenow="${item.groupBuyingQuantity}"
-                                         aria-valuemin="0" aria-valuemax="100">
-                                        <span>${item.groupBuyingQuantity}%</span>
+                                         aria-valuenow="${item.participateCount}"
+                                         aria-valuemin="0" aria-valuemax="${item.groupBuyingQuantity}">
+                                        <span>${progressBarWidth}%</span>
                                     </div>
                                 </div>
                             </div>
@@ -43,7 +43,7 @@ function appendRecentItems(items) {
                                 <span class="discount-rate">${item.discountRate}%</span>
                                 <span class="discount-price">${discountPrice}원</span>
                             </span>
-                            <span class="buying-people">${item.groupBuyingQuantity}명 구매중</span>
+                            <span class="buying-people">${item.participateCount}명 구매중</span>
                         </div>
                     </div>
                 </div>

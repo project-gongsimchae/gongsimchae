@@ -14,6 +14,7 @@ import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.imagefile.entity.ItemImageFileStatus;
 import techit.gongsimchae.domain.common.imagefile.repository.ImageFileRepository;
 import techit.gongsimchae.domain.common.imagefile.service.ImageS3Service;
+import techit.gongsimchae.domain.common.participate.repository.ParticipateRepository;
 import techit.gongsimchae.domain.groupbuying.category.entity.Category;
 import techit.gongsimchae.domain.groupbuying.category.repository.CategoryRepository;
 import techit.gongsimchae.domain.groupbuying.event.repository.EventRepository;
@@ -59,6 +60,7 @@ public class ItemService {
     private final ItemOptionRepository itemOptionRepository;
     private final ItemElasticRepository itemElasticRepository;
     private final EventCategoryRepository eventCategoryRepository;
+    private final ParticipateRepository participateRepository;
 
     public void save(Item item) {
         itemRepository.save(item);
@@ -196,7 +198,15 @@ public class ItemService {
             ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             itemCardResDtoWebs.add(new ItemCardResDtoWeb(item, imageFile));
         }
+        setParticipateCount(itemCardResDtoWebs);
         return itemCardResDtoWebs;
+    }
+
+    private void setParticipateCount(List<ItemCardResDtoWeb> itemCardResDtoWebs) {
+        for (ItemCardResDtoWeb itemCardResDtoWeb : itemCardResDtoWebs) {
+            Long count = participateRepository.countByItem(itemCardResDtoWeb.getId());
+            itemCardResDtoWeb.setParticipateCount(count);
+        }
     }
 
     public List<Item> getItemsByCategory(Category category) {
@@ -225,10 +235,12 @@ public class ItemService {
             throw new CustomWebException(ErrorMessage.SORT_TYPE_NOR_FOUND);
         }
         Page<Item> items = itemRepository.findAllByCategoryAndDeleteStatus(category, 0, pageable);
-        return items.map(item -> {
+        Page<ItemCardResDtoWeb> results = items.map(item -> {
             ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             return new ItemCardResDtoWeb(item, imageFile);
         });
+        setParticipateCount(results.getContent());
+        return results;
     }
 
     public ItemRespDtoWeb getItem(String id) {
@@ -256,10 +268,12 @@ public class ItemService {
         } else {
             throw new CustomWebException(ErrorMessage.SORT_TYPE_NOR_FOUND);
         }
-        return newItemsPage.map(item -> {
+        Page<ItemCardResDtoWeb> result = newItemsPage.map(item -> {
             ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             return new ItemCardResDtoWeb(item, imageFile);
         });
+        setParticipateCount(result.getContent());
+        return result;
     }
 
     @Transactional(readOnly = true)
@@ -280,10 +294,12 @@ public class ItemService {
         } else {
             throw new CustomWebException(ErrorMessage.SORT_TYPE_NOT_FOUND);
         }
-        return bestItemsPage.map(item -> {
+        Page<ItemCardResDtoWeb> results = bestItemsPage.map(item -> {
             ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             return new ItemCardResDtoWeb(item, imageFile);
         });
+        setParticipateCount(results.getContent());
+        return results;
     }
 
     public Page<ItemCardResDtoWeb> getCategoriesItems(List<Category> categories, Integer page, Integer per_page, Integer sorted_type) {
@@ -303,10 +319,12 @@ public class ItemService {
         } else {
             throw new CustomWebException(ErrorMessage.SORT_TYPE_NOR_FOUND);
         }
-        return categoriesItemsPage.map(item -> {
+        Page<ItemCardResDtoWeb> results = categoriesItemsPage.map(item -> {
             ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
             return new ItemCardResDtoWeb(item, imageFile);
         });
+        setParticipateCount(results.getContent());
+        return results;
     }
 
     public ReviewItemResDtoWeb getReviewItems(AccountDto accountDto) {
