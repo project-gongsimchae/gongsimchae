@@ -11,8 +11,8 @@
         <div class="row" th:each="item : ${items}">
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="custom-picklist-item-card">
-                    <div class="custom-picklist-image-wrapper" th:if="${item.getImageUrls != null}" th:with="image=${item.getImageUrls.getFirst()}">
-                        <img th:src="${image.getStoreFileName()}" class="custom-picklist-image" alt="상품 이미지">
+                    <div class="custom-picklist-image-wrapper" th:if="${item.imageUrl != null}" >
+                        <img th:src="${item.imageUrl}" class="custom-picklist-image" alt="상품 이미지">
                     </div>
                     <div class="custom-picklist-item-details">
                         <h4 class="custom-picklist-item-title">

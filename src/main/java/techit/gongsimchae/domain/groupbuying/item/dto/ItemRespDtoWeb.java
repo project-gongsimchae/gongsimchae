@@ -36,6 +36,8 @@ public class ItemRespDtoWeb {
     private String itemBannerImage;
     private Long participateCount;
     private Integer progressbarWidth;
+    private String imageUrl;
+    private Integer categoryStatus;
 
 
     public ItemRespDtoWeb(Item item) {

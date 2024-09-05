@@ -35,7 +35,8 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
         List<ItemRespDtoWeb> results = queryFactory.select(Projections.fields(ItemRespDtoWeb.class,
                         item.id, item.name, item.intro, item.originalPrice, item.discountRate,
                         item.pointAccumulationRate, item.groupBuyingQuantity, item.groupBuyingLimitTime,
-                        item.createDate, category.name.as("categoryName"), item.deleteStatus))
+                        item.createDate, category.name.as("categoryName"), item.deleteStatus,
+                        category.categoryStatus))
                 .from(item)
                 .join(item.category, category)
                 .where(adminSearch(form))
@@ -99,6 +100,7 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
                         item.pointAccumulationRate, item.groupBuyingLimitTime, item.groupBuyingQuantity,
                         item.UID, item.cumulativeSalesVolume, item.reviewCount))
                 .from(item)
+                .where(item.deleteStatus.eq(0))
                 .orderBy(item.createDate.desc())
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
@@ -127,6 +129,7 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
 
         Long size = queryFactory.select(item.count())
                 .from(item)
+                .where(item.deleteStatus.eq(0))
                 .fetchOne();
         return new PageImpl<>(results, pageable, size.intValue());
     }

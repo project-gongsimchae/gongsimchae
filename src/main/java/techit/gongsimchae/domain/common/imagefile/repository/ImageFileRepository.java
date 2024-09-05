@@ -1,7 +1,10 @@
 package techit.gongsimchae.domain.common.imagefile.repository;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import techit.gongsimchae.domain.common.imagefile.entity.ImageFile;
 import techit.gongsimchae.domain.common.inquiry.entity.Inquiry;
@@ -17,7 +20,8 @@ public interface ImageFileRepository extends JpaRepository<ImageFile, Long> {
 
     List<ImageFile> findAllByItemIn(List<Item> recentItems);
 
-    ImageFile findByItem(Item item);
+    @Query("select if from ImageFile if join fetch if.item i where i.id=:id and if.itemImageFileStatus = 'THUMBNAIL' ")
+    Optional<ImageFile> findByItemThumbnail(Long id);
 
     List<ImageFile> findAllByItem(Item item);
 
