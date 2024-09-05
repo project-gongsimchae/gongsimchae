@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 완료</title>
+    <link rel="stylesheet" th:href="@{/css/groupbuying/orderComplete.css}">
+</head>
+<body>
+<div class="order-complete-container">
+    <h1 class="complete-title">주문이 완료되었습니다</h1>
+
+    <div class="separation-box">
+        <h2 class="order-info">주문 정보</h2>
+        <p><strong>주문번호:</strong> <span th:text="${order.id}"></span></p>
+        <p><strong>주문상태:</strong> <span th:text="${order.orderStatus}"></span></p>
+    </div>
+
+    <div class="separation-box">
+        <h2 class="payment-info">결제 정보</h2>
+        <p><strong>결제 금액:</strong> <span th:text="${#numbers.formatDecimal(paymentInfo.finalPaymentAmount, 0, 'COMMA', 0, 'POINT')}">원</span></p>
+        <p><strong>배송 주소:</strong> <span th:text="${paymentInfo.deliveryAddress}"></span></p>
+    </div>
+
+    <div class="separation-box">
+        <h2 class="order-item-info">주문 상품</h2>
+        <table class="order-table">
+            <thead>
+            <tr>
+                <th>상품명</th>
+                <th>옵션</th>
+                <th>수량</th>
+                <th>가격</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${orderItems}">
+                <td th:text="${item.itemOption.item.name}"></td>
+                <td th:text="${item.itemOption.content}"></td>
+                <td th:text="${item.count}"></td>
+                <td th:text="${#numbers.formatDecimal(item.price * item.count, 0, 'COMMA', 0, 'POINT')}">원</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="main-button">
+        <a th:href="@{/main}" class="main-redirect-button">
+            메인으로 돌아가기
+        </a>
+    </div>
+</div>
+</body>
+</html>
