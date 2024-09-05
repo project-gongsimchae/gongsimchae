@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.openModalButton').forEach(button => {
         button.addEventListener('click', function() {
             const uid = this.getAttribute('data-uid');
-            openModalForReview(uid, '작성하기', 'POST', `/mypage/reviews/write/${uid}`); // post
+            const orderItemId = this.closest('.review-item').querySelector('#myOrderItemId').value;
+            openModalForReview(uid, '작성하기', 'POST', `/mypage/reviews/write/${uid}`, orderItemId); // post
         });
     });
 
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.openUpdateModalButton').forEach(button => {
         button.addEventListener('click', function() {
             const uid = this.getAttribute('data-uid');
+            const orderItemId = this.closest('.review-item').querySelector('#myOrderItemId').value;
 
             // 리뷰 수정 모드: 데이터를 서버에서 가져오거나 페이지에서 찾습니다.
             fetch(`/mypage/reviews/${uid}`)  // 수정할 리뷰 데이터를 가져오는 API 경로, get
@@ -37,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     // 데이터를 가져온 후 필드에 바인딩
                     bindDataToForm(data);
-                    openModalForReview(uid, '수정하기', 'POST', `/mypage/reviews/update/${uid}`); // put
+                    openModalForReview(uid, '수정하기', 'POST', `/mypage/reviews/update/${uid}`, orderItemId); // put
                 })
                 .catch(error => {
                     console.error('리뷰 데이터를 불러오는 중 오류 발생:', error);
@@ -46,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 모달 열기 함수
-    function openModalForReview(uid, buttonText, method, actionUrl) {
+    function openModalForReview(uid, buttonText, method, actionUrl, orderItemId) {
         const submitButton = document.getElementById('submitReviewButton');
 
         // 버튼 텍스트 및 요청 메서드 변경
@@ -56,6 +58,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('reviewForm');
         form.setAttribute('method', 'post');  // HTML form 태그에서 method 속성은 GET/POST만 지원
         form.setAttribute('action', actionUrl);
+
+        // orderItemId 값을 hidden input에 설정
+        document.getElementById('orderItemId').value = orderItemId;
 
         // 폼 전송 이벤트 설정
         submitButton.onclick = function(event) {
@@ -93,6 +98,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('starPoint').value = data.starPoint;
         document.getElementById('content').value = data.content;
         document.getElementById('secretStatus').checked = data.secretStatus === true;
+
+        console.log(data.title)
+        console.log(data.starPoint)
+        console.log(data.content)
     }
 
     // 데이터 비우기 함수

@@ -11,6 +11,8 @@ import techit.gongsimchae.domain.common.user.entity.User;
 import techit.gongsimchae.domain.common.user.repository.UserRepository;
 import techit.gongsimchae.domain.groupbuying.item.entity.Item;
 import techit.gongsimchae.domain.groupbuying.item.repository.ItemRepository;
+import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderItem;
+import techit.gongsimchae.domain.groupbuying.orderitem.repository.OrderItemRepository;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewsReqDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.dto.ReviewResDtoWeb;
 import techit.gongsimchae.domain.groupbuying.reviews.entity.Review;
@@ -33,6 +35,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ImageS3Service imageS3Service;
     private final ImageFileRepository imageFileRepository;
+    private final OrderItemRepository orderItemRepository;
 
     public void createReview(AccountDto accountDto, ReviewsReqDtoWeb reviewReqDtoWeb, String uid) {
         User user = userRepository.findByLoginId(accountDto.getLoginId()).orElseThrow(
@@ -41,7 +44,10 @@ public class ReviewService {
         Item item = itemRepository.findByUIDAndDeleteStatus(uid, 0).orElseThrow(
                 () -> new CustomWebException(ErrorMessage.ITEM_NOT_FOUND)
         );
-        Review review = reviewRepository.save(new Review(reviewReqDtoWeb, user, item));
+
+        OrderItem orderItem = orderItemRepository.findById(reviewReqDtoWeb.getOrderItemId()).orElseThrow(() -> new CustomWebException(ErrorMessage.ORDER_ITEM_NOT_FOUND));
+
+        Review review = reviewRepository.save(new Review(reviewReqDtoWeb, user, item, orderItem));
         imageS3Service.storeFile(reviewReqDtoWeb.getImages(), S3VO.REVIEWS_IMAGE_UPLOAD_DIRECTORY, review);
     }
 

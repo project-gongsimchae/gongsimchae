@@ -3,7 +3,6 @@ package techit.gongsimchae.domain.web.common;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -199,7 +198,7 @@ public class MyPageController {
     @PostMapping("/reviews/write/{uid}")
     public String createReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                 @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
-                                @PathVariable String uid) {
+                                @PathVariable("uid") String uid) {
         reviewService.createReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
         return "redirect:/mypage/reviews";
     }
@@ -212,7 +211,9 @@ public class MyPageController {
     @ResponseBody
     @GetMapping("reviews/{uid}")
     public ReviewResDtoWeb getReviews(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                      @PathVariable String uid) {
+                                      @PathVariable("uid") String uid) {
+        log.info(">>!!!!!!!!! 실행되었음");
+
         return reviewService.getReviews(principalDetails.getAccountDto(), uid);
     }
 
@@ -224,7 +225,7 @@ public class MyPageController {
     @PostMapping("reviews/update/{uid}")
     public String updateReviews (@AuthenticationPrincipal PrincipalDetails principalDetails,
                                  @ModelAttribute ReviewsReqDtoWeb reviewReqDtoWeb,
-                                 @PathVariable String uid) {
+                                 @PathVariable("uid") String uid) {
         reviewService.updateReview(principalDetails.getAccountDto(), reviewReqDtoWeb, uid);
         return "redirect:/mypage/reviews";
     }

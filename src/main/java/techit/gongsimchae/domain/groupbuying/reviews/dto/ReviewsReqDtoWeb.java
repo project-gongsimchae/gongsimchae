@@ -12,4 +12,5 @@ public class ReviewsReqDtoWeb {
     private String content;
     private Boolean secretStatus = false;
     private MultipartFile images;
+    private Long orderItemId;
 }
