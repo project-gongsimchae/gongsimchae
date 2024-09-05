@@ -338,17 +338,19 @@ public class ItemService {
 
         List<ReviewAbleItemResDtoWeb> reviewAbleItemResDtoWebs = new ArrayList<>();
         List<ReviewedItemResDtoWeb> reviewedItemResDtoWebs = new ArrayList<>();
-        for (Item item : items) {
-            ImageFile imageFile = imageFileRepository.findAllByItem(item).get(0);
+
+        for (OrderItem orderItem : ordersItems) {
+            ImageFile imageFile = imageFileRepository.findAllByItem(orderItem.getItemOption().getItem()).get(0);
+
             Review matchingReview = reviews.stream()
-                    .filter(review -> review.getItem().equals(item))
+                    .filter(review -> review.getOrderItem().equals(orderItem))
                     .findFirst()
                     .orElse(null);
 
             if (matchingReview != null) {
-                reviewedItemResDtoWebs.add(new ReviewedItemResDtoWeb(item, imageFile.getStoreFilename(), matchingReview.getCreateDate()));
+                reviewedItemResDtoWebs.add(new ReviewedItemResDtoWeb(orderItem.getItemOption().getItem(), imageFile.getStoreFilename(), matchingReview.getCreateDate(), orderItem));
             } else {
-                reviewAbleItemResDtoWebs.add(new ReviewAbleItemResDtoWeb(item, imageFile.getStoreFilename()));
+                reviewAbleItemResDtoWebs.add(new ReviewAbleItemResDtoWeb(orderItem.getItemOption().getItem(), imageFile.getStoreFilename(), orderItem));
             }
         }
         return new ReviewItemResDtoWeb(reviewAbleItemResDtoWebs, reviewedItemResDtoWebs);
