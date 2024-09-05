@@ -1,5 +1,6 @@
 package techit.gongsimchae.domain.groupbuying.orders.repository;
 
+import org.hibernate.query.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import techit.gongsimchae.domain.groupbuying.orderitem.entity.OrderStatus;
 import techit.gongsimchae.domain.groupbuying.orders.entity.Orders;
@@ -13,4 +14,6 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     Optional<Orders> findByIdAndUserId(Long id, Long userId);
 
     List<Orders> findAllByUserIdAndOrderStatus(Long userId, OrderStatus orderStatus);
+
+    Optional<Orders> findByMerchantUid(String merchantUid);
 }
