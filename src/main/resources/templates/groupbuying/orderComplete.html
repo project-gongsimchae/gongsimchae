@@ -13,12 +13,15 @@
         <h2 class="order-info">주문 정보</h2>
         <p><strong>주문번호:</strong> <span th:text="${order.id}"></span></p>
         <p><strong>주문상태:</strong> <span th:text="${order.orderStatus}"></span></p>
+        <p><strong>결제 금액:</strong> <span th:text="${#numbers.formatDecimal(paymentInfo.finalPaymentAmount, 0, 'COMMA', 0, 'POINT')}">원</span></p>
     </div>
 
     <div class="separation-box">
-        <h2 class="payment-info">결제 정보</h2>
-        <p><strong>결제 금액:</strong> <span th:text="${#numbers.formatDecimal(paymentInfo.finalPaymentAmount, 0, 'COMMA', 0, 'POINT')}">원</span></p>
-        <p><strong>배송 주소:</strong> <span th:text="${paymentInfo.deliveryAddress}"></span></p>
+        <h2 class="payment-info">배송지 정보</h2>
+        <p><strong>이름 :</strong> <span th:text="${deliveryInfo.name}"></span></p>
+        <p><strong>핸드폰 번호 :</strong> <span th:text="${deliveryInfo.phone}"></span></p>
+        <p><strong>배송 주소:</strong> <span th:text="${deliveryInfo.address}"></span></p>
+
     </div>
 
     <div class="separation-box">

@@ -53,6 +53,10 @@ public interface ErrorMessage {
     String ORDER_NOT_FOUND = "존재하지 않는 주문정보입니다.";
 
 
+    // UID
+    String MERCHANTUID_NOT_FOUND = "존재하지 않는 주문 번호 입니다.";
+
+
     /**
      * portion 에러
      */
