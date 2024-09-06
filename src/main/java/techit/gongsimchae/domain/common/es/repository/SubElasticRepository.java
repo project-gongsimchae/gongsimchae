@@ -76,7 +76,7 @@ public class SubElasticRepository {
     }
 
     public void updateSubdivision(Subdivision subdivision, String url) {;
-        Query query = new CriteriaQuery(Criteria.where("subdivisionId").is(subdivision.getId()));
+        Query query = new CriteriaQuery(Criteria.where("subdivision_id").is(subdivision.getId()));
 
         SubdivisionDocument subdivisionDocument = elasticsearchOperations.searchOne(query, SubdivisionDocument.class).getContent();
         subdivisionDocument.changeInfo(subdivision,url);

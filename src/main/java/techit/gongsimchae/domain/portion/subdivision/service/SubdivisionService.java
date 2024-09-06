@@ -120,7 +120,7 @@ public class SubdivisionService {
 
     private void updateSubDocument(Subdivision subdivision, List<ImageFile> imageFiles) {
         String url = null;
-        if (!imageFiles.isEmpty()) {
+        if (imageFiles != null && !imageFiles.isEmpty()) {
             url = imageFiles.get(0).getStoreFilename();
         }
         subElasticRepository.updateSubdivision(subdivision, url);
