@@ -80,6 +80,8 @@ public class OrdersService {
                     .discountAmount(totalDiscountAmount)
                     .couponDiscount(0)
                     .paymentType(payment.getPgProvider())
+                    .buyerName(payment.getBuyerName())
+                    .buyerNumber(payment.getBuyerTel())
                     .deliveryAddress(payment.getBuyerAddr())
                     .cancelReason(payment.getCancelReason())
                     .build();
