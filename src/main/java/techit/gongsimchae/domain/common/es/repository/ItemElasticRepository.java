@@ -29,24 +29,24 @@ public class ItemElasticRepository {
 
         NativeQuery query = NativeQuery.builder()
                 .withQuery(q -> q.bool(b -> b
-                                .should(s -> s.match(m -> m
-                                                .field("name")
-                                                .query(keyword)
-                                                .analyzer("nori")
-                                        ))
-                                .should(s -> s
-                                        .match(m -> m
-                                                .field("intro")
-                                                .query(keyword)
-                                                .analyzer("nori")))
-                                .mustNot(mn -> mn
-                                        .term(t -> t
-                                                .field("deleteStatus")
-                                                .value(1)
-                                        )
+                        .filter(f -> f
+                                .term(t -> t
+                                        .field("delete_status")
+                                        .value(0)
                                 )
                         )
-                )
+                        .should(s -> s.match(w -> w
+                                .field("title")
+                                .query(keyword)
+                                .analyzer("nori")
+                        ))
+                        .should(s -> s.match(w -> w
+                                .field("intro")
+                                .query(keyword)
+                                .analyzer("nori")
+                        ))
+                        .minimumShouldMatch("1")
+                ))
                 .withSort(s -> {
                     Integer sortType = itemSearchForm.getSortType();
                     if (sortType != null) {
