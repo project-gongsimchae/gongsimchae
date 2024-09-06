@@ -130,7 +130,9 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
                     .join(imageFile.subdivision, subdivision)
                     .where(subdivision.id.eq(result.getId()))
                     .fetch();
-            result.setImageFileList(images);
+            if(images != null && !images.isEmpty()) {
+                result.setImageUrl(images.getFirst().getStoreFilename());
+            }
         }
 
         Long size = queryFactory.select(subdivision.count())
@@ -165,8 +167,8 @@ public class SubdivisionCustomRepositoryImpl implements SubdivisionCustomReposit
             builder.and(subdivision.dong.in(split));
         }
         if (searchDto.getContent() != null) {
-            builder.and(subdivision.title.contains(searchDto.getContent())
-                    .and(subdivision.content.contains(searchDto.getContent())));
+            builder.and((subdivision.title.contains(searchDto.getContent())
+                    .or(subdivision.content.contains(searchDto.getContent()))));
         }
         return builder;
     }

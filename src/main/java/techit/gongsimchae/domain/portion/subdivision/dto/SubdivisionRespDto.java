@@ -33,6 +33,7 @@ public class SubdivisionRespDto {
     private List<ImageFileRespDto> imageFileList;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+    private String imageUrl;
 
     public SubdivisionRespDto(Subdivision subdivision) {
         this.id = subdivision.getId();
@@ -62,9 +63,7 @@ public class SubdivisionRespDto {
         this.views = subdivisionDocument.getViews();
         this.UID = subdivisionDocument.getUid();
         this.subdivisionType = SubdivisionType.valueOf(subdivisionDocument.getSubdivisionType());
-        if (subdivisionDocument.getUrl() != null) {
-            this.imageFileList.add(ImageFileRespDto.builder().storeFilename(subdivisionDocument.getUrl()).build());
-        }
+        this.imageUrl = subdivisionDocument.getUrl();
 
     }
 }
