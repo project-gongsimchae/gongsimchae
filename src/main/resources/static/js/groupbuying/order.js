@@ -36,11 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
         address = document.getElementById('recipientAddress').value;
         detailAddress = document.getElementById('recipientDetailAddress').value;
         const fullAddress = `${address} ${detailAddress}`;
-
         document.getElementById('displayRecipientName').textContent = name;
         document.getElementById('displayRecipientPhone').textContent = phone;
         document.getElementById('displayRecipientAddress').textContent = fullAddress;
 
+        address = fullAddress;
         modal.hide();
     };
 
@@ -84,6 +84,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function requestPay() {
         const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+        const agreementCheckbox = document.querySelector('.agreement input[type="checkbox"]');
+
+        if (!agreementCheckbox.checked) {
+            alert("개인정보 수집 및 이용에 동의해주세요. (필수)");
+            return;
+        }
+
         if (!selectedPaymentMethod) {
             alert("결제 수단을 선택해주세요.");
             return;
@@ -92,6 +99,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const pgProvider = selectedPaymentMethod.dataset.pgProvider;
         const finalAmount = parseInt(document.getElementById('finalTotalAmount').textContent.replace(/[^0-9]/g, ''));
         const selectedCouponId = document.getElementById('couponSelect').value;
+
+        name = name || document.getElementById('displayRecipientName').textContent;
+        phone = phone || document.getElementById('displayRecipientPhone').textContent;
+        address = address || document.getElementById('displayRecipientAddress').textContent;
+        zipcode = zipcode || orderInfo.buyerPostcode;
 
         $.ajax({
             url: '/order/create',
@@ -114,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     buyer_email: orderInfo.buyerEmail,
                     buyer_name: name,
                     buyer_tel: phone,
-                    buyer_addr: `${address} ${detailAddress}`,
+                    buyer_addr: address,
                     buyer_postcode: zipcode,
                     m_redirect_url: "http://localhost:8081/order/complete",
                 };
@@ -156,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         data: JSON.stringify({
                             name: name,
                             phone: phone,
-                            address: `${address} ${detailAddress}`,
+                            address: address,
                         }),
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader(csrfHeader, csrfToken);
