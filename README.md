@@ -451,7 +451,27 @@ Tools | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge
 
 ## 🐞 Trouble Shooting
 <details>
-  <summary><strong> 문제해결</strong></summary>
+  <summary><strong> 조회수를 Redis에 저장하여 성능 향상</strong></summary>
     <div markdown="1"> 
-      1.여기에 작성
+    - 문제: DB에 직접 조회수를 저장하면서 발생한 성능 저하 및 트래픽 폭주 문제 <br>
+    - 해결: Redis를 캐시로 활용하여 조회수를 실시간으로 저장 및 업데이트, 특정 주기에만 Redis 데이터를 DB로 동기화 <br>
+    - 결과: DB 부하를 줄이고 실시간 조회수가 필요한 서비스에서 속도와 성능 모두 향상
+    <img width="1470" alt="image" src="https://github.com/user-attachments/assets/65cbc148-f121-43eb-a4c1-7ef5700709f2" />
+    <img width="1470" alt="image" src="https://github.com/user-attachments/assets/dd3a2ab1-885b-4a73-9ed5-ce9011195c12" />
+
 </details>
+<details>
+  <summary><strong> SSE 커넥션 풀이 고갈되는 현상 해결</strong></summary>
+    <div markdown="1"> 
+  - 문제: SSE 사용 중 다수의 클라이언트 접속으로 인해 커넥션 풀 고갈, 특히 지속적인 연결로 리소스가 과도하게 소모됨 <br>
+  - 해결: 커넥션 풀 증가 및 OSIV를 비활성화 <br>
+  - 결과: 안정적으로 다수의 SSE 커넥션을 처리 가능하며, 서비스 가용성 유지
+</details>
+<details>
+  <summary><strong> ElasticSearch를 활용한 연관 검색어 및 성능 최적화</strong></summary>
+    <div markdown="1"> 
+- 문제: 기존 SQL 기반 검색에서 느린 검색 속도와 관련 데이터 분석 어려움 <br>
+- 해결: ElasticSearch를 도입하여 연관 검색어와 역색인 방식으로 검색 기능 구현 <br>
+- 결과: 검색 성능이 비약적으로 개선되었으며 사용자 만족도 향상
+</details>
+
